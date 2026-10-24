@@ -1,0 +1,21 @@
+{
+  "name": "Spatial IO Port",
+  "icon": "ae2:spatial_io_port",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 210,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:spatial_io_port",
+      "link_recipe": true,
+      "anchor": "the-spatial-io-port",
+      "text": "The Spatial IO Port is used in $(l:ae2_mechanics/spatial_io)spatial IO$(/l) to hold the $(l:items_blocks_machines/spatial_cells)spatial cell$(/l) and control the spatial IO operation.$(br2)The cell can be inserted and extracted by any item logistics like hoppers or ae2 busses, if you want to automate it."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/spatial_io_port",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

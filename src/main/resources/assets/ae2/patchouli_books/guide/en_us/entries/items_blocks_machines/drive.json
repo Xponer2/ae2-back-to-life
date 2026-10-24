@@ -1,0 +1,52 @@
+{
+  "name": "ME Drive",
+  "icon": "ae2:drive",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 210,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-me-drive",
+      "text": "The Drive is the $(l:ae2_mechanics/devices)device$(/l) you plug your $(l:items_blocks_machines/storage_cells)storage cells$(/l) into in order to use them for $(l:ae2_mechanics/import_export_storage)network storage$(/l). It has 10 slots which each accept a cell.$(br2)If for some reason you want to, you can push and pull the cells from its inventory with any item logistics like hoppers or ae2 busses.$(br2)It can be rotated with a $(l:items_blocks_machines/wrench)Certus Quartz Wrench$(/l)."
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "0"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:drive",
+          "0": "ae2:drive"
+        }
+      },
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Cell Status LEDs",
+      "anchor": "cell-status-leds",
+      "text": "The cells in the drive have an LED on them which shows their status:$(li)$(bold)Green$(): Empty$(li)$(bold)Blue$(): Has some contents$(li)$(bold)Orange$(): $(l:ae2_mechanics/bytes_and_types)Types$(/l) full, no new types can be added$(li)$(bold)Red$(): $(l:ae2_mechanics/bytes_and_types)Bytes$(/l) full, no more items can be inserted$(li)$(bold)Black$(): No power or drive has no $(l:ae2_mechanics/channels)channel$(/l)"
+    },
+    {
+      "type": "text",
+      "title": "Priority",
+      "anchor": "priority",
+      "text": "Priorities can be set by clicking the wrench in the top-right of the GUI. Items entering the network will start at the highest priority storage as their first destination. In the case of two storages or cells have the same priority, if one already contains the item, they will prefer that storage over any other. Any $(l:items_blocks_machines/cell_workbench)partitioned$(/l) cells will be treated as already containing the item when in the same priority group as other"
+    },
+    {
+      "type": "text",
+      "text": "storages. Items being removed from storage will be removed from the storage with the lowest priority. This priority system means as items are inserted and removed from network storage, higher priority storages will be filled and lower priority storages will be emptied."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/storage_drive",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

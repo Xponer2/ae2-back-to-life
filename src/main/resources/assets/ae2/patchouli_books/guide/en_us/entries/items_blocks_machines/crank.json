@@ -1,0 +1,50 @@
+{
+  "name": "Crank",
+  "icon": "ae2:crank",
+  "category": "items_blocks_machines/machines",
+  "sortnum": 310,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-crank",
+      "text": "The crank is used to power machines when you don't otherwise have access to power (or an $(l:items_blocks_machines/energy_acceptor)Energy Acceptor$(/l)). Early-game struggles, am I right?"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "D",
+            " ",
+            "D",
+            " ",
+            "D"
+          ],
+          [
+            "0",
+            " ",
+            "B",
+            " ",
+            "C"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:growth_accelerator[facing=up,powered=false]",
+          "B": "ae2:inscriber",
+          "C": "ae2:charger",
+          "D": "ae2:crank[facing=up]",
+          "0": "ae2:growth_accelerator[facing=up,powered=false]"
+        }
+      },
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/crank",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "name": "ME Storage Bus",
+  "icon": "ae2:storage_bus",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 220,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-storage-bus",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)Ever wanted to $(o)keep$() your chest monster instead of replacing it with something sensible? We present the Storage Bus!$(br2)The storage bus turns the inventory it's touching into $(l:ae2_mechanics/import_export_storage)network storage$(/l). It does this by allowing the network to see the contents of that inventory,"
+    },
+    {
+      "type": "text",
+      "text": "and by pushing to and pulling from that inventory in order to fulfill $(l:ae2_mechanics/devices)devices$(/l) pushing to and pulling from network storage.$(br2)Due to AE2's philosophy of emergent mechanics through interaction of the functions of the $(l:ae2_mechanics/devices)devices$(/l), you don't necessarily $(o)have$() to use a storage bus for $(o)storage$(). By using $(l:ae2_mechanics/subnetworks)subnetworks$(/l) to make a storage bus (or handful of storage busses) the $(o)only$() storage on a network, you can"
+    },
+    {
+      "type": "text",
+      "text": "use it as a source or destination for item transfer. (see $(l:example_setups/pipe_subnet)\"pipe subnet\"$(/l))$(br2)IMPORTANT NOTE: Big optimized inventories like drawers are fine, but big $(o)un*optimized inventories with many slots, like colossal chests, are terrible for performance when used with storage busses.$()$(br2)They are $(l:ae2_mechanics/cable_subparts)cable subparts$(/l)."
+    },
+    {
+      "type": "text",
+      "title": "Filtering",
+      "anchor": "filtering",
+      "text": "By default the bus will store everything. Items inserted into its filter slots will act as a whitelist, only allowing those specific items to be stored.$(br2)Items and fluids can be dragged into the slots from JEI/REI even if you don't actually have any of that item.$(br2)Right-click with a fluid container (like a bucket or fluid tank) to set that fluid as a filter instead of the bucket"
+    },
+    {
+      "type": "text",
+      "text": "or tank item."
+    },
+    {
+      "type": "text",
+      "title": "Priority",
+      "anchor": "priority",
+      "text": "Priorities can be set by clicking the wrench in the top-right of the GUI. Items entering the network will start at the highest priority storage as their first destination. In the case of two storages have the same priority, if one already contains the item, they will prefer that storage over any other. Any filtered storages will be treated as already containing the item when in the same priority group as other storages. Items"
+    },
+    {
+      "type": "text",
+      "text": "being removed from storage will be removed from the storage with the lowest priority. This priority system means as items are inserted and removed from network storage, higher priority storages will be filled and lower priority storages will be emptied."
+    },
+    {
+      "type": "text",
+      "title": "Settings",
+      "anchor": "settings",
+      "text": "$(li)The bus can be partitioned (filtered) to what is currently in the adjacent inventory$(li)The network can be disallowed or allowed to see items in the adjacent inventory that the bus cannot extract (for example, a storage bus cannot extract items from the middle input slot of an $(l:items_blocks_machines/inscriber)Inscriber$(/l))$(li)The bus can filter on both insertion and extraction or just insertion"
+    },
+    {
+      "type": "text",
+      "text": "$(li)The bus can be bi-directional, insert-only, or extract-only"
+    },
+    {
+      "type": "text",
+      "title": "Upgrades",
+      "anchor": "upgrades",
+      "text": "The storage bus supports the following $(l:items_blocks_machines/upgrade_cards)upgrades$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Capacity Card$(/l) increases the amount of filter slots$(li)$(l:items_blocks_machines/upgrade_cards)Fuzzy Card$(/l) lets the bus filter by damage level and/or ignore item NBT$(li)$(l:items_blocks_machines/upgrade_cards)Inverter Card$(/l) switches the filter from a whitelist to a blacklist$(li)$(l:items_blocks_machines/upgrade_cards)Overflow Destruction Card$(/l) voids items inserted if the attached inventory is full, useful for stopping farms from backing up. Be careful to"
+    },
+    {
+      "type": "text",
+      "text": "partition this!"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/storage_bus",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

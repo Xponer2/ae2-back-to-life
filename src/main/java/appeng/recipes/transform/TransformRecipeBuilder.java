@@ -1,0 +1,38 @@
+package appeng.recipes.transform;
+
+import java.util.Collections;
+
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
+
+import appeng.api.util.ItemLike;
+
+public class TransformRecipeBuilder {
+
+    public static void transform(RecipeOutput consumer, ResourceLocation id, ItemLike output, int count,
+            TransformCircumstance circumstance, ItemLike... inputs) {
+        var ingredients = NonNullList.<Ingredient>createWithCapacity(inputs.length);
+        for (var input : inputs) {
+            ingredients.add(Ingredient.of(input));
+        }
+        var recipe = new TransformRecipe(ingredients, toStack(output, count), circumstance);
+        consumer.accept(id, recipe, null);
+    }
+
+    public static void transform(RecipeOutput consumer, ResourceLocation id, ItemLike output, int count,
+            TransformCircumstance circumstance, Ingredient... inputs) {
+        var ingredients = NonNullList.<Ingredient>createWithCapacity(inputs.length);
+        Collections.addAll(ingredients, inputs);
+        var recipe = new TransformRecipe(ingredients, toStack(output, count), circumstance);
+        consumer.accept(id, recipe, null);
+    }
+
+    private static ItemStack toStack(ItemLike item, int count) {
+        var stack = item.asItem().getDefaultInstance();
+        stack.setCount(count);
+        return stack;
+    }
+}

@@ -1,0 +1,93 @@
+{
+  "name": "Molecular Assembler",
+  "icon": "ae2:molecular_assembler",
+  "category": "items_blocks_machines/machines",
+  "sortnum": 310,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:molecular_assembler",
+      "link_recipe": true,
+      "anchor": "the-molecular-assembler",
+      "text": "The molecular assembler takes items input into it and carries out the operation defined by an adjacent $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l), or the inserted $(l:items_blocks_machines/patterns)Crafting Pattern$(/l), $(l:items_blocks_machines/patterns)Smithing Table Pattern$(/l), or $(l:items_blocks_machines/patterns)Stonecutting Pattern$(/l), then pushes the result to adjacent inventories.$(br2)This assembler has a crafting pattern that specifies the 1"
+    },
+    {
+      "type": "text",
+      "text": "oak log = 4 oak planks recipe. When oak logs are fed into the upper hopper, the assembler crafts and spits oak planks into the lower hopper."
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "B ",
+            "C "
+          ],
+          [
+            "0 ",
+            "  "
+          ]
+        ],
+        "mapping": {
+          "A": "minecraft:hopper[facing=down]",
+          "B": "ae2:molecular_assembler[powered=true]",
+          "C": "minecraft:hopper[facing=west]",
+          "0": "minecraft:hopper[facing=down]"
+        }
+      },
+      "text": "$(bold)The Main Use Of The Molecular Assembler$()",
+      "anchor": "the-main-use-of-the-molecular-assembler"
+    },
+    {
+      "type": "text",
+      "text": "However, their main use is next to a $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l). Pattern providers have special behavior in this case, and will send information about the relevant pattern along with the ingredients to adjacent assemblers. Since assemblers auto-eject the results of crafts to adjacent inventories (and thus into the return slots of the pattern provider), an assembler on a pattern provider is all that is needed to automate crafting patterns."
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "BA",
+            "AB",
+            "BA",
+            "AB"
+          ],
+          [
+            "0B",
+            "BA",
+            "AB",
+            "BA"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:molecular_assembler[powered=true]",
+          "B": "ae2:pattern_provider[push_direction=all]",
+          "0": "ae2:molecular_assembler[powered=true]"
+        }
+      },
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Upgrades",
+      "anchor": "upgrades",
+      "text": "The Molecular Assembler supports the following $(l:items_blocks_machines/upgrade_cards)upgrades$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Acceleration Card$(/l)"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crafting/molecular_assembler",
+      "anchor": "recipe",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Note",
+      "anchor": "note",
+      "text": "Optifine breaks the \"push to adjacent inventories\" function so most crafting setups with assemblers won't work."
+    }
+  ]
+}

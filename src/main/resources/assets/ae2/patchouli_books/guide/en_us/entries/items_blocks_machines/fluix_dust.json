@@ -1,0 +1,25 @@
+{
+  "name": "Fluix Dust",
+  "icon": "ae2:fluix_dust",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:fluix_dust",
+      "link_recipe": true,
+      "anchor": "fluix-dust",
+      "text": "A $(l:items_blocks_machines/fluix_crystal)Fluix Crystal$(/l) that has been crushed by an $(l:items_blocks_machines/inscriber)Inscriber$(/l). Used in the production of several AE2 machines and components."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Inscriber",
+      "top": "",
+      "middle": "ae2:fluix_crystal,ore:crystalFluix",
+      "bottom": "",
+      "output": "ae2:fluix_dust",
+      "text": "The presses are not used up.",
+      "anchor": "recipe"
+    }
+  ]
+}

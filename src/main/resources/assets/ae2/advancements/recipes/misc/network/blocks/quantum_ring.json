@@ -1,0 +1,241 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_energy_cell": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:energy_cell"
+          }
+        ]
+      }
+    },
+    "has_engineering_processor": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:engineering_processor"
+          }
+        ]
+      }
+    },
+    "has_fluix_smart_dense_cable_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:white_smart_dense_cable"
+          }
+        ]
+      }
+    },
+    "has_fluix_smart_dense_cable_1": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:light_gray_smart_dense_cable"
+          }
+        ]
+      }
+    },
+    "has_fluix_smart_dense_cable_2": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:gray_smart_dense_cable"
+          }
+        ]
+      }
+    },
+    "has_fluix_smart_dense_cable_3": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:black_smart_dense_cable"
+          }
+        ]
+      }
+    },
+    "has_fluix_smart_dense_cable_4": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:lime_smart_dense_cable"
+          }
+        ]
+      }
+    },
+    "has_fluix_smart_dense_cable_5": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:yellow_smart_dense_cable"
+          }
+        ]
+      }
+    },
+    "has_fluix_smart_dense_cable_6": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:orange_smart_dense_cable"
+          }
+        ]
+      }
+    },
+    "has_fluix_smart_dense_cable_7": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:brown_smart_dense_cable"
+          }
+        ]
+      }
+    },
+    "has_fluix_smart_dense_cable_8": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:red_smart_dense_cable"
+          }
+        ]
+      }
+    },
+    "has_fluix_smart_dense_cable_9": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:pink_smart_dense_cable"
+          }
+        ]
+      }
+    },
+    "has_fluix_smart_dense_cable_10": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:magenta_smart_dense_cable"
+          }
+        ]
+      }
+    },
+    "has_fluix_smart_dense_cable_11": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:purple_smart_dense_cable"
+          }
+        ]
+      }
+    },
+    "has_fluix_smart_dense_cable_12": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:blue_smart_dense_cable"
+          }
+        ]
+      }
+    },
+    "has_fluix_smart_dense_cable_13": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:light_blue_smart_dense_cable"
+          }
+        ]
+      }
+    },
+    "has_fluix_smart_dense_cable_14": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:cyan_smart_dense_cable"
+          }
+        ]
+      }
+    },
+    "has_fluix_smart_dense_cable_15": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:green_smart_dense_cable"
+          }
+        ]
+      }
+    },
+    "has_fluix_smart_dense_cable_16": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:fluix_smart_dense_cable"
+          }
+        ]
+      }
+    },
+    "has_logic_processor": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:logic_processor"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:network/blocks/quantum_ring"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_fluix_smart_dense_cable_0",
+      "has_fluix_smart_dense_cable_1",
+      "has_fluix_smart_dense_cable_2",
+      "has_fluix_smart_dense_cable_3",
+      "has_fluix_smart_dense_cable_4",
+      "has_fluix_smart_dense_cable_5",
+      "has_fluix_smart_dense_cable_6",
+      "has_fluix_smart_dense_cable_7",
+      "has_fluix_smart_dense_cable_8",
+      "has_fluix_smart_dense_cable_9",
+      "has_fluix_smart_dense_cable_10",
+      "has_fluix_smart_dense_cable_11",
+      "has_fluix_smart_dense_cable_12",
+      "has_fluix_smart_dense_cable_13",
+      "has_fluix_smart_dense_cable_14",
+      "has_fluix_smart_dense_cable_15",
+      "has_fluix_smart_dense_cable_16",
+      "has_energy_cell",
+      "has_logic_processor",
+      "has_engineering_processor"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:network/blocks/quantum_ring"
+    ]
+  }
+}

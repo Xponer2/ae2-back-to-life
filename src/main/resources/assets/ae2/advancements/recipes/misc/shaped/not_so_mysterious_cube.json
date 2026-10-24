@@ -1,0 +1,65 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:shaped/not_so_mysterious_cube"
+      }
+    },
+    "press_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:calculation_processor_press"
+          }
+        ]
+      }
+    },
+    "press_1": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:engineering_processor_press"
+          }
+        ]
+      }
+    },
+    "press_2": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:logic_processor_press"
+          }
+        ]
+      }
+    },
+    "press_3": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:silicon_press"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "press_0",
+      "press_1",
+      "press_2",
+      "press_3"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:shaped/not_so_mysterious_cube"
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "Monitors",
+  "icon": "ae2:storage_monitor",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 210,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "monitors",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)Monitors allow visualization and interaction with a single item or fluid type, without opening a GUI.$(br2)Monitors will inherit the color of the $(l:items_blocks_machines/cables)cable$(/l) they are mounted on.$(br2)If the monitor is on the floor or ceiling, you can rotate it"
+    },
+    {
+      "type": "text",
+      "text": "with a $(l:items_blocks_machines/wrench)Certus Quartz Wrench$(/l).$(br2)They are $(l:ae2_mechanics/cable_subparts)cable subparts$(/l)."
+    },
+    {
+      "type": "text",
+      "title": "Storage Monitor",
+      "anchor": "storage-monitor",
+      "text": "Will show an item or fluid and its quantity. Put them next to your farms or something...$(br2)Does $(o)not$() require a $(l:ae2_mechanics/channels)channel$(/l).$(br2)Keybinds:$(li)Right-click with an item or double-right-click with a fluid container to set the monitor to that item/fluid.$(li)Right-click with an empty hand to clear the monitor.$(li)Shift-right-click with an empty hand to lock the monitor."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/monitors_storage",
+      "anchor": "recipe",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Conversion Monitor",
+      "anchor": "conversion-monitor",
+      "text": "The Conversion Monitor is similar to a storage monitor, but allows you to insert or extract its configured item.$(br2)If the configured item is $(l:ae2_mechanics/autocrafting)autocraftable$(/l) and none are in storage, attemping to take an item will instead open a UI to specify the amount to be crafted.$(br2)$(o)Does$() require a $(l:ae2_mechanics/channels)channel$(/l).$(br2)Additional keybinds:"
+    },
+    {
+      "type": "text",
+      "text": "$(li)Left-click to extract a stack of the configured item, or request craft of that item if none are in storage.$(li)Right-click with any item to insert that item.$(li)Right-click with an empty hand to insert all of the configured item from your inventory."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/monitors_conversion",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

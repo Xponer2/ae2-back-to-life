@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_dusts/fluix_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:fluix_dust"
+          }
+        ]
+      }
+    },
+    "has_dusts/fluix_1": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "type": "forge:ore_dict",
+            "ore": "dustFluix"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:network/blocks/io_condenser"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_dusts/fluix_0",
+      "has_dusts/fluix_1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:network/blocks/io_condenser"
+    ]
+  }
+}

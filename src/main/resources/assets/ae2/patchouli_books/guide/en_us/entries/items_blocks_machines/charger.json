@@ -1,0 +1,59 @@
+{
+  "name": "Charger",
+  "icon": "ae2:charger",
+  "category": "items_blocks_machines/machines",
+  "sortnum": 310,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:charger",
+      "link_recipe": true,
+      "anchor": "the-charger",
+      "text": "The Charger provides a way to charge supported tools, and $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l).$(br2)Power can be provided via the top or bottom, via either AE2's $(l:items_blocks_machines/cables)cables$(/l), or other mod power cables. It can accept either AE2's power (AE) or Forge Energy (FE). Items can be inserted or removed from any side. Only the results can be"
+    },
+    {
+      "type": "text",
+      "text": "removed, so no need for filters to prevent removing certus crystals instead of charged certus. Can be rotated with a $(l:items_blocks_machines/wrench)Certus Quartz Wrench$(/l) in order to facilitate automation.$(br2)Can be used to create $(l:items_blocks_machines/certus_quartz_crystal_charged)Charged Certus Quartz Crystal$(/l) from $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l), and $(l:items_blocks_machines/meteorite_compass)Meteorite Compass$(/l) from $(item)Compass$().$(br2)To power it manually, place a $(l:items_blocks_machines/crank)Wooden Crank$(/l) on the top or bottom and right-click it until"
+    },
+    {
+      "type": "text",
+      "text": "the item is charged.$(br2)It also acts as the workstation for the $(l:items_blocks_machines/fluix_researcher)Fluix Researcher$(/l)."
+    },
+    {
+      "type": "text",
+      "title": "Simple Automation",
+      "anchor": "simple-automation",
+      "text": "As an example, the rotateability lets you semi-automate chargers like so:"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "A"
+          ],
+          [
+            "B"
+          ],
+          [
+            "0"
+          ]
+        ],
+        "mapping": {
+          "A": "minecraft:hopper[facing=down]",
+          "B": "ae2:charger",
+          "0": "minecraft:hopper[facing=down]"
+        }
+      },
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/crystal_processing_charger",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

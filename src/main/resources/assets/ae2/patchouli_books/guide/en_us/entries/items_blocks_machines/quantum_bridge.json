@@ -1,0 +1,106 @@
+{
+  "name": "Quantum Bridge",
+  "icon": "ae2:quantum_ring",
+  "category": "items_blocks_machines/network_infrastructure",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-quantum-network-bridge",
+      "text": "Quantum Network Bridges can extend a $(l:ae2_mechanics/me_network_connections)network$(/l) over infinite distances and even between dimensions. They can carry 32 channels in total (regardless of how cables are connected to each face), essentially acting like a wireless $(l:items_blocks_machines/cables#dense-cable)dense cable$(/l)."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/quantum_bridge_demonstration.png"
+      ],
+      "border": true,
+      "text": ""
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " "
+          ],
+          [
+            "A",
+            "A",
+            "A",
+            " ",
+            "A",
+            "A",
+            "A"
+          ],
+          [
+            "A",
+            "B",
+            "A",
+            " ",
+            "A",
+            "B",
+            "A"
+          ],
+          [
+            "0",
+            "A",
+            "A",
+            " ",
+            "A",
+            "A",
+            "A"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:quantum_ring[formed=true]",
+          "B": "ae2:quantum_link[formed=true]",
+          "0": "ae2:quantum_ring[formed=true]"
+        }
+      },
+      "text": "$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "text": "Of note, $(bold)both sides must be chunkloaded$() so a $(l:items_blocks_machines/spatial_anchor)Spatial Anchor$(/l) or other chunkloader must be used if the 2 sides are far apart."
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:quantum_ring",
+      "link_recipe": true,
+      "anchor": "quantum-ring",
+      "text": "Eight of these blocks placed around a $(item)ME Quantum Link Chamber$() will create a Quantum Network Bridge. Only the 4 $(item)ME Quantum Ring$() blocks adjacent to the $(item)ME Quantum Link Chamber$() will accept network connections, the 4 corner blocks cannot connect to cables."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/quantum_ring",
+      "anchor": "recipe",
+      "text": ""
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:quantum_link",
+      "link_recipe": true,
+      "anchor": "quantum-link-chamber",
+      "text": "One of these blocks surrounded by a $(item)ME Quantum Ring$() will create a Quantum Network Bridge. This block doesn't connect to any cables and only registers as part of the network with the full bridge is made.$(br2)This block's inventory can only hold a single $(l:items_blocks_machines/singularities)Quantum Entangled Singularity$(/l) and is"
+    },
+    {
+      "type": "text",
+      "text": "automation accessible."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/quantum_link",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

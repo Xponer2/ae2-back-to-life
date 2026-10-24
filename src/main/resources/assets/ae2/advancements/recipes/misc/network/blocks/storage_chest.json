@@ -1,0 +1,54 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_crystals/fluix": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:fluix_crystal"
+          }
+        ]
+      }
+    },
+    "has_glass_cable": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:fluix_glass_cable"
+          }
+        ]
+      }
+    },
+    "has_terminal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:terminal"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:network/blocks/storage_chest"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_glass_cable",
+      "has_terminal",
+      "has_crystals/fluix"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:network/blocks/storage_chest"
+    ]
+  }
+}

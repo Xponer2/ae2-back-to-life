@@ -1,0 +1,87 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_annihilation_core": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:annihilation_core"
+          }
+        ]
+      }
+    },
+    "has_formation_core": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:formation_core"
+          }
+        ]
+      }
+    },
+    "has_illuminated_panel_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:monitor"
+          }
+        ]
+      }
+    },
+    "has_illuminated_panel_1": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:semi_dark_monitor"
+          }
+        ]
+      }
+    },
+    "has_illuminated_panel_2": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:dark_monitor"
+          }
+        ]
+      }
+    },
+    "has_logic_processor": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:logic_processor"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:network/parts/terminals"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_formation_core",
+      "has_illuminated_panel_0",
+      "has_illuminated_panel_1",
+      "has_illuminated_panel_2",
+      "has_logic_processor",
+      "has_annihilation_core"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:network/parts/terminals"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "Devices",
+  "description": "Devices of Applied Energistics 2.",
+  "icon": "ae2:interface",
+  "parent": "items_blocks_machines",
+  "sortnum": 2
+}

@@ -1,0 +1,137 @@
+{
+  "name": "Terminals",
+  "icon": "ae2:crafting_terminal",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 210,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "terminals",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)While $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l)s, $(l:items_blocks_machines/import_bus)ME Import Bus$(/l)ses, $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l)ses, and the et cetera are the primary method by which an AE2 network interacts with the world, Terminals are the primary method by which an AE2 network interacts with $(o)you$(). There are several variants with differing functions."
+    },
+    {
+      "type": "text",
+      "text": "Terminals will inherit the color of the $(l:items_blocks_machines/cables)cable$(/l) they are mounted on.$(br2)They are $(l:ae2_mechanics/cable_subparts)cable subparts$(/l)."
+    },
+    {
+      "type": "text",
+      "title": "Terminal Placement",
+      "anchor": "terminal-placement",
+      "text": "As a terminal is often the first $(l:ae2_mechanics/cable_subparts)subpart$(/l) someone might place, it is common to get it wrong and place the terminal backwards. Here is an example of what to do and what not to do:$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)You still have a terminal and an energy acceptor, except now the terminal is the right way around and actually connected"
+    },
+    {
+      "type": "text",
+      "text": "to the network, and it all fits in a smaller space too."
+    },
+    {
+      "type": "text",
+      "title": "Terminal Search",
+      "anchor": "terminal-ui",
+      "text": "The searchbox accepts Regex terms, so you can, for example, write \"gtceu:.$(o)ore\" to get all ores from Gregtech. Learning Regex is left as an exercise for the reader.$()"
+    },
+    {
+      "type": "text",
+      "title": "Terminal",
+      "anchor": "terminal",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)Your basic terminal, allowing you to view and access the contents of your $(l:ae2_mechanics/import_export_storage)network's storage$(/l) and request things from your $(l:ae2_mechanics/autocrafting)autocrafting$(/l) setup."
+    },
+    {
+      "type": "text",
+      "title": "The UI",
+      "anchor": "the-ui",
+      "text": "There are several sections of a basic terminal's UI$(br2)The center section gives access to your network's storage. You can put things in and take things out. There are several mouse/key shortcuts:$(li)Left-click grabs a stack, right-click grabs half a stack.$(li)If an item or fluid or etc. is able to be $(l:ae2_mechanics/autocrafting)autocrafted$(/l), whatever you have bound to \"pick block\" (usually middle-click) brings up a UI to"
+    },
+    {
+      "type": "text",
+      "text": "specify the amount to be crafted. You can also input formulas like $(#555)3*64/2$(), or type $(#555)=32$() to only craft the number of items needed to reach 32 in your storage.$(li)Holding shift will freeze the displayed items in-place, stopping them from re-organizing themselves when quantities change or new items enter the system.$(li)Right-clicking with a bucket or other fluid container will deposit the fluid, left-clicking a fluid in the terminal with an"
+    },
+    {
+      "type": "text",
+      "text": "empty fluid container will withdraw the fluid.$(br2)The left section has settings buttons to:$(li)Sort by different attributes like name, mod, and quantity$(li)View stored, craftable, or both$(li)View items, fluids, or both$(li)Change the sort order$(li)Open the detailed terminal settings window$(li)Change the height of the terminal UI"
+    },
+    {
+      "type": "text",
+      "text": "On the right there are slots for $(l:items_blocks_machines/view_cell)View Cell$(/l)s$(br2)The top-right of the center section (hammer button) brings up the $(l:ae2_mechanics/autocrafting)autocrafting$(/l) status UI, allowing you to see the progress of your autocrafts and what each $(l:items_blocks_machines/crafting_cpu_multiblock)crafting CPU$(/l) is doing."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/terminals",
+      "anchor": "recipe",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Crafting Terminal",
+      "anchor": "crafting-terminal-ui",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)The Crafting Terminal is similar to a regular terminal, with all the same settings and sections, but with an added crafting grid that will be automatically refilled from $(l:ae2_mechanics/import_export_storage)network storage$(/l). Be careful when shift-clicking the output!$(br2)You should upgrade your terminal into a crafting terminal ASAP."
+    },
+    {
+      "type": "text",
+      "title": "The UI",
+      "anchor": "the-ui",
+      "text": "The crafting terminal has the same UI as the regular terminal, but with an added crafting grid in the middle.$(br2)There are 2 additional buttons, to empty the crafting grid into network storage or your inventory."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/terminals_crafting",
+      "anchor": "recipe",
+      "text": "$(bold)Pattern Encoding Terminal$()$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)The Pattern Encoding Terminal is similar to a regular"
+    },
+    {
+      "type": "text",
+      "text": "terminal, with all the same settings and sections, but with an added $(l:items_blocks_machines/patterns)pattern$(/l) encoding interface. It looks similar to a crafting terminal's UI but this crafting grid doesn't actually perform crafts.$(br2)You should have one of these in addition to a crafting terminal."
+    },
+    {
+      "type": "text",
+      "title": "The UI",
+      "anchor": "the-ui",
+      "text": "The crafting terminal has the same UI as the regular terminal, added $(l:items_blocks_machines/patterns)pattern$(/l) encoding interface.$(br2)The pattern encoding interface has several sections:$(br2)A slot to insert $(l:items_blocks_machines/patterns)Blank Pattern$(/l)s.$(br2)A big arrow to encode the pattern."
+    },
+    {
+      "type": "text",
+      "text": "A slot for encoded patterns. Place a pattern that has already been encoded in this slot in order to edit it, then click the \"encode\" arrow.$(br2)4 tabs on the right to swap the type of pattern to be encoded between$(li)Crafting$(li)Processing$(li)Smithing$(li)Stonecutting$(br2)The central UI changes depending on the type of"
+    },
+    {
+      "type": "text",
+      "text": "pattern to be encoded:$(li)In crafting mode:$(li2)Left-click in or drag from JEI/REI the ingredients to form the recipe. Right-click to remove the ingredient.$(li2)Enabling substitiutions allows things like crafting sticks from any plank type. This should only be used when absolutely necessary.$(li2)Fluid substitutions allows using stored fluids in place of buckets of fluids.$(li2)You can also directly encode a pattern from the"
+    },
+    {
+      "type": "text",
+      "text": "JEI/REI recipe screen.$(li)In processing mode:$(li2)Left-click or right-click in or drag from JEI/REI the ingredients to specify the inputs and outputs of the recipe.$(li2)Right-click with a fluid container (like a bucket or fluid tank) to set that fluid as an ingredient instead of the bucket or tank item.$(li2)When holding a stack, left-click places the whole stack, right-click places one item. Left-click on an existing"
+    },
+    {
+      "type": "text",
+      "text": "ingredient stack to remove the whole stack and right-click to decrement the stack by 1. Whatever you have bound to \"pick block\" (usually middle-click) lets you specify a precise amount of the item or fluid.$(li2)The output slots have a primary output and space for any secondary outputs you might want the autocrafting algorithm to know about.$(li2)Both input and output slots scroll, so you can have 81 different ingredients and 26"
+    },
+    {
+      "type": "text",
+      "text": "secondary outputs$(li2)You can also directly encode a pattern from the JEI/REI recipe screen.$(li)The smithing and stonecutting mode UIs work similarly to a smithing table and stonecutter respectively."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/terminals_pattern_encoding",
+      "anchor": "recipe",
+      "text": "$(bold)Pattern Access Terminal$()$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)The Pattern Access Terminal serves to solve a specific issue: in a dense tower of $(l:items_blocks_machines/pattern_provider)ME$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "$(l:items_blocks_machines/pattern_provider)Pattern Provider$(/l)s and $(l:items_blocks_machines/molecular_assembler)Molecular Assembler$(/l)s, you can't physically access the providers to insert new patterns. Additionally, perhaps you're lazy and don't want to walk across your base to insert a $(l:items_blocks_machines/patterns)pattern$(/l). The pattern access terminal allows access to all pattern providers on the network."
+    },
+    {
+      "type": "text",
+      "title": "The UI",
+      "anchor": "the-ui",
+      "text": "This terminal has a different UI to all the other terminals.$(br2)It has settings for terminal height and which pattern providers to show.$(br2)Each row in the terminal corresponds to a specific pattern provider.$(br2)Pattern providers in the terminal are sorted by what blocks they are connected to, or what name you have given"
+    },
+    {
+      "type": "text",
+      "text": "them (in an anvil or with a $(l:items_blocks_machines/presses)Inscriber Name Press$(/l))."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/terminals_pattern_access",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

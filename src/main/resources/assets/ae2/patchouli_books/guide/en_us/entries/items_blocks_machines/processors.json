@@ -1,0 +1,98 @@
+{
+  "name": "Processors",
+  "icon": "ae2:logic_processor",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "processors",
+      "text": "Processors are one of the primary ingredients in AE2 $(l:ae2_mechanics/devices)devices$(/l) and machines. They are also one of your first big automation challenges. There are three types of processor, made with gold, $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l), and diamond respectively. They are made using $(l:items_blocks_machines/presses)presses$(/l) in an $(l:items_blocks_machines/inscriber)Inscriber$(/l), in a multi-step process (usually achieved via a series of inscribers and filtered piping)."
+    },
+    {
+      "type": "ae2:item_row_3",
+      "item0": "ae2:logic_processor",
+      "item1": "ae2:calculation_processor",
+      "item2": "ae2:engineering_processor",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Production Steps",
+      "anchor": "production-steps",
+      "text": "1. Gather/make the required ingredients: silicon, redstone, gold, $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l), diamond."
+    },
+    {
+      "type": "smelting",
+      "recipe": "ae2:certus_quartz_dust",
+      "text": "2. Press the prerequisite printed circuit components"
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Inscriber",
+      "top": "ae2:silicon_press",
+      "middle": "ae2:silicon,ore:itemSilicon",
+      "bottom": "",
+      "output": "ae2:printed_silicon",
+      "text": "The presses are not used up."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Inscriber",
+      "top": "ae2:logic_processor_press",
+      "middle": "minecraft:gold_ingot,ore:ingotGold",
+      "bottom": "",
+      "output": "ae2:printed_logic_processor",
+      "text": "The presses are not used up."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Inscriber",
+      "top": "ae2:calculation_processor_press",
+      "middle": "ae2:certus_quartz_crystal",
+      "bottom": "",
+      "output": "ae2:printed_calculation_processor",
+      "text": "The presses are not used up."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Inscriber",
+      "top": "ae2:engineering_processor_press",
+      "middle": "minecraft:diamond,ore:gemDiamond",
+      "bottom": "",
+      "output": "ae2:printed_engineering_processor",
+      "text": "The presses are not used up."
+    },
+    {
+      "type": "text",
+      "text": "3. Final assembly"
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Inscriber",
+      "top": "ae2:printed_logic_processor",
+      "middle": "minecraft:redstone",
+      "bottom": "ae2:printed_silicon",
+      "output": "ae2:logic_processor",
+      "text": "All inputs are used up."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Inscriber",
+      "top": "ae2:printed_calculation_processor",
+      "middle": "minecraft:redstone",
+      "bottom": "ae2:printed_silicon",
+      "output": "ae2:calculation_processor",
+      "text": "All inputs are used up."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Inscriber",
+      "top": "ae2:printed_engineering_processor",
+      "middle": "minecraft:redstone",
+      "bottom": "ae2:printed_silicon",
+      "output": "ae2:engineering_processor",
+      "text": "All inputs are used up."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "Misc. Ingredients and Blocks",
+  "description": "Misc. Ingredients and Blocks of Applied Energistics 2.",
+  "icon": "ae2:certus_quartz_crystal",
+  "parent": "items_blocks_machines",
+  "sortnum": 0
+}

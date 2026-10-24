@@ -1,0 +1,65 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_illuminated_panel_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:monitor"
+          }
+        ]
+      }
+    },
+    "has_illuminated_panel_1": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:semi_dark_monitor"
+          }
+        ]
+      }
+    },
+    "has_illuminated_panel_2": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:dark_monitor"
+          }
+        ]
+      }
+    },
+    "has_level_emitter": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:level_emitter"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:network/parts/monitors_storage"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_illuminated_panel_0",
+      "has_illuminated_panel_1",
+      "has_illuminated_panel_2",
+      "has_level_emitter"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:network/parts/monitors_storage"
+    ]
+  }
+}

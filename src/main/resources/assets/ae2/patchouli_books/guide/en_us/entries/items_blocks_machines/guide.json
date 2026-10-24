@@ -1,0 +1,28 @@
+{
+  "name": "Guide",
+  "icon": "ae2:guide",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:guide",
+      "link_recipe": true,
+      "anchor": "the-guide",
+      "text": "$(bold)This guide that you are reading now, for all your AE2 guiding needs.$()$(li)Access the sidebar on the left to find a table of contents$(li)Many pages have interactive scenes. If a scene has and (zoom) buttons next to it, you can rotate and move the camera. Left click and drag to rotate, right click and drag to"
+    },
+    {
+      "type": "text",
+      "text": "translate."
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Charger",
+      "in0": "minecraft:book",
+      "output": "ae2:guide",
+      "machine": "ae2:charger",
+      "text": "",
+      "anchor": "recipe"
+    }
+  ]
+}

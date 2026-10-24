@@ -1,0 +1,35 @@
+{
+  "name": "Color Applicator",
+  "icon": "ae2:color_applicator",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:color_applicator",
+      "link_recipe": true,
+      "anchor": "the-color-applicator",
+      "text": "The color applicator is used to paint colorable blocks like $(l:items_blocks_machines/cables)cables$(/l), wool, terracotta, glass, and concrete. It uses $(l:items_blocks_machines/paintballs)paintballs$(/l) or dyes, and snowballs can be used in order to clean color off of cables and paintball splotches off of blocks.$(br2)Its energy can be recharged in a $(l:items_blocks_machines/charger)Charger$(/l)."
+    },
+    {
+      "type": "text",
+      "text": "Color applicators act like $(l:items_blocks_machines/storage_cells)storage cells$(/l), and their paint storage can most easily be filled by sticking the applicator in the storage cell slot in a $(l:items_blocks_machines/chest)ME Chest$(/l)$(br2)Right-click a target to apply the selected color. To change colors, use your scroll wheel while hold shift, or right-click without a target."
+    },
+    {
+      "type": "text",
+      "title": "Upgrades",
+      "anchor": "upgrades",
+      "text": "Color Applicators support the following $(l:items_blocks_machines/upgrade_cards)upgrades$(/l), inserted via a $(l:items_blocks_machines/cell_workbench)Cell Workbench$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Equal Distribution Card$(/l) allocates the same amount of cell byte space to each type, so one type cannot fill up the entire cell$(li)$(l:items_blocks_machines/upgrade_cards)Overflow Destruction Card$(/l) voids items inserted if the cell is full (or that specific type's allocated space in the case of an equal distribution card). Be careful to partition this!"
+    },
+    {
+      "type": "text",
+      "text": "$(li)$(l:items_blocks_machines/upgrade_cards)Energy Card$(/l) in order to increase their battery capacity"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/network_color_applicator",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

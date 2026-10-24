@@ -1,0 +1,48 @@
+{
+  "name": "Energy Cells",
+  "icon": "ae2:energy_cell",
+  "category": "items_blocks_machines/network_infrastructure",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "energy-cells",
+      "text": "Energy cells give a network more $(l:ae2_mechanics/energy)energy$(/l) storage. Some amount of energy buffer helps to smooth out spikes in energy draw when large amounts of items are inserted or extracted, and larger amounts of energy storage allow the network to run while energy isn't being generated (like at night with solar panels) or handle the massive instantaneous energy draw of $(l:ae2_mechanics/spatial_io)spatial storage$(/l)."
+    },
+    {
+      "type": "ae2:item_row_3",
+      "item0": "ae2:energy_cell",
+      "item1": "ae2:dense_energy_cell",
+      "item2": "ae2:creative_energy_cell",
+      "text": ""
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:energy_cell",
+      "link_recipe": true,
+      "anchor": "fill-bars",
+      "text": "The bars on the side of a cell correspond to how much energy it has.$(li)0 when below 25% charge$(li)1 when between 25% and 50% charge$(li)2 when between 50% and 75% charge$(li)3 when between 75% and 99% charge$(li)4 when above 99% charge"
+    },
+    {
+      "type": "text",
+      "title": "Types Of Cell",
+      "anchor": "types-of-cell",
+      "text": "$(li)The $(item)Energy Cell$() can store 200k AE, and just one should be sufficient for most use cases, handling the power surges of normal network use with ease.$(li)The $(item)Dense Energy Cell$() can store 1.6M AE and is for when you want to run a network off of stored power, or handle the massive instantaneous energy draw of large $(l:ae2_mechanics/spatial_io)spatial storage$(/l) setups."
+    },
+    {
+      "type": "text",
+      "text": "$(li)The $(item)Creative Energy Cell$() is a creative item for testing, providing UNLIMITED POWAHHHH or whatever."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/energy_energy_cell",
+      "anchor": "recipes",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/energy_dense_energy_cell",
+      "text": ""
+    }
+  ]
+}

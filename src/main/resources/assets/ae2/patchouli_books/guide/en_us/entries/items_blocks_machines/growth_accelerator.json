@@ -1,0 +1,71 @@
+{
+  "name": "Growth Accelerator",
+  "icon": "ae2:growth_accelerator",
+  "category": "items_blocks_machines/machines",
+  "sortnum": 310,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:growth_accelerator",
+      "link_recipe": true,
+      "anchor": "the-growth-accelerator",
+      "text": "The Growth Accelerator massively accelerates $(l:ae2_mechanics/certus_growth)the growth of$(/l) certus or amethyst when placed adjacent to the budding block.$(br2)Curiously, it can $(o)also$() accelerate the growth of various plants.$(br2)It does this by applying \"random ticks\" to the adjacent"
+    },
+    {
+      "type": "text",
+      "text": "blocks, in addition to the random ticks that happen naturally. In theory this means 1 accelerator should make things grow ~90x faster than normal, and the effect stacks additively."
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "   ",
+            "   ",
+            " L ",
+            "   "
+          ],
+          [
+            " E ",
+            "FG ",
+            "HIJ",
+            " K "
+          ],
+          [
+            "0A ",
+            "BCB",
+            " D ",
+            "   "
+          ]
+        ],
+        "mapping": {
+          "A": "minecraft:farmland[moisture=4]",
+          "B": "minecraft:dirt",
+          "C": "ae2:creative_energy_cell",
+          "D": "minecraft:double_stone_slab[seamless=true]",
+          "E": "minecraft:wheat[age=7]",
+          "F": "minecraft:sapling[type=oak,stage=1]",
+          "G": "ae2:growth_accelerator[facing=up,powered=true]",
+          "H": "ae2:quartz_cluster[facing=north]",
+          "I": "ae2:flawless_budding_quartz",
+          "J": "ae2:quartz_cluster[facing=south]",
+          "K": "ae2:quartz_cluster[facing=east]",
+          "L": "ae2:quartz_cluster[facing=up]"
+        }
+      },
+      "text": "Power can be provided via the top or bottom, via either AE2's $(l:items_blocks_machines/cables)cables$(/l), or other mod power"
+    },
+    {
+      "type": "text",
+      "text": "cables. It can accept either AE2's power (AE) or Forge Energy (FE).$(br2)To power it manually, place a $(l:items_blocks_machines/crank)Wooden Crank$(/l) on the top or bottom and right-click it.$(br2)The top and the bottom can be identified by the pink flux greebles on them.$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/crystal_processing_growth_accelerator",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

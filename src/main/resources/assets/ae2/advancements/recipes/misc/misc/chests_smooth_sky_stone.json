@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_smooth_sky_stone_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:smooth_sky_stone_block"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:misc/chests_smooth_sky_stone"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_smooth_sky_stone_block"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:misc/chests_smooth_sky_stone"
+    ]
+  }
+}

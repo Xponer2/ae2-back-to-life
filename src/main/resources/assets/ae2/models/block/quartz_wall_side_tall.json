@@ -1,0 +1,6 @@
+{
+  "parent": "ae2:block/template_wall_side_tall",
+  "textures": {
+    "wall": "ae2:block/quartz_block"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "Cell Workbench",
+  "icon": "ae2:cell_workbench",
+  "category": "items_blocks_machines/machines",
+  "sortnum": 310,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:cell_workbench",
+      "link_recipe": true,
+      "anchor": "the-cell-workbench",
+      "text": "The Cell Workbench allows you to configure $(l:items_blocks_machines/storage_cells)storage cells$(/l) and $(l:items_blocks_machines/view_cell)View Cell$(/l)s.$(br2)You can add $(l:items_blocks_machines/upgrade_cards)upgrade cards$(/l) and configure \"partitions\" to filter what the cell will store.$(br2)Items and fluids can be dragged into the slots from JEI/REI even if you don't actually have any of that item."
+    },
+    {
+      "type": "text",
+      "text": "Right-click with a fluid container (like a bucket or fluid tank) to set that fluid as a filter instead of the bucket or tank item."
+    },
+    {
+      "type": "text",
+      "title": "Settings",
+      "anchor": "settings",
+      "text": "The cell workbench has a few buttons on the top-left:$(li)You can partition a cell based on its existing contents$(li)You can clear the cell's partitioning$(li)The workbench can be set to retain the partition settings when the cell is removed, allowing you to copy settings between cells."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/cell_workbench",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

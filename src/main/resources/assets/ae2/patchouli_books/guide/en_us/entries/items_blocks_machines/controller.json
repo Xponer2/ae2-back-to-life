@@ -1,0 +1,135 @@
+{
+  "name": "Controller",
+  "icon": "ae2:controller",
+  "category": "items_blocks_machines/network_infrastructure",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:controller",
+      "link_recipe": true,
+      "anchor": "the-controller",
+      "text": "The controller is the routing hub of a $(l:ae2_mechanics/me_network_connections)ME Network$(/l). Without it, a network is \"ad-hoc\" and can only have a max of 8 channel-using $(l:ae2_mechanics/devices)devices$(/l) total.$(br2)It is not possible to have 2 controllers in one $(l:ae2_mechanics/me_network_connections)ME Network$(/l).$(br2)The controller provides 32 $(l:ae2_mechanics/channels)Channels$(/l) per face."
+    },
+    {
+      "type": "text",
+      "text": "The controller requires 6 AE/t per controller block to function. Each controller block can store 8000 AE, so larger networks might require additional energy storage. See $(l:ae2_mechanics/energy)energy$(/l) for details.$(br2)Multiblock Controllers can be built in a fairly free form."
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "ABBBA",
+            "C   C",
+            "C   C",
+            "C   C",
+            "ABBBA",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     "
+          ],
+          [
+            "D   D",
+            "     ",
+            "     ",
+            "     ",
+            "D   D",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     "
+          ],
+          [
+            "D   D",
+            "     ",
+            "     ",
+            "     ",
+            "D   D",
+            "     ",
+            "     ",
+            "     ",
+            "    A",
+            "     ",
+            "    A",
+            "    C",
+            "    A",
+            "     ",
+            "    A"
+          ],
+          [
+            "D   D",
+            "     ",
+            "     ",
+            "     ",
+            "D   D",
+            "     ",
+            "     ",
+            "     ",
+            "    D",
+            "     ",
+            "     ",
+            "    A",
+            "     ",
+            "     ",
+            "    D"
+          ],
+          [
+            "0BBBA",
+            "C   C",
+            "C   C",
+            "C   C",
+            "ABBBA",
+            "     ",
+            "    A",
+            "    C",
+            "  ABA",
+            "     ",
+            "ABA  ",
+            "C C  ",
+            "ABA  ",
+            "     ",
+            " A  A"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:controller[state=online,type=block]",
+          "B": "ae2:controller[state=online,type=column_z]",
+          "C": "ae2:controller[state=online,type=column_x]",
+          "D": "ae2:controller[state=online,type=column_y]",
+          "0": "ae2:controller[state=online,type=block]"
+        }
+      },
+      "text": "However, there are a few rules that must be followed:"
+    },
+    {
+      "type": "text",
+      "text": "1. All controller blocks on a $(l:ae2_mechanics/me_network_connections)ME Network$(/l) must be connected; else the blocks will turn red.$(br2)2. The size of the controller must be within 7x7x7; else it will turn red.$(br2)3. A controller can have 2 adjacent blocks in at most 1 axis; if a block violates this rule, it will disable and turn red.$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "text": "As long as all rules are followed and powered, the controller should glow and cycle colors.$(br2)You can right-click on a controller to get the same GUI as a $(l:items_blocks_machines/network_tool)Network Tool$(/l)"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/controller",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "name": "Energy Acceptor",
+  "icon": "ae2:energy_acceptor",
+  "category": "items_blocks_machines/network_infrastructure",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:energy_acceptor",
+      "link_recipe": true,
+      "anchor": "the-energy-acceptor",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)The energy acceptor converts common forms of energy from other tech mods into AE2's internal form of $(l:ae2_mechanics/energy)energy$(/l), AE. While the $(l:items_blocks_machines/controller)ME Controller$(/l) can also do this, controller faces are valuable so it's often better to use an energy acceptor instead."
+    },
+    {
+      "type": "text",
+      "text": "The ratios for conversion of Forge Energy and Techreborn Energy are$(li)2 FE = 1 AE (Forge)$(li)1 E = 2 AE (Fabric)$(br2)The speed of conversion is entirely dependent on how much AE your network can store, for reasons that are explained on $(l:ae2_mechanics/energy)this page$(/l)."
+    },
+    {
+      "type": "text",
+      "title": "Variants",
+      "anchor": "variants",
+      "text": "Energy acceptors come in 2 different variants: normal and flat/$(l:ae2_mechanics/cable_subparts)subpart$(/l). This allows you to make some setups more compact.$(br2)Energy acceptors can be swapped between normal and flat in a crafting grid."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/energy_energy_acceptor",
+      "recipe2": "ae2:network/blocks/energy_energy_acceptor_alt",
+      "anchor": "recipe"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/energy_acceptor",
+      "text": ""
+    }
+  ]
+}

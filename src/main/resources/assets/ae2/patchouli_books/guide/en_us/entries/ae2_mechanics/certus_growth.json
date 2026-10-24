@@ -1,0 +1,142 @@
+{
+  "name": "Certus Growth",
+  "icon": "ae2:quartz_cluster",
+  "category": "ae2_mechanics",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "certus-growth",
+      "text": "$(bold)Basically just copy-pasted from the getting started page$()"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "B"
+          ],
+          [
+            "0"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:flawless_budding_quartz",
+          "B": "ae2:small_quartz_bud[facing=up]",
+          "0": "ae2:flawless_budding_quartz"
+        }
+      },
+      "text": "Certus quartz buds will sprout from $(l:items_blocks_machines/budding_certus)budding certus blocks$(/l), similar to amethyst. If you"
+    },
+    {
+      "type": "text",
+      "text": "break a bud that is not finished growing, it will drop one $(l:items_blocks_machines/certus_quartz_dust)Certus Quartz Dust$(/l), unchanged by fortune. If you break a fully grown cluster, it will drop four $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l)s, and fortune will increase this number.$(br2)There are 4 tiers of budding certus blocks: Flawless, Flawed, Chipped, and Damaged, and you initially find them in $(l:ae2_mechanics/meteorites)meteorites$(/l)."
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          [
+            "0",
+            "B",
+            "C",
+            "D"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:flawless_budding_quartz",
+          "B": "ae2:flawed_budding_quartz",
+          "C": "ae2:chipped_budding_quartz",
+          "D": "ae2:damaged_budding_quartz",
+          "E": "ae2:quartz_cluster[facing=up]",
+          "F": "ae2:large_quartz_bud[facing=up]",
+          "G": "ae2:medium_quartz_bud[facing=up]",
+          "H": "ae2:small_quartz_bud[facing=up]",
+          "0": "ae2:flawless_budding_quartz"
+        }
+      },
+      "text": "Every time a bud grows by another stage, the budding block has a chance to degrade"
+    },
+    {
+      "type": "text",
+      "text": "by one tier, eventually turning into a plain certus quartz block. They can be repaired (and new budding blocks created) by throwing the budding block (or a certus quartz block) in water with one or more $(l:items_blocks_machines/certus_quartz_crystal_charged)Charged Certus Quartz Crystal$(/l)."
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Throw in Water",
+      "in0": "ae2:charged_certus_quartz_crystal",
+      "in1": "ae2:quartz_block",
+      "output": "ae2:damaged_budding_quartz",
+      "machine": "minecraft:water_bucket",
+      "text": "Throw the items into water together."
+    },
+    {
+      "type": "text",
+      "text": "Flawless budding certus blocks will not degrade and will generate certus infinitely. However they cannot be crafted or moved with a pickaxe, even with silk touch. (they $(o)can$() be moved with $(l:ae2_mechanics/spatial_io)spatial storage$(/l) though)$(br2)By themselves, certus quartz buds grow very slowly. Luckily the $(l:items_blocks_machines/growth_accelerator)Growth Accelerator$(/l) massively accelerates this process when placed adjacent to the budding block. You should build a few of these as"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "   ",
+            " F ",
+            "   "
+          ],
+          [
+            "0A ",
+            "BCD",
+            " E "
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:growth_accelerator[facing=up,powered=true]",
+          "B": "ae2:quartz_cluster[facing=north]",
+          "C": "ae2:flawless_budding_quartz",
+          "D": "ae2:quartz_cluster[facing=south]",
+          "E": "ae2:quartz_cluster[facing=east]",
+          "F": "ae2:quartz_cluster[facing=up]"
+        }
+      },
+      "text": "your first priority."
+    },
+    {
+      "type": "text",
+      "text": "Complex interactions mean each side of a budding block which is covered slows the cumulative growth rate from the budding block, which eventually overpowers the effect of more accelerators. Empirical testing shows thus:"
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/certus_farm_speed_chart_1.png"
+      ],
+      "border": true,
+      "title": "Items/min for ratios",
+      "text": ""
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/certus_farm_speed_chart_2.png"
+      ],
+      "border": true,
+      "title": "common setups",
+      "text": "If you don't have enough quartz to also make an $(l:items_blocks_machines/energy_acceptor)Energy Acceptor$(/l) or $(l:items_blocks_machines/vibration_chamber)Vibration Chamber$(/l),"
+    },
+    {
+      "type": "text",
+      "text": "you can make a $(l:items_blocks_machines/crank)Wooden Crank$(/l) and stick it on the end of your accelerator.$(br2)Harvesting the certus automatically is $(l:example_setups/simple_certus_farm)described here$(/l)."
+    }
+  ]
+}

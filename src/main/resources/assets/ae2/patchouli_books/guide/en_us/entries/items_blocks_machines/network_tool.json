@@ -1,0 +1,35 @@
+{
+  "name": "Network Tool",
+  "icon": "ae2:network_tool",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:network_tool",
+      "link_recipe": true,
+      "anchor": "network-tool",
+      "text": "The Network Tool is a modified $(l:items_blocks_machines/wrench)wrench$(/l) that also shows network diagnostic information and can store $(l:items_blocks_machines/upgrade_cards)upgrade cards$(/l). While it retains the wrench's ability to quickly disassemble things and pull $(l:ae2_mechanics/cable_subparts)subparts$(/l) off of a cable, it cannot rotate things.$(br2)It has 9 slots in which to store $(l:items_blocks_machines/upgrade_cards)upgrade cards$(/l), and they will be available in any AE2"
+    },
+    {
+      "type": "text",
+      "text": "device UI if the tool is anywhere in your inventory.$(br2)Right-clicking any part of a network will show a diagnostic info window, similar to right-clicking a $(l:items_blocks_machines/controller)ME Controller$(/l). This window shows$(li)The amount of channels in-use on the network$(li)A toggle for the global setting to view energy in AE or E/FE$(li)The amount of $(l:ae2_mechanics/energy)energy$(/l) stored in the network, and the network's maximum energy"
+    },
+    {
+      "type": "text",
+      "text": "capacity$(li)The amount of energy entering and being used by the network$(li)A list of all the $(l:ae2_mechanics/devices)devices$(/l) and components on the network$(br2)This window is also helpful for figuring out if two different cables or devices are part of the same network when messing around with $(l:ae2_mechanics/subnetworks)Subnetworks$(/l)."
+    },
+    {
+      "type": "text",
+      "title": "Hiding Facades",
+      "anchor": "hiding-facades",
+      "text": "$(l:items_blocks_machines/facades)Facades$(/l) will be hidden while holding a network tool in either hand.$(br2)You can interact with blocks behind hidden facades without having to remove the facades first."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/network_tool",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

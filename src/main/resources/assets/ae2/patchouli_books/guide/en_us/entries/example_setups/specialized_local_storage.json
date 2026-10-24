@@ -1,0 +1,37 @@
+{
+  "name": "Specialized Local Storage",
+  "icon": "ae2:drive",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "specialized-local-storage",
+      "text": "Utilizing one of the $(l:items_blocks_machines/interface#special-interactions)special behaviors of the Interface$(/l), a $(l:ae2_mechanics/subnetworks)subnetwork$(/l) can present the contents of its storage to the main network, without being able to see the main network's storage, and taking up only 1 $(l:ae2_mechanics/channels)channel$(/l).$(br2)This is useful for local storage at some farm, so that the items will not overflow into your main storage."
+    },
+    {
+      "type": "text",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Configurations",
+      "anchor": "configurations",
+      "text": "$(li)The first $(l:items_blocks_machines/interface)ME Interface$(/l) (1) simply accepts items from whatever farm you have and pushes them into the subnet.$(li)The $(l:items_blocks_machines/drive)ME Drive$(/l) (2) has some $(l:items_blocks_machines/storage_cells)cells$(/l) in it. The cells should be $(l:items_blocks_machines/cell_workbench)partitioned$(/l) to whatever the farm outputs. The cells can have $(l:items_blocks_machines/upgrade_cards)Equal Distribution Card$(/l)s and $(l:items_blocks_machines/upgrade_cards)Overflow Destruction Card$(/l)s.$(li)The second $(l:items_blocks_machines/interface)ME Interface$(/l) (4) is in its default configuration."
+    },
+    {
+      "type": "text",
+      "text": "$(li)The $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) has its $(l:ae2_mechanics/import_export_storage#storage-priority)priority$(/l) set higher than the main storage. It can be filtered to whatever the farm outputs."
+    },
+    {
+      "type": "text",
+      "title": "How It Works",
+      "anchor": "how-it-works",
+      "text": "$(li)The $(l:items_blocks_machines/interface)ME Interface$(/l) on the subnet shows the $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) on the main network the contents of the $(l:items_blocks_machines/drive)ME Drive$(/l). This means the storage bus can directly pull items from and push items to the cells in the drive.$(li)The storage bus is set to high $(l:ae2_mechanics/import_export_storage#storage-priority)priority$(/l) so that items are preferentially put back in the subnet instead of in your main storage."
+    },
+    {
+      "type": "text",
+      "text": "$(li)Importantly, if the cells in the subnet fill up, the items will not overflow into the main network. If the farm is of a type that breaks if it backs up, $(l:items_blocks_machines/upgrade_cards)Overflow Destruction Card$(/l)s can be used to delete the excess items instead.$(li)If the farm outputs multiple items, $(l:items_blocks_machines/upgrade_cards)Equal Distribution Card$(/l)s can stop one item from filling all the cells and not letting the other items be stored."
+    }
+  ]
+}

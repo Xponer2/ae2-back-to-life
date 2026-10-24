@@ -1,0 +1,41 @@
+{
+  "name": "Spatial Anchor",
+  "icon": "ae2:spatial_anchor",
+  "category": "items_blocks_machines/network_infrastructure",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:spatial_anchor",
+      "link_recipe": true,
+      "anchor": "the-spatial-anchor",
+      "text": "An AE2 network needs to be chunkloaded for any of its $(l:ae2_mechanics/devices)devices$(/l) to be able to function, and if only some of it is loaded, it may not function correctly. The Spatial Anchor solves this problem. It forceloads the chunks that its network occupies. A single cable extending across a chunk border is enough to load that new chunk."
+    },
+    {
+      "type": "text",
+      "text": "It will propagate its \"loading\" across $(l:items_blocks_machines/quantum_bridge)quantum bridges$(/l), but not cross-dimensionally, so if you have a quantum bridge to the nether, you need a spatial anchor on the network in your base and on the network in the nether.$(br2)By default it will also enable random ticks in its loaded chunks, this can be turned off in the ae2 config.$(br2)It can be rotated with a $(l:items_blocks_machines/wrench)Certus Quartz Wrench$(/l) if for"
+    },
+    {
+      "type": "text",
+      "text": "some reason you want to do that."
+    },
+    {
+      "type": "text",
+      "title": "Settings",
+      "anchor": "settings",
+      "text": "$(li)The spatial anchor provides access to the global setting to view energy in AE or E/FE.$(li)An in-world hologram can be displayed showing the chunks being loaded."
+    },
+    {
+      "type": "text",
+      "title": "Energy",
+      "anchor": "energy",
+      "text": "The spatial anchor will use $(l:ae2_mechanics/energy)energy$(/l) according to this equation:$(br2)e = 80 + (x\\$(o)(x+1))/2$()$(br2)where x is the number of chunks being loaded"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/spatial_anchor",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

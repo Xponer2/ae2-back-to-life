@@ -1,0 +1,252 @@
+{
+  "name": "Storage Cells",
+  "icon": "ae2:item_storage_cell_1k",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "storage-cells",
+      "text": "Storage Cells are one of the primary methods of storage in Applied Energistics. They go in $(l:items_blocks_machines/drive)ME Drive$(/l)s or $(l:items_blocks_machines/chest)ME Chest$(/l)s.$(br2)See $(l:ae2_mechanics/bytes_and_types)Bytes and Types$(/l) for an explanation of their capacities in bytes and types.$(br2)Storage components can be removed from the housing if the cell is empty by shift-right clicking with the cell in your hand."
+    },
+    {
+      "type": "ae2:item_row_5",
+      "item0": "ae2:item_storage_cell_1k",
+      "item1": "ae2:item_storage_cell_4k",
+      "item2": "ae2:item_storage_cell_16k",
+      "item3": "ae2:item_storage_cell_64k",
+      "item4": "ae2:item_storage_cell_256k",
+      "text": ""
+    },
+    {
+      "type": "ae2:item_row_5",
+      "item0": "ae2:fluid_storage_cell_1k",
+      "item1": "ae2:fluid_storage_cell_4k",
+      "item2": "ae2:fluid_storage_cell_16k",
+      "item3": "ae2:fluid_storage_cell_64k",
+      "item4": "ae2:fluid_storage_cell_256k",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "anchor": "storage-capacity-with-varying-type-count",
+      "text": "You can upgrade storage cells to higher tiers by combining them with higher-tier storage components in a crafting grid. Their content will be retained, and the lower-tier component is returned.$(br2)$(bold)Storage Capacity with Varying Type Count$()$(br2)The $(l:ae2_mechanics/bytes_and_types)upfront cost of types$(/l) is such that a cell holding 1 type can hold 2x as much as a cell with all 63 types in use."
+    },
+    {
+      "type": "text",
+      "text": "$(li)$(item)$(bold)1k ME Item Storage Cell$(): Total Capacity of Cell With 1 Type In Use 8,128; Total Capacity of Cell With 63 Types In Use 4,160$(li)$(item)$(bold)4k ME Item Storage Cell$(): Total Capacity of Cell With 1 Type In Use 32,512; Total Capacity of Cell With 63 Types In Use 16,640$(li)$(item)$(bold)16k ME Item Storage Cell$(): Total Capacity of Cell With 1 Type In Use 130,048; Total Capacity of Cell With 63 Types In Use 66,560"
+    },
+    {
+      "type": "text",
+      "text": "$(li)$(item)$(bold)64k ME Item Storage Cell$(): Total Capacity of Cell With 1 Type In Use 520,192; Total Capacity of Cell With 63 Types In Use 266,240$(li)$(item)$(bold)256k ME Item Storage Cell$(): Total Capacity of Cell With 1 Type In Use 2,080,768; Total Capacity of Cell With 63 Types In Use 1,064,960"
+    },
+    {
+      "type": "text",
+      "title": "Partitioning",
+      "anchor": "partitioning",
+      "text": "Cells can be filtered to only accept certain items, similar to how $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l)ses can be filtered. This is done in a $(l:items_blocks_machines/cell_workbench)Cell Workbench$(/l).$(br2)Items can be dragged into the slots from JEI/REI even if you don't actually have any of that item."
+    },
+    {
+      "type": "text",
+      "title": "Upgrades",
+      "anchor": "upgrades",
+      "text": "Storage cells support the following $(l:items_blocks_machines/upgrade_cards)upgrades$(/l), inserted via a $(l:items_blocks_machines/cell_workbench)Cell Workbench$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Fuzzy Card$(/l) (not available on fluid cells) lets the cell be partitioned by damage level and/or ignore item NBT$(li)$(l:items_blocks_machines/upgrade_cards)Inverter Card$(/l) switches the filter from a whitelist to a blacklist$(li)$(l:items_blocks_machines/upgrade_cards)Equal Distribution Card$(/l) allocates the same amount of cell byte space to each type, so one type cannot fill up the entire cell"
+    },
+    {
+      "type": "text",
+      "text": "$(li)$(l:items_blocks_machines/upgrade_cards)Overflow Destruction Card$(/l) voids items inserted if the cell is full (or that specific type's allocated space in the case of an equal distribution card), useful for stopping farms from backing up. Be careful to partition this!$(li)Portable cells can accept $(l:items_blocks_machines/upgrade_cards)Energy Card$(/l) in order to increase their battery capacity"
+    },
+    {
+      "type": "text",
+      "title": "Coloring",
+      "anchor": "coloring",
+      "text": "Portable item and fluid cells can be colored similar to leather armor, by crafting them together with dyes."
+    },
+    {
+      "type": "text",
+      "title": "Housings",
+      "anchor": "housings",
+      "text": "Cells can be made with a storage component and a housing or with the housing recipe around a storage component:"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_cell_1k",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_cell_1k_storage",
+      "text": "Housings by themselves are crafted like so:"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_cell_housing",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/fluid_cell_housing",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Storage Components",
+      "anchor": "storage-components",
+      "text": "Storage Components are the core of all AE2 cells, determining the capacity of the cells. Each tier increases the capacity by 4x and costs 3 of the previous tier."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_components_cell_1k_part",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_components_cell_4k_part",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_components_cell_16k_part",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_components_cell_64k_part",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_components_cell_256k_part",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Item Storage Cells",
+      "anchor": "item-storage-cells",
+      "text": "Item storage cells can hold up to 63 distinct types of items, and are available in all the standard capacities."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_cell_1k_storage",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_cell_4k_storage",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_cell_16k_storage",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_cell_64k_storage",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_cell_256k_storage",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Portable Item Storage",
+      "anchor": "portable-item-storage",
+      "text": "These act as a tiny $(l:items_blocks_machines/chest)ME Chest$(/l) in your pocket, or like a form of backpack. They can be charged in a $(l:items_blocks_machines/charger)Charger$(/l)$(br2)Unlike standard storage cells, these actually $(o)reduce$() in type capacity as their byte capacity increases, and have half the total byte capacity.$(br2)In addition to the upgrade cards all cells can receive, these also accept $(l:items_blocks_machines/upgrade_cards)Energy Card$(/l)s to upgrade their"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_item_cell_1k",
+      "text": "internal batteries."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_item_cell_4k",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_item_cell_16k",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_item_cell_64k",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_item_cell_256k",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Fluid Storage Cells",
+      "anchor": "fluid-storage-cells",
+      "text": "Fluid storage cells can hold up to 5 distinct types of fluids, and are available in all the standard capacities."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/fluid_storage_cell_1k_storage",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/fluid_storage_cell_4k_storage",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/fluid_storage_cell_16k_storage",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/fluid_storage_cell_64k_storage",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/fluid_storage_cell_256k_storage",
+      "anchor": "portable-fluid-storage",
+      "text": "$(bold)Portable Fluid Storage$()$(br2)These act as a tiny $(l:items_blocks_machines/chest)ME Chest$(/l) in your pocket, or like a form of backpack. They can be charged in a $(l:items_blocks_machines/charger)Charger$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "Unlike standard storage cells, these actually $(o)reduce$() in type capacity as their byte capacity increases, and have half the total byte capacity.$(br2)In addition to the upgrade cards all cells can receive, these also accept $(l:items_blocks_machines/upgrade_cards)Energy Card$(/l)s to upgrade their internal batteries."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_fluid_cell_1k",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_fluid_cell_4k",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_fluid_cell_16k",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_fluid_cell_64k",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_fluid_cell_256k",
+      "text": ""
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:creative_storage_cell",
+      "anchor": "creative-storage-cell",
+      "text": "Creative cells $(bold)do not provide infinite storage$(). Instead, they act as infinite sources and sinks of whatever item or fluid you $(l:items_blocks_machines/cell_workbench)partition$(/l) them to."
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "name": "Item/Fluid \"Pipe\" Subnet",
+  "icon": "ae2:storage_bus",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "itemfluid-pipe-subnet",
+      "text": "A simple method of emulating an item and/or fluid pipe with AE2 $(l:ae2_mechanics/devices)devices$(/l), useful for, well, anything you'd use an item or fluid pipe for. This includes returning the result of a craft to a $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l).$(br2)There are generally two different methods of achieving this:$(br2)$(bold)Import Bus -> Storage Bus$()"
+    },
+    {
+      "type": "text",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)The $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) (1) on the source inventory imports the items or fluid, and attempts to store them in $(l:ae2_mechanics/import_export_storage)network storage$(/l). Since the only storage on the network is the $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (2) (which is why this is a subnet and not on your main network), the items or fluid are placed in the destination inventory, thus being transferred. Energy is provided through a $(l:items_blocks_machines/quartz_fiber)Quartz$(/l)"
+    },
+    {
+      "type": "text",
+      "anchor": "storage-bus---export-bus",
+      "text": "$(l:items_blocks_machines/quartz_fiber)Fiber$(/l). Both the import bus and storage bus can be filtered, but the setup will transfer everything it can access if no filters are applied. This setup also works with multiple import busses and multiple storage busses.$(br2)$(bold)Storage Bus -> Export Bus$()$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "text": "The $(l:items_blocks_machines/export_bus)ME Export Bus$(/l) on the destination inventory attempts to pull items in its filter from $(l:ae2_mechanics/import_export_storage)network storage$(/l). Since the only storage on the network is the $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (which is why this is a subnet and not on your main network), the items or fluid are pulled from the source inventory, thus being transferred. Energy is provided through a $(l:items_blocks_machines/quartz_fiber)Quartz Fiber$(/l). Because export busses must be filtered to function, this setup only operates if you filter the export bus. This"
+    },
+    {
+      "type": "text",
+      "anchor": "a-setup-that-does-not-work-import-bus---export-bus",
+      "text": "setup also works with multiple storage busses and multiple export busses.$(br2)$(bold)A Setup That Does Not Work (Import Bus -> Export Bus)$()$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)A setup with just an import and export bus will not work. The import bus will attempt to pull from the source inventory and store the items or fluid in"
+    },
+    {
+      "type": "text",
+      "anchor": "inputting-and-outputting-through-1-face",
+      "text": "network storage. The export bus will attempt to pull from network storage and put the items or fluid in the destination inventory. However since this network $(bold)has no storage$(), the import bus can't import and the export bus can't export, so nothing happens.$(br2)$(bold)Inputting And Outputting Through 1 Face$()$(br2)Say you have some machine that can receive input and have its output pulled through"
+    },
+    {
+      "type": "text",
+      "text": "1 face. (Like a $(l:items_blocks_machines/charger)Charger$(/l)) You can both push in the ingredients and pull out the result, by combining the 2 pipe subnet methods:$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Interfaces",
+      "anchor": "interfaces",
+      "text": "It turns out there are $(l:ae2_mechanics/devices)devices$(/l) besides import busses and export busses that push items into and pull items out of $(l:ae2_mechanics/import_export_storage)network storage$(/l)! Of relevance here is the $(l:items_blocks_machines/interface)ME Interface$(/l). If an item is inserted that the interface is not set to stock, the interface will push it to network storage, which we can exploit similarly to the import bus -> storage bus pipe. Setting an interface to stock some item will pull it from network storage, similar to the"
+    },
+    {
+      "type": "text",
+      "anchor": "one-to-many-and-many-to-one-and-many-to-many",
+      "text": "storage bus -> export bus pipe. Interfaces can be set to stock some things and not stock others, allowing you to remotely push and pull through storage busses, if you for some reason want to do that.$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)$(bold)One-To-Many and Many-To One (and many-to-many)$()$(br2)Of course, you don't have to use just one $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) or"
+    },
+    {
+      "type": "text",
+      "anchor": "providing-to-multiple-places",
+      "text": "$(l:items_blocks_machines/export_bus)ME Export Bus$(/l) or $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l)$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)$(bold)Providing To Multiple Places$()$(br2)From all this, we can derive a method to send ingredients from one $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l) face to many different locations, like an array of machines, or several different faces of one machine."
+    },
+    {
+      "type": "text",
+      "text": "We don't want an import -> storage pipe or a storage -> export pipe because the $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l) never actually contains the ingredients. Instead, providers $(o)push$() the ingredients to adjacent inventories, so we need some adjacent inventory that can also import items.$(br2)This sounds like... an $(l:items_blocks_machines/interface)ME Interface$(/l)! Make sure the provider is in directional or flat subpart mode and/or the interface is in flat subpart"
+    },
+    {
+      "type": "text",
+      "text": "mode, so the two don't form a network connection.$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    }
+  ]
+}

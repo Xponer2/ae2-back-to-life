@@ -1,0 +1,47 @@
+{
+  "name": "Vibration Chamber",
+  "icon": "ae2:vibration_chamber",
+  "category": "items_blocks_machines/network_infrastructure",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:vibration_chamber",
+      "link_recipe": true,
+      "anchor": "the-vibration-chamber",
+      "text": "While the primary intended method of providing $(l:ae2_mechanics/energy)energy$(/l) to your network is an $(l:items_blocks_machines/energy_acceptor)Energy Acceptor$(/l), the vibration chamber can directly generate small to middling amounts of AE.$(br2)By default (no $(l:items_blocks_machines/upgrade_cards)upgrades$(/l) and default configs) it makes 40 AE/t."
+    },
+    {
+      "type": "text",
+      "text": "When the network's $(l:ae2_mechanics/energy)energy$(/l) storage is full, the vibration chamber throttles down to conserve fuel, but cannot fully shut off."
+    },
+    {
+      "type": "text",
+      "title": "Settings",
+      "anchor": "settings",
+      "text": "$(li)The vibration chamber provides access to the global setting to view energy in AE or E/FE."
+    },
+    {
+      "type": "text",
+      "title": "Upgrades",
+      "anchor": "upgrades",
+      "text": "The vibration chamber supports the following $(l:items_blocks_machines/upgrade_cards)upgrades$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Energy Card$(/l) increases the efficiency of the chamber by +50%, for a max of +150%, or 250% of the base efficiency.$(li)$(l:items_blocks_machines/upgrade_cards)Acceleration Card$(/l) increases the burn rate of the chamber by +50%, for a max of +150%, or 250% of the base power output."
+    },
+    {
+      "type": "text",
+      "title": "Config",
+      "anchor": "config",
+      "text": "The properties of the vibration chamber can be edited in common.json in the ae2 folder in the config folder of your .minecraft\\ directory.$(li)baseEnergyPerFuelTick sets the base, un-upgraded efficiency of the vibration chamber.$(li)minEnergyPerGameTick sets the lowest possible energy generation (the chamber will always slowly use some fuel even if the network requires no energy)."
+    },
+    {
+      "type": "text",
+      "text": "$(li)maxEnergyPerGameTick sets the un-upgraded max output (and speed) of the vibration chamber."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/energy_vibration_chamber",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

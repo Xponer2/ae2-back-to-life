@@ -1,0 +1,34 @@
+{
+  "name": "Wrenches",
+  "icon": "ae2:certus_quartz_wrench",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "wrenches",
+      "text": "Wrenches are used to rotate ae2 devices (right-click), and disassemble ae2 blocks (shift-right-click). $(l:ae2_mechanics/cable_subparts)Subparts$(/l) can be removed from a cable without breaking everything on the cable (or the cable can be removed without breaking the subparts.)$(br2)Many ae2 blocks can be rotated, so just because this guide doesn't say you can rotate something doesn't mean"
+    },
+    {
+      "type": "ae2:item_row_2",
+      "item0": "ae2:certus_quartz_wrench",
+      "item1": "ae2:nether_quartz_wrench",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "text": "you can't."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/certus_quartz_wrench",
+      "anchor": "recipes",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/nether_quartz_wrench",
+      "text": ""
+    }
+  ]
+}

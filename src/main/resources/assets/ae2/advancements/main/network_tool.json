@@ -1,0 +1,31 @@
+{
+  "parent": "ae2:main/controller",
+  "display": {
+    "description": {
+      "translate": "achievement.ae2.NetworkTool.desc"
+    },
+    "icon": {
+      "item": "ae2:network_tool"
+    },
+    "title": {
+      "translate": "achievement.ae2.NetworkTool"
+    }
+  },
+  "criteria": {
+    "network_tool": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:network_tool"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "network_tool"
+    ]
+  ]
+}

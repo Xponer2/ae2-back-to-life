@@ -1,0 +1,15 @@
+{
+  "name": "Matter Ball",
+  "icon": "ae2:matter_ball",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:matter_ball",
+      "link_recipe": true,
+      "anchor": "matter-balls",
+      "text": "A ball of generic matter, useful as ammunition for a $(l:items_blocks_machines/matter_cannon)Matter Cannon$(/l) or for producing $(l:items_blocks_machines/paintballs)paintballs$(/l).$(br2)Made with 256 items or buckets in a $(l:items_blocks_machines/condenser)Matter Condenser$(/l) in matter ball mode."
+    }
+  ]
+}

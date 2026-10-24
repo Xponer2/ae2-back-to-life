@@ -1,0 +1,58 @@
+/*
+ * This file is part of Applied Energistics 2.
+ * Copyright (c) 2021, TeamAppliedEnergistics, All rights reserved.
+ *
+ * Applied Energistics 2 is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Applied Energistics 2 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Applied Energistics 2.  If not, see <http://www.gnu.org/licenses/lgpl>.
+ */
+
+package appeng.block.qnb;
+
+import java.util.Collection;
+import java.util.function.Function;
+
+import com.google.common.collect.ImmutableSet;
+
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.model.IModelState;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import appeng.client.render.BasicUnbakedModel;
+import appeng.core.AppEng;
+
+@SideOnly(Side.CLIENT)
+public class QnbFormedModel implements BasicUnbakedModel {
+
+    private static final ResourceLocation MODEL_RING = AppEng.makeId("block/qnb/ring");
+
+    @Override
+    public IBakedModel bake(IModelState state, VertexFormat format,
+            Function<ResourceLocation, TextureAtlasSprite> textureGetter) {
+        IBakedModel ringModel = BasicUnbakedModel.bakeDependency(MODEL_RING, format, textureGetter);
+        return new QnbFormedBakedModel(ringModel, textureGetter);
+    }
+
+    @Override
+    public Collection<ResourceLocation> getDependencies() {
+        return ImmutableSet.of(MODEL_RING);
+    }
+
+    @Override
+    public Collection<ResourceLocation> getTextures() {
+        return QnbFormedBakedModel.getRequiredTextures();
+    }
+}

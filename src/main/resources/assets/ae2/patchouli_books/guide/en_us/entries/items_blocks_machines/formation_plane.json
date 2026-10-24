@@ -1,0 +1,55 @@
+{
+  "name": "Formation Plane",
+  "icon": "ae2:formation_plane",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 210,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-formation-plane",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)The Formation Plane places blocks and drops items. It works similarly to an insert-only $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l), placing/dropping when things are \"stored\" in it by $(l:ae2_mechanics/devices)devices$(/l) inserting into $(l:ae2_mechanics/import_export_storage)network storage$(/l), like $(l:items_blocks_machines/import_bus)ME Import Bus$(/l)ses and $(l:items_blocks_machines/interface)ME Interface$(/l)s.$(br2)$(#555)$(o)(3D scene not available in this$()"
+    },
+    {
+      "type": "text",
+      "text": "$(#555)$(o)version)$()$(br2)Notice that these are similar to the import bus -> storage bus and interface -> storage bus pipes in $(l:example_setups/pipe_subnet)pipe subnets$(/l).$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)This $(l:ae2_mechanics/devices)device$(/l) makes use of the mechanics used by storage busses in things like $(l:example_setups/pipe_subnet)pipe$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "$(l:example_setups/pipe_subnet)subnets$(/l), and can replace storage busses in those setups if you want to drop items/place blocks instead of transport items.$(br2)They are $(l:ae2_mechanics/cable_subparts)cable subparts$(/l).$(br2)$(bold)REMEMBER TO ENABLE FAKE PLAYERS IN YOUR CHUNK CLAIM$()"
+    },
+    {
+      "type": "text",
+      "title": "Filtering",
+      "anchor": "filtering",
+      "text": "By default the plane will place/drop anything. Items inserted into its filter slots will act as a whitelist, only allowing those specific items to be placed.$(br2)Items and fluids can be dragged into the slots from JEI/REI even if you don't actually have any of that item.$(br2)Right-click with a fluid container (like a bucket or fluid tank) to set that fluid as"
+    },
+    {
+      "type": "text",
+      "text": "a filter instead of the bucket or tank item."
+    },
+    {
+      "type": "text",
+      "title": "Priority",
+      "anchor": "priority",
+      "text": "Priorities can be set by clicking the wrench in the top-right of the GUI. Items entering the network will start at the highest priority storage."
+    },
+    {
+      "type": "text",
+      "title": "Settings",
+      "anchor": "settings",
+      "text": "$(li)The plane can be set to place blocks in-world or drop items"
+    },
+    {
+      "type": "text",
+      "title": "Upgrades",
+      "anchor": "upgrades",
+      "text": "The formation plane supports the following $(l:items_blocks_machines/upgrade_cards)upgrades$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Capacity Card$(/l) increases the amount of filter slots$(li)$(l:items_blocks_machines/upgrade_cards)Fuzzy Card$(/l) lets the plane filter by damage level and/or ignore item NBT$(li)$(l:items_blocks_machines/upgrade_cards)Inverter Card$(/l) switches the filter from a whitelist to a blacklist"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/formation_plane",
+      "recipe2": "ae2:network/parts/formation_plane_alt",
+      "anchor": "recipe"
+    }
+  ]
+}

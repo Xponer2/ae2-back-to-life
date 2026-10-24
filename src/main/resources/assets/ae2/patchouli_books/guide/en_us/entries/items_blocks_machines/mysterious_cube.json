@@ -1,0 +1,21 @@
+{
+  "name": "Mysterious Cube",
+  "icon": "ae2:mysterious_cube",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:mysterious_cube",
+      "link_recipe": true,
+      "anchor": "the-mysterious-cube",
+      "text": "Remember when you had to find a bunch of meteors to find all the presses? No more! Now meteorites come with a Mysterious Cube.$(br2)I wonder what happens when you break it (without silk touch)...$(br2)You can also make a replica, the Not So Mysterious Cube"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/not_so_mysterious_cube",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

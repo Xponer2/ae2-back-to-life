@@ -1,0 +1,58 @@
+{
+  "name": "Network Connections",
+  "icon": "ae2:fluix_glass_cable",
+  "category": "ae2_mechanics",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "network-connections",
+      "text": "$(bold)What Does \"Network\" Mean?$()$(br2)A \"Network\" is a group of $(l:ae2_mechanics/devices)devices$(/l) linked by blocks that can pass $(l:ae2_mechanics/channels)channels$(/l), like $(l:items_blocks_machines/cables)cables$(/l) or fullblock machines and $(l:ae2_mechanics/devices)devices$(/l). ($(l:items_blocks_machines/charger)Charger$(/l), $(l:items_blocks_machines/interface)ME Interface$(/l), $(l:items_blocks_machines/drive)ME Drive$(/l), etc.) Technically a single cable is a network, actually.$(br2)$(bold)An Aside On Device Positioning$()"
+    },
+    {
+      "type": "text",
+      "text": "For $(l:ae2_mechanics/devices)devices$(/l) which have some specific network function (like an $(l:items_blocks_machines/interface)ME Interface$(/l) pushing to and pulling from $(l:ae2_mechanics/import_export_storage)network storage$(/l), a $(l:items_blocks_machines/level_emitter)ME Level Emitter$(/l) reading the contents of network storage, an $(l:items_blocks_machines/drive)ME Drive$(/l) being network storage, etc.) the physical position of the device does not matter.$(br2)Again, $(bold)the physical position of the device does not matter$(). All that matters is that the device is connected to the network (and"
+    },
+    {
+      "type": "text",
+      "text": "of course which network it's connected to)."
+    },
+    {
+      "type": "text",
+      "title": "Network Connections",
+      "anchor": "network-connections",
+      "text": "An easy way of determining what's connected in a network is using a $(l:items_blocks_machines/network_tool)Network Tool$(/l). It will show every component on the network, so if you see stuff you shouldn't or don't see stuff you should, you have a problem.$(br2)For example, this is 2 separate networks.$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "text": "This is also 2 separate networks, because the $(l:items_blocks_machines/quartz_fiber)Quartz Fiber$(/l) shares $(l:ae2_mechanics/energy)energy$(/l) without providing a network connection.$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)However, this is just 1 network, not 2 separate ones. The $(l:items_blocks_machines/quantum_bridge)quantum bridge$(/l) acts like a wireless $(l:items_blocks_machines/cables#dense-cable)dense cable$(/l), so both ends are on the same network.$(br2)$(#555)$(o)(3D scene not available in this$()"
+    },
+    {
+      "type": "text",
+      "anchor": "connections-in-the-context-of-subnets",
+      "text": "$(#555)$(o)version)$()$(br2)This is also just 1 network, as $(l:items_blocks_machines/cables)cable$(/l) color has nothing to do with network connections other than cables of different colors not connecting to each other. All colors connect to fluix (or \"uncolored\") cables.$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)$(bold)Connections In The Context of Subnets$()"
+    },
+    {
+      "type": "text",
+      "text": "$(l:ae2_mechanics/subnetworks)Subnetworks$(/l) take advantage of network connections (and specifically $(bold)NOT$() being connected) to restrict what $(l:ae2_mechanics/devices)devices$(/l) have access to what other devices.$(br2)All a subnet is, really, is a separate network.$(br2)For example, take the $(l:example_setups/ore_fortuner)Automatic Ore Fortuner$(/l). There are 3 separate networks here, all of which serve a specific purpose in the setup."
+    },
+    {
+      "type": "text",
+      "anchor": "connections-in-the-context-of-p2p",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)$(bold)Connections In The Context of P2P$()$(br2)One variant of $(l:items_blocks_machines/p2p_tunnels)P2P Tunnel$(/l) moves $(l:ae2_mechanics/channels)Channels$(/l) instead of items or fluids or redstone signal, and this confuses people for some reason. The network the tunnel is mounted to has nothing to do with the network the tunnel is carrying. they $(o)can$() be the same network, but they don't have to be, and"
+    },
+    {
+      "type": "text",
+      "anchor": "less-intuitive-connections",
+      "text": "usually aren't.$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)$(bold)Less Intuitive Connections$()$(br2)In this case, this is just 1 network, because the $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l), being a fullblock device, acts like a cable, and the $(l:items_blocks_machines/inscriber)Inscriber$(/l) does similar. Thus, the network connection passes through the provider and inscriber."
+    },
+    {
+      "type": "text",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)To prevent this (useful for many autocrafting setups involving $(l:ae2_mechanics/subnetworks)subnetworks$(/l)), you can right-click the provider with a $(l:items_blocks_machines/wrench)Certus Quartz Wrench$(/l) to make it directional, in which case it will not pass channels through one side.$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)$(#555)$(o)(3D scene not available in this$()"
+    },
+    {
+      "type": "text",
+      "text": "$(#555)$(o)version)$()$(br2)Other parts that do not provide directional network connections are most $(l:ae2_mechanics/cable_subparts)subpart$(/l) $(l:ae2_mechanics/devices)devices$(/l) like $(l:items_blocks_machines/import_bus)ME Import Bus$(/l)ses, $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l)ses, and $(l:items_blocks_machines/interface)ME Interface$(/l)s.$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    }
+  ]
+}

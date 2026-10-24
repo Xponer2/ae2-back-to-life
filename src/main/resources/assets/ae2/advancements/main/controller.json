@@ -1,0 +1,31 @@
+{
+  "parent": "ae2:main/presses",
+  "display": {
+    "description": {
+      "translate": "achievement.ae2.Controller.desc"
+    },
+    "icon": {
+      "item": "ae2:controller"
+    },
+    "title": {
+      "translate": "achievement.ae2.Controller"
+    }
+  },
+  "criteria": {
+    "certus": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:controller"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "certus"
+    ]
+  ]
+}

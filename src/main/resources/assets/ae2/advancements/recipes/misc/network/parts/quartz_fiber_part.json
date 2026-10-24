@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_dusts/quartz_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:certus_quartz_dust"
+          }
+        ]
+      }
+    },
+    "has_dusts/quartz_1": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "type": "forge:ore_dict",
+            "ore": "dustCertusQuartz"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:network/parts/quartz_fiber_part"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_dusts/quartz_0",
+      "has_dusts/quartz_1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:network/parts/quartz_fiber_part"
+    ]
+  }
+}

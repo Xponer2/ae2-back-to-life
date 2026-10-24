@@ -1,0 +1,31 @@
+{
+  "name": "Import, Export, and Storage",
+  "icon": "ae2:guide",
+  "category": "ae2_mechanics",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "import-export-and-storage",
+      "text": "$(bold)your ME system and the world$()$(br2)An important concept in AE2 is the idea of Network Storage. It is the place in which the contents of a network are stored, usually $(l:items_blocks_machines/storage_cells)storage cells$(/l) or whatever inventory a $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) is connected to. Most AE2 $(l:ae2_mechanics/devices)devices$(/l) interact with it in one way or another.$(br2)For example,"
+    },
+    {
+      "type": "text",
+      "text": "$(li)$(l:items_blocks_machines/import_bus)ME Import Bus$(/l)ses push things into network storage$(li)$(l:items_blocks_machines/export_bus)ME Export Bus$(/l)ses pull things from network storage$(li)$(l:items_blocks_machines/interface)ME Interface$(/l)s both pull from and push to network storage$(li)$(l:items_blocks_machines/terminals)Terminals$(/l) both push to and pull from network storage when you insert or take items, or to refill the crafting slots$(li)$(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l)ses don't really push to or pull from storage, they push to or pull from the connected inventory in order to use it as network"
+    },
+    {
+      "type": "text",
+      "text": "storage (so really other devices push to or pull from $(o)them$())$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)The actions/events of pushing to and pulling from network storage are important to keep in mind when designing automation and logistics setups."
+    },
+    {
+      "type": "text",
+      "title": "Storage Priority",
+      "anchor": "storage-priority",
+      "text": "Priorities can be set by clicking the wrench in the top-right of some GUIs. Items entering the network will start at the highest priority storage, as their first destination, in the case of two storages have the same priority, if one already contains the item, they will prefer that storage over any other. Any Whitelisted cells will be treated as already containing the item when in the same priority group as other"
+    },
+    {
+      "type": "text",
+      "text": "storages. Items being removed from storage will be removed from the storage with the lowest priority. This priority system means as items are inserted and removed from network storage, higher priority storages will be filled and lower priority storages will be emptied."
+    }
+  ]
+}

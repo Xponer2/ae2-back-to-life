@@ -1,0 +1,13 @@
+{
+  "name": "P2P Tunnels",
+  "icon": "ae2:me_p2p_tunnel",
+  "category": "ae2_mechanics",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "p2p-tunnels",
+      "text": "See $(l:items_blocks_machines/p2p_tunnels)P2P Tunnels$(/l)"
+    }
+  ]
+}

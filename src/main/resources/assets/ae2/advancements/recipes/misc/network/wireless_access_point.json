@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:network/wireless_access_point"
+      }
+    },
+    "has_wireless_receiver": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:wireless_receiver"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_wireless_receiver"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:network/wireless_access_point"
+    ]
+  }
+}

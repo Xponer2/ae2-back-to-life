@@ -1,0 +1,6 @@
+{
+  "name": "AE2 Mechanics",
+  "description": "How ME networks work: channels, energy, storage, autocrafting, subnetworks, spatial IO and more.",
+  "icon": "ae2:controller",
+  "sortnum": 1
+}

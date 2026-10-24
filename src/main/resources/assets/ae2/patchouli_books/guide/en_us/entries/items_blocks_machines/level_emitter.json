@@ -1,0 +1,58 @@
+{
+  "name": "Level Emitter",
+  "icon": "ae2:level_emitter",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 220,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-level-emitter",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)The Level Emitter emits a redstone signal depending on the quantity of an item in $(l:ae2_mechanics/import_export_storage)network storage$(/l).$(br2)There is also a version that emits a redstone signal depending on the $(l:ae2_mechanics/energy)energy$(/l) stored in your network."
+    },
+    {
+      "type": "text",
+      "text": "Items and fluids can be dragged into the slot from JEI/REI even if you don't actually have any of that item.$(br2)Right-click with a fluid container (like a bucket or fluid tank) to set that fluid as a filter instead of the bucket or tank item.$(br2)They are $(l:ae2_mechanics/cable_subparts)cable subparts$(/l).$(br2)Unlike other $(l:ae2_mechanics/devices)devices$(/l), level emitters $(o)do not$() require a $(l:ae2_mechanics/channels)channel$(/l)."
+    },
+    {
+      "type": "text",
+      "title": "Settings",
+      "anchor": "settings",
+      "text": "$(li)The Level Emitter can be set to either \"greater than/equal to\" or \"less than\" mode$(li)When a $(l:items_blocks_machines/upgrade_cards)Crafting Card$(/l) is inserted, it can be set to \"emit redstone while item is crafting\" or \"emit redstone to craft item\""
+    },
+    {
+      "type": "text",
+      "title": "Upgrades",
+      "anchor": "upgrades",
+      "text": "The level emitter supports the following $(l:items_blocks_machines/upgrade_cards)upgrades$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Fuzzy Card$(/l) lets the emitter filter by damage level and/or ignore item NBT$(li)$(l:items_blocks_machines/upgrade_cards)Crafting Card$(/l) enables the crafting functionality"
+    },
+    {
+      "type": "text",
+      "title": "Crafting Functionality",
+      "anchor": "crafting-functionality",
+      "text": "If a $(l:items_blocks_machines/upgrade_cards)Crafting Card$(/l) is inserted, the emitter will be switched into crafting mode.$(br2)This enables two options:$(br2)The first option, \"emit redstone while item is crafting\", makes the emitter emit a redstone signal while your $(l:ae2_mechanics/autocrafting)autocrafting$(/l) is crafting some specific item through $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l)s. This is useful for only turning on specific power-hungry"
+    },
+    {
+      "type": "text",
+      "text": "automation setups while they are actually being used.$(br2)The second option, \"emit redstone to craft item\", is extremely useful for specific use cases like infinite farms and automation setups that only have a chance of making an output, instead of a guaranteed output. This setting creates a virtual $(l:items_blocks_machines/patterns)pattern$(/l) for $(l:ae2_mechanics/autocrafting)autocrafting$(/l) to use, for whatever item is in the emitter's filter slot. (For correct functionality, an"
+    },
+    {
+      "type": "text",
+      "text": "actual pattern for the same item $(bold)should not exist$() in your $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l)s)$(br2)This \"pattern\" does not define, or even care about ingredients. All it says is \"If you emit redstone from this level emitter, the ME system will receive this item at some point in the near or distant future\". This is usually used to activate and deactivate infinite farms which require no input ingredients, or to activate $(l:example_setups/recursive_crafting_setup)a system that handles$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "$(l:example_setups/recursive_crafting_setup)recursive recipes$(/l) (which standard autocafting cannot understand) like, for example, \"1 cobblestone = 2 cobblestone\" if you have a machine that duplicates cobblestone."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/level_emitter",
+      "anchor": "recipe",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/energy_level_emitter",
+      "text": ""
+    }
+  ]
+}

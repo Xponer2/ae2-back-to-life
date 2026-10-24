@@ -1,0 +1,77 @@
+{
+  "parent": "ae2:main/storage_cell",
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "achievement.ae2.PortableCell.desc"
+    },
+    "icon": {
+      "item": "ae2:portable_item_cell_1k"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "achievement.ae2.PortableCell"
+    }
+  },
+  "criteria": {
+    "pc_16k": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:portable_item_cell_16k"
+          }
+        ]
+      }
+    },
+    "pc_1k": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:portable_item_cell_1k"
+          }
+        ]
+      }
+    },
+    "pc_256k": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:portable_item_cell_256k"
+          }
+        ]
+      }
+    },
+    "pc_4k": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:portable_item_cell_4k"
+          }
+        ]
+      }
+    },
+    "pc_64k": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:portable_item_cell_64k"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "pc_1k",
+      "pc_4k",
+      "pc_16k",
+      "pc_64k",
+      "pc_256k"
+    ]
+  ]
+}

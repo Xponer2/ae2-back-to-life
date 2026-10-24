@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_engineering_processor": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:engineering_processor"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:network/parts/tunnels_me"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_engineering_processor"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:network/parts/tunnels_me"
+    ]
+  }
+}

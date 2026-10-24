@@ -1,0 +1,13 @@
+{
+  "name": "An Example \"Main Network\"",
+  "icon": "ae2:controller",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "an-example-main-network",
+      "text": "Many other setups reference a \"Main Network\". You might also ask how all these $(l:ae2_mechanics/devices)devices$(/l) come together into a functional system. Here is an example:$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    }
+  ]
+}

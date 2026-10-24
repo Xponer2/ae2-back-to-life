@@ -1,0 +1,46 @@
+{
+  "name": "Charger Automation",
+  "icon": "ae2:charger",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "charger-automation",
+      "text": "Note that since this uses a $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l), it is meant to integrate into your $(l:ae2_mechanics/autocrafting)autocrafting$(/l) setup. If you just want to automate a $(l:items_blocks_machines/charger)Charger$(/l) standalone, use hoppers and chests and stuff.$(br2)Automation of a $(l:items_blocks_machines/charger)Charger$(/l) is fairly simple. A $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l) pushes the ingredient into the charger, then a $(l:example_setups/pipe_subnet)pipe subnet$(/l) or other item pipe pushes the result back into"
+    },
+    {
+      "type": "text",
+      "text": "the provider.$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Configurations",
+      "anchor": "configurations",
+      "text": "$(li)The $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l) (1) is in its default configuration, with the relevant $(l:items_blocks_machines/patterns)Processing Pattern$(/l)s. It also provides the $(l:items_blocks_machines/charger)Charger$(/l) with $(l:ae2_mechanics/energy)energy$(/l) because it acts like a $(l:items_blocks_machines/cables)cable$(/l)."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/charger_pattern.png"
+      ],
+      "border": true,
+      "title": "Charger Pattern",
+      "text": "$(li)The $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) (2) is in its default configuration."
+    },
+    {
+      "type": "text",
+      "text": "$(li)The $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (3) is in its default configuration."
+    },
+    {
+      "type": "text",
+      "title": "How It Works",
+      "anchor": "how-it-works",
+      "text": "1. The $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l) pushes the ingredients into the $(l:items_blocks_machines/charger)Charger$(/l).$(br2)2. The charger does its charging thing.$(br2)3. The $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) on the green subnet pulls the result out of the charger and attempts to store it in $(l:ae2_mechanics/import_export_storage)network storage$(/l).$(br2)4. The only storage on the green subnet is the $(l:items_blocks_machines/storage_bus)ME Storage$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "$(l:items_blocks_machines/storage_bus)Bus$(/l), which stores the resulting items in the pattern provider, returning them to the main network."
+    }
+  ]
+}

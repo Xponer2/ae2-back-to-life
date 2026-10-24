@@ -1,0 +1,85 @@
+{
+  "name": "Interface",
+  "icon": "ae2:interface",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 210,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:interface",
+      "link_recipe": true,
+      "anchor": "the-interface",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)Interfaces act like a small chest and fluid tank that fills itself from and empties to $(l:ae2_mechanics/import_export_storage)network storage$(/l) depending on what you set it to keep a stock of in its slots. It tries to complete this in a single gametick, so it can fill itself with or empty itself from up to"
+    },
+    {
+      "type": "text",
+      "text": "9 stacks per gametick, making it a fast method of import or export if you have fast item pipes.$(br2)Another useful trait is that while most fluid tanks can only store 1 type of fluid, interfaces can store up to 9, as well as items. They're essentially just chests/multi-fluid tanks with some extra functionality, and you can prevent that extra functionality by keeping them disconnected from any"
+    },
+    {
+      "type": "text",
+      "anchor": "how-an-interface-works-internally",
+      "text": "networks. Thus, they are useful in some niche cases where you want to store a small amount of a bunch of different stuff.$(br2)$(bold)How An Interface Works Internally$()$(br2)As previously stated, an interface is essentially a chest/tank with some super duper $(l:items_blocks_machines/import_bus)ME Import Bus$(/l)ses and $(l:items_blocks_machines/export_bus)ME Export Bus$(/l)ses attached, with a bunch of $(l:items_blocks_machines/level_emitter)ME Level Emitter$(/l)s.$(br2)$(#555)$(o)(3D scene not available in this$()"
+    },
+    {
+      "type": "text",
+      "text": "$(#555)$(o)version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Special Interactions",
+      "anchor": "special-interactions",
+      "text": "Interfaces also have a few special functionalities with other AE2 $(l:ae2_mechanics/devices)devices$(/l):$(br2)A $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) on an unconfigured interface will present the entirety of the $(l:ae2_mechanics/import_export_storage)network storage$(/l) of its network to the storage bus' network, as if the interface's network was one big chest the storage bus was placed on. Setting an item to be stocked in the interface's filter slots disables this."
+    },
+    {
+      "type": "text",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)Pattern providers have a special interaction with interfaces on $(l:ae2_mechanics/subnetworks)subnets$(/l): if the interface is unconfigured the provider will skip the interface entirely and push directly to that subnet's $(l:ae2_mechanics/import_export_storage)storage$(/l), skipping the interface and not filling it with recipe batches, and more importantly, not inserting the next batch until there's space in storage."
+    },
+    {
+      "type": "text",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Variants",
+      "anchor": "variants",
+      "text": "Interfaces come in 2 different variants: normal and flat/$(l:ae2_mechanics/cable_subparts)subpart$(/l). This affects which specific sides their inventories can be accessed from and that they provide a network connection to.$(li)Normal interfaces allow things to push to, pull from, and access their inventory from all sides and, like most AE2 machines, act like a cable providing network connection to all sides."
+    },
+    {
+      "type": "text",
+      "text": "$(li)Flat interfaces are $(l:ae2_mechanics/cable_subparts)cable subparts$(/l), and so multiple can be placed on the same cable, allowing for compact setups. They allow things to push to, pull from, and access their inventory from their face but do not provide a network connection on their face.$(br2)Interfaces can be swapped between normal and flat in a crafting grid."
+    },
+    {
+      "type": "text",
+      "title": "Settings",
+      "anchor": "settings",
+      "text": "The upper slots in the interface determine what the interface is set to stock inside itself. When something is placed in them or dragged from JEI/REI, a wrench appears that lets you set the quantity.$(br2)Right-click with a fluid container (like a bucket or fluid tank) to set that fluid as a filter instead of the bucket or tank item."
+    },
+    {
+      "type": "text",
+      "text": "When you set a slot to stocking mode, it will also prevent external machines from inserting anything else into that slot."
+    },
+    {
+      "type": "text",
+      "title": "Upgrades",
+      "anchor": "upgrades",
+      "text": "The interface supports the following $(l:items_blocks_machines/upgrade_cards)upgrades$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Fuzzy Card$(/l) lets the bus filter by damage level and/or ignore item NBT$(li)$(l:items_blocks_machines/upgrade_cards)Crafting Card$(/l) lets the interface send crafting requests to your $(l:ae2_mechanics/autocrafting)autocrafting$(/l) system to get the items it desires. It will pull the items from storage if possible, before making a request for a new item to be crafted."
+    },
+    {
+      "type": "text",
+      "title": "Priority",
+      "anchor": "priority",
+      "text": "Priorities can be set by clicking the wrench in the top-right of the GUI. Interfaces with higher priority will get their items before those with lower priority,"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/interfaces_interface",
+      "anchor": "recipes",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/interfaces_interface_part",
+      "text": ""
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "name": "Meteorites",
+  "icon": "ae2:sky_stone_block",
+  "category": "ae2_mechanics",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "meteorites",
+      "text": "Meteorites are the starting point for using AE2. They provide critical materials: $(l:items_blocks_machines/budding_certus)budding certus blocks$(/l) of various types and a $(l:items_blocks_machines/mysterious_cube)Mysterious Cube$(/l) in the center.$(br2)$(l:getting_started/getting_started)Getting Started$(/l) will provide info on what to do once you find one."
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "AAA ",
+            "EFEA",
+            "FGFA",
+            "HEHA"
+          ],
+          [
+            "0AA ",
+            "BCDA",
+            "DDBA",
+            "BDDA"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:sky_stone_block",
+          "B": "ae2:chipped_budding_quartz",
+          "C": "ae2:damaged_budding_quartz",
+          "D": "ae2:flawless_budding_quartz",
+          "E": "ae2:large_quartz_bud[facing=up]",
+          "F": "ae2:quartz_cluster[facing=up]",
+          "G": "ae2:mysterious_cube",
+          "H": "ae2:small_quartz_bud[facing=up]",
+          "0": "ae2:sky_stone_block"
+        }
+      },
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Finding Meteorites",
+      "anchor": "finding-meteorites",
+      "text": "Meteorites are fairly common and leave massive holes in the ground, so you may have already found a few. if not, a $(l:items_blocks_machines/meteorite_compass)Meteorite Compass$(/l) will point toward the nearest mysterious cube."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/assemblies/meteorite-crater.png"
+      ],
+      "border": true,
+      "title": "Meteorite Crater",
+      "text": ""
+    }
+  ]
+}

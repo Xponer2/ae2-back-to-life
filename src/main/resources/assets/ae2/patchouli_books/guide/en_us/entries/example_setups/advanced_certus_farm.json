@@ -1,0 +1,61 @@
+{
+  "name": "Advanced Certus Farm",
+  "icon": "ae2:certus_quartz_crystal",
+  "category": "example_setups",
+  "sortnum": 120,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "advanced-certus-farm",
+      "text": "This is basically just the $(l:example_setups/semiauto_certus_farm)Semi-Auto Certus Farm$(/l), except it has been fully integrated into your ME system.$(br2)Instead of having a big stockpile of budding blocks and manually refreshing them every once in a while, this setup uses $(l:example_setups/charger_automation)Charger Automation$(/l) and $(l:example_setups/throw_in_water_automation)Throwing-In-Water Automation$(/l) to do it automatically."
+    },
+    {
+      "type": "text",
+      "text": "See $(l:ae2_mechanics/certus_growth)Certus Growth$(/l) for estimated speeds.$(br2)$(bold)THIS IS A COMPLEX BUILD WITH STUFF HIDDEN BEHIND OTHER STUFF, PAN AROUND TO VIEW IT FROM ALL ANGLES$()$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Configurations",
+      "anchor": "configurations",
+      "text": "$(bold)Cluster Breaker:$()$(li)The first $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) (1) has no GUI and cannot be configured, but can be enchanted with Fortune.$(li)The first $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (2) is filtered to $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l).$(br2)$(bold)Certus Block Breaker:$()$(li)The second $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) (3) has no GUI and cannot be configured, but must be enchanted with Silk Touch."
+    },
+    {
+      "type": "text",
+      "anchor": "budding-block-placer",
+      "text": "$(li)The second $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (4) is filtered to $(l:items_blocks_machines/quartz_block)Certus Quartz Block$(/l).$(br2)$(bold)Budding Block Placer:$()$(li)The $(l:items_blocks_machines/formation_plane)ME Formation Plane$(/l) (5) is in its default configuration.$(li)The $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) (6) is filtered to $(l:items_blocks_machines/budding_certus)Flawed Budding Certus Quartz$(/l).$(br2)$(bold)On Main Network:$()$(li)The third $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (7) is filtered to $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l), and has its $(l:ae2_mechanics/import_export_storage#storage-priority)priority$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "set higher than your main storage.$(li)The $(l:items_blocks_machines/interface)ME Interface$(/l) (8) is set to keep 1 Flawed Budding Certus Quartz in itself, and has a $(l:items_blocks_machines/upgrade_cards)Crafting Card$(/l)."
+    },
+    {
+      "type": "text",
+      "title": "How It Works",
+      "anchor": "how-it-works",
+      "text": "$(bold)Cluster Breaker:$()$(br2)The cluster breaker subnet works very similarly to the subnet in the $(l:example_setups/simple_certus_farm)simple certus farm$(/l).$(br2)1. The $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) attempts to break what is in front of it, but can only break $(l:items_blocks_machines/budding_certus)Certus Quartz Cluster$(/l) because the only storage on the subnet is the $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l), filtered to $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l)."
+    },
+    {
+      "type": "text",
+      "anchor": "certus-block-breaker",
+      "text": "2. The $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) stores the certus quartz crystals in the barrel.$(br2)$(bold)Certus Block Breaker$()$(br2)The certus block breaker subnet serves to break the depleted budding block once it turns into a plain $(l:items_blocks_machines/quartz_block)Certus Quartz Block$(/l). It works similarly to the cluster breaker.$(br2)1. The $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) attempts to break what is in"
+    },
+    {
+      "type": "text",
+      "text": "front of it, but can only break $(l:items_blocks_machines/quartz_block)Certus Quartz Block$(/l) because the only storage on the subnet is the $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l), filtered to $(l:items_blocks_machines/quartz_block)Certus Quartz Block$(/l). The plane needs to have silk touch, so the budding block won't degrade upon being broken, and thus the plane won't break it prematurely.$(br2)2. The $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) stores the certus quartz block in the $(l:items_blocks_machines/interface)ME Interface$(/l), allowing the $(l:example_setups/throw_in_water_automation)Throwing-In-Water Automation$(/l) to use it to make a new $(l:items_blocks_machines/budding_certus)Flawed$(/l)"
+    },
+    {
+      "type": "text",
+      "anchor": "budding-block-placer",
+      "text": "$(l:items_blocks_machines/budding_certus)Budding Certus Quartz$(/l).$(br2)$(bold)Budding Block Placer$()$(br2)The budding block placer subnet serves to place a new $(l:items_blocks_machines/budding_certus)Flawed Budding Certus Quartz$(/l) when the breaker subnet breaks the old depleted one.$(br2)1. The $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) Imports a budding block from the $(l:items_blocks_machines/interface)ME Interface$(/l) into $(l:ae2_mechanics/import_export_storage)network storage$(/l)$(br2)2. The only storage on the subnet is the $(l:items_blocks_machines/formation_plane)ME Formation$(/l)"
+    },
+    {
+      "type": "text",
+      "anchor": "on-the-main-network",
+      "text": "$(l:items_blocks_machines/formation_plane)Plane$(/l), which places the budding block.$(br2)$(bold)On the Main Network$()$(li)The $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) gives the main network (and also the $(l:example_setups/charger_automation)Charger Automation$(/l)) access to all of the certus quartz crystals in the barrel. It is set to high $(l:ae2_mechanics/import_export_storage#storage-priority)priority$(/l) so that certus quartz crystals are preferentially put back in the barrel instead of in your main storage.$(li)The $(l:items_blocks_machines/interface)ME Interface$(/l) gives the budding block placer subnet"
+    },
+    {
+      "type": "text",
+      "text": "access to a $(l:items_blocks_machines/budding_certus)Flawed Budding Certus Quartz$(/l), and gives the certus block breaker subnet a way to get the depleted blocks back into the main network. The $(l:items_blocks_machines/upgrade_cards)Crafting Card$(/l) allows the interface to request new budding blocks from the main network's $(l:ae2_mechanics/autocrafting)autocrafting$(/l)."
+    }
+  ]
+}

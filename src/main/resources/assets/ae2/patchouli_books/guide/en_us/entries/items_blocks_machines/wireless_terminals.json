@@ -1,0 +1,72 @@
+{
+  "name": "Wireless Terminals",
+  "icon": "ae2:wireless_crafting_terminal",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "wireless-terminals",
+      "text": "Wireless terminals are portable versions of the regular wired $(l:items_blocks_machines/terminals)terminals$(/l). They have the exact same UIs as their wired counterparts, except instead of slots for $(l:items_blocks_machines/view_cell)View Cell$(/l)s, they have slots for $(l:items_blocks_machines/upgrade_cards)upgrade cards$(/l)$(br2)In order to pair them with a network, insert the terminal in the top-right slot of a $(l:items_blocks_machines/wireless_access_point)ME Wireless Access Point$(/l) connected to that network. (The"
+    },
+    {
+      "type": "ae2:item_row_2",
+      "item0": "ae2:wireless_terminal",
+      "item1": "ae2:wireless_crafting_terminal",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "text": "slot with a picture of a wireless terminal on it and an arrow below it)$(br2)They must be within range of a $(l:items_blocks_machines/wireless_access_point)ME Wireless Access Point$(/l) to function.$(br2)Their energy can be recharged in a $(l:items_blocks_machines/charger)Charger$(/l)."
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:wireless_terminal",
+      "link_recipe": true,
+      "anchor": "wireless-terminal",
+      "text": "Your basic terminal, now portable! View and access the contents of your $(l:ae2_mechanics/import_export_storage)network's storage$(/l) and request things from your $(l:ae2_mechanics/autocrafting)autocrafting$(/l) setup from anywhere within the range of a $(l:items_blocks_machines/wireless_access_point)ME Wireless Access Point$(/l)."
+    },
+    {
+      "type": "text",
+      "title": "The UI",
+      "anchor": "the-ui",
+      "text": "See $(l:items_blocks_machines/terminals)terminals$(/l)"
+    },
+    {
+      "type": "text",
+      "title": "Upgrades",
+      "anchor": "upgrades",
+      "text": "The Wireless Terminal supports the following $(l:items_blocks_machines/upgrade_cards)upgrades$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Energy Card$(/l) in order to increase the battery capacity"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/wireless_terminal",
+      "anchor": "recipe",
+      "text": "$(bold)Wireless Crafting Terminal$()"
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:wireless_crafting_terminal",
+      "link_recipe": true,
+      "text": "The Wireless Crafting Terminal is similar to a regular wireless terminal, with all the same settings and sections, but with an added crafting grid that will be automatically refilled from $(l:ae2_mechanics/import_export_storage)network storage$(/l). Be careful when shift-clicking the output!"
+    },
+    {
+      "type": "text",
+      "title": "The UI",
+      "anchor": "the-ui",
+      "text": "See $(l:items_blocks_machines/terminals)terminals$(/l)"
+    },
+    {
+      "type": "text",
+      "title": "Upgrades",
+      "anchor": "upgrades",
+      "text": "The Wireless Crafting Terminal supports the following $(l:items_blocks_machines/upgrade_cards)upgrades$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Energy Card$(/l) in order to increase the battery capacity"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/upgrade_wireless_crafting_terminal",
+      "recipe2": "ae2:network/wireless_crafting_terminal",
+      "anchor": "recipe"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_glass_cable": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:fluix_glass_cable"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:network/cables/covered_fluix"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_glass_cable"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:network/cables/covered_fluix"
+    ]
+  }
+}

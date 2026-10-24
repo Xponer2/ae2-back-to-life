@@ -1,0 +1,21 @@
+{
+  "name": "Types of Storage and Network Cleanliness",
+  "icon": "ae2:drive",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "various-kinds-of-storage-and-keeping-your-network-organized",
+      "text": "Using filters, $(l:items_blocks_machines/cell_workbench)partitions$(/l), and $(l:ae2_mechanics/import_export_storage#storage-priority)storage priority$(/l), you can set up several tiers of storage for various kinds of things.$(br2)The kinds of storage tend to be:$(li)General storage, for all the random stuff you have a few to a few thousand of. This uses small $(l:items_blocks_machines/storage_cells)cells$(/l), like 4k or 16k.$(li)Bulk storage, for all the stuff you have more than a few thousand of, like cobble or"
+    },
+    {
+      "type": "text",
+      "text": "iron. This uses big cells like 256k or the cells from the MEGA addon.$(li)Local storage at farms, as described in $(l:example_setups/specialized_local_storage)Specialized Local Storage$(/l) and the $(l:example_setups/simple_certus_farm)various$(/l) $(l:example_setups/semiauto_certus_farm)certus$(/l) $(l:example_setups/advanced_certus_farm)farms$(/l).$(br2)The priorities are set up so that when items are dumped into the main network, it first tries to store them in the specialized bulk or local storage, and if that can't be done (due to filters and partitions), it then puts the"
+    },
+    {
+      "type": "text",
+      "text": "items in general storage. This means that items WILL NOT ACTIVELY MOVE from one storage ot the other, but will \"migrate\" as they enter and leave the network. To actively move items, use an $(l:items_blocks_machines/io_port)ME IO Port$(/l).$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    }
+  ]
+}

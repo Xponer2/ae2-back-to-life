@@ -1,0 +1,31 @@
+{
+  "parent": "ae2:main/charger",
+  "display": {
+    "description": {
+      "translate": "achievement.ae2.Compass.desc"
+    },
+    "icon": {
+      "item": "ae2:meteorite_compass"
+    },
+    "title": {
+      "translate": "achievement.ae2.Compass"
+    }
+  },
+  "criteria": {
+    "compass": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:meteorite_compass"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "compass"
+    ]
+  ]
+}

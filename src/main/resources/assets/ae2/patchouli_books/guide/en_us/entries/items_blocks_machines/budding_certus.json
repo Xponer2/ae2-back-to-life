@@ -1,0 +1,91 @@
+{
+  "name": "Budding Certus Quartz",
+  "icon": "ae2:flawless_budding_quartz",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "budding-certus-quartz",
+      "text": "(also see $(l:ae2_mechanics/certus_growth)Certus Growth$(/l))"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          [
+            "0",
+            "B",
+            "C",
+            "D"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:flawless_budding_quartz",
+          "B": "ae2:flawed_budding_quartz",
+          "C": "ae2:chipped_budding_quartz",
+          "D": "ae2:damaged_budding_quartz",
+          "E": "ae2:quartz_cluster[facing=up]",
+          "F": "ae2:large_quartz_bud[facing=up]",
+          "G": "ae2:medium_quartz_bud[facing=up]",
+          "H": "ae2:small_quartz_bud[facing=up]",
+          "0": "ae2:flawless_budding_quartz"
+        }
+      },
+      "text": "Certus quartz buds will sprout from budding certus blocks, similar to amethyst. These are"
+    },
+    {
+      "type": "text",
+      "text": "found in $(l:ae2_mechanics/meteorites)meteorites$(/l). There are 4 tiers of budding certus blocks: Flawless, Flawed, Chipped, and Damaged. They can be most easily identified with a mod like HWYLA, Jade, The One Probe, etc. (or the f3 screen)$(br2)With flawed, chipped, and damaged budding certus, every time a bud grows by another stage, the budding block has a chance to degrade by one tier, eventually turning into a plain $(l:items_blocks_machines/quartz_block)Certus Quartz Block$(/l)."
+    },
+    {
+      "type": "text",
+      "text": "Flawless budding certus will not degrade from growing buds, and act as an infinite source.$(br2)If broken with a regular pickaxe, budding certus blocks will degrade by 1 tier. If broken with a pickaxe enchanted with silk touch, they will not degrade, unless they were flawless. $(bold)This means that flawless budding certus blocks cannot be picked up and moved with a pickaxe$(). Instead, $(l:ae2_mechanics/spatial_io)Spatial Storage$(/l) can be used to"
+    },
+    {
+      "type": "text",
+      "text": "cut-and-paste the flawless budding blocks around."
+    },
+    {
+      "type": "text",
+      "title": "Recipes",
+      "anchor": "recipes",
+      "text": "Flawed, chipped, and damaged budding certus can be crafted by throwing the previous tier of budding block (or a $(l:items_blocks_machines/quartz_block)Certus Quartz Block$(/l)) in water with one or more $(l:items_blocks_machines/certus_quartz_crystal_charged)Charged Certus Quartz Crystal$(/l).$(br2)Flawless budding certus cannot be crafted, only found in the world."
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Throw in Water",
+      "in0": "ae2:charged_certus_quartz_crystal",
+      "in1": "ae2:quartz_block",
+      "output": "ae2:damaged_budding_quartz",
+      "machine": "minecraft:water_bucket",
+      "text": "Throw the items into water together."
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Throw in Water",
+      "in0": "ae2:charged_certus_quartz_crystal",
+      "in1": "ae2:damaged_budding_quartz",
+      "output": "ae2:chipped_budding_quartz",
+      "machine": "minecraft:water_bucket",
+      "text": "Throw the items into water together."
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Throw in Water",
+      "in0": "ae2:charged_certus_quartz_crystal",
+      "in1": "ae2:chipped_budding_quartz",
+      "output": "ae2:flawed_budding_quartz",
+      "machine": "minecraft:water_bucket",
+      "text": "Throw the items into water together."
+    }
+  ]
+}

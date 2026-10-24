@@ -1,0 +1,34 @@
+{
+  "name": "Cell Dumper or Filler",
+  "icon": "ae2:io_port",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "cell-dumper-or-filler",
+      "text": "One might ask \"How do I quickly empty a cell into a chest or drawer array or backpack, or, inversely, fill a cell from the same?\"$(br2)The answer is use of an $(l:items_blocks_machines/io_port)ME IO Port$(/l) and some subnetting to restrict where it can put the items, or pull items from.$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Configurations",
+      "anchor": "configurations",
+      "text": "$(li)The $(l:items_blocks_machines/io_port)ME IO Port$(/l) (1) can be set to either \"Transfer data to Network\" or \"Transfer data to Storage Cell\" using the arrow button in the middle of the GUI. It has 3 acceleration cards for maximum speed.$(li)The $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (2) is in its default configuration."
+    },
+    {
+      "type": "text",
+      "title": "How It Works",
+      "anchor": "how-it-works",
+      "text": "$(bold)In \"Transfer To Network\" Mode$()$(br2)1. The $(l:items_blocks_machines/io_port)ME IO Port$(/l) attempts to dump the contents of the inserted $(l:items_blocks_machines/storage_cells)storage cell$(/l). into $(l:ae2_mechanics/import_export_storage)network storage$(/l).$(br2)2. The only storage on the subnet is the $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l), which stores the items or fluids or etc. in whatever you put in front of it.$(li)The $(l:items_blocks_machines/energy_cells)Energy Cell$(/l) provides a large enough buffer of $(l:ae2_mechanics/energy)energy$(/l)"
+    },
+    {
+      "type": "text",
+      "anchor": "in-transfer-to-storage-cell-mode",
+      "text": "that the network does not run out from the power draw of transferring so many items per gametick.$(br2)$(bold)In \"Transfer To Storage Cell\" Mode$()$(br2)1. The $(l:items_blocks_machines/io_port)ME IO Port$(/l) attempts to dump the contents of the $(l:ae2_mechanics/import_export_storage)network's storage$(/l) into the inserted $(l:items_blocks_machines/storage_cells)storage cell$(/l).$(br2)2. The only storage on the subnet is the $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l), which pulls the items or fluids"
+    },
+    {
+      "type": "text",
+      "text": "or etc. out of whatever you put in front of it.$(li)The $(l:items_blocks_machines/energy_cells)Energy Cell$(/l) provides a large enough buffer of $(l:ae2_mechanics/energy)energy$(/l) that the network does not run out from the power draw of transferring so many items per gametick."
+    }
+  ]
+}

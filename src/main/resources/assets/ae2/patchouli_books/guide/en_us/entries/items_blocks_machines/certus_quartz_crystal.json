@@ -1,0 +1,29 @@
+{
+  "name": "Certus Quartz Crystal",
+  "icon": "ae2:certus_quartz_crystal",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:certus_quartz_crystal",
+      "link_recipe": true,
+      "anchor": "the-certus-quartz-crystal",
+      "text": "$(o)\"Certus Quartz Crystals possess the unique trait of accepting large quantities of energy into their crystalline matrix\"$()$(br2)One of the primary ingredients for AE2 blocks, $(l:ae2_mechanics/devices)devices$(/l), and items. Made by growing it from $(l:ae2_mechanics/certus_growth)budding certus$(/l).$(br2)$(bold)Some Alternate Recipes$()"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:misc/deconstruction_certus_quartz_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Throw in Water",
+      "in0": "ae2:charged_certus_quartz_crystal",
+      "in1": "ae2:certus_quartz_dust",
+      "output": "ae2:certus_quartz_crystal#2",
+      "machine": "minecraft:water_bucket",
+      "text": "Throw the items into water together."
+    }
+  ]
+}

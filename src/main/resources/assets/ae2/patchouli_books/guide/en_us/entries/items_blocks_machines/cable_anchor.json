@@ -1,0 +1,23 @@
+{
+  "name": "Cable Anchor",
+  "icon": "ae2:cable_anchor",
+  "category": "items_blocks_machines/network_infrastructure",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-cable-anchor",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)Small decorative cable-mounted spikes that you can use to prevent cables from connecting, create ladders with cables, or make the cable appear connected to the walls around it. Also used to craft $(l:items_blocks_machines/facades)Cable Facade$(/l).$(br2)Cable anchors prevent connections from forming on"
+    },
+    {
+      "type": "text",
+      "text": "the side they're mounted on.$(br2)You can climb them like a ladder."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/cable_anchor",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

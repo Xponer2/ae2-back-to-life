@@ -1,0 +1,104 @@
+{
+  "name": "Paintballs",
+  "icon": "ae2:green_lumen_paint_ball",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "paintballs",
+      "text": "Paintballs are used in a $(l:items_blocks_machines/color_applicator)Color Applicator$(/l) in order to paint colorable blocks like $(l:items_blocks_machines/cables)cables$(/l), wool, terracotta, glass, and concrete. They can also be used in a $(l:items_blocks_machines/matter_cannon)Matter Cannon$(/l) to shoot little splotches of paint."
+    },
+    {
+      "type": "ae2:item_row_5",
+      "item0": "ae2:white_paint_ball",
+      "item1": "ae2:orange_paint_ball",
+      "item2": "ae2:green_paint_ball",
+      "item3": "ae2:blue_paint_ball",
+      "item4": "ae2:red_paint_ball",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Recipes",
+      "anchor": "recipes",
+      "text": "8 matter balls around a dye"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/paintballs_white",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/paintballs_orange",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/paintballs_green",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/paintballs_blue",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/paintballs_red",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/paintballs_black",
+      "text": ""
+    },
+    {
+      "type": "ae2:item_row_5",
+      "item0": "ae2:white_lumen_paint_ball",
+      "item1": "ae2:orange_lumen_paint_ball",
+      "item2": "ae2:green_lumen_paint_ball",
+      "item3": "ae2:blue_lumen_paint_ball",
+      "item4": "ae2:red_lumen_paint_ball",
+      "anchor": "lumen-paintballs",
+      "text": "They act identically to regular paintballs but the splotches emit light when shot out of a $(l:items_blocks_machines/matter_cannon)Matter Cannon$(/l). Useful as a sort of flaregun I guess."
+    },
+    {
+      "type": "text",
+      "title": "Recipes",
+      "anchor": "recipes",
+      "text": "8 paintballs around a glowstone dust"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/paintballs_lumen_white",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/paintballs_lumen_orange",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/paintballs_lumen_green",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/paintballs_lumen_blue",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/paintballs_lumen_red",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/paintballs_lumen_black",
+      "text": ""
+    }
+  ]
+}

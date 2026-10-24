@@ -1,0 +1,28 @@
+{
+  "name": "Toggle Bus",
+  "icon": "ae2:toggle_bus",
+  "category": "items_blocks_machines/network_infrastructure",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-toggle-bus",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)A bus which functions similarly to $(l:items_blocks_machines/cables)Fluix ME Glass Cable$(/l) or other cables, but it allows its connection state to be toggled via redstone. This allows you to cut off a section of a $(l:ae2_mechanics/me_network_connections)ME Network$(/l).$(br2)When redstone signal supplied the part enables the connection, $(item)ME Inverted Toggle$()"
+    },
+    {
+      "type": "text",
+      "text": "$(item)Bus$() provides the reverse behavior by disabling the connection instead.$(br2)Of note, toggling these may cause the network to reboot and recalculate the connected devices.$(br2)They are $(l:ae2_mechanics/cable_subparts)cable subparts$(/l)."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/toggle_bus",
+      "recipe2": "ae2:network/parts/toggle_bus_alt",
+      "anchor": "recipes"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/toggle_bus_inverted_alt",
+      "text": ""
+    }
+  ]
+}

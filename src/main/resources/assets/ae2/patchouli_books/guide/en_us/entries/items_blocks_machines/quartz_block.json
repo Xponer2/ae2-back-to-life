@@ -1,0 +1,21 @@
+{
+  "name": "Certus Quartz Block",
+  "icon": "ae2:quartz_block",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:quartz_block",
+      "link_recipe": true,
+      "anchor": "the-certus-quartz-block",
+      "text": "The storage block for $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l). Can be used to make $(l:items_blocks_machines/budding_certus)budding certus blocks$(/l) or $(l:items_blocks_machines/decorative_certus)decorative certus blocks$(/l)."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:decorative/quartz_block",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_pattern_provider_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:cable_pattern_provider"
+          }
+        ]
+      }
+    },
+    "has_pattern_provider_1": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:pattern_provider"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:network/parts/terminals_pattern_access"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_pattern_provider_0",
+      "has_pattern_provider_1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:network/parts/terminals_pattern_access"
+    ]
+  }
+}

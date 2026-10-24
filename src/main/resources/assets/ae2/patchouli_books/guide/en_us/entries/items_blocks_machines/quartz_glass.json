@@ -1,0 +1,26 @@
+{
+  "name": "Quartz Glass",
+  "icon": "ae2:quartz_glass",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:quartz_glass",
+      "link_recipe": true,
+      "anchor": "quartz-glass",
+      "text": "Mostly clear glass made with $(l:items_blocks_machines/certus_quartz_dust)Certus Quartz Dust$(/l). Used to make many AE2 machines and items.$(br2)There is a variant, vibrant quartz glass, that emits light."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:decorative/quartz_glass",
+      "anchor": "recipes",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:decorative/quartz_vibrant_glass",
+      "text": ""
+    }
+  ]
+}

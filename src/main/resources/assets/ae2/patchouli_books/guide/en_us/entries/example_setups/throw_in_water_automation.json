@@ -1,0 +1,61 @@
+{
+  "name": "Throwing-In-Water Automation",
+  "icon": "ae2:fluix_crystal",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "automation-of-throwing-in-water-recipes",
+      "text": "Note that since this uses a $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l), it is meant to integrate into your $(l:ae2_mechanics/autocrafting)autocrafting$(/l) setup.$(br2)Some recipes require items to be thrown into water (though a similar setup can be used to throw items other places). This can be automated with a $(l:items_blocks_machines/formation_plane)ME Formation Plane$(/l), $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l), and some supporting infrastructure (this is essentially 2 modified $(l:example_setups/pipe_subnet)pipe$(/l)"
+    },
+    {
+      "type": "text",
+      "anchor": "configurations-and-patterns",
+      "text": "$(l:example_setups/pipe_subnet)subnets$(/l)).$(br2)This setup is meant to be used in combination with $(l:example_setups/charger_automation)charger automation$(/l) to provide the $(l:items_blocks_machines/certus_quartz_crystal_charged)Charged Certus Quartz Crystal$(/l)s.$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)$(bold)Configurations and Patterns$()$(li)The $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l) (1) is in its default configuration, with the relevant $(l:items_blocks_machines/patterns)Processing$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "$(l:items_blocks_machines/patterns)Pattern$(/l)s$(li2)For $(l:items_blocks_machines/fluix_crystal)Fluix Crystal$(/l) the default recipe from JEI/REI works fine:"
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/fluix_pattern.png"
+      ],
+      "border": true,
+      "title": "Fluix Pattern",
+      "text": "$(li2)For $(l:items_blocks_machines/budding_certus)Flawed Budding Certus Quartz$(/l) it's probably best to"
+    },
+    {
+      "type": "text",
+      "text": "make it directly from $(l:items_blocks_machines/quartz_block)Certus Quartz Block$(/l), which avoids issues with the input of one recipe being the output of another, causing the storage bus to not be able to filter:"
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/flawed_budding_pattern.png"
+      ],
+      "border": true,
+      "text": "$(li)The $(l:items_blocks_machines/interface)ME Interface$(/l) (2) is in its default configuration."
+    },
+    {
+      "type": "text",
+      "text": "$(li)The $(l:items_blocks_machines/formation_plane)ME Formation Plane$(/l) (3) is set to drop inputs as items.$(li)The $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) (4) has no GUI and cannot be configured.$(li)The $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (5) is filtered to the outputs of the patterns."
+    },
+    {
+      "type": "text",
+      "title": "How It Works",
+      "anchor": "how-it-works",
+      "text": "1. The $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l) pushes the ingredients into the $(l:items_blocks_machines/interface)ME Interface$(/l) on its side, on the green subnet$(br2)2. The interface (being configured to not store anything by default) attempts to push its contents into $(l:ae2_mechanics/import_export_storage)network storage$(/l)$(br2)3. The only storage on the green subnet is the $(l:items_blocks_machines/formation_plane)ME Formation Plane$(/l), which drops the items it receives into the"
+    },
+    {
+      "type": "text",
+      "text": "water$(br2)4. The $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) on the orange subnet attempts to pick up the items that were just dropped, but cannot, because the $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) on top of the pattern provider (the only storage on the orange subnet) is filtered to only accept the results of possible crafts$(br2)5. The items perform their in-world transformation."
+    },
+    {
+      "type": "text",
+      "text": "6. The annihilation plane can now pick up the items in front of it, as the storage bus is allowed to store them.$(br2)7. The storage bus stores the resulting items in the pattern provider, returning them to the network."
+    }
+  ]
+}

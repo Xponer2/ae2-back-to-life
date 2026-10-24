@@ -1,0 +1,54 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_fluix_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:fluix_block"
+          }
+        ]
+      }
+    },
+    "has_glass_cable": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:fluix_glass_cable"
+          }
+        ]
+      }
+    },
+    "has_quartz_glass": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:quartz_glass"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:network/blocks/crystal_processing_growth_accelerator"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_fluix_block",
+      "has_glass_cable",
+      "has_quartz_glass"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:network/blocks/crystal_processing_growth_accelerator"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "Wireless Access Point",
+  "icon": "ae2:wireless_access_point",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 210,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:wireless_access_point",
+      "link_recipe": true,
+      "anchor": "the-wireless-access-point",
+      "text": "Allows wireless access via a $(l:items_blocks_machines/wireless_terminals)Wireless Terminal$(/l). Range and power usage is determined based on the number of $(item)Wireless Booster$() installed.$(br2)A network can have any number of wireless access points with any number of $(item)Wireless Booster$() in each one, allowing you to optimize power usage and range by altering your setup."
+    },
+    {
+      "type": "text",
+      "text": "Requires a $(l:ae2_mechanics/channels)channel$(/l).$(br2)Also used to bind $(l:items_blocks_machines/wireless_terminals)wireless terminals$(/l)"
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:wireless_booster",
+      "link_recipe": true,
+      "anchor": "wireless-booster",
+      "text": "Used to increase the range of the wireless access point."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/wireless_access_point",
+      "anchor": "recipes",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/wireless_booster",
+      "text": ""
+    }
+  ]
+}

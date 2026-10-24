@@ -1,0 +1,24 @@
+{
+  "name": "Charged Certus Quartz Crystal",
+  "icon": "ae2:charged_certus_quartz_crystal",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:charged_certus_quartz_crystal",
+      "link_recipe": true,
+      "anchor": "the-charged-certus-quartz-crystal",
+      "text": "A $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l) that has been run through a $(l:items_blocks_machines/charger)Charger$(/l). Used in the production of $(l:items_blocks_machines/fluix_crystal)Fluix Crystal$(/l) and $(l:items_blocks_machines/budding_certus)budding certus blocks$(/l)."
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Charger",
+      "in0": "ae2:certus_quartz_crystal",
+      "output": "ae2:charged_certus_quartz_crystal",
+      "machine": "ae2:charger",
+      "text": "",
+      "anchor": "recipe"
+    }
+  ]
+}

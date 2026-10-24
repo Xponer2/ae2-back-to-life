@@ -1,0 +1,37 @@
+{
+  "name": "Automatic Ore Fortuner",
+  "icon": "ae2:guide",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "automation-of-ore-fortuning",
+      "text": "The $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) can be enchanted with any pickaxe enchantment, including fortune, so an obvious use case is to apply fortune to a few, and have $(l:items_blocks_machines/formation_plane)ME Formation Plane$(/l)s and $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l)s rapidly place and break ores.$(br2)Note that since $(l:items_blocks_machines/import_bus)ME Import Bus$(/l)ses \"spin up to speed\", the setup will start slow then reach full speed in a few seconds."
+    },
+    {
+      "type": "text",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Configurations",
+      "anchor": "configurations",
+      "text": "$(li)The $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) (1) has a few $(l:items_blocks_machines/upgrade_cards)Acceleration Card$(/l)s in it. More are required the more formation planes are in the array, as they make the import bus pull more items at once.$(li)The $(l:items_blocks_machines/formation_plane)ME Formation Plane$(/l)s (2) are in their default configurations.$(li)The $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l)s (3) have no GUI and cannot be configured, but are enchanted with fortune.$(li)The $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (4) is in"
+    },
+    {
+      "type": "text",
+      "text": "its default configuration."
+    },
+    {
+      "type": "text",
+      "title": "How It Works",
+      "anchor": "how-it-works",
+      "text": "1. The $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) on the green subnet imports blocks from the first barrel into $(l:ae2_mechanics/import_export_storage)network storage$(/l)$(br2)2. The only storage on the green subnet is the $(l:items_blocks_machines/formation_plane)ME Formation Plane$(/l), which places the blocks.$(br2)3. The $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) on the orange subnet breaks the blocks, applying fortune to them."
+    },
+    {
+      "type": "text",
+      "text": "4. The $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) on the orange subnet stores the results of the breaking in the second barrel."
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_quartz_dust_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:certus_quartz_dust"
+          }
+        ]
+      }
+    },
+    "has_quartz_dust_1": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "type": "forge:ore_dict",
+            "ore": "dustCertusQuartz"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:decorative/quartz_glass"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_quartz_dust_0",
+      "has_quartz_dust_1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:decorative/quartz_glass"
+    ]
+  }
+}

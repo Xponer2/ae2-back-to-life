@@ -1,0 +1,114 @@
+{
+  "name": "Cables",
+  "icon": "ae2:fluix_glass_cable",
+  "category": "items_blocks_machines/network_infrastructure",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "cables",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)While ME networks are also created by adjacent ME-capable machines, cables are the primary way of extending an ME network over larger areas.$(br2)Differently colored cables can be used to ensure adjacent cables do not connected to each other, allowing $(l:ae2_mechanics/channels)channels$(/l) to be distributed more"
+    },
+    {
+      "type": "text",
+      "text": "efficiently. They also affect the color of terminals connected to them, so you don't have to have all your terminals be purple. Fluix cables connect to every other color.$(br2)Of note, $(bold)CHANNELS HAVE NOTHING TO DO WITH CABLE COLOR$()"
+    },
+    {
+      "type": "text",
+      "title": "An Important Note",
+      "anchor": "an-important-note",
+      "text": "$(bold)If you are new to AE2 and unfamiliar with channels, use smart cable and dense smart cable wherever you can. It will show how channels are routed through your network, making their behavior more understandable.$()"
+    },
+    {
+      "type": "text",
+      "title": "Another Note",
+      "anchor": "another-note",
+      "text": "$(bold)These are not item or fluid or energy or etc. pipes.$() They have no internal inventory, pattern providers and machines do not \"push\" into them, all they do is connect AE2 $(l:ae2_mechanics/devices)devices$(/l) together into a network."
+    },
+    {
+      "type": "text",
+      "title": "Glass Cable",
+      "anchor": "glass-cable",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)$(item)Fluix ME Glass Cable$() is the simplest cable to make, transfers power and up to 8 $(l:ae2_mechanics/channels)channels$(/l). It comes in 17 different colors, the default being Fluix, and can be dyed any color using any of the 16 dyes.$(br2)To craft colored cables surround a dye of any type with 8 cables of the same type"
+    },
+    {
+      "type": "text",
+      "text": "( color of the cables dosn't matter, but they must be the same type, glass, smart, etc ). You can also paint cables with any forge compatible paint brush in world.$(br2)You can craft any colored cable with a water bucket to remove the dye.$(br2)You can cover the cable with wool to create $(item)Fluix ME Covered Cable$(), and craft $(item)Fluix ME Smart Cable$() to get a better idea of what is going on with"
+    },
+    {
+      "type": "text",
+      "text": "your $(l:ae2_mechanics/channels)channels$(/l)."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cables/glass_fluix",
+      "recipe2": "ae2:network/cables/glass_fluix_clean"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cables/glass_blue",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Covered Cable",
+      "anchor": "covered-cable",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)The covered cable variant offers no gameplay benefits over its $(item)Fluix ME Glass Cable$() counterpart. It can however be used as an alternate aesthetic choice if you prefer the covered look.$(br2)Can be colored in the same manner as $(item)Fluix ME Glass Cable$(). Four $(item)Fluix ME Covered Cable$() can be crafted with"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cables/covered_fluix",
+      "text": "redstone and glowstone to make $(item)Fluix ME Dense Covered Cable$()."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cables/covered_blue",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Dense Cable",
+      "anchor": "dense-cable",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)Higher Capacity cable, can carry 32 channels unlike standard cable which can only carry 8, however it doesn't support buses so you must first step down from dense to a smaller cable (such as $(item)Fluix ME Glass Cable$() or $(item)Fluix ME Smart Cable$()) before using buses or panels."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cables/dense_covered_fluix",
+      "text": "Dense cables slightly override the \"shortest path\" behavior of channels, channels will take the shortest path to a dense cable, and then the shortest path through that dense cable to a controller."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cables/dense_covered_blue",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Smart Cable",
+      "anchor": "smart-cable",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)While bearing some similarity to $(item)Fluix ME Covered Cable$() in appearance, they provide diagnostic function by visualizing the channel usage on the cables, the channels appear as lit colored lines that run along the black stripe on the cables giving"
+    },
+    {
+      "type": "text",
+      "text": "you an understanding of how your channels are being used on your network. For regular smart cables, the first four channels show as lines matching the color of the cable, the next four show as white lines. For dense smart cable, each stripe represents 4 channels.$(br2)On networks with a $(l:items_blocks_machines/controller)ME Controller$(/l), the lines on the cables show the exact path the channels take."
+    },
+    {
+      "type": "text",
+      "text": "Smart cables on ad-hoc networks will instead show the number of channels in use network-wide instead of the number of channels flowing through that specific cable.$(br2)These can also be colored in the same manner as $(item)Fluix ME Glass Cable$()."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cables/smart_fluix",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cables/dense_smart_fluix",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cables/smart_blue",
+      "text": ""
+    }
+  ]
+}

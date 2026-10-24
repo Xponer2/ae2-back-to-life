@@ -1,0 +1,29 @@
+{
+  "name": "Illuminated Panels",
+  "icon": "ae2:semi_dark_monitor",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "illuminated-panels",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)Illuminated panels are a decorative light source that is also used in the production of $(l:items_blocks_machines/terminals)terminals$(/l).$(br2)They are $(l:ae2_mechanics/cable_subparts)cable subparts$(/l)."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/panels_monitor",
+      "anchor": "recipes",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/panels_semi_dark_monitor",
+      "recipe2": "ae2:network/parts/panels_semi_dark_monitor_alt"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/panels_dark_monitor",
+      "text": ""
+    }
+  ]
+}

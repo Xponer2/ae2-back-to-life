@@ -1,0 +1,124 @@
+{
+  "name": "Inscriber",
+  "icon": "ae2:inscriber",
+  "category": "items_blocks_machines/machines",
+  "sortnum": 310,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:inscriber",
+      "link_recipe": true,
+      "anchor": "the-inscriber",
+      "text": "The inscriber is used to inscribe circuits and $(l:items_blocks_machines/processors)processors$(/l) using $(l:items_blocks_machines/presses)presses$(/l), and to crush various items into dust. It can accept either AE2's power (AE) or Fabric/Forge Energy (E/FE). It can be sided, such that inserting items from different sides inserts them into different slots in its inventory. To facilitate this, it"
+    },
+    {
+      "type": "text",
+      "text": "can be rotated with a $(l:items_blocks_machines/wrench)Certus Quartz Wrench$(/l). It can also be set to push the results of crafts to adjacent inventories.$(br2)The size of the input buffer can be adjusted. For example, if you want to feed from one inventory into a big array of inscribers, you want a small buffer so that the materials are distributed between the inscribers more optimally (instead of the first inscriber filling up to 64 and the rest being empty)."
+    },
+    {
+      "type": "ae2:item_row_4",
+      "item0": "ae2:silicon_press",
+      "item1": "ae2:logic_processor_press",
+      "item2": "ae2:calculation_processor_press",
+      "item3": "ae2:engineering_processor_press",
+      "text": "The 4 circuit presses are used to craft $(l:items_blocks_machines/processors)processors$(/l)$(br2)While the name press can be used to name blocks similar to an anvil, useful for labeling things in a $(l:items_blocks_machines/terminals)ME Pattern Access Terminal$(/l)."
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:name_press",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Settings",
+      "anchor": "settings",
+      "text": "$(li)The inscriber can be set to be sided (as explained below) or allow inputs to any slot from any side, with an internal filter deciding what goes where. While in non-sided mode, items cannot be extracted from the top and bottom slots.$(li)The inscriber can be set to push items into adjacent inventories.$(li)The size of the input buffer can be adjusted, the large option is for a standalone"
+    },
+    {
+      "type": "text",
+      "anchor": "the-gui-and-sidedness",
+      "text": "inscriber you feed manually, the small option is to make large parallelized setups more viable.$(br2)$(bold)The GUI And Sidedness$()$(br2)When in sided mode, the inscriber filters what goes where by which side you insert or extract from."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/inscriber_gui.png"
+      ],
+      "border": true,
+      "title": "Inscriber GUI",
+      "text": ""
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/inscriber_sides.png"
+      ],
+      "border": true,
+      "title": "Inscriber Sides",
+      "text": "A. $(bold)Top Input$() accessed via the top side of the inscriber (items can be both pushed to"
+    },
+    {
+      "type": "text",
+      "text": "and pulled from this slot)$(br2)B. $(bold)Center Input$() inserted to via the left, right, front, and rear sides of the inscriber (items can only be pushed to this slot, not pulled from)$(br2)C. $(bold)Bottom Input$() accessed via the bottom side of the inscriber (items can be both pushed to and pulled from this slot)$(br2)D. $(bold)Output$() pulled from via the left, right, front, and rear"
+    },
+    {
+      "type": "text",
+      "text": "sides of the inscriber (items can only be pulled from this slot, not pushed to)"
+    },
+    {
+      "type": "text",
+      "title": "Simple Automation",
+      "anchor": "simple-automation",
+      "text": "As an example, the sidedness and rotateability mean you can semi-automate inscribers like so:"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            " ",
+            "A",
+            " ",
+            " ",
+            "A"
+          ],
+          [
+            "B",
+            "C",
+            "D",
+            " ",
+            "C"
+          ],
+          [
+            "0",
+            "A",
+            " ",
+            " ",
+            "A"
+          ]
+        ],
+        "mapping": {
+          "A": "minecraft:hopper[facing=down]",
+          "B": "minecraft:hopper[facing=east]",
+          "C": "ae2:inscriber",
+          "D": "minecraft:hopper[facing=west]"
+        }
+      },
+      "text": "Or just pipe into and out of the inscriber when in non-sided mode."
+    },
+    {
+      "type": "text",
+      "title": "Upgrades",
+      "anchor": "upgrades",
+      "text": "The inscriber supports the following $(l:items_blocks_machines/upgrade_cards)upgrades$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Acceleration Card$(/l)"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/inscribers",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

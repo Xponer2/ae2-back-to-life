@@ -1,0 +1,13 @@
+{
+  "name": "Quantum Bridge",
+  "icon": "ae2:quantum_ring",
+  "category": "ae2_mechanics",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-quantum-network-bridge",
+      "text": "See $(l:items_blocks_machines/quantum_bridge)Quantum Network Bridge$(/l)"
+    }
+  ]
+}

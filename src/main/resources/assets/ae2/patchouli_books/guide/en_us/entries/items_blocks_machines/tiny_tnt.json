@@ -1,0 +1,21 @@
+{
+  "name": "Tiny TNT",
+  "icon": "ae2:tiny_tnt",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:tiny_tnt",
+      "link_recipe": true,
+      "anchor": "tiny-tnt",
+      "text": "Small TNT for small explosions. Useful for making $(l:items_blocks_machines/singularities)Quantum Entangled Singularity$(/l) pairs.$(br2)It can have its block damage disabled in the config to allow making singularities without the possibility of griefing, if you want to disable TNT and creepers on your server."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:misc/tiny_tnt",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

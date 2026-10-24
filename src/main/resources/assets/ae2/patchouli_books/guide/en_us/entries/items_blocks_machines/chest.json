@@ -1,0 +1,85 @@
+{
+  "name": "ME Chest",
+  "icon": "ae2:chest",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 210,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-me-chest",
+      "text": "The ME Chest acts like a miniature network with a $(l:items_blocks_machines/terminals)ME Terminal$(/l), $(l:items_blocks_machines/drive)ME Drive$(/l), and $(l:items_blocks_machines/energy_acceptor)Energy Acceptor$(/l). While it can be used as a tiny storage network, its capacity for just one single $(l:items_blocks_machines/storage_cells)storage cell$(/l) means it has limited utility as such.$(br2)Instead, it is useful for interacting with specifically the storage cell mounted inside it. Its integrated terminal can only see and"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "0"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:chest[lights_on=true]",
+          "0": "ae2:chest[lights_on=true]"
+        }
+      },
+      "text": ""
+    },
+    {
+      "type": "text",
+      "text": "access the items in the mounted drive, while $(l:ae2_mechanics/devices)devices$(/l) on the general network can access items in any $(l:ae2_mechanics/import_export_storage)network storage$(/l), including ME chests.$(br2)It has 2 different GUIs and is sided for item transport. Interacting with the top terminal opens the integrated terminal. Items can be inserted into the mounted storage cell through this face, but not extracted. Interacting with any other face opens the GUI with the slot for the storage cell"
+    },
+    {
+      "type": "text",
+      "text": "and the priority settings. The cell can be inserted and removed by item logistics only through the face with the cell slot.$(br2)It can be rotated with a $(l:items_blocks_machines/wrench)Certus Quartz Wrench$(/l).$(br2)It has a small AE energy storage buffer, so if not on a network with an $(l:items_blocks_machines/energy_cells)energy cell$(/l), inserting or extracting too many items at once may cause it to brown out."
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "0",
+            " ",
+            "A"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:chest[lights_on=true]",
+          "0": "ae2:chest[lights_on=true]"
+        }
+      },
+      "text": "The terminal can be colored with a $(l:items_blocks_machines/color_applicator)Color Applicator$(/l)."
+    },
+    {
+      "type": "text",
+      "title": "Settings",
+      "anchor": "settings",
+      "text": "The ME Chest has all the same settings as a $(l:items_blocks_machines/terminals)ME Terminal$(/l) or $(l:items_blocks_machines/terminals)ME Crafting Terminal$(/l). It, however, does not support $(l:items_blocks_machines/view_cell)View Cell$(/l)s."
+    },
+    {
+      "type": "text",
+      "title": "Cell Status LEDs",
+      "anchor": "cell-status-leds",
+      "text": "The cells in the chest have an LED on them which shows their status:$(li)$(bold)Green$(): Empty$(li)$(bold)Blue$(): Has some contents$(li)$(bold)Orange$(): $(l:ae2_mechanics/bytes_and_types)Types$(/l) full, no new types can be added$(li)$(bold)Red$(): $(l:ae2_mechanics/bytes_and_types)Bytes$(/l) full, no more items can be inserted$(li)$(bold)Black$(): No power or drive has no $(l:ae2_mechanics/channels)channel$(/l)"
+    },
+    {
+      "type": "text",
+      "title": "Priority",
+      "anchor": "priority",
+      "text": "Priorities can be set by clicking the wrench in the top-right of the cell slot GUI. Items entering the network will start at the highest priority storage as their first destination. In the case of two storages or cells have the same priority, if one already contains the item, they will prefer that storage over any other. Any $(l:items_blocks_machines/cell_workbench)partitioned$(/l) cells will be treated as already containing the item when in the same priority group as other"
+    },
+    {
+      "type": "text",
+      "text": "storages. Items being removed from storage will be removed from the storage with the lowest priority. This priority system means as items are inserted and removed from network storage, higher priority storages will be filled and lower priority storages will be emptied."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/storage_chest",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

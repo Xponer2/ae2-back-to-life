@@ -1,0 +1,25 @@
+{
+  "name": "Certus Quartz Dust",
+  "icon": "ae2:certus_quartz_dust",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:certus_quartz_dust",
+      "link_recipe": true,
+      "anchor": "certus-quartz-dust",
+      "text": "A $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l) that has been crushed by an $(l:items_blocks_machines/inscriber)Inscriber$(/l). Used in the production of several AE2 materials and components."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Inscriber",
+      "top": "",
+      "middle": "ae2:certus_quartz_crystal,ae2:charged_certus_quartz_crystal,ore:crystalCertusQuartz,ore:gemCertusQuartz",
+      "bottom": "",
+      "output": "ae2:certus_quartz_dust",
+      "text": "The presses are not used up.",
+      "anchor": "recipe"
+    }
+  ]
+}

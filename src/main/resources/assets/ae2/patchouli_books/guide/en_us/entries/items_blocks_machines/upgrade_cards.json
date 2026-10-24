@@ -1,0 +1,163 @@
+{
+  "name": "Upgrade Cards",
+  "icon": "ae2:speed_card",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "upgrade-cards",
+      "text": "Upgrade cards change the behavior of AE2 $(l:ae2_mechanics/devices)devices$(/l) and machines, increasing their speed, improving their filter capacity, enabling redstone control, etc."
+    },
+    {
+      "type": "ae2:item_row_9",
+      "item0": "ae2:redstone_card",
+      "item1": "ae2:capacity_card",
+      "item2": "ae2:void_card",
+      "item3": "ae2:fuzzy_card",
+      "item4": "ae2:speed_card",
+      "item5": "ae2:inverter_card",
+      "item6": "ae2:crafting_card",
+      "item7": "ae2:equal_distribution_card",
+      "item8": "ae2:energy_card",
+      "text": ""
+    },
+    {
+      "type": "ae2:item_row_2",
+      "item0": "ae2:basic_card",
+      "item1": "ae2:advanced_card",
+      "anchor": "card-components",
+      "text": "Cards are crafted with either basic or advanced card bases"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:materials/basiccard",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:materials/advancedcard",
+      "text": ""
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:redstone_card",
+      "link_recipe": true,
+      "anchor": "redstone-card",
+      "text": "Redstone cards add redstone control, adding a toggle button in the device's GUI to swap between various redstone conditions."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:materials/cardredstone",
+      "text": ""
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:capacity_card",
+      "link_recipe": true,
+      "anchor": "capacity-card",
+      "text": "Capacity cards increase the amount of filter slots in import, export, and storage busses, and formation planes."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:materials/cardcapacity",
+      "anchor": "overflow-destruction-card",
+      "text": "$(bold)Overflow Destruction Card$()"
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:void_card",
+      "link_recipe": true,
+      "text": "Overflow destruction cards can be applied to $(l:items_blocks_machines/storage_cells)storage cells$(/l) in a $(l:items_blocks_machines/cell_workbench)Cell Workbench$(/l) and will delete incoming items if the cell is full. (make sure to $(l:items_blocks_machines/cell_workbench)partition$(/l) your cells!) Combined with an equal distribution card, items will be voided if that specific item's section of the cell is full, even if other items' sections are empty."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:materials/cardvoid",
+      "text": ""
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:fuzzy_card",
+      "link_recipe": true,
+      "anchor": "fuzzy-card",
+      "text": "Fuzzy cards let devices and tools with filters filter by damage level and/or ignore item NBT, allowing you to export all iron axes no matter the damage level and enchantments, or only export damaged diamond swords, not fully repaired ones.$(br2)Below is an example of how Fuzzy Damage comparison mods"
+    },
+    {
+      "type": "text",
+      "text": "work, left side is the bus config, top is the compared item.$(li)$(bold)Nearly Broken Pickaxe$(): 10% Damaged Pickaxe ✅; 30% Damaged Pickaxe \\$(o)\\$()\\$(o)\\$(); 80% Damaged Pickaxe \\$(o)\\$()\\$(o)\\$(); Full Repair Pickaxe \\$(o)\\$()\\$(o)\\$()$(li)$(bold)Fully Repaired Pickaxe$(): 10% Damaged Pickaxe \\$(o)\\$()\\$(o)\\$(); 30% Damaged Pickaxe ✅; 80% Damaged Pickaxe ✅; Full Repair Pickaxe ✅$(li)$(bold)Nearly Broken Pickaxe$(): 10% Damaged Pickaxe ✅; 30% Damaged Pickaxe ✅; 80% Damaged Pickaxe \\$(o)\\$()\\$(o)\\$(); Full Repair"
+    },
+    {
+      "type": "text",
+      "text": "Pickaxe \\$(o)\\$()\\$(o)\\$()$(li)$(bold)Fully Repaired Pickaxe$(): 10% Damaged Pickaxe \\$(o)\\$()\\$(o)\\$(); 30% Damaged Pickaxe \\$(o)\\$()\\$(o)\\$(); 80% Damaged Pickaxe ✅; Full Repair Pickaxe ✅$(li)$(bold)Nearly Broken Pickaxe$(): 10% Damaged Pickaxe ✅; 30% Damaged Pickaxe ✅; 80% Damaged Pickaxe \\$(o)\\$()\\$(o)\\$(); Full Repair Pickaxe \\$(o)\\$()\\$(o)\\$()$(li)$(bold)Fully Repaired Pickaxe$(): 10% Damaged Pickaxe \\$(o)\\$()\\$(o)\\$(); 80% Damaged Pickaxe ✅; Full Repair Pickaxe ✅"
+    },
+    {
+      "type": "text",
+      "text": "$(li)$(bold)Nearly Broken Pickaxe$(): 10% Damaged Pickaxe ✅; 30% Damaged Pickaxe ✅; 80% Damaged Pickaxe ✅; Full Repair Pickaxe \\$(o)\\$()\\$(o)\\$()$(li)$(bold)Fully Repaired Pickaxe$(): 10% Damaged Pickaxe \\$(o)\\$()\\$(o)\\$(); 30% Damaged Pickaxe \\$(o)\\$()\\$(o)\\$(); 80% Damaged Pickaxe \\$(o)\\$()\\$(o)\\$(); Full Repair Pickaxe ✅$(li)$(bold)Nearly Broken Pickaxe$(): 10% Damaged Pickaxe ✅; 30% Damaged Pickaxe ✅; 80% Damaged Pickaxe ✅; Full Repair Pickaxe $(bold)✅$()"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:materials/cardfuzzy",
+      "text": "$(li)$(bold)Fully Repaired Pickaxe$(): 10% Damaged Pickaxe $(bold)✅$(); 30% Damaged Pickaxe $(bold)✅$(); 80% Damaged Pickaxe $(bold)✅$(); Full Repair Pickaxe ✅"
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:speed_card",
+      "link_recipe": true,
+      "anchor": "acceleration-card",
+      "text": "Acceleration cards make stuff go faster, making import and export busses move more items per operation, and making inscribers and assemblers work faster."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:materials/cardspeed",
+      "text": ""
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:inverter_card",
+      "link_recipe": true,
+      "anchor": "inverter-card",
+      "text": "Inverter cards swap filters in devices and tools from whitelist to blacklist."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:materials/cardinverter",
+      "text": ""
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:crafting_card",
+      "link_recipe": true,
+      "anchor": "crafting-card",
+      "text": "Crafting cards let the device send crafting requests to your $(l:ae2_mechanics/autocrafting)autocrafting$(/l) system to get the items it desires."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:materials/cardcrafting",
+      "anchor": "equal-distribution-card",
+      "text": "$(bold)Equal Distribution Card$()"
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:equal_distribution_card",
+      "link_recipe": true,
+      "text": "Equal distribution cards can be applied to $(l:items_blocks_machines/storage_cells)storage cells$(/l) in a $(l:items_blocks_machines/cell_workbench)Cell Workbench$(/l) and split the cell into equally-sized sections based on what the card is $(l:items_blocks_machines/cell_workbench)partitioned$(/l) to. This prevents one item type from completely filling the cell."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:materials/carddistribution",
+      "text": ""
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:energy_card",
+      "link_recipe": true,
+      "anchor": "energy-card",
+      "text": "Energy cards add more energy storage to certain tools like portable terminals, and make $(l:items_blocks_machines/vibration_chamber)Vibration Chamber$(/l)s more efficient."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:materials/cardenergy",
+      "text": ""
+    }
+  ]
+}

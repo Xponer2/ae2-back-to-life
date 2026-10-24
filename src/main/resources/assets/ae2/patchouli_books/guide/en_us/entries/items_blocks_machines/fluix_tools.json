@@ -1,0 +1,73 @@
+{
+  "name": "Fluix Tools",
+  "icon": "ae2:fluix_pickaxe",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "fluix-tools",
+      "text": "$(l:items_blocks_machines/fluix_crystal)Fluix$(/l) tools are similar to iron tools, having 3x the durability and a slightly higher attack damage and mining speed.$(br2)All fluix tools act as if they have at least fortune/looting 1, which is useful before getting access to an enchanting table.$(br2)You will need to make a $(l:items_blocks_machines/fluix_upgrade_smithing_template)Fluix Upgrade$(/l)"
+    },
+    {
+      "type": "ae2:item_row_5",
+      "item0": "ae2:fluix_axe",
+      "item1": "ae2:fluix_hoe",
+      "item2": "ae2:fluix_shovel",
+      "item3": "ae2:fluix_pickaxe",
+      "item4": "ae2:fluix_sword",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_3",
+      "title": "Smithing",
+      "in0": "ae2:fluix_upgrade_smithing_template",
+      "in1": "ae2:certus_quartz_axe,ae2:nether_quartz_axe",
+      "in2": "ae2:fluix_block",
+      "output": "ae2:fluix_axe",
+      "machine": "",
+      "text": "Smithing table recipe.",
+      "anchor": "recipes"
+    },
+    {
+      "type": "ae2:recipe_3",
+      "title": "Smithing",
+      "in0": "ae2:fluix_upgrade_smithing_template",
+      "in1": "ae2:certus_quartz_hoe,ae2:nether_quartz_hoe",
+      "in2": "ae2:fluix_block",
+      "output": "ae2:fluix_hoe",
+      "machine": "",
+      "text": "Smithing table recipe."
+    },
+    {
+      "type": "ae2:recipe_3",
+      "title": "Smithing",
+      "in0": "ae2:fluix_upgrade_smithing_template",
+      "in1": "ae2:certus_quartz_shovel,ae2:nether_quartz_shovel",
+      "in2": "ae2:fluix_block",
+      "output": "ae2:fluix_shovel",
+      "machine": "",
+      "text": "Smithing table recipe."
+    },
+    {
+      "type": "ae2:recipe_3",
+      "title": "Smithing",
+      "in0": "ae2:fluix_upgrade_smithing_template",
+      "in1": "ae2:certus_quartz_pickaxe,ae2:nether_quartz_pickaxe",
+      "in2": "ae2:fluix_block",
+      "output": "ae2:fluix_pickaxe",
+      "machine": "",
+      "text": "Smithing table recipe."
+    },
+    {
+      "type": "ae2:recipe_3",
+      "title": "Smithing",
+      "in0": "ae2:fluix_upgrade_smithing_template",
+      "in1": "ae2:certus_quartz_sword,ae2:nether_quartz_sword",
+      "in2": "ae2:fluix_block",
+      "output": "ae2:fluix_sword",
+      "machine": "",
+      "text": "Smithing table recipe."
+    }
+  ]
+}

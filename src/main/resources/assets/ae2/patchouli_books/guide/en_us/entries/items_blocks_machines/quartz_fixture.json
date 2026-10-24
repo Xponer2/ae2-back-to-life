@@ -1,0 +1,30 @@
+{
+  "name": "Quartz Fixtures",
+  "icon": "ae2:quartz_fixture",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "quartz-fixtures",
+      "text": "The charged quartz fixture is a little greeble that emits light.$(br2)The light detecting fixture instead emits a redstone signal according to the light level of its block."
+    },
+    {
+      "type": "ae2:item_row_2",
+      "item0": "ae2:quartz_fixture",
+      "item1": "ae2:light_detector",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:decorative/quartz_fixture",
+      "recipe2": "ae2:decorative/quartz_fixture_from_anchors",
+      "anchor": "recipes"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:decorative/light_detector",
+      "text": ""
+    }
+  ]
+}

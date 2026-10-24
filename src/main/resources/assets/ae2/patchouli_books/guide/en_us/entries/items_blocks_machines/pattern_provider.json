@@ -1,0 +1,132 @@
+{
+  "name": "Pattern Provider",
+  "icon": "ae2:pattern_provider",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 210,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:pattern_provider",
+      "link_recipe": true,
+      "anchor": "the-pattern-provider",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)Pattern providers are the primary way in which your $(l:ae2_mechanics/autocrafting)autocrafting$(/l) system interacts with the world. They push the ingredients in their $(l:items_blocks_machines/patterns)patterns$(/l) to adjacent inventories, and items can be inserted into them in order to insert them into the network. Often a"
+    },
+    {
+      "type": "text",
+      "text": "channel can be saved by piping the output of a machine back into a nearby pattern provider (often the one that pushed the ingredients) instead of using an $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) to pull the output of the machine into the network.$(br2)Of note, since they push the ingredients directly from the $(l:items_blocks_machines/crafting_cpu_multiblock#crafting-storage)crafting storage$(/l) in a crafting CPU, they never actually contain the ingredients in their inventory, so you cannot pipe out from them. You have"
+    },
+    {
+      "type": "text",
+      "text": "to have the provider push to another inventory (like a barrel) then pipe from that.$(br2)Also of note, the provider has to push ALL of the ingredients at once, it can't push half-batches. This is useful to exploit.$(br2)Pattern providers have a special interaction with interfaces on $(l:ae2_mechanics/subnetworks)subnets$(/l): if the interface is unmodified (nothing in the request slots) the provider will skip the"
+    },
+    {
+      "type": "text",
+      "text": "interface entirely and push directly to that subnet's $(l:ae2_mechanics/import_export_storage)storage$(/l), skipping the interface and not filling it with recipe batches, and more importantly, not inserting the next batch until there's space in the machine. This works correctly with blocking mode, the provider will monitor the slots in the machine for ingredients, instead of the slots in the interface.$(br2)For example, this setup will push both the thing to be"
+    },
+    {
+      "type": "text",
+      "text": "smelted and the fuel directly into the corresponding slots in the furnace. You can use this to pattern provide into multiple sides of a machine, or multiple machines.$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)This is a general illustration of providing to multiple machines$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "text": "Multiple pattern providers with identical patterns are supported and work in parallel.$(br2)Pattern providers will attempt to round-robin their batches to all of their faces, thus using all attached machines in parallel."
+    },
+    {
+      "type": "text",
+      "title": "Variants",
+      "anchor": "variants",
+      "text": "Pattern Providers come in 3 different variants: normal, directional, and flat/$(l:ae2_mechanics/cable_subparts)subpart$(/l). This affects which specific sides they push ingredients to, receive items from, and provide a network connection to.$(li)Normal pattern providers push ingredients to all sides, receive inputs from all sides, and, like most AE2 machines, act like a cable providing $(l:ae2_mechanics/me_network_connections)network connections$(/l) to all sides."
+    },
+    {
+      "type": "text",
+      "text": "$(li)Directional pattern providers are made by using a $(l:items_blocks_machines/wrench)Certus Quartz Wrench$(/l) on a normal pattern provider to change its direction. They only push ingredients to the selected side, receive inputs from all sides, and specifically don't provide a $(l:ae2_mechanics/me_network_connections)network connection$(/l) on the selected side. This allows them to push to AE2 machines without connecting networks, if you want to make a subnetwork."
+    },
+    {
+      "type": "text",
+      "text": "$(li)Flat pattern providers are $(l:ae2_mechanics/cable_subparts)cable subparts$(/l), and so multiple can be placed on the same cable, allowing for compact setups. They act similar to the selected side on a directional pattern provider, providing patterns, receiving inputs, and $(bold)not$() providing a $(l:ae2_mechanics/me_network_connections)network connection$(/l) on their face.$(br2)Pattern providers can be swapped between normal and flat in a crafting grid."
+    },
+    {
+      "type": "text",
+      "title": "Settings",
+      "anchor": "settings",
+      "text": "Pattern providers have a variety of modes:$(li)$(bold)Blocking Mode$() stops the provider from pushing a new batch of ingredients if there are already ingredients in the machine.$(li)$(bold)Lock Crafting$() can lock the provider under various redstone conditions, or until the result of the previous craft is inserted into that specific pattern provider.$(li)The provider can be shown or hidden on $(l:items_blocks_machines/terminals)ME Pattern$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "$(l:items_blocks_machines/terminals)Access Terminal$(/l)s."
+    },
+    {
+      "type": "text",
+      "title": "Priority",
+      "anchor": "priority",
+      "text": "Priorities can be set by clicking the wrench in the top-right of the GUI. In the case of several $(l:items_blocks_machines/patterns)patterns$(/l) for the same item, patterns in providers with higher priority will be used over patterns in providers with lower priority, unless the network does not have the ingredients for the higher priority pattern.$(br2)$(bold)A Common Misconception$()"
+    },
+    {
+      "type": "text",
+      "text": "For some reason people keep doing this, I don't understand why, but I'm putting this here to hopefully help. (Perhaps people are mistaken, thinking an $(l:items_blocks_machines/export_bus)ME Export Bus$(/l) is the only way for things to exit the network, not knowing that pattern providers also export things)$(br2)This will not do what you want it to do. As mentioned in $(l:items_blocks_machines/cables)cables$(/l), cables are not item pipes, they have no internal inventory, providers will not"
+    },
+    {
+      "type": "text",
+      "text": "push into them.$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)Since the provider doesn't have anything to push to, it will not be able to function. All it's doing here is acting like a cable, connecting the $(l:items_blocks_machines/export_bus)ME Export Bus$(/l) to the network.$(br2)The provider will also not somehow tell the $(l:items_blocks_machines/export_bus)ME Export Bus$(/l) what to export, the export bus will just export everything you"
+    },
+    {
+      "type": "text",
+      "anchor": "use-with-molecular-assemblers",
+      "text": "put in its filter.$(br2)What we've essentially done here is this:$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)Likely what you would actually want to make is this, where the pattern provider can export the contents of its patterns to the adjacent machine:$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "text": "$(bold)Use With Molecular Assemblers$()$(br2)$(l:items_blocks_machines/molecular_assembler)Molecular Assembler$(/l)s are basically just like any other machine. They have an inventory that can be inserted into, they then perform an action on the things in that inventory, and then, like many machines, they push the result to an adjacent inventory. Thus, they should be used with providers like any other machine, with one addition:"
+    },
+    {
+      "type": "text",
+      "text": "Assemblers can take the desired pattern from a $(l:items_blocks_machines/patterns)Crafting Pattern$(/l), $(l:items_blocks_machines/patterns)Smithing Table Pattern$(/l), or $(l:items_blocks_machines/patterns)Stonecutting Pattern$(/l) that is inserted directly into the assembler. This is useful in an assembly line but having to have a dedicated assembler per-crafting-recipe would be annoying.$(br2)Thus, pattern providers have a special functionality with assemblers, they can send the pattern data along with the"
+    },
+    {
+      "type": "text",
+      "text": "ingredients. This way, you can simply place an assembler next to a pattern provider, and the provider can then use the assembler for all of its crafting, smithing, and stonecutting patterns.$(br2)It's really this simple, just put the patterns in the providers:"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "BA",
+            "AB",
+            "BA",
+            "AB"
+          ],
+          [
+            "0B",
+            "BA",
+            "AB",
+            "BA"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:molecular_assembler[powered=true]",
+          "B": "ae2:pattern_provider[push_direction=all]",
+          "0": "ae2:molecular_assembler[powered=true]"
+        }
+      },
+      "text": "$(o)Note that this has exactly 8 providers, the maximum amount of channels that can be routed$()"
+    },
+    {
+      "type": "text",
+      "text": "$(o)through a single assembler, provider, or non-dense cable.$()"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/pattern_providers_interface",
+      "recipe2": "ae2:network/blocks/pattern_providers_interface_alt",
+      "anchor": "recipes"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/pattern_providers_interface_part",
+      "text": ""
+    }
+  ]
+}

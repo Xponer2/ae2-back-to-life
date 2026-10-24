@@ -1,0 +1,31 @@
+{
+  "name": "Index/Table of Contents",
+  "icon": "ae2:guide",
+  "category": "getting_started",
+  "sortnum": -1,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "what-is-applied-energistics-2",
+      "text": "$(bold)How To Use This Guide$()$(li)Access the sidebar on the left to find a table of contents$(li)Many pages have interactive scenes. If a scene has and (zoom) buttons next to it, you can rotate and move the camera. Left click and drag to rotate, right click and drag to translate.$(br2)$(bold)What is Applied Energistics 2?$()"
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/logo.png"
+      ],
+      "border": true,
+      "title": "Logo",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "text": "Applied Energistics 2 adds components and mechanics to provide logistics and storage solutions. You can replace your massive room full of chests with a compact ME Network, but that's just the beginning of things. Applied Energistics is meant to work with and allow automation of other mods in a modpack. You can set up your system to, with a single click, craft all of the prerequisites (and the final result) of a complex crafting chain, or keep certain"
+    },
+    {
+      "type": "text",
+      "text": "quantities of items in stock, crafting more as needed, or simply transfer items around your base.$(li)$(l:getting_started/getting_started)Getting Started$(/l)$(li)$(l:getting_started/tips_and_tricks)Tips and Tricks$(/l)$(li)$(l:ae2_mechanics/autocrafting)AE2 Mechanics$(/l)$(li)$(l:example_setups/advanced_certus_farm)Example Setups$(/l)$(li)$(l:items_blocks_machines/annihilation_plane)Items, Blocks, and Machines$(/l)$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    }
+  ],
+  "priority": true
+}

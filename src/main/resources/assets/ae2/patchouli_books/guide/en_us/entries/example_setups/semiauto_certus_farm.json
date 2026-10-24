@@ -1,0 +1,61 @@
+{
+  "name": "Semi-Auto Certus Farm",
+  "icon": "ae2:certus_quartz_crystal",
+  "category": "example_setups",
+  "sortnum": 115,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "semi-auto-certus-farm",
+      "text": "Unfortunately, the $(l:example_setups/simple_certus_farm)simple certus farm$(/l) requires a $(l:items_blocks_machines/budding_certus)Flawless Budding Certus Quartz$(/l) to work fully automatically. This requires either $(l:ae2_mechanics/spatial_io)Spatial IO$(/l) or building the farm at the $(l:ae2_mechanics/meteorites)meteorite$(/l).$(br2)However, AE2 can place and break blocks, so it might just be possible to make your farm $(o)replace the budding certus for you$(). (You will have to periodically insert some"
+    },
+    {
+      "type": "text",
+      "text": "$(l:items_blocks_machines/budding_certus)Flawed Budding Certus Quartz$(/l) into the input barrel and extract $(l:items_blocks_machines/quartz_block)Certus Quartz Block$(/l) from the spent buddng certus barrel)$(br2)To do this fully automatically, see $(l:example_setups/advanced_certus_farm)Advanced Certus Farm$(/l).$(br2)This farm is a bit more complex than the $(l:example_setups/simple_certus_farm)simple certus farm$(/l), because it is actually 3 separate setups crammmed together.$(br2)See $(l:ae2_mechanics/certus_growth)Certus Growth$(/l) for"
+    },
+    {
+      "type": "text",
+      "text": "estimated speeds.$(br2)$(bold)THIS IS A COMPLEX BUILD WITH STUFF HIDDEN BEHIND OTHER STUFF, PAN AROUND TO VIEW IT FROM ALL ANGLES$()$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Configurations",
+      "anchor": "configurations",
+      "text": "$(bold)Cluster Breaker:$()$(li)The first $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) (1) has no GUI and cannot be configured, but can be enchanted with Fortune.$(li)The first $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (2) is filtered to $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l).$(br2)$(bold)Certus Block Breaker:$()$(li)The second $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) (3) has no GUI and cannot be configured, but must be enchanted with Silk Touch."
+    },
+    {
+      "type": "text",
+      "anchor": "budding-block-placer",
+      "text": "$(li)The second $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (4) is filtered to $(l:items_blocks_machines/quartz_block)Certus Quartz Block$(/l).$(br2)$(bold)Budding Block Placer:$()$(li)The $(l:items_blocks_machines/formation_plane)ME Formation Plane$(/l) (5) is in its default configuration.$(li)The $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) (6) is in its default configuration.$(br2)$(bold)On Main Network:$()$(li)The third $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (7) is filtered to $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l), and has its $(l:ae2_mechanics/import_export_storage#storage-priority)priority$(/l) set higher than your main"
+    },
+    {
+      "type": "text",
+      "text": "storage."
+    },
+    {
+      "type": "text",
+      "title": "How It Works",
+      "anchor": "how-it-works",
+      "text": "$(bold)Cluster Breaker:$()$(br2)The cluster breaker subnet works very similarly to the subnet in the $(l:example_setups/simple_certus_farm)simple certus farm$(/l).$(br2)1. The $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) attempts to break what is in front of it, but can only break $(l:items_blocks_machines/budding_certus)Certus Quartz Cluster$(/l) because the only storage on the subnet is the $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l), filtered to $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l)."
+    },
+    {
+      "type": "text",
+      "anchor": "certus-block-breaker",
+      "text": "2. The $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) stores the certus quartz crystals in the barrel.$(br2)$(bold)Certus Block Breaker$()$(br2)The certus block breaker subnet serves to break the depleted budding block once it turns into a plain $(l:items_blocks_machines/quartz_block)Certus Quartz Block$(/l). It works similarly to the cluster breaker.$(br2)1. The $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) attempts to break what is in"
+    },
+    {
+      "type": "text",
+      "text": "front of it, but can only break $(l:items_blocks_machines/quartz_block)Certus Quartz Block$(/l) because the only storage on the subnet is the $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l), filtered to $(l:items_blocks_machines/quartz_block)Certus Quartz Block$(/l). The plane needs to have silk touch, so the budding block won't degrade upon being broken, and thus the plane won't break it prematurely.$(br2)2. The $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) stores the certus quartz block in the spent buddng certus barrel, you will have to manually throw it in water with $(l:items_blocks_machines/certus_quartz_crystal_charged)Charged$(/l)"
+    },
+    {
+      "type": "text",
+      "anchor": "budding-block-placer",
+      "text": "$(l:items_blocks_machines/certus_quartz_crystal_charged)Certus Quartz Crystal$(/l) to refresh it.$(br2)$(bold)Budding Block Placer$()$(br2)The budding block placer subnet serves to place a new $(l:items_blocks_machines/budding_certus)Flawed Budding Certus Quartz$(/l) when the breaker subnet breaks the old depleted one.$(br2)1. The $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) Imports a budding block from the input barrel."
+    },
+    {
+      "type": "text",
+      "anchor": "on-the-main-network",
+      "text": "2. The only storage on the subnet is the $(l:items_blocks_machines/formation_plane)ME Formation Plane$(/l), which places the budding block.$(br2)$(bold)On the Main Network$()$(li)The $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) gives the main network (and also the $(l:example_setups/charger_automation)Charger Automation$(/l)) access to all of the certus quartz crystals in the barrel. It is set to high $(l:ae2_mechanics/import_export_storage#storage-priority)priority$(/l) so that certus quartz crystals are preferentially put back in the barrel instead of in your main storage."
+    }
+  ]
+}

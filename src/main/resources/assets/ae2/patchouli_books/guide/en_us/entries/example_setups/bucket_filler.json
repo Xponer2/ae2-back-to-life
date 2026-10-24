@@ -1,0 +1,71 @@
+{
+  "name": "Bucket Filler",
+  "icon": "minecraft:water_bucket",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "bucket-filler",
+      "text": "Also see $(l:example_setups/bucket_emptier)Bucket Emptier$(/l).$(br2)Note that since this uses a $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l), it is meant to integrate into your $(l:ae2_mechanics/autocrafting)autocrafting$(/l) setup.$(br2)Sometimes, life is inconvenient and you need buckets of a fluid instead of the fluid itself. Sometimes a machine might do this for you (like the Fluid Transposer from Thermal Expansion), but you might not"
+    },
+    {
+      "type": "text",
+      "text": "always have a mod that does it conveniently for you. Luckily vanilla Minecraft has a slightly-less-convenient way, the $(item)Dispenser$().$(br2)$(bold)Note that you often don't have to do this because Fluid Substitutions in a$() $(l:items_blocks_machines/terminals#recipe)$(bold)Pattern Encoding Terminal$()$(/l) $(bold)allow you to use the fluid itself in a crafting recipe instead of a bucket.$()$(br2)$(#555)$(o)(3D scene not available in this$()"
+    },
+    {
+      "type": "text",
+      "text": "$(#555)$(o)version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Configurations",
+      "anchor": "configurations",
+      "text": "$(li)The $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l) (1) is Set to lock crafting \"With redstone signal\", with the relevant $(l:items_blocks_machines/patterns)Processing Pattern$(/l)s."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/water_fill_pattern.png"
+      ],
+      "border": true,
+      "title": "Charger Pattern",
+      "text": ""
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/lava_fill_pattern.png"
+      ],
+      "border": true,
+      "title": "Charger Pattern",
+      "text": "$(li)The $(l:items_blocks_machines/interface)ME Interface$(/l) (2) is in its default configuration."
+    },
+    {
+      "type": "ae2:item_row_2",
+      "item0": "minecraft:bucket",
+      "item1": "ae2:inverter_card",
+      "text": "$(li)The first $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (3) is in its default configuration.$(li)The $(l:items_blocks_machines/formation_plane)ME Formation Plane$(/l) (4) is filtered to blacklist buckets, using an inverter card.$(li)The $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) (5) is filtered to blacklist buckets, using an inverter card."
+    },
+    {
+      "type": "ae2:item_row_2",
+      "item0": "minecraft:bucket",
+      "item1": "ae2:inverter_card",
+      "text": "$(li)The second $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (6) is in its default configuration."
+    },
+    {
+      "type": "text",
+      "title": "How It Works",
+      "anchor": "how-it-works",
+      "text": "1. The $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l) pushes the ingredients into the $(l:items_blocks_machines/interface)ME Interface$(/l). (Actually, as an optimization, it pushes directly through the storage bus and formation plane as if they were extensions of the provider's faces. The items never actually enter the interface.)$(br2)2. Through mechanisms described in $(l:example_setups/pipe_subnet#providing-to-multiple-places)pipe subnets$(/l) and $(l:items_blocks_machines/formation_plane)ME Formation Plane$(/l), the bucket ends up in the $(item)Dispenser$() and"
+    },
+    {
+      "type": "text",
+      "text": "the fluid is placed by the formation plane.$(br2)3. The $(item)Comparator$() detects the bucket in the dispenser and thus simultaneously powers the dispenser and locks the $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l).$(br2)4. The dispenser scoops up the fluid with the bucket, it now has a filled bucket in itself.$(br2)5. The $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) pulls the filled bucket out of the dispenser and stores it"
+    },
+    {
+      "type": "text",
+      "text": "through the $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) into the pattern provider, returning it to the main network.$(br2)6. The comparator sees the dispenser is empty, unlocking the provider."
+    }
+  ]
+}

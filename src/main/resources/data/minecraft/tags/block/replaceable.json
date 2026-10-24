@@ -1,0 +1,15 @@
+{
+  "values": [
+    "minecraft:air",
+    "minecraft:water",
+    "minecraft:flowing_water",
+    "minecraft:lava",
+    "minecraft:flowing_lava",
+    "minecraft:tallgrass",
+    "minecraft:deadbush",
+    "minecraft:vine",
+    "minecraft:snow_layer",
+    "minecraft:double_plant",
+    "minecraft:fire"
+  ]
+}

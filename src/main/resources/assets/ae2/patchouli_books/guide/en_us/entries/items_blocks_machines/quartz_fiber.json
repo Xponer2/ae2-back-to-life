@@ -1,0 +1,23 @@
+{
+  "name": "Quartz Fiber",
+  "icon": "ae2:quartz_fiber",
+  "category": "items_blocks_machines/network_infrastructure",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-quartz-fiber",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)The quartz fiber is used to share power between $(l:ae2_mechanics/me_network_connections)networks$(/l), while keeping them separate. This allows you to power $(l:ae2_mechanics/subnetworks)subnetworks$(/l) without needing to put energy acceptors and power cables everywhere. It can also be used to keep cables from connecting, although using cables of differing colors, or using"
+    },
+    {
+      "type": "text",
+      "text": "$(l:items_blocks_machines/cable_anchor)Cable Anchor$(/l) is cheaper and more effective.$(br2)They are $(l:ae2_mechanics/cable_subparts)cable subparts$(/l)."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/quartz_fiber_part",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

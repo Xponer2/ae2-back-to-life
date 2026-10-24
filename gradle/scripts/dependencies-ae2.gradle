@@ -1,0 +1,3 @@
+// Optional integrations (compile against, not required at runtime)
+dependencies {
+}

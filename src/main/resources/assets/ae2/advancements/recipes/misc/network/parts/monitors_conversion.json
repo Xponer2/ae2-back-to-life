@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_storage_monitor": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:storage_monitor"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:network/parts/monitors_conversion"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_storage_monitor"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:network/parts/monitors_conversion"
+    ]
+  }
+}

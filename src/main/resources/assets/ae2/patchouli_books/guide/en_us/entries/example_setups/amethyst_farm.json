@@ -1,0 +1,45 @@
+{
+  "name": "Amethyst Farm",
+  "icon": "ae2:guide",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "farming-of-amethyst",
+      "text": "While the $(l:items_blocks_machines/growth_accelerator)Growth Accelerator$(/l) works on amethyst, the usual methods of filtering $(l:items_blocks_machines/budding_certus)certus buds$(/l) with an $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) do not work on amethyst buds. Unlike non-mature certus buds which drop $(l:items_blocks_machines/certus_quartz_dust)Certus Quartz Dust$(/l), non-mature amethyst buds drop nothing, so an annihilation plane will always break them because a network can always store \"nothing\"."
+    },
+    {
+      "type": "text",
+      "text": "The way around this is to enchant the annihilation plane with silk touch. Then the non-mature amethyst buds $(o)do$() drop something (the various stages of the physical bud blocks), and thus can be filtered.$(br2)The $(item)Amethyst Cluster$() must then be placed again by a $(l:items_blocks_machines/formation_plane)ME Formation Plane$(/l), to then be re-broken by an $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) without silk touch, in order to get $(item)Amethyst Shard$()s."
+    },
+    {
+      "type": "text",
+      "text": "Note that due to the directionality of the cluster, there must be a solid block face directly opposite of the formation plane.$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Configurations",
+      "anchor": "configurations",
+      "text": "$(li)The first $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) (1) has no GUI and cannot be configured, but must be enchanted with silk touch.$(li)The $(l:items_blocks_machines/formation_plane)ME Formation Plane$(/l) (2) is filtered to $(item)Amethyst Cluster$().$(li)The second $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) (3) has no GUI and cannot be configured, but can be enchanted with fortune.$(li)The first $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (4) is filtered to $(item)Amethyst Shard$().$(li)The second $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (5) is filtered to $(item)Amethyst$()"
+    },
+    {
+      "type": "text",
+      "text": "$(item)Shard$(), and has its $(l:ae2_mechanics/import_export_storage#storage-priority)priority$(/l) set higher than your main storage."
+    },
+    {
+      "type": "text",
+      "title": "How It Works",
+      "anchor": "how-it-works",
+      "text": "1. The first $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) attempts to break what is in front of it, but can only break $(item)Amethyst Cluster$() because the only storage on the subnet is the $(l:items_blocks_machines/formation_plane)ME Formation Plane$(/l), filtered to amethyst cluster. This only works because the plane is enchanted with silk touch, otherwise it would be able to break the non-mature buds because they drop nothing."
+    },
+    {
+      "type": "text",
+      "text": "2. The $(l:items_blocks_machines/formation_plane)ME Formation Plane$(/l) places the cluster on the block opposing it.$(br2)3. The second $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) breaks the cluster, producing $(item)Amethyst Shard$().$(br2)4. The first $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) stores the shards in the barrel. This technically doesn't need to be filtered because the only thing the second annihilation plane should be encountering is fully-grown clusters."
+    },
+    {
+      "type": "text",
+      "text": "5. The second $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) gives the main network access to all of the amethyst shards in the barrel. It is set to high $(l:ae2_mechanics/import_export_storage#storage-priority)priority$(/l) so that amethyst shards are preferentially put back in the barrel instead of in your main storage."
+    }
+  ]
+}

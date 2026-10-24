@@ -1,0 +1,37 @@
+{
+  "name": "Simple Certus Farm",
+  "icon": "ae2:certus_quartz_crystal",
+  "category": "example_setups",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "simple-certus-farm",
+      "text": "As mentioned in $(l:ae2_mechanics/certus_growth)Certus Growth$(/l), automation of $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l) harvesting involves $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l)s and $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l)ses. $(l:items_blocks_machines/growth_accelerator)Growth Accelerator$(/l)s are used to massively speed up the growth of certus quartz buds, and then the planes break the fully grown $(l:items_blocks_machines/budding_certus)Certus Quartz Cluster$(/l). They are filtered by taking advantage of the suspiciously fortunate trait that non-mature certus buds"
+    },
+    {
+      "type": "text",
+      "text": "drop $(l:items_blocks_machines/certus_quartz_dust)Certus Quartz Dust$(/l) instead of dropping nothing.$(br2)This farm works fully automatically with $(l:items_blocks_machines/budding_certus)Flawless Budding Certus Quartz$(/l), but with flawed, chipped, and damaged budding certus quartz you will have to replace the budding block manually. Or, as described in $(l:example_setups/semiauto_certus_farm)Semi-Auto Certus Farm$(/l) and $(l:example_setups/advanced_certus_farm)Advanced Certus Farm$(/l), automatically.$(br2)See $(l:ae2_mechanics/certus_growth)Certus Growth$(/l) for estimated speeds."
+    },
+    {
+      "type": "text",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Configurations",
+      "anchor": "configurations",
+      "text": "$(li)The first $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) (1) has no GUI and cannot be configured, but can be enchanted with fortune.$(li)The first $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (2) is filtered to $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l).$(li)The second $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (3) is filtered to $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l), and has its $(l:ae2_mechanics/import_export_storage#storage-priority)priority$(/l) set higher than the main storage."
+    },
+    {
+      "type": "text",
+      "title": "How It Works",
+      "anchor": "how-it-works",
+      "text": "1. The $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) attempts to break what is in front of it, but can only break $(l:items_blocks_machines/budding_certus)Certus Quartz Cluster$(/l) because the only storage on the subnet is the $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l), filtered to $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l).$(br2)4. The first $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) stores the certus quartz crystals in the barrel.$(br2)5. The second $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) gives the main network access to all of the certus quartz"
+    },
+    {
+      "type": "text",
+      "text": "crystals in the barrel. It is set to high $(l:ae2_mechanics/import_export_storage#storage-priority)priority$(/l) so that certus quartz crystals are preferentially put back in the barrel instead of in your main storage."
+    }
+  ]
+}

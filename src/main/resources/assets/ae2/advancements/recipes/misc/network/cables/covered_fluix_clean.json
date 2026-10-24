@@ -1,0 +1,208 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_covered_cable_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:white_covered_cable"
+          }
+        ]
+      }
+    },
+    "has_covered_cable_1": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:light_gray_covered_cable"
+          }
+        ]
+      }
+    },
+    "has_covered_cable_2": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:gray_covered_cable"
+          }
+        ]
+      }
+    },
+    "has_covered_cable_3": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:black_covered_cable"
+          }
+        ]
+      }
+    },
+    "has_covered_cable_4": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:lime_covered_cable"
+          }
+        ]
+      }
+    },
+    "has_covered_cable_5": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:yellow_covered_cable"
+          }
+        ]
+      }
+    },
+    "has_covered_cable_6": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:orange_covered_cable"
+          }
+        ]
+      }
+    },
+    "has_covered_cable_7": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:brown_covered_cable"
+          }
+        ]
+      }
+    },
+    "has_covered_cable_8": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:red_covered_cable"
+          }
+        ]
+      }
+    },
+    "has_covered_cable_9": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:pink_covered_cable"
+          }
+        ]
+      }
+    },
+    "has_covered_cable_10": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:magenta_covered_cable"
+          }
+        ]
+      }
+    },
+    "has_covered_cable_11": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:purple_covered_cable"
+          }
+        ]
+      }
+    },
+    "has_covered_cable_12": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:blue_covered_cable"
+          }
+        ]
+      }
+    },
+    "has_covered_cable_13": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:light_blue_covered_cable"
+          }
+        ]
+      }
+    },
+    "has_covered_cable_14": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:cyan_covered_cable"
+          }
+        ]
+      }
+    },
+    "has_covered_cable_15": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:green_covered_cable"
+          }
+        ]
+      }
+    },
+    "has_covered_cable_16": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:fluix_covered_cable"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:network/cables/covered_fluix_clean"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_covered_cable_0",
+      "has_covered_cable_1",
+      "has_covered_cable_2",
+      "has_covered_cable_3",
+      "has_covered_cable_4",
+      "has_covered_cable_5",
+      "has_covered_cable_6",
+      "has_covered_cable_7",
+      "has_covered_cable_8",
+      "has_covered_cable_9",
+      "has_covered_cable_10",
+      "has_covered_cable_11",
+      "has_covered_cable_12",
+      "has_covered_cable_13",
+      "has_covered_cable_14",
+      "has_covered_cable_15",
+      "has_covered_cable_16"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:network/cables/covered_fluix_clean"
+    ]
+  }
+}

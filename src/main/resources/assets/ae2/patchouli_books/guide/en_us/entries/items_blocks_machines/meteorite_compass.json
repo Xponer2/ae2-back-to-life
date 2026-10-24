@@ -1,0 +1,24 @@
+{
+  "name": "Meteorite Compass",
+  "icon": "ae2:meteorite_compass",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:meteorite_compass",
+      "link_recipe": true,
+      "anchor": "the-meteorite-compass",
+      "text": "The Meteorite Compass points at the nearest $(l:items_blocks_machines/mysterious_cube)Mysterious Cube$(/l), which thus points it at the nearest $(l:ae2_mechanics/meteorites)meteorite$(/l). It's one of the first AE2 items you should make."
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Charger",
+      "in0": "minecraft:compass:0",
+      "output": "ae2:meteorite_compass",
+      "machine": "ae2:charger",
+      "text": "",
+      "anchor": "recipe"
+    }
+  ]
+}

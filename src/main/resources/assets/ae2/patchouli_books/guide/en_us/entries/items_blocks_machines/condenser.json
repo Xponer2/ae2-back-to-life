@@ -1,0 +1,35 @@
+{
+  "name": "Matter Condenser",
+  "icon": "ae2:condenser",
+  "category": "items_blocks_machines/machines",
+  "sortnum": 310,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:condenser",
+      "link_recipe": true,
+      "anchor": "the-matter-condenser",
+      "text": "The matter condenser can be used as either a trash can or to create $(l:items_blocks_machines/matter_ball)Matter Ball$(/l)s and $(l:items_blocks_machines/singularities)singularities$(/l). It can take any item or fluid or etc. a storage cell can store."
+    },
+    {
+      "type": "text",
+      "title": "Settings/Recipes",
+      "anchor": "settingsrecipes",
+      "text": "$(li)In trash can mode, the matter condenser just voids everything that enters it$(li)In matter ball mode the condenser makes $(l:items_blocks_machines/matter_ball)Matter Ball$(/l)s out of whatever you put in it. This mode requires that you put a storage component in the top slot of the condenser. Matter balls take 256 items or buckets each, so a $(l:items_blocks_machines/storage_cells)1k ME Storage Component$(/l) (which provides 8192 bits of capacity) is more than enough."
+    },
+    {
+      "type": "text",
+      "text": "$(li)In matter singularity mode the condenser makes $(l:items_blocks_machines/singularities)singularities$(/l) out of whatever you put in it. This mode requires that you put a storage component in the top slot of the condenser. Singularities take 256,000 items or buckets each, so a $(l:items_blocks_machines/storage_cells)64k ME Storage Component$(/l) (which provides 524,288 bits of capacity) is more than enough.$(br2)Note that in the latter two modes where some resource is"
+    },
+    {
+      "type": "text",
+      "text": "produced, the Matter Condenser $(o)can$() back up and will not accept any further input if both the energy and output item buffers are completely filled up."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/io_condenser",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

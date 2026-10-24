@@ -1,0 +1,25 @@
+{
+  "name": "Ender Dust",
+  "icon": "ae2:ender_dust",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:ender_dust",
+      "link_recipe": true,
+      "anchor": "ender-dust",
+      "text": "An ender pearl that has been crushed by an $(l:items_blocks_machines/inscriber)Inscriber$(/l). Used in the production of $(l:items_blocks_machines/wireless_access_point)Wireless Booster$(/l)s and $(l:items_blocks_machines/singularities)Quantum Entangled Singularity$(/l) pairs."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Inscriber",
+      "top": "",
+      "middle": "minecraft:ender_pearl",
+      "bottom": "",
+      "output": "ae2:ender_dust",
+      "text": "The presses are not used up.",
+      "anchor": "recipe"
+    }
+  ]
+}

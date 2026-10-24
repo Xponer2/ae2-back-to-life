@@ -1,0 +1,98 @@
+{
+  "name": "Processor Automation",
+  "icon": "ae2:logic_processor",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "automation-of-processor-production",
+      "text": "There are many ways of automating $(l:items_blocks_machines/processors)processors$(/l), and this is one of them.$(br2)This general layout can be done with any type of item logistics pipe or conduit or duct or whatever the mod calls it, as long as you can filter it."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/processor_flow_diagram.png"
+      ],
+      "border": true,
+      "text": "Here is detailed how to do it with just AE2, using $(l:example_setups/pipe_subnet)\"pipe\" subnets$(/l)."
+    },
+    {
+      "type": "text",
+      "text": "Note that since this uses a $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l), it is meant to integrate into your $(l:ae2_mechanics/autocrafting)autocrafting$(/l) setup. If you just want to automate a processors standalone, replace the pattern provider with another barrel, and directly put the ingredients in the upper barrel.$(br2)This happens to be backwards-compatible with previous AE2 versions, because even if the $(l:items_blocks_machines/inscriber)Inscriber$(/l)s are sided, the pipe subnets still"
+    },
+    {
+      "type": "text",
+      "anchor": "a-lesson-in-pattern-encoding",
+      "text": "insert to and extract from the correct faces.$(br2)$(bold)A Lesson In Pattern Encoding$()$(br2)Often, the $(l:items_blocks_machines/patterns)pattern$(/l) you need to encode $(bold)WILL NOT MATCH WHAT YOU SEE IN JEI$(), or what JEI outputs when you click the + button. In this case, JEI will output 2 separate patterns, one for the printed components and one for the final assembly, and the printed components pattern will"
+    },
+    {
+      "type": "text",
+      "text": "include a $(l:items_blocks_machines/presses)press$(/l). This is not what we want, because this is not what the setup will do. We want 1 pattern that inputs the raw resources and outputs the completed processor, and since the press is already in the inscriber, we should not put it in the pattern.$(br2)---$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Configurations",
+      "anchor": "configurations",
+      "text": "$(li)The $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l) (1) is in its default configuration, with the relevant $(l:items_blocks_machines/patterns)Processing Pattern$(/l)s. Note that the patterns go direct from raw resources to the completed processor, and do $(bold)NOT$() include the $(l:items_blocks_machines/presses)press$(/l)."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/logic_pattern.png"
+      ],
+      "border": true,
+      "title": "Logic Pattern",
+      "text": ""
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/calculation_pattern.png"
+      ],
+      "border": true,
+      "title": "Calculation Pattern",
+      "text": ""
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/engineering_pattern.png"
+      ],
+      "border": true,
+      "title": "Engineering Pattern",
+      "text": "$(li)The $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l)ses (2, 17, 18, 20) are in their default"
+    },
+    {
+      "type": "ae2:item_row_5",
+      "item0": "ae2:silicon",
+      "item1": "minecraft:gold_ingot",
+      "item2": "ae2:certus_quartz_crystal",
+      "item3": "minecraft:diamond",
+      "item4": "minecraft:redstone",
+      "text": "configurations.$(li)The $(l:items_blocks_machines/export_bus)ME Export Bus$(/l)ses (3-7) are filtered to the relevant ingredient. They have 2 $(l:items_blocks_machines/upgrade_cards)Acceleration Card$(/l)s.$(li)The $(l:items_blocks_machines/import_bus)ME Import Bus$(/l)ses (13-16, 19) are in their default configurations. They have 2 $(l:items_blocks_machines/upgrade_cards)Acceleration Card$(/l)s.$(li)The $(l:items_blocks_machines/inscriber)Inscriber$(/l)s are in their default configurations. They have the relevant $(l:items_blocks_machines/presses)press$(/l), and 4 $(l:items_blocks_machines/upgrade_cards)Acceleration Card$(/l)s."
+    },
+    {
+      "type": "ae2:item_row_4",
+      "item0": "ae2:silicon_press",
+      "item1": "ae2:logic_processor_press",
+      "item2": "ae2:calculation_processor_press",
+      "item3": "ae2:engineering_processor_press",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "How It Works",
+      "anchor": "how-it-works",
+      "text": "1. The $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l) pushes the ingredients into the barrel.$(br2)2. The first $(l:example_setups/pipe_subnet)pipe subnet$(/l) (orange) pulls the silicon, redstone dust, and the relevant processor's ingredient (Gold Ingot, Certus Quartz Crystal, or Diamond) out of the barrel and puts them in the relevant $(l:items_blocks_machines/inscriber)Inscriber$(/l).$(br2)3. The first four $(l:items_blocks_machines/inscriber)Inscriber$(/l)s make the $(l:items_blocks_machines/processors)Printed Silicon$(/l), and"
+    },
+    {
+      "type": "text",
+      "text": "the $(l:items_blocks_machines/processors)Printed Logic Circuit$(/l), $(l:items_blocks_machines/processors)Printed Calculation Circuit$(/l), or $(l:items_blocks_machines/processors)Printed Engineering Circuit$(/l).$(br2)4. The second and third $(l:example_setups/pipe_subnet)pipe subnet$(/l)s (green) take the printed circuits out of the first four $(l:items_blocks_machines/inscriber)Inscriber$(/l)s and put them in the fifth, final assembly $(l:items_blocks_machines/inscriber)Inscriber$(/l).$(br2)5. The fifth $(l:items_blocks_machines/inscriber)Inscriber$(/l) assembles the $(l:items_blocks_machines/processors)processor$(/l).$(br2)6. The fourth $(l:example_setups/pipe_subnet)pipe subnet$(/l) (purple) puts the prcoessor in"
+    },
+    {
+      "type": "text",
+      "text": "the pattern provider, returning it to the main network."
+    }
+  ]
+}

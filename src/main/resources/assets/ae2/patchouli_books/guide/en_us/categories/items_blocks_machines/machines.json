@@ -1,0 +1,7 @@
+{
+  "name": "Machines",
+  "description": "Machines of Applied Energistics 2.",
+  "icon": "ae2:inscriber",
+  "parent": "items_blocks_machines",
+  "sortnum": 3
+}

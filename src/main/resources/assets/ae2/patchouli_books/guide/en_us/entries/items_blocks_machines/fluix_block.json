@@ -1,0 +1,21 @@
+{
+  "name": "Fluix Block",
+  "icon": "ae2:fluix_block",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:fluix_block",
+      "link_recipe": true,
+      "anchor": "the-fluix-block",
+      "text": "The storage block for $(l:items_blocks_machines/fluix_crystal)Fluix Crystal$(/l). It is also used in the recipes for a few machines."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:decorative/fluix_block",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

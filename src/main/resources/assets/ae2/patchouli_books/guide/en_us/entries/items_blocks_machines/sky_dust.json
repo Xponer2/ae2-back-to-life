@@ -1,0 +1,25 @@
+{
+  "name": "Sky Stone Dust",
+  "icon": "ae2:sky_dust",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:sky_dust",
+      "link_recipe": true,
+      "anchor": "sky-stone-dust",
+      "text": "A $(l:items_blocks_machines/sky_stone)Sky Stone$(/l) block that has been crushed by an $(l:items_blocks_machines/inscriber)Inscriber$(/l). Used in the production of $(l:items_blocks_machines/storage_cells)256k ME Storage Component$(/l) and $(l:items_blocks_machines/sky_stone)Sky Stone$(/l).$(br2)Can also be obtained by pointing an $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) upward at world height limit."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Inscriber",
+      "top": "",
+      "middle": "ae2:sky_stone_block",
+      "bottom": "",
+      "output": "ae2:sky_dust",
+      "text": "The presses are not used up.",
+      "anchor": "recipe"
+    }
+  ]
+}

@@ -1,0 +1,162 @@
+/**
+ * Applied Energistics 2 - 1.12.2 backport of AE2 19.2.x (Minecraft 1.21.1).
+ * Build based on the CleanroomMC TemplateDevEnv (RetroFuturaGradle + Jabel).
+ */
+import com.gtnewhorizons.retrofuturagradle.mcp.InjectTagsTask
+
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'com.gtnewhorizons.retrofuturagradle' version '1.4.9'
+}
+
+apply from: 'gradle/scripts/helpers.gradle'
+
+version = propertyString('mod_version')
+group = propertyString('root_package')
+
+base {
+    archivesName.set(propertyString('mod_id'))
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+        vendor.set(JvmVendorSpec.AZUL)
+    }
+}
+
+minecraft {
+    mcVersion.set('1.12.2')
+    mcpMappingChannel.set(propertyString('mapping_channel'))
+    mcpMappingVersion.set(propertyString('mapping_version'))
+    useDependencyAccessTransformers.set(true)
+    username.set(propertyString('minecraft_username'))
+    extraRunJvmArguments.addAll(['-ea:appeng', '-Dfml.coreMods.load='])
+
+    Properties props = new Properties().tap { it.load(file('tags.properties').newInputStream()); it }
+    injectedTags.set(props.collectEntries { k, v -> [(k): interpolate(v)] })
+}
+
+configurations {
+    // Libraries bundled into the final jar (1.12.2 does not ship them)
+    shade
+    implementation.extendsFrom shade
+}
+
+repositories {
+    maven {
+        name 'Mojang'
+        url 'https://libraries.minecraft.net'
+        content {
+            includeGroup 'com.mojang'
+        }
+    }
+    maven {
+        name 'CleanroomMC Maven'
+        url 'https://maven.cleanroommc.com'
+    }
+    maven {
+        name 'BlameJared (JEI)'
+        url 'https://maven.blamejared.com'
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name 'CurseMaven'
+                url 'https://curse.cleanroommc.com'
+            }
+        }
+        filter {
+            includeGroup 'curse.maven'
+        }
+    }
+    mavenCentral()
+}
+
+dependencies {
+    // Modern Java syntax (var, switch expressions, text blocks, instanceof patterns) compiled to Java 8 bytecode
+    annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:1.0.0'
+    annotationProcessor 'net.java.dev.jna:jna-platform:5.13.0'
+    compileOnly('com.github.bsideup.jabel:jabel-javac-plugin:1.0.0') {
+        transitive = false
+    }
+    patchedMinecraft 'me.eigenraven.java8unsupported:java-8-unsupported-shim:1.0.0'
+
+    compileOnly 'org.jetbrains:annotations:26.0.2'
+
+    // Codec/MapCodec/RecordCodecBuilder (last Java 8 build, as used by MC 1.16.5). MIT licensed.
+    shade('com.mojang:datafixerupper:4.0.26') {
+        transitive = false
+    }
+
+    runtimeOnly 'com.cleanroommc:strip-latest-forge-requirements:1.0'
+}
+
+apply from: 'gradle/scripts/dependencies-ae2.gradle'
+
+def atFile = file('src/main/resources/ae2_at.cfg')
+tasks.deobfuscateMergedJarToSrg.configure {
+    accessTransformerFiles.from(atFile)
+}
+tasks.srgifyBinpatchedJar.configure {
+    accessTransformerFiles.from(atFile)
+}
+
+processResources {
+    inputs.property 'mod_version', propertyString('mod_version')
+    filesMatching(['mcmod.info', 'pack.mcmeta']) { fcd ->
+        fcd.expand(
+                'mod_id': propertyString('mod_id'),
+                'mod_name': propertyString('mod_name'),
+                'mod_version': propertyString('mod_version'),
+                'mod_description': propertyString('mod_description'),
+                'mod_authors': "${propertyStringList('mod_authors', ',').join(', ')}",
+                'mod_credits': propertyString('mod_credits'),
+                'mod_url': propertyString('mod_url'),
+                'mod_update_json': propertyString('mod_update_json'),
+                'mod_logo_path': propertyString('mod_logo_path'),
+        )
+    }
+    rename '(ae2_at.cfg)', 'META-INF/$1'
+}
+
+jar {
+    from({ configurations.shade.collect { it.isDirectory() ? it : zipTree(it) } }) {
+        exclude 'META-INF/**'
+    }
+    // license texts and credits must travel with every copy of the mod
+    from(rootProject.files('LICENSE'))
+    from(rootProject.file('licenses')) {
+        into 'licenses'
+    }
+    manifest {
+        attributes(['FMLAT': 'ae2_at.cfg'])
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    if (it.name in ['compileMcLauncherJava', 'compilePatchedMcJava']) {
+        return
+    }
+    sourceCompatibility = 17
+    options.release.set(8)
+    options.compilerArgs.addAll(['-Xmaxerrs', '100000', '-Xlint:-options'])
+    javaCompiler.set(javaToolchains.compilerFor {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    })
+}
+
+tasks.named('injectTags', InjectTagsTask).configure {
+    it.outputClassName.set(propertyString('tag_class_name'))
+}
+
+// Writes the compile classpath, for compiling outside of Gradle
+tasks.register('writeCompileClasspath') {
+    dependsOn 'injectTags'
+    doLast {
+        file('build/compile-classpath.txt').text = sourceSets.main.compileClasspath.asPath
+        file('build/processor-path.txt').text = sourceSets.main.annotationProcessorPath.asPath
+    }
+}

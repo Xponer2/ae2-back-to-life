@@ -1,0 +1,54 @@
+{
+  "name": "Furnace Automation",
+  "icon": "minecraft:furnace",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "furnace-automation",
+      "text": "Note that since this uses a $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l), it is meant to integrate into your $(l:ae2_mechanics/autocrafting)autocrafting$(/l) setup. If you just want to automate a furnace standalone, use hoppers and chests and stuff.$(br2)Automation of a $(item)Furnace$() is a bit more complex than automation of simpler machines like a $(l:example_setups/charger_automation)charger$(/l). A furnace requires input from two separate sides, and extraction"
+    },
+    {
+      "type": "text",
+      "text": "from a third. The item to be smelted must be pushed in the top face, the fuel must be pushed in a side face, and the result must be pulled out the bottom.$(br2)This could be done via a $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l) on the top, an $(l:items_blocks_machines/export_bus)ME Export Bus$(/l) on the side to constantly push in fuel, and an $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) on the bottom to import the results into the network. However, this uses 3 $(l:ae2_mechanics/channels)channels$(/l)."
+    },
+    {
+      "type": "text",
+      "text": "Here's how you can do it with just 1 channel:$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Configurations",
+      "anchor": "configurations",
+      "text": "$(li)The $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l) (1) is in its default configuration, with the relevant $(l:items_blocks_machines/patterns)Processing Pattern$(/l)s. It is made directional by using a $(l:items_blocks_machines/wrench)Certus Quartz Wrench$(/l) on it."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/furnace_pattern.png"
+      ],
+      "border": true,
+      "title": "Iron Pattern",
+      "text": "$(li)The $(l:items_blocks_machines/interface)ME Interface$(/l) (2) is in its default configuration."
+    },
+    {
+      "type": "text",
+      "text": "$(li)The first $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (3) is filtered to coal, or whatever fuel you want to use.$(li)The second $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (4) is filtered to blacklist the fuel you're using, using an $(l:items_blocks_machines/upgrade_cards)Inverter Card$(/l)."
+    },
+    {
+      "type": "text",
+      "title": "How It Works",
+      "anchor": "how-it-works",
+      "text": "1. The $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l) pushes the ingredients into the $(l:items_blocks_machines/interface)ME Interface$(/l). (Actually, as an optimization, it pushes directly through the storage busses as if they were extensions of the provider's faces. The items never actually enter the interface.)$(br2)2. The interface is set to store nothing, so it tries to push the ingredients into $(l:ae2_mechanics/import_export_storage)network storage$(/l)."
+    },
+    {
+      "type": "text",
+      "text": "3. The only storage on the green subnet is the $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l)ses. The bus filtered to coal places the coal in the furnace's fuel slot through the side face. The bus filtered to NOT coal places the items to be smelted in the top slot, through the top face.$(br2)4. The furnace does its furnacey thing$(br2)5. The hopper pulls the results out the furnace's bottom, and places them in the"
+    },
+    {
+      "type": "text",
+      "text": "provider's return slots, returning them to the main network."
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Example Setups",
+  "description": "Example builds for common tasks: farms, automation of machines, autostocking and storage layouts.",
+  "icon": "ae2:pattern_provider",
+  "sortnum": 2
+}

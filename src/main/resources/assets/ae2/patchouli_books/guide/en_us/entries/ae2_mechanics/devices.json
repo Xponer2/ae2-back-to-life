@@ -1,0 +1,13 @@
+{
+  "name": "Devices",
+  "icon": "ae2:interface",
+  "category": "ae2_mechanics",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "devices",
+      "text": "A \"Device\" refers to an AE2 network component that performs some function related to the network itself. They almost always require a channel, with the notable exception of $(l:items_blocks_machines/level_emitter)Level Emitters$(/l).$(br2)Some examples include:$(li)$(l:items_blocks_machines/interface)ME Interface$(/l)$(li)$(l:items_blocks_machines/import_bus)ME Import Bus$(/l)$(li)$(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l)$(li)$(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l)$(li)$(l:items_blocks_machines/drive)ME Drive$(/l)"
+    }
+  ]
+}

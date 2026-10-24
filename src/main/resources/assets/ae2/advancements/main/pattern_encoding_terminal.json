@@ -1,0 +1,31 @@
+{
+  "parent": "ae2:main/crafting_terminal",
+  "display": {
+    "description": {
+      "translate": "achievement.ae2.PatternTerminal.desc"
+    },
+    "icon": {
+      "item": "ae2:pattern_encoding_terminal"
+    },
+    "title": {
+      "translate": "achievement.ae2.PatternTerminal"
+    }
+  },
+  "criteria": {
+    "certus": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:pattern_encoding_terminal"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "certus"
+    ]
+  ]
+}

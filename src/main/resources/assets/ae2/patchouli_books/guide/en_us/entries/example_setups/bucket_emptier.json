@@ -1,0 +1,60 @@
+{
+  "name": "Bucket Emptier",
+  "icon": "minecraft:bucket",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "bucket-emptier",
+      "text": "Also see $(l:example_setups/bucket_filler)Bucket Filler$(/l).$(br2)Note that since this uses a $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l), it is meant to integrate into your $(l:ae2_mechanics/autocrafting)autocrafting$(/l) setup.$(br2)Sometimes, life is inconvenient and you need the fluid itself but you can only make the fluid in a bucket. Sometimes a machine might do this for you (like the Fluid Transposer from Thermal Expansion), but you"
+    },
+    {
+      "type": "text",
+      "text": "might not always have a mod that does it conveniently for you. Luckily vanilla Minecraft has a slightly-less-convenient way, the $(item)Dispenser$().$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Configurations",
+      "anchor": "configurations",
+      "text": "$(li)The $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l) (1) is Set to lock crafting \"With redstone signal\" and blocking mode turned on, with the relevant $(l:items_blocks_machines/patterns)Processing Pattern$(/l)s."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/water_empty_pattern.png"
+      ],
+      "border": true,
+      "title": "Charger Pattern",
+      "text": ""
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/lava_empty_pattern.png"
+      ],
+      "border": true,
+      "title": "Charger Pattern",
+      "text": "$(li)The $(l:items_blocks_machines/interface)ME Interface$(/l) (2) is in its default configuration."
+    },
+    {
+      "type": "spotlight",
+      "item": "minecraft:bucket",
+      "text": "$(li)The first $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (3) is in its default configuration.$(li)The $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) (4) has no GUI and cannot be configured.$(li)The $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) (5) is filtered to buckets.$(li)The second $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (6) is in its default configuration."
+    },
+    {
+      "type": "text",
+      "title": "How It Works",
+      "anchor": "how-it-works",
+      "text": "1. The $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l) pushes the ingredients into the $(l:items_blocks_machines/interface)ME Interface$(/l). (Actually, as an optimization, it pushes directly through the storage bus asi fit was an extension of the provider's faces. The items never actually enter the interface.)$(br2)2. Through mechanisms described in $(l:example_setups/pipe_subnet#providing-to-multiple-places)pipe subnets$(/l), the bucket ends up in the $(item)Dispenser$()."
+    },
+    {
+      "type": "text",
+      "text": "3. The $(item)Comparator$() detects the bucket in the dispenser and thus simultaneously powers the dispenser and locks the $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l).$(br2)4. The dispenser dumps out the fluid from the bucket, it now has an empty bucket in itself.$(br2)5. The $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) pulls the empty bucket out of the dispenser and stores it through the $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) into the pattern provider, returning it to the main"
+    },
+    {
+      "type": "text",
+      "text": "network.$(br2)6. The comparator sees the dispenser is empty, unlocking the provider."
+    }
+  ]
+}

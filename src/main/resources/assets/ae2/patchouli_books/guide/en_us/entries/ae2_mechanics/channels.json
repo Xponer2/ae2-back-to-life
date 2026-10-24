@@ -1,0 +1,89 @@
+{
+  "name": "Channels",
+  "icon": "ae2:controller",
+  "category": "ae2_mechanics",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "channels",
+      "text": "Applied Energistics 2's $(l:ae2_mechanics/me_network_connections)ME Networks$(/l) require Channels to support $(l:ae2_mechanics/devices)devices$(/l) which use networked storage, or other network services. Think of channels like USB cables to all your devices. A computer only has so many USB ports and can only support so many devices connected to it. Most machines, full-block devices, and standard cables can only pass through up to 8 channels. You can think of full-block"
+    },
+    {
+      "type": "text",
+      "text": "devices and standard cables as a bundle of 8 \"channel wires\". However, $(l:items_blocks_machines/cables#dense-cable)dense cables$(/l) can support up to 32 channels. The only other devices capable of transmitting 32 are $(l:items_blocks_machines/p2p_tunnels)ME P2P Tunnel$(/l) and the $(l:items_blocks_machines/quantum_bridge)Quantum Network Bridge$(/l). Each time a device uses up a channel, imagine pulling off a usb \"wire\" from the bundle, which obviously means that \"wire\" isn't available further down the line.$(br2)$(#555)$(o)(3D scene not available in this$()"
+    },
+    {
+      "type": "text",
+      "text": "$(#555)$(o)version)$()$(br2)An easy way to see how channels are being used and routed through your network is to use $(l:items_blocks_machines/cables)smart cables$(/l), which will display on them the paths and usage of channels.$(br2)Channels will consume 1⁄128 ae/t per node they transverse, this means that by adding a $(l:items_blocks_machines/controller)ME Controller$(/l) for a network with 8 devices and over 96 nodes your power usage might actually decrease power"
+    },
+    {
+      "type": "text",
+      "text": "consumption because it changes how channels are allocated.$(br2)Of note, $(bold)CHANNELS HAVE NOTHING TO DO WITH CABLE COLOR$(), all cable color does is make cables not connect."
+    },
+    {
+      "type": "text",
+      "title": "Channel Routing",
+      "anchor": "channel-routing",
+      "text": "When using a $(l:items_blocks_machines/controller)ME Controller$(/l), channels route via 3 steps. They first take the shortest path through adjacent machines to the nearest $(l:items_blocks_machines/cables)normal cable$(/l) (glass, covered, or smart). They then take the shortest path through that normal cable to the nearest $(l:items_blocks_machines/cables)dense cable$(/l) (dense or dense smart). They then take the shortest path through that dense cable to the $(l:items_blocks_machines/controller)ME Controller$(/l). If the shortest path is already maxed out, some $(l:ae2_mechanics/devices)devices$(/l) may not get their"
+    },
+    {
+      "type": "text",
+      "text": "required channels, use colored cables, cable anchors and tunnels to your advantage to make sure your channels go in the path you desire.$(br2)For example, in this case some drives don't get channels because although there is enough capacity in the cables, the channels try to take the shortest path, overloading some cables while leaving others empty.$(br2)$(#555)$(o)(3D scene not available in this$()"
+    },
+    {
+      "type": "text",
+      "text": "$(#555)$(o)version)$()$(br2)This can be fixed by more carefully constraining the paths channels can take. Networks should be treelike (or bushlike). Loops and ambiguous channel paths should be minimized.$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Ad-Hoc Networks",
+      "anchor": "ad-hoc-networks",
+      "text": "A Network without a $(l:items_blocks_machines/controller)ME Controller$(/l) is considered to be Ad-Hoc, and can support up to 8 channel using devices. Once you exceed 8 devices the network's channel using devices will shutdown, you can either remove devices, or add a $(l:items_blocks_machines/controller)ME Controller$(/l).$(br2)Unlike with controllered networks, $(l:items_blocks_machines/cables)smart cables$(/l) on ad-hoc networks will show the number of channels in use network-wide instead of the"
+    },
+    {
+      "type": "text",
+      "text": "number of channels flowing through that specific cable.$(br2)While using ad-hoc networks each device will use 1 channel network wide, this is very different from how $(l:items_blocks_machines/controller)ME Controller$(/l) allocate channels based on shortest route."
+    },
+    {
+      "type": "text",
+      "title": "Design",
+      "anchor": "design",
+      "text": "As mentioned before in $(l:ae2_mechanics/channels#channel-routing)channel routing$(/l), it's best to design your network in a treelike structure, with dense cables branching out from the controller, regular cables branching out from the dense, and $(l:ae2_mechanics/devices)devices$(/l) in clusters of 8 or fewer on the regular cables.$(br2)Here is an example of what not to do:$(br2)Following the channel paths,"
+    },
+    {
+      "type": "text",
+      "text": "1. Immediately exiting the controller to the right, we're bottlenecked to 8 channels because the drive acts like a normal cable. However since we're not using a smart cable here we cannot see how many channels are in use. 8 channels left.$(br2)2. The drive takes a channel. 7 channels left.$(br2)3. 2 channels go up to the terminals. 5 channels left."
+    },
+    {
+      "type": "text",
+      "text": "4. Continuing right, the interface takes another channel. 4 channels left.$(br2)5. 1 channel goes up to the pattern provider. 3 channels left.$(br2)6. Continuing right, 1 channel goes up to the import bus. 2 channels left.$(br2)7. The cluster of pattern providers feeding assemblers only gets 2 channels, so 2 of the providers do not get"
+    },
+    {
+      "type": "text",
+      "text": "channels.$(br2)Ultimately the error is in bottlenecking the channels and not thinking through how channels will be distributed.$(br2)$(#555)$(o)(3D scene not available in this version)$()$(br2)---$(br2)Here is an example of a good structure:$(br2)$(#555)$(o)(3D scene not available in this$()"
+    },
+    {
+      "type": "text",
+      "text": "$(#555)$(o)version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Channel Modes",
+      "anchor": "channel-modes",
+      "text": "AE2 10.0.0 for Minecraft 1.18 introduces new options to change how AE2 channels behave in your world. There's a new configuration option in the general section ($(#555)channels$()) which controls this option, and a new in-game command for operators to change the mode and the config from inside the game. The command is $(#555)/ae2 channelmode <mode>$() to change it and $(#555)/ae2 channelmode$() to show the current mode. When the mode is changed in-game,"
+    },
+    {
+      "type": "text",
+      "text": "all existing grids will reboot and use the new mode immediately.$(br2)This resurrects and improves upon the option that was available in Minecraft 1.12 and introduces better options for players that just want a little more laid back gameplay but don't want the mechanic to be removed entirely.$(br2)The following table lists the available modes in both the configuration file and command."
+    },
+    {
+      "type": "text",
+      "text": "$(li)$(#555)$(bold)default$(): The standard mode with the channel capacities of cable and ad-hoc networks as described throughout this website$(li)$(#555)$(bold)x2$(): All channel capacities are doubled (16 on normal cable, 64 on dense cable, ad-hoc networks support 16 channels)$(li)$(#555)$(bold)x3$(): All channel capacities are tripled (24 on normal cable, 92 on dense cable, ad-hoc networks support 24 channels)"
+    },
+    {
+      "type": "text",
+      "text": "$(li)$(#555)$(bold)x4$(): All channel capacities are quadrupled (32 on normal cable, 128 on dense cable, ad-hoc networks support 32 channels)$(li)$(#555)$(bold)infinite$(): All channel restrictions are removed. Controllers still reduce the power consumption of grids $(o)significantly$(). Smart cables will only toggle between completely off (no channels carried) and completely on (1 or more channels carried)."
+    }
+  ]
+}

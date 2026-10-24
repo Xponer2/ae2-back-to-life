@@ -1,0 +1,101 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_crystals/certus_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:certus_quartz_crystal"
+          }
+        ]
+      }
+    },
+    "has_crystals/certus_1": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:charged_certus_quartz_crystal"
+          }
+        ]
+      }
+    },
+    "has_crystals/certus_2": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "type": "forge:ore_dict",
+            "ore": "crystalCertusQuartz"
+          }
+        ]
+      }
+    },
+    "has_crystals/certus_3": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "type": "forge:ore_dict",
+            "ore": "gemCertusQuartz"
+          }
+        ]
+      }
+    },
+    "has_dusts/fluix_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:fluix_dust"
+          }
+        ]
+      }
+    },
+    "has_dusts/fluix_1": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "type": "forge:ore_dict",
+            "ore": "dustFluix"
+          }
+        ]
+      }
+    },
+    "has_quartz_glass": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:quartz_glass"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:network/blocks/energy_energy_cell"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_quartz_glass",
+      "has_dusts/fluix_0",
+      "has_dusts/fluix_1",
+      "has_crystals/certus_0",
+      "has_crystals/certus_1",
+      "has_crystals/certus_2",
+      "has_crystals/certus_3"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:network/blocks/energy_energy_cell"
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "name": "ME Import Bus",
+  "icon": "ae2:import_bus",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 220,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-import-bus",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)The import bus pulls items and fluids (and whatever else, given addons) from the inventory it's touching and pushes them into $(l:ae2_mechanics/import_export_storage)network storage$(/l).$(br2)For purposes of lag reduction, if the import bus has not imported something recently, it goes into a sort of \"sleep"
+    },
+    {
+      "type": "text",
+      "text": "mode\" where it operates slowly, and wakes up and accelerates to full speed (4 operations per second) when it successfully imports something.$(br2)They are $(l:ae2_mechanics/cable_subparts)cable subparts$(/l)."
+    },
+    {
+      "type": "text",
+      "title": "Filtering",
+      "anchor": "filtering",
+      "text": "By default the bus will import anything it has access to. Items inserted into its filter slots will act as a whitelist, only allowing those specific items to be imported.$(br2)Items and fluids can be dragged into the slots from JEI/REI even if you don't actually have any of that item.$(br2)Right-click with a fluid container (like a bucket or fluid tank) to set that fluid as"
+    },
+    {
+      "type": "text",
+      "text": "a filter instead of the bucket or tank item."
+    },
+    {
+      "type": "text",
+      "title": "Upgrades",
+      "anchor": "upgrades",
+      "text": "The import bus supports the following $(l:items_blocks_machines/upgrade_cards)upgrades$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Capacity Card$(/l) increases the amount of filter slots$(li)$(l:items_blocks_machines/upgrade_cards)Acceleration Card$(/l) increases the amount of stuff moved per operation$(li)$(l:items_blocks_machines/upgrade_cards)Fuzzy Card$(/l) lets the bus filter by damage level and/or ignore item NBT$(li)$(l:items_blocks_machines/upgrade_cards)Inverter Card$(/l) switches the filter from a whitelist to a blacklist$(li)$(l:items_blocks_machines/upgrade_cards)Redstone Card$(/l) adds redstone control, allowing active on"
+    },
+    {
+      "type": "text",
+      "text": "high signal, low signal, or once per pulse"
+    },
+    {
+      "type": "text",
+      "title": "Speeds",
+      "anchor": "speeds",
+      "text": "$(li)$(bold)0$(): 1$(li)$(bold)1$(): 8$(li)$(bold)2$(): 32$(li)$(bold)3$(): 64$(li)$(bold)4$(): 96"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/import_bus",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

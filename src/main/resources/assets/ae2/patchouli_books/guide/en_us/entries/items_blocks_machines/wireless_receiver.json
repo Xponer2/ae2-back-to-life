@@ -1,0 +1,21 @@
+{
+  "name": "Wireless Receiver",
+  "icon": "ae2:wireless_receiver",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:wireless_receiver",
+      "link_recipe": true,
+      "anchor": "wireless-receiver",
+      "text": "A $(l:items_blocks_machines/fluix_pearl)Fluix Pearl$(/l) in a reflector dish, a component of short-range wireless ME technology."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/wireless_part",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

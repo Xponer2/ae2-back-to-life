@@ -1,0 +1,21 @@
+{
+  "name": "Spatial Pylon",
+  "icon": "ae2:spatial_pylon",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 210,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:spatial_pylon",
+      "link_recipe": true,
+      "anchor": "the-spatial-pylon",
+      "text": "The Spatial Pylon is used in $(l:ae2_mechanics/spatial_io)spatial IO$(/l) to generate the spatial field and define the volume to be affected.$(br2)Each continuous line of pylons uses 1 $(l:ae2_mechanics/channels)channel$(/l)$(br2)Lines of pylons must be at least 2 blocks long to function."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/spatial_io_pylon",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

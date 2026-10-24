@@ -1,0 +1,37 @@
+{
+  "name": "Fluix Researcher (Villager)",
+  "icon": "minecraft:emerald",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 310,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:charger",
+      "anchor": "the-fluix-researcher",
+      "text": "The Fluix Researcher is a villager profession. The corresponding job site is the $(l:items_blocks_machines/charger)Charger$(/l)."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/ae2_villager.png"
+      ],
+      "border": true,
+      "title": "Fluix Researcher",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Trades",
+      "anchor": "trades",
+      "text": "Trades follow the vanilla structure, unlocking a random selection of 2 trades per level (unless that level has only 1 possible trade)$(li)$(bold)Novice$(): Item Wanted 3 $(item)Emerald$(); Item Given 4 $(l:items_blocks_machines/certus_quartz_crystal)Certus Quartz Crystal$(/l)$(li)$(bold)Novice$(): Item Wanted 2 $(item)Emerald$(); Item Given 1 $(l:items_blocks_machines/meteorite_compass)Meteorite Compass$(/l)$(li)$(bold)Apprentice$(): Item Wanted 3 $(l:items_blocks_machines/certus_quartz_crystal_charged)Charged Certus Quartz Crystal$(/l); Item Given 1 $(item)Emerald$()$(li)$(bold)Apprentice$(): Item Wanted 5"
+    },
+    {
+      "type": "text",
+      "text": "$(l:items_blocks_machines/processors)Silicon$(/l); Item Given 1 $(item)Emerald$()$(li)$(bold)Apprentice$(): Item Wanted 5 $(item)Emerald$(); Item Given 8 $(l:items_blocks_machines/sky_stone)Sky Stone$(/l)$(li)$(bold)Journeyman$(): Item Wanted 2 $(l:items_blocks_machines/quartz_glass)Quartz Glass$(/l); Item Given 1 $(item)Emerald$()$(li)$(bold)Journeyman$(): Item Wanted 5 $(item)Emerald$(); Item Given 4 $(l:items_blocks_machines/fluix_crystal)Fluix Crystal$(/l)$(li)$(bold)Expert$(): Item Wanted 5 $(l:items_blocks_machines/matter_ball)Matter Ball$(/l); Item Given 1 $(item)Emerald$()$(li)$(bold)Expert$(): Item Wanted 10 $(item)Emerald$(); Item Given 1 $(l:items_blocks_machines/presses)Inscriber Silicon Press$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "$(li)$(bold)Expert$(): Item Wanted 10 $(item)Emerald$(); Item Given 1 $(l:items_blocks_machines/presses)Inscriber Logic Press$(/l)$(li)$(bold)Expert$(): Item Wanted 10 $(item)Emerald$(); Item Given 1 $(l:items_blocks_machines/presses)Inscriber Calculation Press$(/l)$(li)$(bold)Expert$(): Item Wanted 10 $(item)Emerald$(); Item Given 1 $(l:items_blocks_machines/presses)Inscriber Engineering Press$(/l)$(li)$(bold)Master$(): Item Wanted 8 $(item)Emerald$(); Item Given 5 $(item)Slime Ball$()"
+    }
+  ]
+}

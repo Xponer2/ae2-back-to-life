@@ -1,0 +1,37 @@
+{
+  "name": "Level Emitter Autostocking",
+  "icon": "ae2:level_emitter",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "level-emitter-autostocking",
+      "text": "One might ask \"How do I keep a certain amount of an item in stock, crafting more as needed?\"$(br2)One solution is use of an $(l:items_blocks_machines/export_bus)ME Export Bus$(/l), $(l:items_blocks_machines/level_emitter)ME Level Emitter$(/l), and $(l:items_blocks_machines/upgrade_cards)Crafting Card$(/l) to automatically request new items from your network's $(l:ae2_mechanics/autocrafting)autocrafting$(/l). This setup is for maintaining a large quantity of one item."
+    },
+    {
+      "type": "text",
+      "text": "You can of course make your network craft continuously, by omitting the level emitter and redstone card.$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Configurations",
+      "anchor": "configurations",
+      "text": "$(li)The $(l:items_blocks_machines/export_bus)ME Export Bus$(/l) (1) is filtered to the desired item. It has a $(l:items_blocks_machines/upgrade_cards)Redstone Card$(/l) and $(l:items_blocks_machines/upgrade_cards)Crafting Card$(/l). The \"Redstone Mode\" is set to \"Active with signal\", The \"Crafting Behavior\" is set to \"Do not use stocked items\".$(li)The $(l:items_blocks_machines/level_emitter)ME Level Emitter$(/l) (2) is configured with the desired item and quantity, and set to \"Emit when levels are below limit\".$(li)The $(l:items_blocks_machines/interface)ME Interface$(/l) (3) is in"
+    },
+    {
+      "type": "text",
+      "text": "its default configuration."
+    },
+    {
+      "type": "text",
+      "title": "How It Works",
+      "anchor": "how-it-works",
+      "text": "1. If the amount of the desired item in $(l:ae2_mechanics/import_export_storage)network storage$(/l) is below the quantity specified in the $(l:items_blocks_machines/level_emitter)ME Level Emitter$(/l), it will emit a redstone signal.$(br2)2. Upon receiving a redstone signal (and due to the $(l:items_blocks_machines/upgrade_cards)Crafting Card$(/l) and being set to not use stocked items), the $(l:items_blocks_machines/export_bus)ME Export Bus$(/l) will request that the network's $(l:ae2_mechanics/autocrafting)autocrafting$(/l) craft more of the desired item, then export it."
+    },
+    {
+      "type": "text",
+      "text": "3. Upon having an item pushed into it (and not being configured to have anything in its internal inventory), the $(l:items_blocks_machines/interface)ME Interface$(/l) will push that item into network storage."
+    }
+  ]
+}

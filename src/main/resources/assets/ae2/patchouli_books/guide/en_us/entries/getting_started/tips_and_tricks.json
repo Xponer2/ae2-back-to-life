@@ -1,0 +1,29 @@
+{
+  "name": "Tips and Tricks",
+  "icon": "ae2:guide",
+  "category": "getting_started",
+  "sortnum": 20,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "tips-and-tricks",
+      "text": "A load of random little recommendations$(li)Remove Optifine$(li)You can rotate and zoom into guidebook scenes that have the zoom and annotation hide/show buttons$(li)Keep your network treelike and avoid loops$(li)Full-block $(l:ae2_mechanics/devices)devices$(/l) in groups of 8 or less unless you deeply understand how $(l:ae2_mechanics/channels)channels$(/l) route through a network"
+    },
+    {
+      "type": "text",
+      "text": "$(li)Pick a wood and stick with it for all your $(l:items_blocks_machines/patterns)patterns$(/l). Yes, enabling substitutions in patterns sometimes works, but using the same wood type everywhere greatly reduces hassle.$(li)Arrange your $(l:items_blocks_machines/patterns)patterns$(/l) vertically in the $(l:items_blocks_machines/terminals)ME Pattern Access Terminal$(/l)/ distribute your patterns between your $(l:items_blocks_machines/pattern_provider)providers$(/l) so that recipes can be performed in parallel.$(li)Add an $(l:items_blocks_machines/energy_cells)energy cell$(/l) so that your network can handle power"
+    },
+    {
+      "type": "text",
+      "text": "spikes.$(li)You can use water in the $(l:items_blocks_machines/condenser)Matter Condenser$(/l)$(li)The best way to keep your network clean is to not put random mob loot like swords and armor in. Each unique combination of enchantment and durability is another $(l:ae2_mechanics/bytes_and_types)type$(/l).$(li)An \"item entering system\" event must occur when returning the result of a $(l:items_blocks_machines/patterns)processing pattern$(/l), like through an $(l:items_blocks_machines/import_bus)ME Import Bus$(/l), $(l:items_blocks_machines/interface)ME Interface$(/l), or $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l) return slot, you can't"
+    },
+    {
+      "type": "text",
+      "text": "just pipe the result into a chest with a $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) on it.$(li)Don't forget that can rotate and zoom into guidebook scenes that have the zoom and annotation hide/show buttons$(li)The $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l) will only push complete recipe batches and only through a single side. This is useful for making sure machines don't get partial batches, but sometimes you want the ingredients to go to multiple places. You can achieve this using an $(l:items_blocks_machines/interface)ME$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "$(l:items_blocks_machines/interface)Interface$(/l), either as a $(l:example_setups/pipe_subnet)\"pipe\" subnet$(/l) or using its ability to hold multiple different item stacks, fluids, chemicals, etc. all at once, to use it as a sort of intermediate chest/tank.$(li)You can zoom and rotate guidebook scenes that have the zoom and annotation hide/show buttons"
+    }
+  ]
+}

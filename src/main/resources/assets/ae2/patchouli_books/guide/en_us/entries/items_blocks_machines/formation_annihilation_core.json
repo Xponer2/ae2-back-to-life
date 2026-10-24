@@ -1,0 +1,30 @@
+{
+  "name": "Formation and Annihilation Cores",
+  "icon": "ae2:formation_core",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "formation-and-annihilation-cores",
+      "text": "These are the primary components of AE2 input and output $(l:ae2_mechanics/devices)devices$(/l). Using the power of $(l:items_blocks_machines/fluix_crystal)Fluix Crystal$(/l) and a $(l:items_blocks_machines/processors)logic processor$(/l) it allows devices to input and output items, blocks, fluids, etc. (No actual function, just a crafting intermediate)"
+    },
+    {
+      "type": "ae2:item_row_2",
+      "item0": "ae2:formation_core",
+      "item1": "ae2:annihilation_core",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:materials/formationcore",
+      "anchor": "recipes",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:materials/annihilationcore",
+      "text": ""
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "name": "Fluix Crystal",
+  "icon": "ae2:fluix_crystal",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:fluix_crystal",
+      "link_recipe": true,
+      "anchor": "the-fluix-crystal",
+      "text": "$(o)\"Fluix Crystals possess the unique ability to absorb and convert energy from one form to another, and are the foundation of all Matter Energy technology\"$()$(br2)One of the primary ingredients for AE2 blocks, $(l:ae2_mechanics/devices)devices$(/l), and items. Made by throwing nether quartz, redstone, and $(l:items_blocks_machines/certus_quartz_crystal_charged)Charged Certus Quartz Crystal$(/l) in water."
+    },
+    {
+      "type": "text",
+      "text": "It can be $(l:example_setups/throw_in_water_automation)automated$(/l) using a $(l:items_blocks_machines/formation_plane)ME Formation Plane$(/l) and $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l)."
+    },
+    {
+      "type": "ae2:recipe_3",
+      "title": "Throw in Water",
+      "in0": "ae2:charged_certus_quartz_crystal",
+      "in1": "minecraft:redstone",
+      "in2": "minecraft:quartz",
+      "output": "ae2:fluix_crystal#2",
+      "machine": "minecraft:water_bucket",
+      "text": "Throw the items into water together.",
+      "anchor": "recipes"
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Throw in Water",
+      "in0": "ae2:charged_certus_quartz_crystal",
+      "in1": "ae2:fluix_dust",
+      "output": "ae2:fluix_crystal",
+      "machine": "minecraft:water_bucket",
+      "text": "Throw the items into water together."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:misc/deconstruction_fluix_block",
+      "text": ""
+    }
+  ]
+}

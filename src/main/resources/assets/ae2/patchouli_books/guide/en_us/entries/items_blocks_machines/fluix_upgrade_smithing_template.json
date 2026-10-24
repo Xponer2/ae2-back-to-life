@@ -1,0 +1,21 @@
+{
+  "name": "Fluix Smithing Template",
+  "icon": "ae2:fluix_upgrade_smithing_template",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:fluix_upgrade_smithing_template",
+      "link_recipe": true,
+      "anchor": "fluix-smithing-template",
+      "text": "Unlike the vanilla smithing template, you can make this one from scratch.$(br2)Required for $(l:items_blocks_machines/fluix_tools)fluix tools$(/l)"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/fluix_upgrade_smithing_template",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

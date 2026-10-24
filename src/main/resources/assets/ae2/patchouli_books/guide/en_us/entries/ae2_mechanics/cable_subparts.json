@@ -1,0 +1,13 @@
+{
+  "name": "Cable Subparts",
+  "icon": "ae2:guide",
+  "category": "ae2_mechanics",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "cable-subparts",
+      "text": "$(#555)$(o)(3D scene not available in this version)$()$(br2)In AE2, certain $(l:ae2_mechanics/devices)devices$(/l) and components can be placed on cables in the same block. This is useful for compact setups. Shift-right-clicking with a $(l:items_blocks_machines/wrench)Certus Quartz Wrench$(/l) or $(l:items_blocks_machines/network_tool)Network Tool$(/l) can break a single subpart (or the cable) off without breaking everything in that block."
+    }
+  ]
+}

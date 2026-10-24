@@ -1,0 +1,31 @@
+{
+  "parent": "ae2:main/p2p",
+  "display": {
+    "description": {
+      "translate": "achievement.ae2.QNB.desc"
+    },
+    "icon": {
+      "item": "ae2:quantum_link"
+    },
+    "title": {
+      "translate": "achievement.ae2.QNB"
+    }
+  },
+  "criteria": {
+    "certus": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:quantum_link"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "certus"
+    ]
+  ]
+}

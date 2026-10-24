@@ -1,0 +1,21 @@
+{
+  "name": "Crystal Resonance Generator",
+  "icon": "ae2:crystal_resonance_generator",
+  "category": "items_blocks_machines/network_infrastructure",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:crystal_resonance_generator",
+      "link_recipe": true,
+      "anchor": "the-crystal-resonance-generator",
+      "text": "This device generates energy for your ME network without the need for fuel. Because of the crystal vibrations this device generates, only one can be used in each network. These vibrations even pass through $(l:items_blocks_machines/quartz_fiber)Quartz Fiber$(/l).$(br2)$(bold)Generation Rate:$() 20 AE/t"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crystal_resonance_generator",
+      "anchor": "recipes",
+      "text": ""
+    }
+  ]
+}

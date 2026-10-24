@@ -1,0 +1,21 @@
+{
+  "name": "Sky Stone Tank",
+  "icon": "ae2:sky_stone_tank",
+  "category": "items_blocks_machines/machines",
+  "sortnum": 310,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:sky_stone_tank",
+      "link_recipe": true,
+      "anchor": "the-sky-stone-tank",
+      "text": "It's a fluid tank that stores 16 buckets of fluid. Does not retain its contents when picked up. Not much else to say."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:misc/tank_sky_stone",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

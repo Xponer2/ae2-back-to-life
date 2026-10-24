@@ -1,0 +1,208 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_smart_cable_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:white_smart_cable"
+          }
+        ]
+      }
+    },
+    "has_smart_cable_1": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:light_gray_smart_cable"
+          }
+        ]
+      }
+    },
+    "has_smart_cable_2": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:gray_smart_cable"
+          }
+        ]
+      }
+    },
+    "has_smart_cable_3": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:black_smart_cable"
+          }
+        ]
+      }
+    },
+    "has_smart_cable_4": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:lime_smart_cable"
+          }
+        ]
+      }
+    },
+    "has_smart_cable_5": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:yellow_smart_cable"
+          }
+        ]
+      }
+    },
+    "has_smart_cable_6": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:orange_smart_cable"
+          }
+        ]
+      }
+    },
+    "has_smart_cable_7": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:brown_smart_cable"
+          }
+        ]
+      }
+    },
+    "has_smart_cable_8": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:red_smart_cable"
+          }
+        ]
+      }
+    },
+    "has_smart_cable_9": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:pink_smart_cable"
+          }
+        ]
+      }
+    },
+    "has_smart_cable_10": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:magenta_smart_cable"
+          }
+        ]
+      }
+    },
+    "has_smart_cable_11": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:purple_smart_cable"
+          }
+        ]
+      }
+    },
+    "has_smart_cable_12": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:blue_smart_cable"
+          }
+        ]
+      }
+    },
+    "has_smart_cable_13": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:light_blue_smart_cable"
+          }
+        ]
+      }
+    },
+    "has_smart_cable_14": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:cyan_smart_cable"
+          }
+        ]
+      }
+    },
+    "has_smart_cable_15": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:green_smart_cable"
+          }
+        ]
+      }
+    },
+    "has_smart_cable_16": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:fluix_smart_cable"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:network/cables/smart_fluix_clean"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_smart_cable_0",
+      "has_smart_cable_1",
+      "has_smart_cable_2",
+      "has_smart_cable_3",
+      "has_smart_cable_4",
+      "has_smart_cable_5",
+      "has_smart_cable_6",
+      "has_smart_cable_7",
+      "has_smart_cable_8",
+      "has_smart_cable_9",
+      "has_smart_cable_10",
+      "has_smart_cable_11",
+      "has_smart_cable_12",
+      "has_smart_cable_13",
+      "has_smart_cable_14",
+      "has_smart_cable_15",
+      "has_smart_cable_16"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:network/cables/smart_fluix_clean"
+    ]
+  }
+}

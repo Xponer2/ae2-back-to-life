@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_annihilation_core": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ae2:annihilation_core"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ae2:network/parts/annihilation_plane_alt"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_annihilation_core"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ae2:network/parts/annihilation_plane_alt"
+    ]
+  }
+}

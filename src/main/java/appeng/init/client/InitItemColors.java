@@ -1,0 +1,143 @@
+/*
+ * This file is part of Applied Energistics 2.
+ * Copyright (c) 2021, TeamAppliedEnergistics, All rights reserved.
+ *
+ * Applied Energistics 2 is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Applied Energistics 2 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Applied Energistics 2.  If not, see <http://www.gnu.org/licenses/lgpl>.
+ */
+
+package appeng.init.client;
+
+import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.color.ItemColors;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import appeng.api.util.AEColor;
+import appeng.api.util.ItemLike;
+import appeng.client.render.StaticItemColor;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEItems;
+import appeng.core.definitions.ItemDefinition;
+import appeng.items.misc.PaintBallItem;
+import appeng.items.parts.ColoredPartItem;
+import appeng.items.parts.PartItem;
+import appeng.items.storage.BasicStorageCell;
+import appeng.items.tools.MemoryCardItem;
+import appeng.items.tools.powered.ColorApplicatorItem;
+import appeng.items.tools.powered.PortableCellItem;
+
+@SideOnly(Side.CLIENT)
+public final class InitItemColors {
+
+    private InitItemColors() {
+    }
+
+    @FunctionalInterface
+    interface ItemColorRegistrar {
+        void register(IItemColor itemColor, ItemLike... items);
+    }
+
+    /**
+     * Called from {@code ColorHandlerEvent.Item}.
+     */
+    public static void init(ItemColors itemColors) {
+        // Automatically make all registered itemcolors create opaque colors
+        init((itemColor, items) -> {
+            var opaqueColor = makeOpaque(itemColor);
+            for (var item : items) {
+                itemColors.registerItemColorHandler(opaqueColor, item.asItem());
+            }
+        });
+    }
+
+    private static void init(ItemColorRegistrar registrar) {
+        // I checked, the ME chest doesn't keep its color in item form
+        registrar.register(new StaticItemColor(AEColor.TRANSPARENT), AEBlocks.ME_CHEST);
+        registrar.register(MemoryCardItem::getTintColor, AEItems.MEMORY_CARD);
+        registrar.register(InitItemColors::getColorApplicatorColor, AEItems.COLOR_APPLICATOR);
+        registrar.register(PortableCellItem::getColor, AEItems.PORTABLE_ITEM_CELL1K, AEItems.PORTABLE_FLUID_CELL1K,
+                AEItems.PORTABLE_ITEM_CELL4K, AEItems.PORTABLE_FLUID_CELL4K,
+                AEItems.PORTABLE_ITEM_CELL16K, AEItems.PORTABLE_FLUID_CELL16K,
+                AEItems.PORTABLE_ITEM_CELL64K, AEItems.PORTABLE_FLUID_CELL64K,
+                AEItems.PORTABLE_ITEM_CELL256K, AEItems.PORTABLE_FLUID_CELL256K);
+        registrar.register(BasicStorageCell::getColor, AEItems.ITEM_CELL_1K, AEItems.FLUID_CELL_1K,
+                AEItems.ITEM_CELL_4K, AEItems.FLUID_CELL_4K,
+                AEItems.ITEM_CELL_16K, AEItems.FLUID_CELL_16K,
+                AEItems.ITEM_CELL_64K, AEItems.FLUID_CELL_64K,
+                AEItems.ITEM_CELL_256K, AEItems.FLUID_CELL_256K);
+
+        // Automatically register colors for certain items we register
+        for (ItemDefinition<?> definition : AEItems.getItems()) {
+            Item item = definition.asItem();
+            if (item instanceof PartItem) {
+                AEColor color = AEColor.TRANSPARENT;
+                if (item instanceof ColoredPartItem) {
+                    color = ((ColoredPartItem<?>) item).getColor();
+                }
+                registrar.register(new StaticItemColor(color), definition);
+            } else if (item instanceof PaintBallItem) {
+                registerPaintBall(registrar, definition, (PaintBallItem) item);
+            }
+        }
+    }
+
+    /**
+     * We use a white base item icon for paint balls. This applies the correct color to it.
+     */
+    private static void registerPaintBall(ItemColorRegistrar registrar, ItemLike definition, PaintBallItem item) {
+        AEColor color = item.getColor();
+        final int colorValue = item.isLumen() ? color.mediumVariant : color.mediumVariant;
+        final int r = colorValue >> 16 & 0xff;
+        final int g = colorValue >> 8 & 0xff;
+        final int b = colorValue & 0xff;
+
+        int renderColor;
+        if (item.isLumen()) {
+            final float fail = 0.7f;
+            final int full = (int) (255 * 0.3);
+            renderColor = (int) (full + r * fail) << 16 | (int) (full + g * fail) << 8 | (int) (full + b * fail)
+                    | 0xff << 24;
+        } else {
+            renderColor = r << 16 | g << 8 | b | 0xff << 24;
+        }
+
+        registrar.register((is, tintIndex) -> renderColor, definition);
+    }
+
+    private static int getColorApplicatorColor(ItemStack itemStack, int idx) {
+        if (idx == 0) {
+            return -1;
+        }
+
+        final AEColor col = ((ColorApplicatorItem) itemStack.getItem()).getActiveColor(itemStack);
+
+        if (col == null) {
+            return -1;
+        }
+
+        return switch (idx) {
+            case 1 -> col.blackVariant;
+            case 2 -> col.mediumVariant;
+            case 3 -> col.whiteVariant;
+            default -> -1;
+        };
+    }
+
+    private static IItemColor makeOpaque(IItemColor itemColor) {
+        return (stack, tintIndex) -> itemColor.colorMultiplier(stack, tintIndex) | 0xFF000000;
+    }
+
+}

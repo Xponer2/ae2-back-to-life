@@ -1,0 +1,25 @@
+{
+  "name": "Entropy Manipulator",
+  "icon": "ae2:entropy_manipulator",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:entropy_manipulator",
+      "link_recipe": true,
+      "anchor": "the-entropy-manipulator",
+      "text": "The Entropy Manipulator allows you to heat and cool things by right-clicking and shift-right-clicking respectively. It can't do much, just things like evaporating or freezing water, solidifying lava to obsidian, smelting logs to charcoal, and smelting cobble to stone in-world."
+    },
+    {
+      "type": "text",
+      "text": "If there is not a specific thing it can do to a block, it will act as a flint-and-steel.$(br2)Its energy can be recharged in a $(l:items_blocks_machines/charger)Charger$(/l)."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/misctools_entropy_manipulator",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

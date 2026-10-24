@@ -1,0 +1,29 @@
+{
+  "name": "Interface Autostocking",
+  "icon": "ae2:interface",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "interface-autostocking",
+      "text": "One might ask \"How do I keep a certain amount of various items in stock, crafting more as needed?\"$(br2)One solution is use of an $(l:items_blocks_machines/interface)ME Interface$(/l) and $(l:items_blocks_machines/upgrade_cards)Crafting Card$(/l) to automatically request new items from your network's $(l:ae2_mechanics/autocrafting)autocrafting$(/l). This setup is more suited to maintaining a small quantity of a wide variety of items."
+    },
+    {
+      "type": "text",
+      "text": "This demonstration setup is cut short so it isn't too wide, it is likely most optimal to use 4 $(l:items_blocks_machines/interface)ME Interface$(/l)s and 4 $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l)ses, to use all 8 $(l:ae2_mechanics/channels)channels$(/l) in a regular $(l:items_blocks_machines/cables)cable$(/l).$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Configurations",
+      "anchor": "configurations",
+      "text": "$(li)The $(l:items_blocks_machines/interface)ME Interface$(/l)s (1) are set to keep the desired items in themselves, by clicking the desired item into their top slots or dragging into the top slots from JEI, then clicking on the wrench icon above the slots to set the amount. They have $(l:items_blocks_machines/upgrade_cards)Crafting Card$(/l)s.$(li)The $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l)ses (2) are set such that \"Input/Output Mode\" is set to \"Extract Only\"."
+    },
+    {
+      "type": "text",
+      "title": "How It Works",
+      "anchor": "how-it-works",
+      "text": "1. If an $(l:items_blocks_machines/interface)ME Interface$(/l) cannot retrieve enough of a configured item from $(l:ae2_mechanics/import_export_storage)network storage$(/l), (and it has a $(l:items_blocks_machines/upgrade_cards)Crafting Card$(/l)), it will request that the network's $(l:ae2_mechanics/autocrafting)autocrafting$(/l) craft more of that item.$(br2)2. The $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l)ses allow the network to access the contents of the interfaces."
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "parent": "ae2:main/storage_bus",
+  "display": {
+    "description": {
+      "translate": "achievement.ae2.Recursive.desc"
+    },
+    "icon": {
+      "item": "ae2:interface"
+    },
+    "title": {
+      "translate": "achievement.ae2.Recursive"
+    }
+  },
+  "criteria": {
+    "recursive": {
+      "trigger": "ae2:recursive_networking"
+    }
+  },
+  "requirements": [
+    [
+      "recursive"
+    ]
+  ]
+}

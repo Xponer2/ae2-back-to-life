@@ -1,0 +1,79 @@
+{
+  "name": "Presses",
+  "icon": "ae2:silicon_press",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "presses",
+      "text": "There are 5 different presses used in the $(l:items_blocks_machines/inscriber)Inscriber$(/l)."
+    },
+    {
+      "type": "ae2:item_row_4",
+      "item0": "ae2:silicon_press",
+      "item1": "ae2:logic_processor_press",
+      "item2": "ae2:calculation_processor_press",
+      "item3": "ae2:engineering_processor_press",
+      "text": ""
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:name_press",
+      "link_recipe": true,
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Processor Presses",
+      "anchor": "processor-presses",
+      "text": "The Silicon, Logic, Calculation, and Engineering presses are used in the production of $(l:items_blocks_machines/processors)processors$(/l). These 4 presses are obtained by breaking a $(l:items_blocks_machines/mysterious_cube)Mysterious Cube$(/l) in a $(l:ae2_mechanics/meteorites)meteorite$(/l). They can also be duplicated in an $(l:items_blocks_machines/inscriber)Inscriber$(/l)."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Inscriber",
+      "top": "ae2:silicon_press",
+      "middle": "minecraft:iron_block",
+      "bottom": "",
+      "output": "ae2:silicon_press",
+      "text": "The presses are not used up."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Inscriber",
+      "top": "ae2:logic_processor_press",
+      "middle": "minecraft:iron_block",
+      "bottom": "",
+      "output": "ae2:logic_processor_press",
+      "text": "The presses are not used up."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Inscriber",
+      "top": "ae2:calculation_processor_press",
+      "middle": "minecraft:iron_block",
+      "bottom": "",
+      "output": "ae2:calculation_processor_press",
+      "text": "The presses are not used up."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Inscriber",
+      "top": "ae2:engineering_processor_press",
+      "middle": "minecraft:iron_block",
+      "bottom": "",
+      "output": "ae2:engineering_processor_press",
+      "text": "The presses are not used up."
+    },
+    {
+      "type": "text",
+      "title": "Name Press",
+      "anchor": "name-press",
+      "text": "The Name Press can be used in an inscriber to name items, similar to an anvil.$(br2)To craft, right click the $(l:items_blocks_machines/cutting_knives)Certus Quartz Cutting Knife$(/l) or $(l:items_blocks_machines/cutting_knives)Nether Quartz Cutting Knife$(/l) and insert an ingot of metal, you will then have to type the name you wish to write onto the plate then simply extract the finished plate. You can use one or two plates at a time in the inscriber, if you use two plates, it will print the name"
+    },
+    {
+      "type": "text",
+      "text": "using the combination of both names, top slot, then bottom slot."
+    }
+  ]
+}

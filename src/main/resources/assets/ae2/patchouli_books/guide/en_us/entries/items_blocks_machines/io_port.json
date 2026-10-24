@@ -1,0 +1,33 @@
+{
+  "name": "ME IO Port",
+  "icon": "ae2:io_port",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 210,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:io_port",
+      "link_recipe": true,
+      "anchor": "the-me-io-port",
+      "text": "The IO Port allows you to rapidly fill or empty $(l:items_blocks_machines/storage_cells)storage cells$(/l) to or from $(l:ae2_mechanics/import_export_storage)network storage$(/l).$(br2)It can be rotated with a $(l:items_blocks_machines/wrench)Certus Quartz Wrench$(/l)."
+    },
+    {
+      "type": "text",
+      "title": "Settings",
+      "anchor": "settings",
+      "text": "$(li)The IO Port can be set to move the cell to the output slots when the cell is empty, full, or when the work is done.$(li)If a $(l:items_blocks_machines/upgrade_cards)Redstone Card$(/l) is inserted, there will be options for various redstone conditions$(li)In the center of the GUI, there is an arrow to set which direction to transfer items, from the cell to $(l:ae2_mechanics/import_export_storage)network storage$(/l), or from storage to the cell."
+    },
+    {
+      "type": "text",
+      "title": "Upgrades",
+      "anchor": "upgrades",
+      "text": "The IO Port supports the following $(l:items_blocks_machines/upgrade_cards)upgrades$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Acceleration Card$(/l) increases the amount of stuff moved per operation$(li)$(l:items_blocks_machines/upgrade_cards)Redstone Card$(/l) adds redstone control, allowing active on high signal, low signal, or once per pulse"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/io_port",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

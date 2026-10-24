@@ -1,0 +1,221 @@
+{
+  "name": "Crafting CPU Multiblock (Storage, Coprocessor, Monitor, Unit)",
+  "icon": "ae2:1k_crafting_storage",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 210,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-crafting-cpu",
+      "text": "Crafting CPUs manage crafting requests/jobs. They store the intermediate ingredients while crafting jobs with multiple steps are being carried out, and affect how big jobs can be, and to some degree how fast they are completed. See $(l:ae2_mechanics/autocrafting)autocrafting$(/l) for more details.$(br2)Each crafting CPU handles 1 request or job, so if you want to request both a calculation processor and 256 smooth"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "DD",
+            "EB",
+            "  ",
+            "  ",
+            "  ",
+            "  "
+          ],
+          [
+            "CD",
+            "CD",
+            "  ",
+            " D",
+            "  ",
+            "  "
+          ],
+          [
+            "0A",
+            "AA",
+            "  ",
+            " B",
+            "  ",
+            " B"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:16k_crafting_storage[formed=true,powered=true]",
+          "B": "ae2:1k_crafting_storage[formed=true,powered=true]",
+          "C": "ae2:crafting_unit[formed=true,powered=true]",
+          "D": "ae2:crafting_accelerator[formed=true,powered=true]",
+          "E": "ae2:crafting_monitor[formed=true,powered=true]",
+          "0": "ae2:16k_crafting_storage[formed=true,powered=true]"
+        }
+      },
+      "text": ""
+    },
+    {
+      "type": "ae2:item_row_4",
+      "item0": "ae2:1k_crafting_storage",
+      "item1": "ae2:crafting_accelerator",
+      "item2": "ae2:crafting_monitor",
+      "item3": "ae2:crafting_unit",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "text": "stone at once, you need 2 CPU multiblocks.$(br2)They can be set to handle requests from players, automation (export busses and interfaces), or both.$(br2)Right-clicking one brings up a crafting status UI where you can check the progress on the crafting job the CPU is handling."
+    },
+    {
+      "type": "text",
+      "title": "Settings",
+      "anchor": "settings",
+      "text": "$(li)The CPU can be set to accept requests from just players, just automation (like $(l:items_blocks_machines/export_bus)ME Export Bus$(/l)ses with $(l:items_blocks_machines/upgrade_cards)Crafting Card$(/l)s), or both."
+    },
+    {
+      "type": "text",
+      "title": "Construction",
+      "anchor": "construction",
+      "text": "Crafting CPUs are multiblocks, and must be solid rectangular prisms with no gaps. They are made out of several components.$(br2)Each CPU must contain at least 1 crafting storage block (and the minimum viable CPU is in fact just a single 1k crafting storage)."
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:crafting_unit",
+      "link_recipe": true,
+      "anchor": "crafting-unit",
+      "text": "(Optional) Crafting units simply fill space in a CPU in order to make it a solid rectangular prism, if you don't have enough of the other components. They are also a base ingredient in the other components."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crafting/cpu_crafting_unit",
+      "text": ""
+    },
+    {
+      "type": "ae2:item_row_5",
+      "item0": "ae2:1k_crafting_storage",
+      "item1": "ae2:4k_crafting_storage",
+      "item2": "ae2:16k_crafting_storage",
+      "item3": "ae2:64k_crafting_storage",
+      "item4": "ae2:256k_crafting_storage",
+      "anchor": "crafting-storage",
+      "text": "(Required) Crafting storages are available in all the standard cell sizes (1k, 4k, 16k, 64k, 256k). They store the ingredients and intermediate ingredients involved in a craft, so larger or more storages are required for the CPU to handle crafting jobs with more ingredients."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crafting/1k_cpu_crafting_storage",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Upgrade",
+      "in0": "ae2:crafting_unit",
+      "in1": "ae2:cell_component_1k",
+      "output": "ae2:1k_crafting_storage",
+      "machine": "",
+      "text": "Right-click a crafting unit with the component."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crafting/4k_cpu_crafting_storage",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Upgrade",
+      "in0": "ae2:crafting_unit",
+      "in1": "ae2:cell_component_4k",
+      "output": "ae2:4k_crafting_storage",
+      "machine": "",
+      "text": "Right-click a crafting unit with the component."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crafting/16k_cpu_crafting_storage",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Upgrade",
+      "in0": "ae2:crafting_unit",
+      "in1": "ae2:cell_component_16k",
+      "output": "ae2:16k_crafting_storage",
+      "machine": "",
+      "text": "Right-click a crafting unit with the component."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crafting/64k_cpu_crafting_storage",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Upgrade",
+      "in0": "ae2:crafting_unit",
+      "in1": "ae2:cell_component_64k",
+      "output": "ae2:64k_crafting_storage",
+      "machine": "",
+      "text": "Right-click a crafting unit with the component."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crafting/256k_cpu_crafting_storage",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Upgrade",
+      "in0": "ae2:crafting_unit",
+      "in1": "ae2:cell_component_256k",
+      "output": "ae2:256k_crafting_storage",
+      "machine": "",
+      "text": "Right-click a crafting unit with the component."
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:crafting_accelerator",
+      "link_recipe": true,
+      "anchor": "crafting-co-processing-unit",
+      "text": "$(bold)Crafting Co-Processing Unit$()$(br2)(Optional) Crafting co-processors make the system send out ingredient batches from $(l:items_blocks_machines/pattern_provider)ME Pattern Provider$(/l)s more often by making the CPU tick faster. This allows them to keep up with machines that process quickly. An example of this is a pattern provider"
+    },
+    {
+      "type": "text",
+      "text": "surrounded by $(l:items_blocks_machines/molecular_assembler)Molecular Assembler$(/l)s being able to push ingredients faster than a single assembler can process, and thus distributing the ingredient batches between the surrounding assemblers.$(br2)Some complex recipes have multiple steps that can be done in parallel, like making planks and books simultaneously for making bookshelves. In the crafting status screen (visible by right clicking a CPU or with the"
+    },
+    {
+      "type": "text",
+      "text": "hammer icon in a $(l:items_blocks_machines/terminals)terminal$(/l)), these steps will all show up as \"scheduled\". Each extra coprocessor allows one more of these steps to be done in parallel (and thus show up as \"crafting\"). However, this is not as relevant because you'll typically have more coprocessors purely for the insertion speed than a recipe has steps that could conceivably be done in parallel."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crafting/cpu_crafting_accelerator",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Upgrade",
+      "in0": "ae2:crafting_unit",
+      "in1": "ae2:engineering_processor",
+      "output": "ae2:crafting_accelerator",
+      "machine": "",
+      "text": "Right-click a crafting unit with the component."
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:crafting_monitor",
+      "link_recipe": true,
+      "anchor": "crafting-monitor",
+      "text": "(Optional) The crafting monitor displays the job the CPU is handling at the moment. The screen can be colored with a $(l:items_blocks_machines/color_applicator)Color Applicator$(/l)."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crafting/cpu_crafting_monitor",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Upgrade",
+      "in0": "ae2:crafting_unit",
+      "in1": "ae2:storage_monitor",
+      "output": "ae2:crafting_monitor",
+      "machine": "",
+      "text": "Right-click a crafting unit with the component."
+    }
+  ]
+}

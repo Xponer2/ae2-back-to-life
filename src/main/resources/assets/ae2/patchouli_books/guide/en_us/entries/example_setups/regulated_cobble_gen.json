@@ -1,0 +1,41 @@
+{
+  "name": "Auto-Regulated Cobblestone Generator",
+  "icon": "minecraft:cobblestone",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "auto-regulated-cobblestone-generator",
+      "text": "Automation of a cobblestone generator is simple, just face an $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) into a standard vanilla manual cobblestone generator. However, doing this will eventually jam your network full of cobblestone, so some regulation is desired.$(br2)Due to how annihilation planes work (they act like $(l:items_blocks_machines/import_bus)ME Import Bus$(/l)ses), we cannot simply put a $(l:items_blocks_machines/level_emitter)ME Level Emitter$(/l) facing an $(l:items_blocks_machines/export_bus)ME$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "$(l:items_blocks_machines/export_bus)Export Bus$(/l) with a $(l:items_blocks_machines/upgrade_cards)Redstone Card$(/l) (since you cannot go directly import to export with no storage in between). We have to be a bit more roundabout.$(br2)$(l:items_blocks_machines/toggle_bus)ME Toggle Bus$(/l)ses allow you to connect and disconnect parts of your network with redstone signals, but they cause the network to reboot whenever they do this. There is a simple workaround: put the toggle bus on a $(l:ae2_mechanics/subnetworks)subnetwork$(/l) such that it only reboots the subnet."
+    },
+    {
+      "type": "text",
+      "text": "We can have a self-contained $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l) and $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) $(l:ae2_mechanics/subnetworks)subnetwork$(/l) push into an $(l:items_blocks_machines/interface)ME Interface$(/l) on the main network. The toggle bus will connect and disconnect the subnet from a $(l:items_blocks_machines/quartz_fiber)Quartz Fiber$(/l), cutting power to the planes.$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Configurations",
+      "anchor": "configurations",
+      "text": "$(li)The $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l)s (1) Have no GUI to configure, but can be enchanted with Efficiency and Unbreaking to reduce power draw.$(li)The $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (2) is in its default configuration.$(li)The $(l:items_blocks_machines/toggle_bus)ME Toggle Bus$(/l) (3) must be on the subnetwork side of the quartz fiber, not the main network, or the main network will reboot every time it toggles."
+    },
+    {
+      "type": "text",
+      "text": "$(li)The $(l:items_blocks_machines/level_emitter)ME Level Emitter$(/l) (4) is configured with the desired item and quantity, and set to \"Emit when levels are below limit\".$(li)The $(l:items_blocks_machines/interface)ME Interface$(/l) (5) is in its default configuration."
+    },
+    {
+      "type": "text",
+      "title": "How It Works",
+      "anchor": "how-it-works",
+      "text": "1. The cobblestone generator makes some cobblestone.$(br2)2. The $(l:items_blocks_machines/annihilation_plane)ME Annihilation Plane$(/l)s break the cobblestone.$(br2)3. The $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) stores the cobblestone in the $(l:items_blocks_machines/interface)ME Interface$(/l), sending it into the main network.$(br2)4. When the amount of cobblestone in the main network exceeds the set amount, the $(l:items_blocks_machines/level_emitter)ME Level Emitter$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "stops sending a signal, turning off the $(l:items_blocks_machines/toggle_bus)ME Toggle Bus$(/l).$(br2)5. This cuts power to the subnetwork, stopping the annihilation planes from working."
+    }
+  ]
+}

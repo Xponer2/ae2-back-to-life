@@ -1,0 +1,20 @@
+Textures and models of Applied Energistics 2 and of AE2: Back to Life
+
+  assets/ae2/textures/**, assets/ae2/models/**, assets/ae2/blockstates/**, guide images
+
+(c) 2020 Ridanisaurus Rid (https://github.com/Ridanisaurus/)
+(c) 2013 - 2020 AlgorithmX2 et al. (Applied Energistics 2, https://github.com/AppliedEnergistics/Applied-Energistics-2)
+New or changed files (c) 2026 the AE2: Back to Life contributors
+
+Licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License
+(CC BY-NC-SA 3.0). The license text:
+
+  https://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
+
+Summary (not a substitute for the license): you may share and adapt the material for non-commercial purposes,
+if you give appropriate credit, indicate if changes were made, and distribute your contributions under the same
+license.
+
+Changes made by AE2: Back to Life: the 1.21.1 model and blockstate JSON files were converted to the Minecraft 1.12.2
+format (texture paths, parent models, variant keys, removed NeoForge-only fields); guide images were rescaled for
+Patchouli. Textures are unchanged unless stated in the git history.

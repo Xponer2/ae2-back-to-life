@@ -1,0 +1,78 @@
+{
+  "name": "Bytes and Types",
+  "icon": "ae2:creative_storage_cell",
+  "category": "ae2_mechanics",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "bytes-and-types",
+      "text": "$(l:items_blocks_machines/storage_cells)Storage Cells$(/l) are defined by both $(o)bytes$() and $(o)types$(). Bytes, like in your actual computer, are a measure of the total amount of \"stuff\" in a storage cell. Types are a measure of how many different, well, $(o)types$() of things are stored in a cell. Each type represents a unique item, so 4,096 cobblestone is 1 type but 16 different swords with different enchantments are 16 types."
+    },
+    {
+      "type": "ae2:item_row_5",
+      "item0": "ae2:item_storage_cell_1k",
+      "item1": "ae2:item_storage_cell_4k",
+      "item2": "ae2:item_storage_cell_16k",
+      "item3": "ae2:item_storage_cell_64k",
+      "item4": "ae2:item_storage_cell_256k",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "text": "Each storage cell can store a fixed amount of data. Each type consumes a number of bytes upfront (which varies with the cell size), and each item consumes one bit of storage, so eight items consume one byte, and a full stack of 64 consumes 8 bytes, regardless of how the item would stack outside an ME network. For instance, 64 identical saddles don't take up more space than 64 stone."
+    },
+    {
+      "type": "text",
+      "text": "Again, each item is 1 bit, so 8 items equals 1 byte. For fluid cells, this is 8 buckets per byte.$(br2)Many people complain about the limited number of types a cell can hold, but they are a $(bold)$(o)necessary limitation$(). Cells store their data in an NBT tag on the item itself, which makes them rather stable. However, this means putting too much data on a cell can cause too much data to be sent to a player,"
+    },
+    {
+      "type": "text",
+      "text": "causing an effect similar to \"Book Banning\" in vanilla minecraft. Additionally, having too many different types in your system increases the load on sorting and item handling. However, this limitation does not end up being very restrictive. One $(l:items_blocks_machines/drive)ME Drive$(/l) bay full of cells is 630 types which is actually quite a lot as long as you don't store loads of unique unstackable items."
+    },
+    {
+      "type": "text",
+      "text": "For this reason, types exist to \"firmly discourage\" you from dumping the hundreds of randomly damaged armor and tools from a mob farm directly into your ME system. Each armor piece with unique damage and enchantments has to be stored as a separate entry, causing bloat. it is recommended to filter them out of the item stream before they touch your system.$(br2)Gunning straight for top tier storage cells is generally not"
+    },
+    {
+      "type": "text",
+      "anchor": "storage-cell-contents-vs-cost",
+      "text": "the best idea, since you use more resources but don't get any extra type storage. This means that all sizes of cell are still useful even lategame, as they have tradeoffs.$(br2)Below is a table comparing the different tiers of storage cells, how much they store, and a rough estimate of their cost.$(br2)$(bold)Storage Cell Contents Vs Cost$()$(li)$(l:items_blocks_machines/storage_cells)$(bold)1k ME Item Storage Cell$()$(/l): Bytes 1,024; Types 63;"
+    },
+    {
+      "type": "text",
+      "text": "Bytes Per Type 8; Certus 4; Redstone 5; Gold 1; Glowstone 0$(li)$(l:items_blocks_machines/storage_cells)$(bold)4k ME Item Storage Cell$()$(/l): Bytes 4,096; Types 63; Bytes Per Type 32; Certus 14.25; Redstone 20; Gold 3; Glowstone 0$(li)$(l:items_blocks_machines/storage_cells)$(bold)16k ME Item Storage Cell$()$(/l): Bytes 16,384; Types 63; Bytes Per Type 128; Certus 45; Redstone 61; Gold 9; Glowstone 4$(li)$(l:items_blocks_machines/storage_cells)$(bold)64k ME Item Storage Cell$()$(/l): Bytes 65,536; Types 63; Bytes Per Type 512; Certus 137.25; Redstone 184; Gold 27;"
+    },
+    {
+      "type": "text",
+      "anchor": "storage-capacity-with-varying-type-count",
+      "text": "Glowstone 16$(li)$(l:items_blocks_machines/storage_cells)$(bold)256k ME Item Storage Cell$()$(/l): Bytes 262,144; Types 63; Bytes Per Type 2048; Certus 414; Redstone 553; Gold 81; Glowstone 48$(br2)$(bold)Storage Capacity with Varying Type Count$()$(br2)The upfront cost of types is such that a cell holding 1 type can hold 2x as much as a cell with all 63 types in use.$(li)$(l:items_blocks_machines/storage_cells)$(bold)1k ME Item Storage Cell$()$(/l): Total Capacity of Cell"
+    },
+    {
+      "type": "text",
+      "text": "With 1 Type In Use 8,128; Total Capacity of Cell With 63 Types In Use 4,160$(li)$(l:items_blocks_machines/storage_cells)$(bold)4k ME Item Storage Cell$()$(/l): Total Capacity of Cell With 1 Type In Use 32,512; Total Capacity of Cell With 63 Types In Use 16,640$(li)$(l:items_blocks_machines/storage_cells)$(bold)16k ME Item Storage Cell$()$(/l): Total Capacity of Cell With 1 Type In Use 130,048; Total Capacity of Cell With 63 Types In Use 66,560$(li)$(l:items_blocks_machines/storage_cells)$(bold)64k ME Item Storage Cell$()$(/l): Total Capacity of Cell With 1 Type In Use 520,192;"
+    },
+    {
+      "type": "text",
+      "text": "Total Capacity of Cell With 63 Types In Use 266,240$(li)$(l:items_blocks_machines/storage_cells)$(bold)256k ME Item Storage Cell$()$(/l): Total Capacity of Cell With 1 Type In Use 2,080,768; Total Capacity of Cell With 63 Types In Use 1,064,960"
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/1_type_cell.png"
+      ],
+      "border": true,
+      "title": "A Cell With 1 Type",
+      "text": ""
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/63_type_cell.png"
+      ],
+      "border": true,
+      "title": "A Cell With 63 Types",
+      "text": ""
+    }
+  ]
+}

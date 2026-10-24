@@ -1,0 +1,21 @@
+{
+  "name": "Charged Staff",
+  "icon": "ae2:charged_staff",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:charged_staff",
+      "link_recipe": true,
+      "anchor": "the-charged-staff",
+      "text": "The Charged Staff is a stick with a $(l:items_blocks_machines/certus_quartz_crystal_charged)Charged Certus Quartz Crystal$(/l) on the end. It does 6 damage, using 300 AE per attack.$(br2)Its energy can be recharged in a $(l:items_blocks_machines/charger)Charger$(/l)."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/misctools_charged_staff",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

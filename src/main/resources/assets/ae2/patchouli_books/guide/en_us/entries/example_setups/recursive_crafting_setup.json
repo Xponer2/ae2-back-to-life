@@ -1,0 +1,58 @@
+{
+  "name": "Recursive Crafting",
+  "icon": "ae2:guide",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "a-recursive-crafting-setup",
+      "text": "As stated in $(l:ae2_mechanics/autocrafting)autocrafting$(/l), the autocrafting planning algorithm cannot handle recipes where the primary output is one of the inputs. For example, it cannot handle cloning $(item)Netherite Upgrade Smithing Template$()s.$(br2)One solution is use of a $(l:items_blocks_machines/level_emitter)ME Level Emitter$(/l)'s ability to pretend to be a $(l:items_blocks_machines/patterns)pattern$(/l)."
+    },
+    {
+      "type": "text",
+      "text": "This will then be used to turn on a little setup that constantly performs the craft. In this case, we will look at a setup to clone $(item)Netherite Upgrade Smithing Template$()s.$(br2)$(#555)$(o)(3D scene not available in this version)$()"
+    },
+    {
+      "type": "text",
+      "title": "Configurations",
+      "anchor": "configurations",
+      "text": "$(li)The $(l:items_blocks_machines/interface)ME Interface$(/l) (1) is set to stock the required additional ingredients: diamond and netherrack.$(li)The $(l:items_blocks_machines/level_emitter)ME Level Emitter$(/l) (2) is configured with \"netherite smithing template\", and set to \"Emit Redstone to craft item\".$(li)The first $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) (3) is filtered to the items the Interface is stocking. It has a Redstone Card. The redstone mode is set to \"Active with signal\"."
+    },
+    {
+      "type": "text",
+      "text": "$(li)The first $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (4) is set to a $(o)higher$() $(l:ae2_mechanics/import_export_storage#storage-priority)priority$(/l) than the second storage bus.$(li)The $(l:items_blocks_machines/molecular_assembler)Molecular Assembler$(/l) (5) has the pattern for duplicating the smithing template, and one smithing template already inserted manually."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/smithing_template_pattern.png"
+      ],
+      "border": true,
+      "title": "Pattern",
+      "text": "$(li)The second $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) (6) is in its default configuration."
+    },
+    {
+      "type": "text",
+      "text": "$(li)The second $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) (7) is filtered to \"netherite smithing template\". It has a $(o)lower$() $(l:ae2_mechanics/import_export_storage#storage-priority)priority$(/l) than the first storage bus."
+    },
+    {
+      "type": "text",
+      "title": "How It Works",
+      "anchor": "how-it-works",
+      "text": "1. The $(l:items_blocks_machines/level_emitter)ME Level Emitter$(/l) pretends to be a $(l:items_blocks_machines/patterns)pattern$(/l) due to the inserted $(l:items_blocks_machines/upgrade_cards)Crafting Card$(/l) and being set to \"Emit Redstone to craft item\". Thus, \"netherite smithing template\" shows up in $(l:items_blocks_machines/terminals)terminals$(/l) as a valid thing to $(l:ae2_mechanics/autocrafting)autocraft$(/l).$(br2)2. When receiving a request to craft that item, either from a player or from the system itself, the level emitter turns on."
+    },
+    {
+      "type": "text",
+      "text": "3. The first $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) is activated by the level emitter, and pulls out the ingredients stocked in the $(l:items_blocks_machines/interface)ME Interface$(/l).$(br2)4. The only $(l:items_blocks_machines/storage_bus)ME Storage Bus$(/l) on the network that is able to store those ingredients is the one on the assembler.$(br2)5. The $(l:items_blocks_machines/molecular_assembler)Molecular Assembler$(/l) receives the ingredients (already having 1 smithing pattern inside), and performs the craft, producing 2 smithing patterns."
+    },
+    {
+      "type": "text",
+      "text": "6. The second $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) extracts 1 smithing pattern.$(br2)7. The first storage bus has a higher priority, so that smithing pattern goes back into the assembler.$(br2)8. The second $(l:items_blocks_machines/import_bus)ME Import Bus$(/l) extracts 1 smithing pattern.$(br2)9. The assembler cannot receive another smithing pattern, so the second smithing pattern goes to the lower priority storage bus, inserting"
+    },
+    {
+      "type": "text",
+      "text": "it into the interface.$(br2)10. The $(l:items_blocks_machines/interface)ME Interface$(/l), not being set to stock smithing patterns, inserts it into the network."
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+Guidebook click sound
+
+  assets/ae2/sounds/guide_click.ogg
+
+By EminYILDIRIM, https://freesound.org/people/EminYILDIRIM/sounds/536108/
+(used by Applied Energistics 2 for its guidebook, unchanged)
+
+Licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0):
+
+  https://creativecommons.org/licenses/by/4.0/legalcode
