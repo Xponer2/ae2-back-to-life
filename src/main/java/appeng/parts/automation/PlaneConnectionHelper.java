@@ -149,8 +149,9 @@ public final class PlaneConnectionHelper {
      */
     public void updateConnections() {
         TileEntity host = getHostBlockEntity();
-        if (host != null) {
-            host.requestModelDataUpdate();
+        // The connections are part of the block state used for rendering: draw the block again
+        if (host != null && host.getWorld() != null && host.getWorld().isRemote) {
+            host.getWorld().markBlockRangeForRenderUpdate(host.getPos(), host.getPos());
         }
     }
 

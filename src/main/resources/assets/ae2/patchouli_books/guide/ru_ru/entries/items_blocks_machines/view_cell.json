@@ -1,0 +1,30 @@
+{
+  "name": "Ячейка просмотра",
+  "icon": "ae2:view_cell",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:view_cell",
+      "link_recipe": true,
+      "anchor": "view-cell",
+      "text": "Ячейки просмотра фильтруют то, что показывают $(l:items_blocks_machines/terminals)терминалы$(/l). Размечаются они в устройстве $(l:items_blocks_machines/cell_workbench)Верстак для ячеек$(/l).$(br2)Например, вы хотите, чтобы терминал показывал только набор каменных строительных материалов. Разметьте ячейку просмотра на эти материалы и вставьте её в терминал — будут показаны только они."
+    },
+    {
+      "type": "text",
+      "text": "Ячейки просмотра складываются: если есть ячейка просмотра для дубовых досок и ещё одна для булыжника, вставив обе, вы увидите и доски, и булыжник."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/view_cell_storage",
+      "anchor": "recipe",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/view_cell",
+      "text": ""
+    }
+  ]
+}

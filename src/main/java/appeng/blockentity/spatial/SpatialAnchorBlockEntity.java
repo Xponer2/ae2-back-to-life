@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Multiset;
-import net.neoforged.neoforge.common.world.chunk.ForcedChunkManager;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -112,7 +111,7 @@ public class SpatialAnchorBlockEntity extends AENetworkedBlockEntity
         data.writeBoolean(this.isActive());
         data.writeBoolean(displayOverlay);
         if (this.displayOverlay) {
-            data.writeLongArray(chunks.stream().mapToLong(ChunkPos::toLong).toArray());
+            data.writeLongArray(chunks.stream().mapToLong(c -> ChunkPos.asLong(c.x, c.z)).toArray());
         }
     }
 
@@ -133,7 +132,7 @@ public class SpatialAnchorBlockEntity extends AENetworkedBlockEntity
         OverlayManager.getInstance().removeHandlers(this);
 
         if (this.displayOverlay) {
-            this.chunks.addAll(Arrays.stream(data.readLongArray(null)).mapToObj(ChunkPos::new)
+            this.chunks.addAll(Arrays.stream(data.readLongArray(null)).mapToObj(l -> new ChunkPos((int) l, (int) (l >>> 32)))
                     .collect(Collectors.toSet()));
             // Register it again to render the overlay
             OverlayManager.getInstance().showArea(this);
@@ -269,7 +268,7 @@ public class SpatialAnchorBlockEntity extends AENetworkedBlockEntity
     }
 
     public boolean isActive() {
-        if (level != null && !level.isRemote) {
+        if (world != null && !world.isRemote) {
             return this.getMainNode().isOnline();
         } else {
             return this.isActive;

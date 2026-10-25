@@ -1,0 +1,25 @@
+{
+  "name": "Карта памяти",
+  "icon": "ae2:memory_card",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:memory_card",
+      "link_recipe": true,
+      "anchor": "the-memory-card",
+      "text": "Карта памяти копирует и вставляет настройки между $(l:ae2_mechanics/devices)устройствами$(/l) AE2 и связывает $(l:items_blocks_machines/p2p_tunnels)P2P-туннели$(/l). Также она умеет вставлять в устройства $(l:items_blocks_machines/upgrade_cards)карты улучшений$(/l).$(li)Щелчок правой кнопкой мыши с Shift копирует настройки или создаёт новую частоту связи P2P.$(li)Щелчок правой кнопкой мыши вставляет настройки, карты"
+    },
+    {
+      "type": "text",
+      "text": "улучшений или частоту связи."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/network_memory_card",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

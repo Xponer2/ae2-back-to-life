@@ -53,6 +53,7 @@ import appeng.util.ConfigInventory;
 import appeng.util.InteractionUtil;
 import appeng.util.Platform;
 import appeng.util.UseOnContext;
+import appeng.util.ItemTooltipContext;
 
 public class BasicStorageCell extends AEBaseItem implements IBasicCellItem, AEToolItem {
     protected final double idleDrain;
@@ -77,7 +78,7 @@ public class BasicStorageCell extends AEBaseItem implements IBasicCellItem, AETo
 
     @Override
     public void appendHoverText(ItemStack stack,
-            TooltipContext context,
+            ItemTooltipContext context,
             List<ITextComponent> lines,
             ITooltipFlag advancedTooltips) {
         if (Platform.isClient()) {
@@ -167,11 +168,11 @@ public class BasicStorageCell extends AEBaseItem implements IBasicCellItem, AETo
 
         // Drop items from the recipe.
         for (var disassembledStack : disassembledStacks) {
-            playerInventory.placeItemBackInInventory(disassembledStack.copy());
+            playerInventory.placeItemBackInInventory(player.world, disassembledStack.copy());
         }
 
         // Drop upgrades
-        getUpgrades(stack).forEach(playerInventory::placeItemBackInInventory);
+        getUpgrades(stack).forEach(upgrade -> playerInventory.placeItemBackInInventory(player.world, upgrade));
 
         return true;
     }

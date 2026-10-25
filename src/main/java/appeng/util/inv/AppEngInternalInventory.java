@@ -185,7 +185,7 @@ public class AppEngInternalInventory extends BaseInternalInventory {
                 int slot = itemCompound.getInteger("Slot");
 
                 if (slot >= 0 && slot < stacks.size()) {
-                    stacks.set(slot, ItemStack.parseOptional(itemCompound));
+                    stacks.set(slot, new ItemStack(itemCompound));
                 }
             }
         }

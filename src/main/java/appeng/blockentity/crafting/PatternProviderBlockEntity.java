@@ -158,12 +158,7 @@ public class PatternProviderBlockEntity extends AENetworkedBlockEntity implement
             // Restore push direction blockstate
             var pushDirection = AEComponents.EXPORTED_PUSH_DIRECTION.get(input);
             if (pushDirection != null) {
-                var level = getLevel();
-                if (level != null) {
-                    level.setBlockState(getPos(), getBlockState().setValue(
-                            PatternProviderBlock.PUSH_DIRECTION,
-                            pushDirection));
-                }
+                setBlockStateProperty(PatternProviderBlock.PUSH_DIRECTION, pushDirection);
             }
         }
     }

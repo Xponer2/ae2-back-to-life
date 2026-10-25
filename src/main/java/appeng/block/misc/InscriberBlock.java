@@ -18,6 +18,7 @@
 
 package appeng.block.misc;
 
+import appeng.block.BlockProperties;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -31,8 +32,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import appeng.api.orientation.IOrientationStrategy;
@@ -45,17 +44,16 @@ import appeng.menu.implementations.InscriberMenu;
 import appeng.menu.locator.MenuLocators;
 import appeng.util.BlockPlaceContext;
 
-public class InscriberBlock extends AEBaseEntityBlock<InscriberBlockEntity> implements SimpleWaterloggedBlock {
+public class InscriberBlock extends AEBaseEntityBlock<InscriberBlockEntity> {
 
-    private static final PropertyBool WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public InscriberBlock(BlockProperties props) {
         super(props);
-        this.setDefaultState(this.getDefaultState().withProperty(WATERLOGGED, false));
+        this.setDefaultState(this.getDefaultState());
     }
 
     @Override
-    public int getLightBlock(IBlockState state, IBlockAccess level, BlockPos pos) {
+    public int getLightOpacity(IBlockState state, IBlockAccess level, BlockPos pos) {
         return 2; // FIXME validate this. a) possibly not required because of getShape b) value
         // range. was 2 in 1.10
     }
@@ -76,8 +74,7 @@ public class InscriberBlock extends AEBaseEntityBlock<InscriberBlockEntity> impl
     @Override
     protected void createBlockStateDefinition(BlockStateContainer.Builder builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(WATERLOGGED);
-    }
+            }
 
     @Override
     public IOrientationStrategy getOrientationStrategy() {
@@ -87,24 +84,13 @@ public class InscriberBlock extends AEBaseEntityBlock<InscriberBlockEntity> impl
     @Override
     @Nullable
     public IBlockState getStateForPlacement(BlockPlaceContext context) {
-        var fluidState = context.getLevel().getFluidState(context.getClickedPos());
-        return super.getStateForPlacement(context)
-                .setValue(WATERLOGGED, fluidState.getType() == FluidRegistry.WATER);
+        return super.getStateForPlacement(context);
     }
 
-    @Override
-    public FluidState getFluidState(IBlockState blockState) {
-        return blockState.getValue(WATERLOGGED).booleanValue()
-                ? FluidRegistry.WATER.getSource(false)
-                : super.getFluidState(blockState);
-    }
 
     @Override
     public IBlockState updateShape(IBlockState blockState, EnumFacing facing, IBlockState facingState, World level,
             BlockPos currentPos, BlockPos facingPos) {
-        if (blockState.getValue(WATERLOGGED).booleanValue()) {
-            level.scheduleTick(currentPos, FluidRegistry.WATER, FluidRegistry.WATER.getTickDelay(level));
-        }
 
         return super.updateShape(blockState, facing, facingState, level, currentPos, facingPos);
     }

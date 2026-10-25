@@ -20,9 +20,9 @@ package appeng.client.gui.me.crafting;
 
 import java.text.NumberFormat;
 
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.input.Keyboard;
 
-import net.minecraft.client.gui.GuiButton;
+import appeng.client.gui.compat.Button;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -44,8 +44,8 @@ public class CraftConfirmScreen extends AEBaseScreen<CraftConfirmMenu> {
 
     private final CraftConfirmTableRenderer table;
 
-    private final GuiButton start;
-    private final GuiButton selectCPU;
+    private final Button start;
+    private final Button selectCPU;
     private final Scrollbar scrollbar;
 
     public CraftConfirmScreen(CraftConfirmMenu menu, InventoryPlayer playerInventory, ITextComponent title,
@@ -56,10 +56,10 @@ public class CraftConfirmScreen extends AEBaseScreen<CraftConfirmMenu> {
         this.scrollbar = widgets.addScrollBar("scrollbar", Scrollbar.BIG);
 
         this.start = widgets.addButton("start", GuiText.Start.text(), this::start);
-        this.start.enabled = false;
+        this.start.active = false;
 
         this.selectCPU = widgets.addButton("selectCpu", getNextCpuButtonLabel(), this::selectNextCpu);
-        this.selectCPU.enabled = false;
+        this.selectCPU.active = false;
 
         widgets.addButton("cancel", GuiText.Cancel.text(), menu::goBack);
     }
@@ -78,8 +78,8 @@ public class CraftConfirmScreen extends AEBaseScreen<CraftConfirmMenu> {
 
         CraftingPlanSummary plan = menu.getPlan();
         boolean planIsStartable = plan != null && !plan.isSimulation();
-        this.start.enabled = !this.menu.hasNoCPU() && planIsStartable;
-        this.selectCPU.enabled = planIsStartable;
+        this.start.active = !this.menu.hasNoCPU() && planIsStartable;
+        this.selectCPU.active = planIsStartable;
 
         // Show additional status about the selected CPU and plan when the planning is done
         ITextComponent planDetails = GuiText.CalculatingWait.text();
@@ -145,7 +145,7 @@ public class CraftConfirmScreen extends AEBaseScreen<CraftConfirmMenu> {
     // Allow players to confirm a craft via the enter key
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int p_keyPressed_3_) {
-        if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
+        if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER) {
             this.start();
             return true;
         }

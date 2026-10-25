@@ -1,0 +1,25 @@
+{
+  "name": "Крохотный динамит",
+  "icon": "ae2:tiny_tnt",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:tiny_tnt",
+      "link_recipe": true,
+      "anchor": "tiny-tnt",
+      "text": "Маленький динамит для маленьких взрывов. Полезен для изготовления пар предметов $(l:items_blocks_machines/singularities)Сингулярность квантовой запутанности$(/l).$(br2)В конфигурации можно отключить разрушение блоков от него, чтобы делать сингулярности без риска гриферства, если вы отключили динамит и криперов на своём"
+    },
+    {
+      "type": "text",
+      "text": "сервере."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:misc/tiny_tnt",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

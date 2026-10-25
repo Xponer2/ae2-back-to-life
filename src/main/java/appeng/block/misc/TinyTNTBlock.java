@@ -18,21 +18,20 @@
 
 package appeng.block.misc;
 
-import appeng.util.Platform;
-
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.Stats;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
@@ -42,11 +41,12 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 
 import appeng.block.AEBaseBlock;
+import appeng.block.BlockProperties;
 import appeng.entity.TinyTNTPrimedEntity;
 import appeng.util.ItemInteractionResult;
+import appeng.util.Platform;
 import appeng.util.shape.CollisionContext;
 import appeng.util.shape.Shapes;
 import appeng.util.shape.VoxelShape;
@@ -61,7 +61,7 @@ public class TinyTNTBlock extends AEBaseBlock {
     }
 
     @Override
-    public int getLightBlock(IBlockState state, IBlockAccess level, BlockPos pos) {
+    public int getLightOpacity(IBlockState state, IBlockAccess level, BlockPos pos) {
         return 2; // FIXME: Validate that this is the correct value range
     }
 
@@ -74,77 +74,102 @@ public class TinyTNTBlock extends AEBaseBlock {
     protected ItemInteractionResult useItemOn(ItemStack heldItem, IBlockState state, World level, BlockPos pos,
             EntityPlayer player, EnumHand hand, RayTraceResult hit) {
         if (Platform.is(heldItem, Items.FLINT_AND_STEEL) || Platform.is(heldItem, Items.FIRE_CHARGE)) {
-            onCaughtFire(state, level, pos, hit.getDirection(), player);
-            level.setBlock(pos, Blocks.AIR.getDefaultState(), Block.UPDATE_ALL_IMMEDIATE);
+            onCaughtFire(state, level, pos, hit.sideHit, player);
+            level.setBlockState(pos, Blocks.AIR.getDefaultState(), 11);
             Item item = heldItem.getItem();
-            if (!player.isCreative()) {
+            if (!player.capabilities.isCreativeMode) {
                 if (Platform.is(heldItem, Items.FLINT_AND_STEEL)) {
-                    heldItem.hurtAndBreak(1, player, EntityLivingBase.getSlotForHand(hand));
+                    heldItem.damageItem(1, player);
                 } else {
                     heldItem.shrink(1);
                 }
             }
 
-            player.awardStat(Stats.ITEM_USED.get(item));
+            var stat = StatList.getObjectUseStats(item);
+            if (stat != null) {
+                player.addStat(stat);
+            }
             return ItemInteractionResult.SUCCESS;
         }
         return super.useItemOn(heldItem, state, level, pos, player, hand, hit);
     }
 
-    @Override
     public void onCaughtFire(IBlockState state, World level, BlockPos pos, @Nullable EnumFacing direction,
             @Nullable EntityLivingBase igniter) {
         this.startFuse(level, pos, igniter);
     }
 
-    public void startFuse(World level, BlockPos pos, EntityLivingBase igniter) {
+    public void startFuse(World level, BlockPos pos, @Nullable EntityLivingBase igniter) {
         if (!level.isRemote) {
             var primedTinyTNTEntity = new TinyTNTPrimedEntity(level, pos.getX() + 0.5F, pos.getY(),
                     pos.getZ() + 0.5F, igniter);
             level.spawnEntity(primedTinyTNTEntity);
-            level.playSound(null, primedTinyTNTEntity.getX(), primedTinyTNTEntity.getY(),
-                    primedTinyTNTEntity.getZ(), SoundEvents.TNT_PRIMED, SoundCategory.BLOCKS, 1, 1);
+            level.playSound(null, primedTinyTNTEntity.posX, primedTinyTNTEntity.posY,
+                    primedTinyTNTEntity.posZ, SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1, 1);
         }
     }
 
     @Override
     public void neighborChanged(IBlockState state, World level, BlockPos pos, Block blockIn, BlockPos fromPos,
             boolean isMoving) {
-        if (level.isBlockIndirectlyGettingPowered(pos) > 0) {
+        if (level.isBlockPowered(pos)) {
             this.startFuse(level, pos, null);
-            level.removeBlock(pos, false);
+            level.setBlockToAir(pos);
         }
     }
 
     @Override
-    public void onPlace(IBlockState state, World level, BlockPos pos, IBlockState oldState, boolean isMoving) {
+    protected void onPlace(IBlockState state, World level, BlockPos pos, IBlockState oldState, boolean isMoving) {
         super.onPlace(state, level, pos, oldState, isMoving);
 
-        if (level.isBlockIndirectlyGettingPowered(pos) > 0) {
+        if (level.isBlockPowered(pos)) {
             this.startFuse(level, pos, null);
-            level.removeBlock(pos, false);
+            level.setBlockToAir(pos);
+        }
+    }
+
+    /**
+     * 1.12.2 has no hook for blocks catching fire: spreading fire replaces the block, so the fuse is lit when that
+     * happens (like vanilla TNT, which is special-cased by the fire block).
+     */
+    @Override
+    public void onRemove(IBlockState state, World level, BlockPos pos, IBlockState newState, boolean isMoving) {
+        super.onRemove(state, level, pos, newState, isMoving);
+        if (!level.isRemote && newState.getBlock() == Blocks.FIRE) {
+            onCaughtFire(state, level, pos, null, null);
         }
     }
 
     @Override
-    public void stepOn(World level, BlockPos pos, IBlockState state, Entity entity) {
-        if (!level.isRemote && entity instanceof AbstractArrow arrow) {
+    public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face) {
+        // same as vanilla TNT
+        return 100;
+    }
 
-            if (arrow.isOnFire()) {
+    @Override
+    public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face) {
+        return 15;
+    }
+
+    @Override
+    public void entityInside(IBlockState state, World level, BlockPos pos, Entity entity) {
+        if (!level.isRemote && entity instanceof EntityArrow arrow) {
+
+            if (arrow.isBurning()) {
                 EntityLivingBase igniter = null;
                 // Check if the shooter still exists
-                Entity shooter = arrow.getOwner();
+                Entity shooter = arrow.shootingEntity;
                 if (shooter instanceof EntityLivingBase) {
                     igniter = (EntityLivingBase) shooter;
                 }
                 this.startFuse(level, pos, igniter);
-                level.removeBlock(pos, false);
+                level.setBlockToAir(pos);
             }
         }
     }
 
     @Override
-    public boolean dropFromExplosion(Explosion exp) {
+    public boolean canDropFromExplosion(Explosion exp) {
         return false;
     }
 
@@ -153,7 +178,7 @@ public class TinyTNTBlock extends AEBaseBlock {
         super.wasExploded(level, pos, exp);
         if (!level.isRemote) {
             final TinyTNTPrimedEntity primedTinyTNTEntity = new TinyTNTPrimedEntity(level, pos.getX() + 0.5F,
-                    pos.getY(), pos.getZ() + 0.5F, exp.getIndirectSourceEntity());
+                    pos.getY(), pos.getZ() + 0.5F, exp.getExplosivePlacedBy());
             primedTinyTNTEntity
                     .setFuse(level.rand.nextInt(primedTinyTNTEntity.getFuse() / 4)
                             + primedTinyTNTEntity.getFuse() / 8);

@@ -18,11 +18,8 @@
 
 package appeng.client.gui;
 
-import appeng.util.Platform;
-
-import appeng.util.TextUtil;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -30,50 +27,34 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.platform.InputConstants;
-import guideme.GuidesCommon;
-import guideme.PageAnchor;
-import guideme.color.SymbolicColor;
-import guideme.compiler.IdUtils;
-import guideme.document.DefaultStyles;
-import guideme.indices.ItemIndex;
-import guideme.style.ResolvedTextStyle;
-import guideme.style.TextStyle;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.components.ComponentRenderUtils;
-import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import appeng.api.behaviors.ContainerItemStrategies;
 import appeng.api.behaviors.EmptyingAction;
-import appeng.api.implementations.menuobjects.ItemMenuHost;
-import appeng.api.parts.IPart;
 import appeng.api.stacks.GenericStack;
 import appeng.client.Point;
-import appeng.client.gui.GuiGraphics;
-import appeng.client.gui.Rect2i;
+import appeng.client.gui.compat.AbstractContainerScreen;
+import appeng.client.gui.compat.Button;
+import appeng.client.gui.compat.GuiEventListener;
+import appeng.client.gui.compat.Keys;
 import appeng.client.gui.layout.SlotGridLayout;
 import appeng.client.gui.style.BackgroundGenerator;
 import appeng.client.gui.style.ScreenStyle;
@@ -86,15 +67,13 @@ import appeng.client.gui.widgets.OpenGuideButton;
 import appeng.client.gui.widgets.VerticalButtonBar;
 import appeng.core.AEConfig;
 import appeng.core.AELog;
-import appeng.core.AppEng;
-import appeng.core.AppEngClient;
 import appeng.core.localization.ButtonToolTips;
 import appeng.core.localization.Tooltips;
+import appeng.core.network.PacketDistributor;
 import appeng.core.network.ServerboundPacket;
 import appeng.core.network.serverbound.InventoryActionPacket;
 import appeng.core.network.serverbound.SwapSlotsPacket;
 import appeng.helpers.InventoryAction;
-import appeng.items.tools.GuideItem;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.SlotSemantic;
 import appeng.menu.SlotSemantics;
@@ -104,10 +83,10 @@ import appeng.menu.slot.DisabledSlot;
 import appeng.menu.slot.FakeSlot;
 import appeng.menu.slot.IOptionalSlot;
 import appeng.menu.slot.ResizableSlot;
-import appeng.util.BuiltInRegistries;
 import appeng.util.ConfigMenuInventory;
+import appeng.util.TextUtil;
 
-public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T> {
+public abstract class AEBaseScreen<T extends AEBaseMenu> extends AbstractContainerScreen<T> {
     private static final Logger LOG = LogManager.getLogger(AEBaseScreen.class);
 
     private static final Point HIDDEN_SLOT_POS = new Point(-9999, -9999);
@@ -117,12 +96,17 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
      */
     public static final String TEXT_ID_DIALOG_TITLE = "dialog_title";
 
-    protected static final ResolvedTextStyle ERROR_TEXT_STYLE = TextStyle.builder()
-            .color(SymbolicColor.ERROR_TEXT)
-            .font(Minecraft.DEFAULT_FONT)
-            .dropShadow(true)
-            .build()
-            .mergeWith(DefaultStyles.BASE_STYLE);
+    /**
+     * Color of error messages drawn into the screen (with shadow).
+     */
+    protected static final int ERROR_TEXT_COLOR = 0xFFFF5555;
+
+    /**
+     * Opens a page of the guide (the help topic of a screen), set by the guide integration. Without one, screens
+     * have no help button.
+     */
+    @Nullable
+    private static Consumer<String> guideOpener;
 
     private final VerticalButtonBar verticalToolbar;
     private final OpenGuideButton helpButton;
@@ -146,10 +130,6 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
 
     public AEBaseScreen(T menu, InventoryPlayer playerInventory, ITextComponent title, ScreenStyle style) {
         super(menu, playerInventory, title);
-
-        // Pre-initialize these fields since they're used in our constructors, but Vanilla only initializes them
-        // in the init method
-        this.fontRenderer = Minecraft.getMinecraft().fontRenderer;
 
         this.style = Objects.requireNonNull(style, "style");
         this.widgets = new WidgetContainer(style);
@@ -250,7 +230,7 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
     }
 
     private List<Slot> getInventorySlots() {
-        return this.menu.slots;
+        return this.menu.inventorySlots;
     }
 
     /**
@@ -259,7 +239,7 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
      */
     @MustBeInvokedByOverriders
     protected void updateBeforeRender() {
-        helpButton.setVisibility(getHelpTopic() != null);
+        helpButton.setVisibility(guideOpener != null && getHelpTopic() != null);
     }
 
     @Override
@@ -302,7 +282,7 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
         var emptyingAction = ContainerItemStrategies.getEmptyingAction(carried);
         if (emptyingAction != null) {
             var wrappedStack = GenericStack.wrapInItemStack(new GenericStack(emptyingAction.what(), 1));
-            if (configInv.isItemValid(slot.slot, wrappedStack)) {
+            if (configInv.isItemValid(appEngSlot.slot, wrappedStack)) {
                 return emptyingAction;
             }
         }
@@ -342,7 +322,7 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
 
         // The line above should have render a tooltip if this condition is true, and no
         // additional tooltips should be shown
-        if (this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
+        if (this.hoveredSlot != null && this.hoveredSlot.getHasStack()) {
             return;
         }
 
@@ -388,13 +368,11 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
         // automatically, but uses a 12px offset (we use 40px for some extra space)
         int maxWidth = width / 2 - 40;
 
-        // Make the first line white
-        // All lines after the first are colored gray
-        List<FormattedCharSequence> styledLines = new ArrayList<>(lines.size());
+        List<String> wrappedLines = new ArrayList<>(lines.size());
         for (ITextComponent line : lines) {
-            styledLines.addAll(ComponentRenderUtils.wrapComponents(line, maxWidth, font));
+            wrappedLines.addAll(font.listFormattedStringToWidth(line.getFormattedText(), maxWidth));
         }
-        guiGraphics.renderTooltip(font, styledLines, x, y);
+        guiGraphics.renderStringTooltip(font, wrappedLines, null, ItemStack.EMPTY, x, y);
 
     }
 
@@ -406,19 +384,17 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
             return;
         }
 
+        // Make the first line white
+        // All lines after the first are colored gray, unless they have a color
         var formattedLines = new ArrayList<ITextComponent>(lines.size());
         for (int i = 0; i < lines.size(); i++) {
+            var line = lines.get(i).createCopy();
             if (i == 0) {
-                formattedLines.add(TextUtil.withStyle(lines.get(i).createCopy(), s -> s.withColor(TextFormatting.WHITE)));
-            } else {
-                formattedLines.add(lines.get(i).createCopy().withStyle(s -> {
-                    if (s.getColor() != null) {
-                        return s;
-                    } else {
-                        return s.withColor(TextFormatting.GRAY);
-                    }
-                }));
+                line.getStyle().setColor(TextFormatting.WHITE);
+            } else if (line.getStyle().getColor() == null) {
+                line.getStyle().setColor(TextFormatting.GRAY);
             }
+            formattedLines.add(line);
         }
         drawTooltip(guiGraphics, x, y, formattedLines);
     }
@@ -456,21 +432,20 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
         // Allow overrides for which content is shown
         ITextComponent content = text.getText();
         if (override != null && override.getContent() != null) {
-            content = override.getContent().copy().withStyle(content.getStyle());
+            content = TextUtil.withStyle(override.getContent().createCopy(), content.getStyle());
         }
 
         // Account for max width and split into lines
-        List<FormattedCharSequence> lines;
+        List<String> lines;
         if (text.getMaxWidth() <= 0) {
-            var line = content.getVisualOrderText();
-            lines = ImmutableList.of(line);
+            lines = Collections.singletonList(content.getFormattedText());
         } else {
-            lines = this.font.split(content, text.getMaxWidth());
+            lines = this.font.listFormattedStringToWidth(content.getFormattedText(), text.getMaxWidth());
         }
 
         int y = pos.getY();
         for (var line : lines) {
-            int lineWidth = this.font.width(line);
+            int lineWidth = this.font.getStringWidth(line);
             int x = pos.getX();
             if (text.getAlign() == TextAlignment.CENTER) {
                 int textWidth = Math.round(lineWidth * scale);
@@ -495,7 +470,7 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
                         false);
                 guiGraphics.pose().popPose();
             }
-            y += text.getScale() * this.font.lineHeight;
+            y += text.getScale() * this.font.FONT_HEIGHT;
         }
     }
 
@@ -582,10 +557,7 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
         focusChangedToSomething = false;
         var result = super.mouseClicked(xCoord, yCoord, btn);
         if (!focusChangedToSomething) {
-            var currentFocus = getCurrentFocusPath();
-            if (currentFocus != null) {
-                currentFocus.applyFocus(false);
-            }
+            setFocused(null);
         }
         return result;
     }
@@ -640,12 +612,12 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
         }
 
         // Prevent cloning of wrapped itemstacks
-        if (clickType == ClickType.CLONE && slot != null && GenericStack.isWrapped(slot.getItem())) {
+        if (clickType == ClickType.CLONE && slot != null && GenericStack.isWrapped(slot.getStack())) {
             return;
         }
 
         if (this.drag_click.size() <= 1
-                && mouseButton == InputConstants.MOUSE_BUTTON_RIGHT
+                && mouseButton == Keys.MOUSE_BUTTON_RIGHT
                 && getEmptyingAction(slot, menu.getCarried()) != null) {
             var p = new InventoryActionPacket(InventoryAction.EMPTY_ITEM, slotIdx, 0);
             PacketDistributor.sendToServer(p);
@@ -668,7 +640,7 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
             InventoryAction action;
             if (hasShiftDown()) {
                 action = InventoryAction.CRAFT_SHIFT;
-            } else if (InputConstants.isKeyDown(getMinecraft().getWindow().getWindow(), GLFW.GLFW_KEY_SPACE)) {
+            } else if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
                 action = InventoryAction.CRAFT_ALL;
             } else {
                 // Craft stack on right-click, craft single on left-click
@@ -681,8 +653,8 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
             return;
         }
 
-        if (slot != null && InputConstants.isKeyDown(getMinecraft().getWindow().getWindow(), GLFW.GLFW_KEY_SPACE)) {
-            int slotNum = slot.index;
+        if (slot != null && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+            int slotNum = slot.slotNumber;
             final InventoryActionPacket p = new InventoryActionPacket(InventoryAction.MOVE_REGION, slotNum, 0);
             PacketDistributor.sendToServer(p);
             return;
@@ -696,7 +668,7 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
                 // some simple double click logic.
                 this.bl_clicked = slot;
                 this.dbl_clickTimer = Stopwatch.createStarted();
-                this.dbl_whichItem = slot.hasItem() ? slot.getItem().copy() : ItemStack.EMPTY;
+                this.dbl_whichItem = slot.getHasStack() ? slot.getStack().copy() : ItemStack.EMPTY;
             } else if (!this.dbl_whichItem.isEmpty()) {
                 // a replica of the weird broken vanilla feature.
 
@@ -704,7 +676,7 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
                 for (Slot inventorySlot : slots) {
                     if (inventorySlot != null && inventorySlot.canTakeStack(getPlayer()) && inventorySlot.getHasStack()
                             && isSameInventory(inventorySlot, slot)
-                            && Container.canItemQuickReplace(inventorySlot, this.dbl_whichItem, true)) {
+                            && Container.canAddItemToSlot(inventorySlot, this.dbl_whichItem, true)) {
                         this.slotClicked(inventorySlot, inventorySlot.slotNumber, 0, ClickType.QUICK_MOVE);
                     }
                 }
@@ -739,17 +711,12 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
         final Slot theSlot = this.getSlotUnderMouse();
 
         if (getMenu().getCarried().isEmpty() && theSlot != null) {
-            if (this.minecraft.options.keySwapOffhand.matches(keyCode, scanCode)) {
-                this.slotClicked(theSlot, theSlot.slotNumber, InventoryPlayer.SLOT_OFFHAND, ClickType.SWAP);
-                return true;
-            }
-
             for (int j = 0; j < 9; ++j) {
-                if (getMinecraft().gameSettings.keyHotbarSlots[j].matches(keyCode, scanCode)) {
+                if (Keys.matches(getMinecraft().gameSettings.keyBindsHotbar[j], keyCode)) {
                     final List<Slot> slots = this.getInventorySlots();
                     for (Slot s : slots) {
-                        if (s.slot == j && s.inventory == this.menu.getPlayerInventory()
-                                && !s.mayPickup(this.menu.getPlayerInventory().player)) {
+                        if (s.getSlotIndex() == j && s.inventory == this.menu.getPlayerInventory()
+                                && !s.canTakeStack(this.menu.getPlayerInventory().player)) {
                             return false;
                         }
                     }
@@ -759,7 +726,7 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
                         return true;
                     } else {
                         for (Slot s : slots) {
-                            if (s.slot == j
+                            if (s.getSlotIndex() == j
                                     && s.inventory == this.menu.getPlayerInventory()) {
                                 ServerboundPacket message = new SwapSlotsPacket(s.slotNumber, theSlot.slotNumber);
                                 PacketDistributor.sendToServer(message);
@@ -810,14 +777,11 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
     }
 
     protected ITextComponent getGuiDisplayName(ITextComponent in) {
-        return title.getString().isEmpty() ? in : title;
+        return title.getUnformattedText().isEmpty() ? in : title;
     }
 
-    /**
-     * This overrides the base-class method through some access transformer hackery...
-     */
     @Override
-    public void renderSlot(GuiGraphics guiGraphics, Slot s) {
+    protected void renderSlot(GuiGraphics guiGraphics, Slot s) {
         if (s instanceof AppEngSlot appEngSlot) {
             try {
                 renderAppEngSlot(guiGraphics, appEngSlot);
@@ -830,27 +794,27 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
     }
 
     private void renderAppEngSlot(GuiGraphics guiGraphics, AppEngSlot s) {
-        var is = s.getItem();
+        var is = s.getStack();
 
         // If the slot has a background icon, render it, but only if the slot is empty
         // or it requests the icon to be always drawn
         if ((s.renderIconWithItem() || is.isEmpty()) && s.isSlotEnabled() && s.getIcon() != null) {
             s.getIcon().getBlitter()
-                    .dest(s.x, s.y)
+                    .dest(s.xPos, s.yPos)
                     .opacity(s.getOpacityOfIcon())
                     .blit(guiGraphics);
         }
 
         // Draw a red background for slots that are in an invalid state
         if (!s.isValid()) {
-            guiGraphics.fill(s.x, s.y, 16 + s.x, 16 + s.y, 0x66ff6666);
+            guiGraphics.fill(s.xPos, s.yPos, 16 + s.xPos, 16 + s.yPos, 0x66ff6666);
         }
 
         super.renderSlot(guiGraphics, s);
     }
 
     @Override
-    public void containerTick() {
+    protected void containerTick() {
         super.containerTick();
 
         widgets.tick();
@@ -873,7 +837,7 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
      * Adds a button to the vertical toolbar to the left of the screen and returns that button to the caller. The button
      * will automatically be positioned. This button will automatically be re-added to the screen when it's resized.
      */
-    protected final <B extends GuiButton> B addToLeftToolbar(B button) {
+    protected final <B extends Button> B addToLeftToolbar(B button) {
         verticalToolbar.add(button);
         return button;
     }
@@ -887,6 +851,19 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
         List<Rect2i> result = new ArrayList<>(2);
         widgets.addExclusionZones(result, getBounds(true));
         return result;
+    }
+
+    /**
+     * Draws a text word-wrapped and centered in the given rectangle, with shadow.
+     */
+    protected void renderTextCenteredIn(GuiGraphics guiGraphics, ITextComponent text, int color, Rect2i rect) {
+        var lines = font.listFormattedStringToWidth(text.getFormattedText(), rect.getWidth());
+        int y = rect.getY() + (rect.getHeight() - lines.size() * font.FONT_HEIGHT) / 2;
+        for (var line : lines) {
+            int x = rect.getX() + (rect.getWidth() - font.getStringWidth(line)) / 2;
+            guiGraphics.drawString(font, line, x, y, color, true);
+            y += font.FONT_HEIGHT;
+        }
     }
 
     protected void fillRect(GuiGraphics guiGraphics, Rect2i rect, int color) {
@@ -968,20 +945,14 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
     }
 
     public static boolean isSameInventory(Slot a, Slot b) {
-        if (a instanceof AppEngSlot appEngSlotA && b instanceof AppEngSlot appEngSlotB) {
-            return appEngSlotA.container == appEngSlotB.container;
-        }
-        return a.inventory == b.inventory;
+        return a.isSameInventory(b);
     }
 
     /**
      * Renders a highlight for the given slot to indicate the mouse is currently hovering over it.
      */
+    @Override
     protected void renderSlotHighlight(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY, float partialTick) {
-        if (!slot.isHighlightable()) {
-            return;
-        }
-
         int x = slot.xPos;
         int y = slot.yPos;
         int w, h;
@@ -995,24 +966,29 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
 
         // Same as the Vanilla method, just with dynamic width and height
         // Added a custom slot highlight effect - RID
+        GlStateManager.disableLighting();
+        GlStateManager.disableDepth();
         guiGraphics.hLine(x, x + w, y - 1, 0xFFdaffff);
         guiGraphics.hLine(x - 1, x + w, y + h, 0xFFdaffff);
         guiGraphics.vLine(x - 1, y - 2, y + h, 0xFFdaffff);
         guiGraphics.vLine(x + w, y - 2, y + h, 0xFFdaffff);
-        guiGraphics.fillGradient(RenderType.guiOverlay(), x, y, x + w, y + h, 0x669cd3ff, 0x669cd3ff, 0);
+        guiGraphics.fillGradient(x, y, x + w, y + h, 0x669cd3ff, 0x669cd3ff);
+        GlStateManager.enableLighting();
+        GlStateManager.enableDepth();
     }
 
     public final void switchToScreen(AEBaseScreen<?> screen) {
         savedSlotInfos.clear();
-        for (var slot : menu.slots) {
+        for (var slot : menu.inventorySlots) {
             savedSlotInfos.add(new SavedSlotInfo(slot));
             // Hide all slots and give the sub-screen a chance to reposition whatever slots it wants
-            slot.x = HIDDEN_SLOT_POS.getX();
-            slot.y = HIDDEN_SLOT_POS.getY();
+            slot.xPos = HIDDEN_SLOT_POS.getX();
+            slot.yPos = HIDDEN_SLOT_POS.getY();
         }
 
-        minecraft.screen = null;
-        minecraft.setScreen(screen);
+        // Without a current screen the game doesn't close this one (which would close the menu)
+        minecraft.currentScreen = null;
+        minecraft.displayGuiScreen(screen);
 
         if (!screen.savedSlotInfos.isEmpty()) {
             // Restore slot state to that of the new screen
@@ -1092,51 +1068,27 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends GuiContainer<T>
         }
     }
 
+    /**
+     * Sets how help topics are opened (the guide integration). Screens show their help button only while one is set.
+     */
+    public static void setGuideOpener(@Nullable Consumer<String> opener) {
+        guideOpener = opener;
+    }
+
     protected void openHelp() {
         var topic = getHelpTopic();
-        if (topic != null) {
-            GuidesCommon.openGuide(getPlayer(), GuideItem.GUIDE_ID, topic);
+        if (topic != null && guideOpener != null) {
+            guideOpener.accept(topic);
         } else {
             LOG.warn("No topic assigned to screen {}, but button was clicked", this);
         }
     }
 
+    /**
+     * @return The help topic of the screen as given by its style ({@code page} or {@code page#anchor}), or null.
+     */
     @Nullable
-    protected PageAnchor getHelpTopic() {
-        // Help topic may be overridden via screen style
-        String helpTopic = style.getHelpTopic();
-        if (helpTopic != null) {
-            var sep = helpTopic.indexOf('#');
-            String fragment = null;
-            if (sep != -1) {
-                fragment = helpTopic.substring(sep + 1);
-                helpTopic = helpTopic.substring(0, sep);
-            }
-            try {
-                return new PageAnchor(IdUtils.resolveId(helpTopic, AppEng.MOD_ID), fragment);
-            } catch (Exception e) {
-                LOG.warn("Invalid helpTopic for screen {}: {}", this, helpTopic);
-            }
-        }
-
-        // Try finding the help topic automatically via the guidebook item index
-        var guide = AppEngClient.instance().getGuide();
-        var itemIndex = guide.getIndex(ItemIndex.class);
-
-        Object target = getMenu().getTarget();
-        if (target instanceof TileEntity be) {
-            var block = Platform.getBlockState(be).getBlock();
-            var blockId = BuiltInRegistries.BLOCK.getKey(block);
-            return itemIndex.get(blockId);
-        } else if (target instanceof IPart part) {
-            var item = part.getPartItem().asItem();
-            var itemId = BuiltInRegistries.ITEM.getKey(item);
-            return itemIndex.get(itemId);
-        } else if (target instanceof ItemMenuHost<?> menuHost) {
-            var item = menuHost.getItem();
-            var itemId = BuiltInRegistries.ITEM.getKey(item);
-            return itemIndex.get(itemId);
-        }
-        return null;
+    protected String getHelpTopic() {
+        return style.getHelpTopic();
     }
 }

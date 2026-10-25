@@ -27,7 +27,7 @@ public class KeyTypeSelectionButton extends IconButton {
             ITextComponent title) {
         return new KeyTypeSelectionButton(
                 () -> {
-                    if (GuiScreen.hasShiftDown()) {
+                    if (GuiScreen.isShiftKeyDown()) {
                         handleShiftClick(parentScreen.getMenu());
                     } else {
                         parentScreen.switchToScreen(new KeyTypeSelectionScreen<>(parentScreen, subMenuHost, title));
@@ -37,7 +37,7 @@ public class KeyTypeSelectionButton extends IconButton {
                 () -> {
                     return new TextComponentString(
                             parentScreen.getMenu().getClientKeyTypeSelection().enabledSet().stream()
-                                    .map(x -> x.getDescription().getString())
+                                    .map(x -> x.getDescription().getUnformattedText())
                                     .collect(Collectors.joining(", ")));
                 });
     }
@@ -64,7 +64,7 @@ public class KeyTypeSelectionButton extends IconButton {
 
         if (totalCount == enabledCount) {
             // From full selection to first key only
-            return ImmutableSet.of(keyTypes.keyTypes().keySet().stream().findFirst().orElseThrow());
+            return ImmutableSet.of(keyTypes.keyTypes().keySet().stream().findFirst().get());
         } else if (enabledCount > 1) {
             // From mixed to full selection
             return ImmutableSet.copyOf(keyTypes.keyTypes().keySet());

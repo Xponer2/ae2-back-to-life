@@ -1,0 +1,50 @@
+{
+  "name": "Рукоять",
+  "icon": "ae2:crank",
+  "category": "items_blocks_machines/machines",
+  "sortnum": 310,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-crank",
+      "text": "Рукоять нужна, чтобы питать механизмы, когда другой энергии (или приёмщика энергии — $(l:items_blocks_machines/energy_acceptor)Приёмщик энергии$(/l)) нет. Трудности начала игры, верно?"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "D",
+            " ",
+            "D",
+            " ",
+            "D"
+          ],
+          [
+            "0",
+            " ",
+            "B",
+            " ",
+            "C"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:growth_accelerator[facing=up,powered=false]",
+          "B": "ae2:inscriber",
+          "C": "ae2:charger",
+          "D": "ae2:crank[facing=up]",
+          "0": "ae2:growth_accelerator[facing=up,powered=false]"
+        }
+      },
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/crank",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

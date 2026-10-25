@@ -1,0 +1,355 @@
+{
+  "name": "Декоративные блоки истинного кварца",
+  "icon": "ae2:quartz_stairs",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "decorative-certus-blocks",
+      "text": "Из блока $(l:items_blocks_machines/quartz_block)Блок истинного кварца$(/l) можно скрафтить, выплавить и вырезать на камнерезе несколько декоративных строительных блоков"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "0 B C D",
+            "       ",
+            "E F G H",
+            "       ",
+            "I J K L",
+            "       ",
+            "M N O P",
+            "       ",
+            "Q R S T",
+            "       ",
+            "U V W X"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:chiseled_quartz_slab[type=bottom]",
+          "B": "ae2:chiseled_quartz_wall[east=none,north=none,south=none,up=true,west=none]",
+          "C": "ae2:chiseled_quartz_stairs[facing=south,half=bottom,shape=straight]",
+          "D": "ae2:chiseled_quartz_block",
+          "E": "ae2:quartz_pillar_slab[type=bottom]",
+          "F": "ae2:quartz_pillar_wall[east=none,north=none,south=none,up=true,west=none]",
+          "G": "ae2:quartz_pillar_stairs[facing=south,half=bottom,shape=straight]",
+          "H": "ae2:quartz_pillar[axis=y]",
+          "I": "ae2:quartz_brick_slab[type=bottom]",
+          "J": "ae2:quartz_brick_wall[east=none,north=none,south=none,up=true,west=none]",
+          "K": "ae2:quartz_brick_stairs[facing=south,half=bottom,shape=straight]",
+          "L": "ae2:quartz_bricks",
+          "M": "ae2:smooth_quartz_slab[type=bottom]",
+          "N": "ae2:smooth_quartz_wall[east=none,north=none,south=none,up=true,west=none]",
+          "O": "ae2:smooth_quartz_stairs[facing=south,half=bottom,shape=straight]",
+          "P": "ae2:smooth_quartz_block",
+          "Q": "ae2:cut_quartz_slab[type=bottom]",
+          "R": "ae2:cut_quartz_wall[east=none,north=none,south=none,up=true,west=none]",
+          "S": "ae2:cut_quartz_stairs[facing=south,half=bottom,shape=straight]",
+          "T": "ae2:cut_quartz_block",
+          "U": "ae2:quartz_slab[type=bottom]",
+          "V": "ae2:quartz_wall[east=none,north=none,south=none,up=true,west=none]",
+          "W": "ae2:quartz_stairs[facing=south,half=bottom,shape=straight]",
+          "X": "ae2:quartz_block",
+          "0": "ae2:chiseled_quartz_slab[type=bottom]"
+        }
+      },
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:decorative/cut_quartz_block",
+      "anchor": "recipes",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:quartz_block",
+      "output": "ae2:cut_quartz_block",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "smelting",
+      "recipe": "ae2:cut_quartz_block",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:decorative/certus_quartz_bricks",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:cut_quartz_block",
+      "output": "ae2:quartz_bricks",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:decorative/certus_quartz_pillar",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:cut_quartz_block",
+      "output": "ae2:quartz_pillar",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:decorative/chiseled_quartz_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:cut_quartz_block",
+      "output": "ae2:chiseled_quartz_block",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/stairs/quartz_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:quartz_block",
+      "output": "ae2:quartz_stairs",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/stairs/cut_quartz_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:cut_quartz_block",
+      "output": "ae2:cut_quartz_stairs",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/stairs/smooth_quartz_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:smooth_quartz_block",
+      "output": "ae2:smooth_quartz_stairs",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/stairs/quartz_bricks",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:quartz_bricks",
+      "output": "ae2:quartz_brick_stairs",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/stairs/quartz_pillar",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:quartz_pillar",
+      "output": "ae2:quartz_pillar_stairs",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/stairs/chiseled_quartz_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:chiseled_quartz_block",
+      "output": "ae2:chiseled_quartz_stairs",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/walls/quartz_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:quartz_block",
+      "output": "ae2:quartz_wall",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/walls/cut_quartz_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:cut_quartz_block",
+      "output": "ae2:cut_quartz_wall",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/walls/smooth_quartz_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:smooth_quartz_block",
+      "output": "ae2:smooth_quartz_wall",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/walls/quartz_bricks",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:quartz_bricks",
+      "output": "ae2:quartz_brick_wall",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/walls/quartz_pillar",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:quartz_pillar",
+      "output": "ae2:quartz_pillar_wall",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/walls/chiseled_quartz_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:chiseled_quartz_block",
+      "output": "ae2:chiseled_quartz_wall",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/slabs/quartz_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:quartz_block",
+      "output": "ae2:quartz_slab#2",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/slabs/cut_quartz_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:cut_quartz_block",
+      "output": "ae2:cut_quartz_slab#2",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/slabs/smooth_quartz_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:smooth_quartz_block",
+      "output": "ae2:smooth_quartz_slab#2",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/slabs/quartz_bricks",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:quartz_bricks",
+      "output": "ae2:quartz_brick_slab#2",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/slabs/quartz_pillar",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:quartz_pillar",
+      "output": "ae2:quartz_pillar_slab#2",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/slabs/chiseled_quartz_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:chiseled_quartz_block",
+      "output": "ae2:chiseled_quartz_slab#2",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    }
+  ]
+}

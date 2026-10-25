@@ -18,8 +18,10 @@
 
 package appeng.blockentity.misc;
 
-import net.neoforged.neoforge.fluids.IFluidTank;
 
+import javax.annotation.Nullable;
+import net.minecraftforge.fluids.capability.FluidTankProperties;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -175,8 +177,8 @@ public class CondenserBlockEntity extends AEBaseInvBlockEntity implements IConfi
         this.storedPower = storedPower;
         // Stored power is not observable from the outside, so only mark the chunk as unsaved instead of using
         // markDirty(), which would also trigger neighbor updates.
-        if (this.level != null) {
-            this.level.blockEntityChanged(this.getPos());
+        if (this.world != null) {
+            this.world.markChunkDirty(this.getPos(), this);
         }
     }
 
@@ -238,33 +240,20 @@ public class CondenserBlockEntity extends AEBaseInvBlockEntity implements IConfi
      * A fluid handler that exposes a 1 bucket tank that can only be filled, and - when filled - will add power to this
      * condenser.
      */
-    private class FluidHandler implements IFluidTank, IFluidHandler {
+    private class FluidHandler implements IFluidHandler {
 
         @Override
-        public FluidStack getFluid() {
-            return FluidStack.EMPTY;
+        public IFluidTankProperties[] getTankProperties() {
+            return new IFluidTankProperties[] {
+                    new FluidTankProperties(null, AEFluidKey.AMOUNT_BUCKET, true, false) };
         }
 
         @Override
-        public int getFluidAmount() {
-            return 0;
-        }
+        public int fill(FluidStack resource, boolean doFill) {
+            int amount = resource == null || resource.amount <= 0 ? 0
+                    : Math.min(resource.amount, AEFluidKey.AMOUNT_BUCKET);
 
-        @Override
-        public int getCapacity() {
-            return AEFluidKey.AMOUNT_BUCKET;
-        }
-
-        @Override
-        public boolean isFluidValid(FluidStack stack) {
-            return !stack.isEmpty();
-        }
-
-        @Override
-        public int fill(FluidStack resource, FluidAction action) {
-            int amount = resource.isEmpty() ? 0 : Math.min(resource.amount, AEFluidKey.AMOUNT_BUCKET);
-
-            if (action == FluidAction.EXECUTE) {
+            if (doFill && amount > 0) {
                 var what = AEFluidKey.of(resource);
                 if (what != null) {
                     var transferFactor = (double) what.getAmountPerOperation();
@@ -275,34 +264,16 @@ public class CondenserBlockEntity extends AEBaseInvBlockEntity implements IConfi
             return amount;
         }
 
+        @Nullable
         @Override
-        public FluidStack drain(int maxDrain, FluidAction action) {
-            return FluidStack.EMPTY;
+        public FluidStack drain(int maxDrain, boolean doDrain) {
+            return null;
         }
 
+        @Nullable
         @Override
-        public FluidStack drain(FluidStack resource, FluidAction action) {
-            return FluidStack.EMPTY;
-        }
-
-        @Override
-        public int getTanks() {
-            return 1;
-        }
-
-        @Override
-        public FluidStack getFluidInTank(int tank) {
-            return FluidStack.EMPTY;
-        }
-
-        @Override
-        public int getTankCapacity(int tank) {
-            return tank == 0 ? getCapacity() : 0;
-        }
-
-        @Override
-        public boolean isFluidValid(int tank, FluidStack stack) {
-            return tank == 0 && isFluidValid(stack);
+        public FluidStack drain(FluidStack resource, boolean doDrain) {
+            return null;
         }
     }
 }

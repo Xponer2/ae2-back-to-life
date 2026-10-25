@@ -1,0 +1,21 @@
+{
+  "name": "Заряженный посох",
+  "icon": "ae2:charged_staff",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:charged_staff",
+      "link_recipe": true,
+      "anchor": "the-charged-staff",
+      "text": "Заряженный посох — это палка с предметом $(l:items_blocks_machines/certus_quartz_crystal_charged)Заряженный кристалл истинного кварца$(/l) на конце. Он наносит 6 единиц урона и тратит 300 AE за удар.$(br2)Его энергию можно восполнить в устройстве $(l:items_blocks_machines/charger)Зарядник$(/l)."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/misctools_charged_staff",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

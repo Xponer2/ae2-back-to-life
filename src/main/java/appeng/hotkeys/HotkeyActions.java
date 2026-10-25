@@ -65,7 +65,7 @@ public class HotkeyActions {
      */
     public static synchronized void register(HotkeyAction hotkeyAction, String id) {
         if (REGISTRY.containsKey(id)) {
-            REGISTRY.get(id).addFirst(hotkeyAction);
+            REGISTRY.get(id).add(0, hotkeyAction);
         } else {
             REGISTRY.put(id, new ArrayList<>(ImmutableList.of(hotkeyAction)));
             AppEng.instance().registerHotkey(id);

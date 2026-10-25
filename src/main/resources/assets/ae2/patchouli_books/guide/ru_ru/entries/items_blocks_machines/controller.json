@@ -1,0 +1,135 @@
+{
+  "name": "Контроллер",
+  "icon": "ae2:controller",
+  "category": "items_blocks_machines/network_infrastructure",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:controller",
+      "link_recipe": true,
+      "anchor": "the-controller",
+      "text": "Контроллер — узел маршрутизации $(l:ae2_mechanics/me_network_connections)МЭ-сети$(/l). Без него сеть считается ad-hoc и может содержать не более 8 $(l:ae2_mechanics/devices)устройств$(/l), использующих каналы.$(br2)В одной $(l:ae2_mechanics/me_network_connections)МЭ-сети$(/l) не может быть 2 контроллеров.$(br2)Контроллер даёт 32 $(l:ae2_mechanics/channels)канала$(/l) на каждую грань."
+    },
+    {
+      "type": "text",
+      "text": "Для работы контроллеру нужно 6 AE/т на каждый блок контроллера. Каждый блок контроллера хранит 8000 AE, так что большим сетям может понадобиться дополнительное хранилище энергии. Подробнее см. раздел $(l:ae2_mechanics/energy)«Энергия»$(/l).$(br2)Многоблочные контроллеры можно строить довольно свободной формы."
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "ABBBA",
+            "C   C",
+            "C   C",
+            "C   C",
+            "ABBBA",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     "
+          ],
+          [
+            "D   D",
+            "     ",
+            "     ",
+            "     ",
+            "D   D",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     "
+          ],
+          [
+            "D   D",
+            "     ",
+            "     ",
+            "     ",
+            "D   D",
+            "     ",
+            "     ",
+            "     ",
+            "    A",
+            "     ",
+            "    A",
+            "    C",
+            "    A",
+            "     ",
+            "    A"
+          ],
+          [
+            "D   D",
+            "     ",
+            "     ",
+            "     ",
+            "D   D",
+            "     ",
+            "     ",
+            "     ",
+            "    D",
+            "     ",
+            "     ",
+            "    A",
+            "     ",
+            "     ",
+            "    D"
+          ],
+          [
+            "0BBBA",
+            "C   C",
+            "C   C",
+            "C   C",
+            "ABBBA",
+            "     ",
+            "    A",
+            "    C",
+            "  ABA",
+            "     ",
+            "ABA  ",
+            "C C  ",
+            "ABA  ",
+            "     ",
+            " A  A"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:controller[state=online,type=block]",
+          "B": "ae2:controller[state=online,type=column_z]",
+          "C": "ae2:controller[state=online,type=column_x]",
+          "D": "ae2:controller[state=online,type=column_y]",
+          "0": "ae2:controller[state=online,type=block]"
+        }
+      },
+      "text": "Однако нужно соблюдать несколько правил:"
+    },
+    {
+      "type": "text",
+      "text": "1. Все блоки контроллера в $(l:ae2_mechanics/me_network_connections)МЭ-сети$(/l) должны быть соединены, иначе блоки станут красными.$(br2)2. Размер контроллера не должен превышать 7x7x7, иначе он станет красным.$(br2)3. У блока контроллера может быть 2 соседних блока не более чем по 1 оси; блок, нарушающий это правило, отключится и станет красным.$(br2)$(#555)$(o)(3D-сцена недоступна в этой$()"
+    },
+    {
+      "type": "text",
+      "text": "$(#555)$(o)версии)$()$(br2)Если все правила соблюдены и есть питание, контроллер светится и переливается цветами.$(br2)Щелчок правой кнопкой мыши по контроллеру открывает тот же интерфейс, что и $(l:items_blocks_machines/network_tool)Сетевой инструмент$(/l)"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/controller",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

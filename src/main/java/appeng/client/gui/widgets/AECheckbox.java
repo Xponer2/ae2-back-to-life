@@ -1,13 +1,13 @@
 package appeng.client.gui.widgets;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarratedElementType;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 
 import appeng.client.gui.GuiGraphics;
+import appeng.client.gui.compat.AbstractButton;
+import appeng.client.gui.compat.NarrationElementOutput;
+import appeng.client.gui.compat.NarrationElementOutput.NarratedElementType;
 import appeng.client.gui.style.Blitter;
 import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.style.ScreenStyle;
@@ -107,7 +107,7 @@ public class AECheckbox extends AbstractButton {
         var opacity = isActive() ? 1 : 0.5f;
 
         icon.dest(getX(), getY()).opacity(opacity).blit(guiGraphics);
-        var lines = font.split(getMessage(), width - 22);
+        var lines = font.listFormattedStringToWidth(getMessage().getFormattedText(), width - 22);
         // try to vertically center if it's just one line
         var lineY = getY() + (lines.size() <= 1 ? 4 : 1);
         for (var line : lines) {

@@ -68,10 +68,10 @@ public class BasicCellHandler implements ICellHandler {
                     .text();
 
             if (handler.isFuzzy()) {
-                lines.add(GuiText.Partitioned.withSuffix(" - ").appendSibling(list).appendSibling(" ").appendSibling(GuiText.Fuzzy.text()));
+                lines.add(GuiText.Partitioned.withSuffix(" - ").appendSibling(list).appendText(" ").appendSibling(GuiText.Fuzzy.text()));
             } else {
                 lines.add(
-                        GuiText.Partitioned.withSuffix(" - ").appendSibling(list).appendSibling(" ").appendSibling(GuiText.Precise.text()));
+                        GuiText.Partitioned.withSuffix(" - ").appendSibling(list).appendText(" ").appendSibling(GuiText.Precise.text()));
             }
         }
     }

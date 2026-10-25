@@ -247,6 +247,28 @@ public final class AEConfig {
         return common.spatialPowerMultiplier.get();
     }
 
+    /**
+     * Id of the spatial storage dimension, -1 until it was picked (1.12.2 dimensions have numeric ids).
+     */
+    public int getSpatialDimensionId() {
+        return common.spatialDimensionId.get();
+    }
+
+    public void setSpatialDimensionId(int id) {
+        common.spatialDimensionId.set(id);
+    }
+
+    /**
+     * Id of the spatial storage dimension type, -1 until it was picked.
+     */
+    public int getSpatialDimensionTypeId() {
+        return common.spatialDimensionTypeId.get();
+    }
+
+    public void setSpatialDimensionTypeId(int id) {
+        common.spatialDimensionTypeId.set(id);
+    }
+
     public double getChargerChargeRate() {
         return common.chargerChargeRate.get();
     }
@@ -536,6 +558,8 @@ public final class AEConfig {
         // Spatial IO/Dimension
         public final DoubleValue spatialPowerExponent;
         public final DoubleValue spatialPowerMultiplier;
+        public final IntValue spatialDimensionId;
+        public final IntValue spatialDimensionTypeId;
 
         // Logging
         public final BooleanValue blockUpdateLog;
@@ -621,6 +645,11 @@ public final class AEConfig {
             builder.push("spatialio");
             this.spatialPowerMultiplier = define(builder, "spatialPowerMultiplier", 1250.0);
             this.spatialPowerExponent = define(builder, "spatialPowerExponent", 1.35);
+            this.spatialDimensionId = define(builder, "storageDimensionID", -1, Integer.MIN_VALUE, Integer.MAX_VALUE,
+                    "Id of the spatial storage dimension. -1 picks a free id on the next start and saves it here.");
+            this.spatialDimensionTypeId = define(builder, "storageProviderID", -1, Integer.MIN_VALUE,
+                    Integer.MAX_VALUE,
+                    "Id of the spatial storage dimension type. -1 picks a free id on the next start and saves it here.");
             builder.pop();
 
             builder.push("logging");

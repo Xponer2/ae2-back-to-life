@@ -1,0 +1,77 @@
+{
+  "name": "Пространственные ячейки",
+  "icon": "ae2:spatial_storage_cell_128",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "spatial-storage-cells",
+      "text": "Пространственные ячейки хранения нужны, чтобы $(l:ae2_mechanics/spatial_io)хранить физические объёмы пространства$(/l). Они используются в устройстве $(l:items_blocks_machines/spatial_io_port)Пространственный порт ввода/вывода$(/l).$(br2)В отличие от $(l:items_blocks_machines/storage_cells)ячеек хранения$(/l), пространственные ячейки нельзя переформатировать.$(br2)Ещё раз: $(bold)ПОСЛЕ ИСПОЛЬЗОВАНИЯ$()"
+    },
+    {
+      "type": "ae2:item_row_3",
+      "item0": "ae2:spatial_storage_cell_2",
+      "item1": "ae2:spatial_storage_cell_16",
+      "item2": "ae2:spatial_storage_cell_128",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "text": "$(bold)ПРОСТРАНСТВЕННУЮ ЯЧЕЙКУ НЕЛЬЗЯ СБРОСИТЬ, ПЕРЕФОРМАТИРОВАТЬ ИЛИ ИЗМЕНИТЬ ЕЁ РАЗМЕР.$() Если нужны другие размеры, сделайте новую ячейку."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/spatial_storage_cell_2_cubed_storage",
+      "anchor": "recipes",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/spatial_storage_cell_16_cubed_storage",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/spatial_storage_cell_128_cubed_storage",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Корпуса",
+      "anchor": "housings",
+      "text": "Ячейки делаются из пространственного компонента и корпуса либо по рецепту корпуса вокруг пространственного компонента:"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/spatial_storage_cell_2_cubed",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/spatial_storage_cell_2_cubed_storage",
+      "text": "Сами корпуса делаются так:"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_cell_housing",
+      "anchor": "spatial-components",
+      "text": "$(bold)Пространственные компоненты$()$(br2)Пространственные компоненты — основа пространственных ячеек хранения. Каждый следующий уровень увеличивает размеры хранимого объёма в 8 раз."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/spatial_components",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/spatial_components_0",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/spatial_components_1",
+      "text": ""
+    }
+  ]
+}

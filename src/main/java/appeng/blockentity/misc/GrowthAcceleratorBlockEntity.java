@@ -109,7 +109,7 @@ public class GrowthAcceleratorBlockEntity extends AENetworkedPoweredBlockEntity 
                 continue;
             }
 
-            adjState.randomTick((WorldServer) getLevel(), adjPos, getLevel().getRandom());
+            adjState.getBlock().randomTick(getLevel(), adjPos, adjState, getLevel().rand);
         }
     }
 

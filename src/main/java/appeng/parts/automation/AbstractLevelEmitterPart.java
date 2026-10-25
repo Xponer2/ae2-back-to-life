@@ -23,7 +23,6 @@ import java.util.Random;
 import org.jetbrains.annotations.Nullable;
 
 import appeng.api.components.DataComponentMap;
-import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -43,6 +42,7 @@ import appeng.api.util.IConfigManagerBuilder;
 import appeng.core.network.RegistryFriendlyByteBuf;
 import appeng.util.Platform;
 import appeng.util.SettingsFrom;
+import net.minecraft.util.EnumParticleTypes;
 
 public abstract class AbstractLevelEmitterPart extends UpgradeablePart {
     private boolean prevState;
@@ -150,7 +150,7 @@ public abstract class AbstractLevelEmitterPart extends UpgradeablePart {
             final double d1 = d.getYOffset() * 0.45F + (r.nextFloat() - 0.5F) * 0.2D;
             final double d2 = d.getZOffset() * 0.45F + (r.nextFloat() - 0.5F) * 0.2D;
 
-            level.addParticle(DustParticleOptions.REDSTONE, 0.5 + pos.getX() + d0, 0.5 + pos.getY() + d1,
+            level.spawnParticle(EnumParticleTypes.REDSTONE, 0.5 + pos.getX() + d0, 0.5 + pos.getY() + d1,
                     0.5 + pos.getZ() + d2, 0.0D, 0.0D, 0.0D);
         }
     }

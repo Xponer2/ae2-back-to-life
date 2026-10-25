@@ -7,17 +7,17 @@ import appeng.core.CreativeTabOutput;
 import java.util.List;
 
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
 
-import appeng.api.util.Registries;
 import appeng.core.localization.GuiText;
 import appeng.core.localization.Tooltips;
 import appeng.items.parts.PartItem;
+import appeng.util.ItemTooltipContext;
 
 /**
  * Special part item for {@link AnnihilationPlanePart} to handle enchants and extended tooltips.
@@ -29,12 +29,20 @@ public class AnnihilationPlanePartItem extends PartItem<AnnihilationPlanePart> {
 
     @Override
     public boolean isEnchantable(ItemStack stack) {
-        return true;
+        return stack.getCount() == 1;
     }
 
     @Override
-    public int getEnchantmentValue() {
+    public int getItemEnchantability() {
         return 10;
+    }
+
+    /**
+     * The plane takes the enchantments of mining tools (silk touch, fortune, efficiency, unbreaking).
+     */
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack, net.minecraft.enchantment.Enchantment enchantment) {
+        return enchantment.type == EnumEnchantmentType.DIGGER || enchantment.type == EnumEnchantmentType.BREAKABLE;
     }
 
     @Override
@@ -43,11 +51,11 @@ public class AnnihilationPlanePartItem extends PartItem<AnnihilationPlanePart> {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<ITextComponent> lines,
+    public void appendHoverText(ItemStack stack, ItemTooltipContext context, List<ITextComponent> lines,
             ITooltipFlag isAdvanced) {
         super.appendHoverText(stack, context, lines, isAdvanced);
 
-        var enchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+        var enchantments = EnchantmentHelper.getEnchantments(stack);
         if (enchantments.isEmpty()) {
             lines.add(Tooltips.of(GuiText.CanBeEnchanted));
         } else {
@@ -59,13 +67,8 @@ public class AnnihilationPlanePartItem extends PartItem<AnnihilationPlanePart> {
     public void addToMainCreativeTab(CreativeTabOutput.DisplayParameters parameters, CreativeTabOutput output) {
         super.addToMainCreativeTab(parameters, output);
 
-        var enchantmentRegistry = parameters.holders().lookupOrThrow(Registries.ENCHANTMENT);
-
-        var enchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
-        enchantments.set(enchantmentRegistry.getOrThrow(Enchantments.SILK_TOUCH), 1);
-
         var silkTouch = new ItemStack(this);
-        silkTouch.set(DataComponents.ENCHANTMENTS, enchantments.toImmutable());
+        silkTouch.addEnchantment(Enchantments.SILK_TOUCH, 1);
         output.accept(silkTouch);
     }
 }

@@ -53,7 +53,7 @@ public final class GuiGraphicsHooks {
                 return false; // Don't allow recursive model replacements
             }
 
-            boolean shiftHeld = GuiScreen.hasShiftDown();
+            boolean shiftHeld = GuiScreen.isShiftKeyDown();
             if (shiftHeld && level != null) {
                 var output = encodedPattern.getOutput(stack);
                 // If output would be identical to stack, we'd infinitely loop

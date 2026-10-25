@@ -1,0 +1,34 @@
+{
+  "name": "Гаечные ключи",
+  "icon": "ae2:certus_quartz_wrench",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "wrenches",
+      "text": "Гаечные ключи поворачивают устройства AE2 (щелчок правой кнопкой мыши) и разбирают блоки AE2 (щелчок правой кнопкой мыши с Shift). $(l:ae2_mechanics/cable_subparts)Части$(/l) можно снимать с кабеля, не ломая всё остальное на кабеле (или снять кабель, не ломая части).$(br2)Многие блоки AE2 можно поворачивать, так что если в этом руководстве не сказано, что что-то можно повернуть,"
+    },
+    {
+      "type": "ae2:item_row_2",
+      "item0": "ae2:certus_quartz_wrench",
+      "item1": "ae2:nether_quartz_wrench",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "text": "это ещё не значит, что нельзя."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/certus_quartz_wrench",
+      "anchor": "recipes",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/nether_quartz_wrench",
+      "text": ""
+    }
+  ]
+}

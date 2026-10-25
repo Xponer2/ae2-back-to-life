@@ -12,11 +12,11 @@ import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 import appeng.api.behaviors.ExternalStorageStrategy;
 import appeng.api.behaviors.PickupStrategy;
@@ -158,7 +158,7 @@ public final class StackWorldBehaviors {
     }
 
     public static List<PickupStrategy> createPickupStrategies(WorldServer level, BlockPos fromPos, EnumFacing fromSide,
-            TileEntity host, ItemEnchantments enchantments, @Nullable UUID owningPlayerId) {
+            TileEntity host, Map<Enchantment, Integer> enchantments, @Nullable UUID owningPlayerId) {
         return pickupStrategies.getMap().values()
                 .stream()
                 .map(f -> f.create(level, fromPos, fromSide, host, enchantments, owningPlayerId))

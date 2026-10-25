@@ -32,8 +32,6 @@ import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.crash.CrashReportCategory;
-import appeng.api.components.DataComponentMap;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -45,10 +43,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IWorldNameable;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
+import appeng.api.components.DataComponentMap;
 import appeng.api.ids.AEComponents;
 import appeng.api.implementations.IPowerChannelState;
 import appeng.api.implementations.items.IMemoryCard;
@@ -150,26 +150,48 @@ public abstract class AEBasePart
         return this.blockEntity.getWorld();
     }
 
+    /**
+     * The custom name of the part, or the name of its item (1.21 {@code Nameable.getName()}).
+     */
     @Override
-    public ITextComponent getName() {
-        return Platform.requireNonNullElse(this.customName, partItem.asItem().getDescription());
+    public ITextComponent getDisplayName() {
+        return this.customName != null ? this.customName : getItemDescription(partItem.asItem());
+    }
+
+    /**
+     * The name for {@link IWorldNameable} of this version is a plain string.
+     */
+    @Override
+    public String getName() {
+        return getDisplayName().getUnformattedText();
     }
 
     @Override
+    public boolean hasCustomName() {
+        return this.customName != null;
+    }
+
     @Nullable
     public ITextComponent getCustomName() {
         return this.customName;
     }
 
+    /**
+     * Same as modern {@code Item.getDescription()}: the translatable name of the item.
+     */
+    protected static ITextComponent getItemDescription(Item item) {
+        return new TextComponentTranslation(item.getTranslationKey(new ItemStack(item)) + ".name");
+    }
+
     @Override
     public void addEntityCrashInfo(CrashReportCategory crashreportcategory) {
-        crashreportcategory.setDetail("Part Side", this.getSide());
+        crashreportcategory.addCrashSection("Part Side", this.getSide());
         var beHost = getTileEntity();
         if (beHost != null) {
-            beHost.fillCrashReportCategory(crashreportcategory);
+            beHost.addInfoToCrashReport(crashreportcategory);
             var level = beHost.getWorld();
             if (level != null) {
-                crashreportcategory.setDetail("World", level.dimension());
+                crashreportcategory.addCrashSection("World", level.provider.getDimension());
             }
         }
     }
@@ -196,7 +218,7 @@ public abstract class AEBasePart
 
         if (data.hasKey("customName")) {
             try {
-                this.customName = ITextComponent.Serializer.fromJson(data.getString("customName"));
+                this.customName = ITextComponent.Serializer.jsonToComponent(data.getString("customName"));
             } catch (Exception ignored) {
             }
         }
@@ -211,7 +233,7 @@ public abstract class AEBasePart
         this.mainNode.saveToNBT(data);
 
         if (this.customName != null) {
-            data.setString("customName", ITextComponent.Serializer.toJson(this.customName));
+            data.setString("customName", ITextComponent.Serializer.componentToJson(this.customName));
         }
     }
 
@@ -310,7 +332,7 @@ public abstract class AEBasePart
         if (mode == SettingsFrom.DISMANTLE_ITEM) {
             this.customName = input.get(AEComponents.CUSTOM_NAME);
         } else if (mode == SettingsFrom.MEMORY_CARD) {
-            this.customName = AEComponents.EXPORTED_CUSTOM_NAME.get(input);
+            this.customName = input.get(AEComponents.EXPORTED_CUSTOM_NAME);
         }
 
         MemoryCardItem.importGenericSettings(this, input, player);
@@ -322,12 +344,12 @@ public abstract class AEBasePart
         if (mode == SettingsFrom.DISMANTLE_ITEM) {
             builder.set(AEComponents.CUSTOM_NAME, this.customName);
         } else if (mode == SettingsFrom.MEMORY_CARD) {
-            AEComponents.EXPORTED_CUSTOM_NAME.set(builder, this.customName);
+            builder.set(AEComponents.EXPORTED_CUSTOM_NAME, this.customName);
         }
 
         if (mode == SettingsFrom.MEMORY_CARD) {
             MemoryCardItem.exportGenericSettings(this, builder);
-            AEComponents.EXPORTED_SETTINGS_SOURCE.set(builder, getPartItem().asItem().getDescription());
+            builder.set(AEComponents.EXPORTED_SETTINGS_SOURCE, getItemDescription(getPartItem().asItem()));
         }
     }
 
@@ -355,22 +377,22 @@ public abstract class AEBasePart
             partItem = AEBlocks.PATTERN_PROVIDER.asItem();
         }
 
-        var name = partItem.getDescription();
+        var name = getItemDescription(partItem);
 
         if (InteractionUtil.isInAlternateUseMode(player)) {
             var settings = exportSettings(SettingsFrom.MEMORY_CARD);
             if (!settings.isEmpty()) {
                 MemoryCardItem.clearCard(memCardIS);
-                memCardIS.applyComponents(settings);
+                settings.applyTo(memCardIS);
                 memoryCard.notifyUser(player, MemoryCardMessages.SETTINGS_SAVED);
             }
         } else {
             var storedName = AEComponents.EXPORTED_SETTINGS_SOURCE.get(memCardIS);
             if (name.equals(storedName)) {
-                importSettings(SettingsFrom.MEMORY_CARD, memCardIS.getComponents(), player);
+                importSettings(SettingsFrom.MEMORY_CARD, DataComponentMap.of(memCardIS), player);
                 memoryCard.notifyUser(player, MemoryCardMessages.SETTINGS_LOADED);
             } else {
-                MemoryCardItem.importGenericSettingsAndNotify(this, memCardIS.getComponents(), player);
+                MemoryCardItem.importGenericSettingsAndNotify(this, DataComponentMap.of(memCardIS), player);
             }
         }
         return true;

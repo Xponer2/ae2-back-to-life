@@ -23,8 +23,11 @@ import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
 import appeng.api.stacks.AEKeyTypesInternal;
 import appeng.api.stacks.GenericStack;
+import appeng.util.ItemTooltipContext;
+import appeng.items.AEBaseItem;
+import appeng.core.CreativeTabOutput;
 
-public class MissingContentItem extends Item {
+public class MissingContentItem extends AEBaseItem {
     public MissingContentItem(ItemProperties properties) {
         super(properties);
     }
@@ -62,9 +65,9 @@ public class MissingContentItem extends Item {
             AEKeyType keyType = null;
             try {
                 var keyTypeString = brokenDataTag.getString(AEKey.TYPE_FIELD);
-                keyType = AEKeyTypesInternal.getRegistry().get(new ResourceLocation(keyTypeString));
+                keyType = AEKeyTypesInternal.get(new ResourceLocation(keyTypeString));
                 if (keyType == null) {
-                    missingId.appendSibling(" (").appendSibling(keyTypeString).appendSibling(")");
+                    missingId.appendText(" (").appendText(keyTypeString).appendText(")");
                 }
             } catch (Exception ignored) {
             }
@@ -83,7 +86,7 @@ public class MissingContentItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<ITextComponent> lines, ITooltipFlag advanced) {
+    public void appendHoverText(ItemStack stack, ItemTooltipContext context, List<ITextComponent> lines, ITooltipFlag advanced) {
         super.appendHoverText(stack, context, lines, advanced);
 
         var error = AEComponents.MISSING_CONTENT_ERROR.get(stack);
@@ -135,5 +138,10 @@ public class MissingContentItem extends Item {
             return "BrokenStackInfo[" + "displayName=" + displayName + ", " + "keyType=" + keyType + ", " + "amount=" + amount + "]";
         }
 
+    }
+
+    @Override
+    public void addToMainCreativeTab(CreativeTabOutput.DisplayParameters parameters, CreativeTabOutput output) {
+        // Only exists for content that could not be loaded
     }
 }

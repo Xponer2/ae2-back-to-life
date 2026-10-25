@@ -28,6 +28,9 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
         acceptedMinecraftVersions = "[1.12.2]",
         dependencies = "required-after:forge@[14.23.5.2847,);after:jei;after:patchouli;after:theoneprobe;after:waila")
 public class AppEngMod {
+    @Mod.Instance(AppEng.MOD_ID)
+    public static AppEngMod instance;
+
     @SidedProxy(clientSide = "appeng.core.AppEngClient", serverSide = "appeng.core.AppEngServer")
     public static AppEngBase proxy;
 

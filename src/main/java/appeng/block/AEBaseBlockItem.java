@@ -18,6 +18,9 @@
 
 package appeng.block;
 
+import net.minecraft.item.Item;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ActionResult;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,7 +89,7 @@ public class AEBaseBlockItem extends ItemBlock implements ItemLike {
             ITooltipFlag advancedTooltips) {
         var aeBlock = getAEBlock();
         if (aeBlock != null) {
-            aeBlock.appendHoverText(itemStack, context.level(), toolTip, advancedTooltips);
+            aeBlock.appendHoverText(itemStack, context, toolTip, advancedTooltips);
         }
     }
 
@@ -144,7 +147,7 @@ public class AEBaseBlockItem extends ItemBlock implements ItemLike {
         if (aeBlock != null) {
             aeBlock.addToMainCreativeTab(parameters, output);
         } else {
-            output.accept(this);
+            output.accept((Item) this);
         }
     }
 
@@ -159,5 +162,17 @@ public class AEBaseBlockItem extends ItemBlock implements ItemLike {
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
         return ItemCapabilityProvider.forStack(stack);
+    }
+
+    /**
+     * Modern Item.use.
+     */
+    public ActionResult<ItemStack> use(World level, EntityPlayer player, EnumHand hand) {
+        return super.onItemRightClick(level, player, hand);
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        return use(worldIn, playerIn, handIn);
     }
 }

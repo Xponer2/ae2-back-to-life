@@ -36,7 +36,6 @@ import appeng.api.parts.IPartCollisionHelper;
 import appeng.core.definitions.AEItems;
 import appeng.core.localization.PlayerMessages;
 import appeng.util.InteractionUtil;
-import appeng.util.Util;
 
 public class FacadePart implements IFacadePart {
 
@@ -71,7 +70,7 @@ public class FacadePart implements IFacadePart {
 
     @Override
     public Item getItem() {
-        return facade.getBlock().asItem();
+        return Item.getItemFromBlock(facade.getBlock());
     }
 
     @Override
@@ -104,8 +103,7 @@ public class FacadePart implements IFacadePart {
     }
 
     private boolean handleInteraction(EntityPlayer player, boolean shouldCycleState, ItemStack heldItem) {
-        var holder = getBlockState().getBlockHolder();
-        var statedefinition = holder.value().getBlockState();
+        var statedefinition = getBlockState().getBlock().getBlockState();
         var properties = statedefinition.getProperties();
         if (properties.isEmpty()) {
             return false;
@@ -120,7 +118,7 @@ public class FacadePart implements IFacadePart {
         }
 
         if (shouldCycleState) {
-            var newState = getBlockState().cycle(property);
+            var newState = getBlockState().cycleProperty(property);
             setBlockState(newState);
 
             // If we reached the default value of the property, we consider that wrapping and show
@@ -130,7 +128,7 @@ public class FacadePart implements IFacadePart {
                 message(player, PlayerMessages.FacadePropertyWrapped.text(property.getName()));
             }
         } else {
-            property = Util.findNextInIterable(properties, property);
+            property = findNext(properties, property);
             if (property == firstProperty) {
                 AEComponents.FACADE_CYCLE_PROPERTY.remove(heldItem);
             } else {
@@ -141,9 +139,25 @@ public class FacadePart implements IFacadePart {
         return true;
     }
 
+    /**
+     * @return The element after the given one, or the first one after the last (or if it isn't there).
+     */
+    private static <T> T findNext(Iterable<T> values, T current) {
+        var it = values.iterator();
+        T first = it.next();
+        T value = first;
+        while (value != current) {
+            if (!it.hasNext()) {
+                return first;
+            }
+            value = it.next();
+        }
+        return it.hasNext() ? it.next() : first;
+    }
+
     private static void message(EntityPlayer player, ITextComponent messageComponent) {
         if (player instanceof EntityPlayerMP serverPlayer) {
-            serverPlayer.sendMessage(messageComponent, true);
+            serverPlayer.sendStatusMessage(messageComponent, true);
         }
     }
 }

@@ -18,6 +18,7 @@
 
 package appeng.blockentity;
 
+import net.minecraft.block.properties.IProperty;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -167,6 +168,80 @@ public class AEBaseBlockEntity extends TileEntity
     /**
      * The actual block state (including the orientation and the state derived from this block entity).
      */
+    // ---------------------------------------------------------------------------------------------------------------
+    // Block state properties kept by the block entity
+    // ---------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Block state properties of this block that 1.21 keeps in the block state (controller status, cell fullness,
+     * formed, ...). On 1.12.2 they don't fit into the metadata of a block entity block, so they are stored here, saved,
+     * synchronized with the block entity and applied by {@link AEBaseEntityBlock#getActualState}.
+     */
+    private final Map<String, String> stateProperties = new HashMap<>();
+
+    /**
+     * 1.21 {@code level.setBlock(pos, state.setValue(property, value))}.
+     */
+    public <T extends Comparable<T>> void setBlockStateProperty(IProperty<T> property, T value) {
+        var name = property.getName(value);
+        if (!name.equals(stateProperties.put(property.getName(), name))) {
+            saveChanges();
+            markForUpdate();
+            // vanilla 1.21 tells the block entity about its new block state
+            if (world != null) {
+                setBlockState(getBlockState());
+            }
+        }
+    }
+
+    public IBlockState applyBlockStateProperties(IBlockState state) {
+        for (var entry : stateProperties.entrySet()) {
+            var property = findProperty(state, entry.getKey());
+            if (property != null) {
+                state = withValue(state, property, entry.getValue());
+            }
+        }
+        return state;
+    }
+
+    @Nullable
+    private static IProperty<?> findProperty(IBlockState state, String name) {
+        for (var property : state.getPropertyKeys()) {
+            if (property.getName().equals(name)) {
+                return property;
+            }
+        }
+        return null;
+    }
+
+    private static <T extends Comparable<T>> IBlockState withValue(IBlockState state, IProperty<T> property,
+            String valueName) {
+        var value = property.parseValue(valueName);
+        return value.isPresent() ? state.withProperty(property, value.get()) : state;
+    }
+
+    private void writeStateProperties(RegistryFriendlyByteBuf data) {
+        data.writeVarInt(stateProperties.size());
+        for (var entry : stateProperties.entrySet()) {
+            data.writeUtf(entry.getKey());
+            data.writeUtf(entry.getValue());
+        }
+    }
+
+    private boolean readStateProperties(RegistryFriendlyByteBuf data) {
+        var read = new HashMap<String, String>();
+        int count = data.readVarInt();
+        for (int i = 0; i < count; i++) {
+            read.put(data.readUtf(), data.readUtf());
+        }
+        if (read.equals(stateProperties)) {
+            return false;
+        }
+        stateProperties.clear();
+        stateProperties.putAll(read);
+        return true;
+    }
+
     public IBlockState getBlockState() {
         if (world == null) {
             var block = getBlockType();
@@ -326,6 +401,14 @@ public class AEBaseBlockEntity extends TileEntity
             }
         }
 
+        this.stateProperties.clear();
+        if (tag.hasKey("stateProperties", Constants.NBT.TAG_COMPOUND)) {
+            var stateTag = tag.getCompoundTag("stateProperties");
+            for (var key : stateTag.getKeySet()) {
+                this.stateProperties.put(key, stateTag.getString(key));
+            }
+        }
+
         loadTag(tag);
     }
 
@@ -347,6 +430,12 @@ public class AEBaseBlockEntity extends TileEntity
 
         if (this.orientation != BlockOrientation.NORTH_UP) {
             data.setString("orientation", this.orientation.name());
+        }
+
+        if (!this.stateProperties.isEmpty()) {
+            var stateTag = new NBTTagCompound();
+            this.stateProperties.forEach(stateTag::setString);
+            data.setTag("stateProperties", stateTag);
         }
 
         if (this.customName != null) {
@@ -382,6 +471,7 @@ public class AEBaseBlockEntity extends TileEntity
         var stream = new RegistryFriendlyByteBuf(Unpooled.buffer());
         this.writeToStream(stream);
         stream.writeByte(this.orientation.ordinal());
+        writeStateProperties(stream);
 
         var bytes = new byte[stream.readableBytes()];
         stream.readBytes(bytes);
@@ -422,6 +512,9 @@ public class AEBaseBlockEntity extends TileEntity
                 if (newOrientation != this.orientation) {
                     this.orientation = newOrientation;
                     onOrientationChanged(newOrientation);
+                    output = true;
+                }
+                if (stream.isReadable() && readStateProperties(stream)) {
                     output = true;
                 }
             }

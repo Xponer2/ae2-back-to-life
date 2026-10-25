@@ -1,0 +1,23 @@
+{
+  "name": "Кварцевое волокно",
+  "icon": "ae2:quartz_fiber",
+  "category": "items_blocks_machines/network_infrastructure",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-quartz-fiber",
+      "text": "$(#555)$(o)(3D-сцена недоступна в этой версии)$()$(br2)Кварцевое волокно передаёт энергию между $(l:ae2_mechanics/me_network_connections)сетями$(/l), не объединяя их. Так можно питать $(l:ae2_mechanics/subnetworks)подсети$(/l), не расставляя повсюду приёмщики энергии и силовые кабели. Ещё им можно не давать кабелям соединяться, хотя кабели разных цветов или $(l:items_blocks_machines/cable_anchor)Кабельный якорь$(/l) дешевле и удобнее."
+    },
+    {
+      "type": "text",
+      "text": "Это $(l:ae2_mechanics/cable_subparts)части кабеля$(/l)."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/quartz_fiber_part",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

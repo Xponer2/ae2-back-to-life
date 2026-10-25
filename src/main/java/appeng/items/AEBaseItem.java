@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -74,7 +75,7 @@ public abstract class AEBaseItem extends Item implements ItemLike {
     }
 
     public void addToMainCreativeTab(CreativeTabOutput.DisplayParameters parameters, CreativeTabOutput output) {
-        output.accept(this);
+        output.accept((Item) this);
     }
 
     @Override
@@ -159,6 +160,20 @@ public abstract class AEBaseItem extends Item implements ItemLike {
             float hitX, float hitY, float hitZ, EnumHand hand) {
         return onItemUseFirst(player.getHeldItem(hand), UseOnContext.of(player, world, pos, hand, side, hitX, hitY,
                 hitZ));
+    }
+
+    /**
+     * Modern interactLivingEntity.
+     */
+    public EnumActionResult interactLivingEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target,
+            EnumHand hand) {
+        return EnumActionResult.PASS;
+    }
+
+    @Override
+    public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target,
+            EnumHand hand) {
+        return interactLivingEntity(stack, player, target, hand) == EnumActionResult.SUCCESS;
     }
 
     public void inventoryTick(ItemStack stack, World level, Entity entity, int slotId, boolean isSelected) {

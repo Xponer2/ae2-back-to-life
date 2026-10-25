@@ -48,6 +48,7 @@ import appeng.spatial.SpatialStorageHelper;
 import appeng.spatial.SpatialStoragePlot;
 import appeng.spatial.SpatialStoragePlotManager;
 import appeng.spatial.TransitionInfo;
+import appeng.util.ItemTooltipContext;
 
 public class SpatialStorageCellItem extends AEBaseItem implements ISpatialStorageCell {
     private static final Logger LOG = LogManager.getLogger(SpatialStorageCellItem.class);
@@ -61,7 +62,7 @@ public class SpatialStorageCellItem extends AEBaseItem implements ISpatialStorag
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<ITextComponent> lines,
+    public void appendHoverText(ItemStack stack, ItemTooltipContext context, List<ITextComponent> lines,
             ITooltipFlag advancedTooltips) {
         var plotInfo = AEComponents.SPATIAL_PLOT_INFO.get(stack);
         if (plotInfo == null) {
@@ -137,7 +138,7 @@ public class SpatialStorageCellItem extends AEBaseItem implements ISpatialStorag
         }
 
         // Store some information about this transition in the plot
-        TransitionInfo info = new TransitionInfo(level.dimension().location(), min, max, Instant.now());
+        TransitionInfo info = new TransitionInfo(level.provider.getDimension(), min, max, Instant.now());
         manager.setLastTransition(plot.getId(), info);
 
         try {

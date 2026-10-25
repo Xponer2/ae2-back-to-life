@@ -21,7 +21,6 @@ package appeng.blockentity.networking;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.core.SectionPos;
 import appeng.api.components.DataComponentMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,7 +28,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.level.chunk.status.ChunkStatus;
 
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
@@ -75,7 +73,7 @@ public class EnergyCellBlockEntity extends AENetworkedBlockEntity implements IAE
     @Override
     public void onReady() {
         super.onReady();
-        final int value = this.level.getBlockState(this.worldPosition).getValue(EnergyCellBlock.ENERGY_STORAGE);
+        final int value = this.world.getBlockState(this.pos).getValue(EnergyCellBlock.ENERGY_STORAGE);
         this.currentDisplayLevel = (byte) value;
         this.updateStateForPowerLevel();
     }
@@ -100,9 +98,7 @@ public class EnergyCellBlockEntity extends AENetworkedBlockEntity implements IAE
 
         if (this.currentDisplayLevel != storageLevel) {
             this.currentDisplayLevel = (byte) storageLevel;
-            this.level.setBlockState(this.worldPosition,
-                    this.level.getBlockState(this.worldPosition).setValue(EnergyCellBlock.ENERGY_STORAGE,
-                            storageLevel));
+            setBlockStateProperty(EnergyCellBlock.ENERGY_STORAGE, storageLevel);
         }
     }
 
@@ -111,20 +107,8 @@ public class EnergyCellBlockEntity extends AENetworkedBlockEntity implements IAE
      * block loaded forever.
      */
     private void setChangedNoTicketUpdate() {
-        if (!(this.level instanceof WorldServer serverLevel)) {
-            throw new IllegalArgumentException("Expected server level, not " + this.level);
-        }
-
-        var pos = getPos();
-        var chunk = serverLevel.getChunkProvider().getChunk(
-                SectionPos.blockToSectionCoord(pos.getX()),
-                SectionPos.blockToSectionCoord(pos.getZ()),
-                ChunkStatus.FULL,
-                false // passing false here is the trick to not adding a ticket!
-        );
-        // The chunk might be null, for example if it has a ticket level of 46 (i.e. about to be unloaded).
-        if (chunk != null) {
-            chunk.setUnsaved(true);
+        if (this.world != null) {
+            this.world.markChunkDirty(this.pos, this);
         }
     }
 

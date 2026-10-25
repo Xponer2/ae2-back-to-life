@@ -1,0 +1,250 @@
+{
+  "name": "Декоративный небесный камень",
+  "icon": "ae2:sky_stone_stairs",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "decorative-sky-stone",
+      "text": "Из блока $(l:items_blocks_machines/sky_stone)Небесный камень$(/l) можно скрафтить и вырезать на камнерезе несколько декоративных строительных блоков"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "0 B C D",
+            "       ",
+            "E F G H",
+            "       ",
+            "I J K L",
+            "       ",
+            "M N O P"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:sky_stone_small_brick_slab[type=bottom]",
+          "B": "ae2:sky_stone_small_brick_wall[east=none,north=none,south=none,up=true,west=none]",
+          "C": "ae2:sky_stone_small_brick_stairs[facing=south,half=bottom,shape=straight]",
+          "D": "ae2:sky_stone_small_brick",
+          "E": "ae2:sky_stone_brick_slab[type=bottom]",
+          "F": "ae2:sky_stone_brick_wall[east=none,north=none,south=none,up=true,west=none]",
+          "G": "ae2:sky_stone_brick_stairs[facing=south,half=bottom,shape=straight]",
+          "H": "ae2:sky_stone_brick",
+          "I": "ae2:smooth_sky_stone_slab[type=bottom]",
+          "J": "ae2:smooth_sky_stone_wall[east=none,north=none,south=none,up=true,west=none]",
+          "K": "ae2:smooth_sky_stone_stairs[facing=south,half=bottom,shape=straight]",
+          "L": "ae2:smooth_sky_stone_block",
+          "M": "ae2:sky_stone_slab[type=bottom]",
+          "N": "ae2:sky_stone_wall[east=none,north=none,south=none,up=true,west=none]",
+          "O": "ae2:sky_stone_stairs[facing=south,half=bottom,shape=straight]",
+          "P": "ae2:sky_stone_block",
+          "0": "ae2:sky_stone_small_brick_slab[type=bottom]"
+        }
+      },
+      "text": ""
+    },
+    {
+      "type": "ae2:item_row_2",
+      "item0": "ae2:sky_stone_chest",
+      "item1": "ae2:smooth_sky_stone_chest",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:misc/chests_sky_stone",
+      "anchor": "recipes",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:misc/chests_smooth_sky_stone",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:decorative/sky_stone_brick",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:smooth_sky_stone_block",
+      "output": "ae2:sky_stone_brick",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:decorative/sky_stone_small_brick",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:smooth_sky_stone_block",
+      "output": "ae2:sky_stone_small_brick",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/stairs/sky_stone_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:sky_stone_block",
+      "output": "ae2:sky_stone_stairs",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/stairs/smooth_sky_stone_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:smooth_sky_stone_block",
+      "output": "ae2:smooth_sky_stone_stairs",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/stairs/sky_stone_brick",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:sky_stone_brick",
+      "output": "ae2:sky_stone_brick_stairs",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/stairs/sky_stone_small_brick",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:sky_stone_small_brick",
+      "output": "ae2:sky_stone_small_brick_stairs",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/walls/sky_stone_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:sky_stone_block",
+      "output": "ae2:sky_stone_wall",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/walls/smooth_sky_stone_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:smooth_sky_stone_block",
+      "output": "ae2:smooth_sky_stone_wall",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/walls/sky_stone_brick",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:sky_stone_brick",
+      "output": "ae2:sky_stone_brick_wall",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/walls/sky_stone_small_brick",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:sky_stone_small_brick",
+      "output": "ae2:sky_stone_small_brick_wall",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/slabs/sky_stone_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:sky_stone_block",
+      "output": "ae2:sky_stone_slab#2",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/slabs/smooth_sky_stone_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:smooth_sky_stone_block",
+      "output": "ae2:smooth_sky_stone_slab#2",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/slabs/sky_stone_brick",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:sky_stone_brick",
+      "output": "ae2:sky_stone_brick_slab#2",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/slabs/sky_stone_small_brick",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:sky_stone_small_brick",
+      "output": "ae2:sky_stone_small_brick_slab#2",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    }
+  ]
+}

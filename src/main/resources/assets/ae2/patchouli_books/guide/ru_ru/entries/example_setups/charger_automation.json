@@ -1,0 +1,40 @@
+{
+  "name": "Автоматизация зарядника",
+  "icon": "ae2:charger",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "charger-automation",
+      "text": "Эта постройка использует $(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l), поэтому она рассчитана на встраивание в вашу систему $(l:ae2_mechanics/autocrafting)автокрафта$(/l). Если нужно просто автоматизировать отдельный $(l:items_blocks_machines/charger)Зарядник$(/l), используйте воронки, сундуки и тому подобное.$(br2)Автоматизировать зарядник ($(l:items_blocks_machines/charger)Зарядник$(/l)) довольно просто. $(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l) выталкивает ингредиент в зарядник, а $(l:example_setups/pipe_subnet)трубная подсеть$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "или другая труба для предметов возвращает результат в поставщик.$(br2)$(#555)$(o)(3D-сцена недоступна в этой версии)$()"
+    },
+    {
+      "type": "text",
+      "title": "Настройки",
+      "anchor": "configurations",
+      "text": "$(li)$(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l) (1) в настройках по умолчанию, внутри — нужные шаблоны ($(l:items_blocks_machines/patterns)Шаблон обработки$(/l)). Он также снабжает $(l:items_blocks_machines/charger)Зарядник$(/l) $(l:ae2_mechanics/energy)энергией$(/l), потому что работает как $(l:items_blocks_machines/cables)кабель$(/l)."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/charger_pattern.png"
+      ],
+      "border": true,
+      "text": "$(li)$(l:items_blocks_machines/import_bus)Мэ шина импорта$(/l) (2) в настройках по умолчанию."
+    },
+    {
+      "type": "text",
+      "anchor": "how-it-works",
+      "text": "$(li)$(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l) (3) в настройках по умолчанию.$(br2)$(bold)Как это работает$()$(br2)1. $(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l) выталкивает ингредиенты в $(l:items_blocks_machines/charger)Зарядник$(/l).$(br2)2. Зарядник делает своё зарядное дело.$(br2)3. $(l:items_blocks_machines/import_bus)Мэ шина импорта$(/l) в зелёной подсети вытаскивает результат из зарядника и пытается"
+    },
+    {
+      "type": "text",
+      "text": "сохранить его в $(l:ae2_mechanics/import_export_storage)сетевом хранилище$(/l).$(br2)4. Единственное хранилище в зелёной подсети — $(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l), которая складывает результат в поставщик шаблонов, возвращая его в основную сеть."
+    }
+  ]
+}

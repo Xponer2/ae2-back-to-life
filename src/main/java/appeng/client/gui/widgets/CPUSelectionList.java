@@ -25,6 +25,7 @@ import appeng.core.localization.ButtonToolTips;
 import appeng.core.localization.GuiText;
 import appeng.core.localization.Tooltips;
 import appeng.menu.me.crafting.CraftingStatusMenu;
+import appeng.util.TextUtil;
 
 public class CPUSelectionList implements ICompositeWidget {
 
@@ -84,17 +85,17 @@ public class CPUSelectionList implements ICompositeWidget {
             // Show the number of coprocessors if any are installed
             var coProcessors = cpu.coProcessors();
             if (coProcessors == 1) {
-                tooltipLines.add(ButtonToolTips.CpuStatusCoProcessor.text(Tooltips.ofNumber(coProcessors))
-                        .withStyle(TextFormatting.GRAY));
+                tooltipLines.add(TextUtil.withStyle(
+                        ButtonToolTips.CpuStatusCoProcessor.text(Tooltips.ofNumber(coProcessors)), TextFormatting.GRAY));
             } else if (coProcessors > 1) {
-                tooltipLines.add(ButtonToolTips.CpuStatusCoProcessors.text(Tooltips.ofNumber(coProcessors))
-                        .withStyle(TextFormatting.GRAY));
+                tooltipLines.add(TextUtil.withStyle(
+                        ButtonToolTips.CpuStatusCoProcessors.text(Tooltips.ofNumber(coProcessors)), TextFormatting.GRAY));
             }
 
             // Show the amount of storage in the Crafting CPU
-            tooltipLines.add(ButtonToolTips.CpuStatusStorage.text(Tooltips.ofBytes(cpu.storage()))
-                    // Vanilla text formatting is broken and inherits the color of the 1st placeholder in the text
-                    .withStyle(TextFormatting.GRAY));
+            // Vanilla text formatting is broken and inherits the color of the 1st placeholder in the text
+            tooltipLines.add(TextUtil.withStyle(ButtonToolTips.CpuStatusStorage.text(Tooltips.ofBytes(cpu.storage())),
+                    TextFormatting.GRAY));
 
             // Show if the CPU is player or automation only
             var modeText = switch (cpu.mode()) {
@@ -111,7 +112,7 @@ public class CPUSelectionList implements ICompositeWidget {
             if (currentJob != null) {
                 tooltipLines.add(
                         ButtonToolTips.CpuStatusCrafting.text(
-                                Tooltips.ofAmount(currentJob)).appendSibling(" ").appendSibling(currentJob.what().getDisplayName()));
+                                Tooltips.ofAmount(currentJob)).appendText(" ").appendSibling(currentJob.what().getDisplayName()));
                 tooltipLines.add(
                         ButtonToolTips.CpuStatusCraftedIn.text(
                                 Tooltips.ofPercent(cpu.progress()),
@@ -248,6 +249,6 @@ public class CPUSelectionList implements ICompositeWidget {
     }
 
     private ITextComponent getCpuName(CraftingStatusMenu.CraftingCpuListEntry cpu) {
-        return cpu.name() != null ? cpu.name() : GuiText.CPUs.text().appendSibling(String.format(" #%d", cpu.serial()));
+        return cpu.name() != null ? cpu.name() : GuiText.CPUs.text().appendText(String.format(" #%d", cpu.serial()));
     }
 }

@@ -37,18 +37,19 @@ import appeng.core.network.codec.ByteBufCodecs;
 import appeng.core.network.codec.StreamCodec;
 import appeng.parts.CableBusStorage;
 import appeng.util.AECodecs;
+import appeng.util.DataResults;
 import appeng.util.NbtOps;
 
 public class FacadeContainer implements IFacadeContainer {
     private static final StreamCodec<ByteBuf, IBlockState> BLOCK_STATE_STREAM_CODEC = ByteBufCodecs
-            .idMapper(Block.BLOCK_STATE_REGISTRY);
+            .idMapper(Block::getStateById, Block::getStateId);
 
     /**
      * Key names to store facades
      */
     private static final String[] NBT_KEY_NAMES = Arrays.stream(EnumFacing.VALUES)
             .map(d -> "facade" + StringUtils.capitalize(d.getName()))
-            .toArray(new String[0]);
+            .toArray(String[]::new);
 
     private final CableBusStorage storage;
     private final Consumer<EnumFacing> changeCallback;
@@ -97,7 +98,7 @@ public class FacadeContainer implements IFacadeContainer {
             var tag = c.getTag(NBT_KEY_NAMES[side.ordinal()]);
             var result = AECodecs.BLOCK_STATE.decode(NbtOps.INSTANCE, tag).result();
             if (result.isPresent()) {
-                var blockState = result.get().get(0);
+                var blockState = result.get().getFirst();
                 this.storage.setFacade(side, new FacadePart(blockState, side));
             }
         }
@@ -107,9 +108,9 @@ public class FacadeContainer implements IFacadeContainer {
     public void writeToNBT(NBTTagCompound c) {
         for (var side : EnumFacing.VALUES) {
             if (this.storage.getFacade(side) != null) {
-                var data = AECodecs.BLOCK_STATE.encodeStart(NbtOps.INSTANCE, this.storage.getFacade(side).getBlockState())
-                        .getOrThrow();
-                c.put(NBT_KEY_NAMES[side.ordinal()], data);
+                var data = DataResults.getOrThrow(AECodecs.BLOCK_STATE.encodeStart(NbtOps.INSTANCE,
+                        this.storage.getFacade(side).getBlockState()));
+                c.setTag(NBT_KEY_NAMES[side.ordinal()], data);
             }
         }
     }

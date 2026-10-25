@@ -53,12 +53,12 @@ public class CraftingBlockItem extends AEBaseBlockItem {
             }
 
             int itemCount = stack.getCount();
-            player.setItemInHand(hand, ItemStack.EMPTY);
+            player.setHeldItem(hand, ItemStack.EMPTY);
 
-            var inv = player.inventory;
-            inv.placeItemBackInInventory(Platform.copyWithCount(removedUpgrade, removedUpgrade.getCount() * itemCount));
+            Platform.placeItemBackInInventory(player,
+                    Platform.copyWithCount(removedUpgrade, removedUpgrade.getCount() * itemCount));
             // This is hard-coded, as this is always a base block.
-            inv.placeItemBackInInventory(AEBlocks.CRAFTING_UNIT.stack(itemCount));
+            Platform.placeItemBackInInventory(player, AEBlocks.CRAFTING_UNIT.stack(itemCount));
 
             return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
         }

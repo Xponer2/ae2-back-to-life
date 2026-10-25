@@ -1,0 +1,79 @@
+{
+  "name": "Декоративный флюис",
+  "icon": "ae2:fluix_stairs",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "decorative-fluix",
+      "text": "Из блока $(l:items_blocks_machines/fluix_block)Блок флюиса$(/l) можно скрафтить и вырезать на камнерезе несколько декоративных строительных блоков."
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "0",
+            " ",
+            "B",
+            " ",
+            "C",
+            " ",
+            "D"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:fluix_slab[type=bottom]",
+          "B": "ae2:fluix_wall[east=none,north=none,south=none,up=true,west=none]",
+          "C": "ae2:fluix_stairs[facing=south,half=bottom,shape=straight]",
+          "D": "ae2:fluix_block",
+          "0": "ae2:fluix_slab[type=bottom]"
+        }
+      },
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/stairs/fluix_block",
+      "anchor": "recipes",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:fluix_block",
+      "output": "ae2:fluix_stairs",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/walls/fluix_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:fluix_block",
+      "output": "ae2:fluix_wall",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/slabs/fluix_block",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Камнерез",
+      "in0": "ae2:fluix_block",
+      "output": "ae2:fluix_slab#2",
+      "machine": "",
+      "text": "Рецепт камнереза."
+    }
+  ]
+}

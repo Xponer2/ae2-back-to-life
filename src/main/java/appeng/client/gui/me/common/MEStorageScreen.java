@@ -18,6 +18,7 @@
 
 package appeng.client.gui.me.common;
 
+import appeng.client.gui.compat.Keys;
 import appeng.util.TextUtil;
 
 import java.util.ArrayList;
@@ -29,20 +30,15 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
-import com.mojang.blaze3d.platform.InputConstants;
-import guideme.color.ConstantColor;
-import guideme.document.LytRect;
-import guideme.render.SimpleRenderContext;
-import net.neoforged.neoforge.network.PacketDistributor;
+import appeng.core.network.PacketDistributor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -70,7 +66,9 @@ import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.AESubScreen;
 import appeng.client.gui.GuiGraphics;
 import appeng.client.gui.Icon;
+import appeng.client.gui.Rect2i;
 import appeng.client.gui.style.Blitter;
+import appeng.client.render.TooltipImages;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.style.TerminalStyle;
 import appeng.client.gui.widgets.AETextField;
@@ -269,7 +267,7 @@ public class MEStorageScreen<C extends MEStorageMenu>
 
         long serial = entry.getSerial();
 
-        if (InputConstants.isKeyDown(Minecraft.getMinecraft().getWindow().getWindow(), GLFW.GLFW_KEY_SPACE)) {
+        if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
             // Move everything from the same group of slots (i.e. player inventory excluding hotbar)
             menu.handleInteraction(serial, InventoryAction.MOVE_REGION);
         } else {
@@ -296,7 +294,7 @@ public class MEStorageScreen<C extends MEStorageMenu>
                     if (entry.isCraftable()) {
                         menu.handleInteraction(serial, InventoryAction.AUTO_CRAFT);
                         return;
-                    } else if (getMenu().getPlayer().getAbilities().instabuild) {
+                    } else if (getMenu().getPlayer().capabilities.isCreativeMode) {
                         action = InventoryAction.CREATIVE_DUPLICATE;
                     }
                     break;
@@ -348,7 +346,7 @@ public class MEStorageScreen<C extends MEStorageMenu>
         this.imageHeight = style.getScreenHeight(rows);
 
         // Re-create the ME slots since the number of rows could have changed
-        List<Slot> slots = this.menu.slots;
+        List<Slot> slots = this.menu.inventorySlots;
         slots.removeIf(slot -> slot instanceof RepoSlot);
 
         int repoIndex = 0;
@@ -377,7 +375,7 @@ public class MEStorageScreen<C extends MEStorageMenu>
         updateSearch();
 
         // Override the dialog title found in the screen JSON with the user-supplied name
-        if (!this.title.getString().isEmpty()) {
+        if (!this.title.getUnformattedText().isEmpty()) {
             setTextContent(TEXT_ID_DIALOG_TITLE, this.title);
         } else if (this.menu.getTarget() instanceof IMEChest) {
             // ME Chest uses Item Terminals, but overrides the title
@@ -466,37 +464,39 @@ public class MEStorageScreen<C extends MEStorageMenu>
     private void renderLinkStatus(GuiGraphics guiGraphics, ILinkStatus linkStatus) {
         // Draw an overlay indicating the grid is disconnected
         if (!linkStatus.connected()) {
-            var renderContext = new SimpleRenderContext(LytRect.empty(), guiGraphics);
-
             var firstSlot = style.getSlotPos(0, 0);
             var lastSlot = style.getSlotPos(rows - 1, style.getSlotsPerRow() - 1);
 
-            var rect = new LytRect(
+            var rect = new Rect2i(
                     firstSlot.getX() - 1,
                     firstSlot.getY() - 1,
                     lastSlot.getX() + 17 - (firstSlot.getX() - 1),
                     lastSlot.getY() + 17 - (firstSlot.getY() - 1));
 
-            renderContext.fillRect(rect, new ConstantColor(0x3f000000));
+            // In front of the items in the slots
+            guiGraphics.pose().pushPose();
+            guiGraphics.pose().translate(0, 0, 200);
+            fillRect(guiGraphics, rect, 0x3f000000);
 
             // Draw the disconnect status on top of the grid
             var statusDescription = linkStatus.statusDescription();
             if (statusDescription != null) {
-                renderContext.renderTextCenteredIn(statusDescription.getUnformattedText(), ERROR_TEXT_STYLE, rect);
+                renderTextCenteredIn(guiGraphics, statusDescription, ERROR_TEXT_COLOR, rect);
             }
+            guiGraphics.pose().popPose();
         }
     }
 
     private void renderPinnedRowDecorations(GuiGraphics guiGraphics) {
-        for (Slot slot : menu.slots) {
+        for (Slot slot : menu.inventorySlots) {
             if (slot instanceof RepoSlot repoSlot) {
                 var entry = repoSlot.getEntry();
                 if (entry != null && PendingCraftingJobs.hasPendingJob(entry.getWhat())) {
-                    var sprite = minecraft.getTextureAtlas(ContainerPlayer.BLOCK_ATLAS)
-                            .apply(AppEng.makeId("block/molecular_assembler_lights"));
-                    Blitter.sprite(sprite)
-                            .src(sprite.getX() + 2, sprite.getY() + 2, sprite.contents().width() - 4,
-                                    sprite.contents().height() - 4)
+                    var sprite = minecraft.getTextureMapBlocks()
+                            .getAtlasSprite(AppEng.makeId("block/molecular_assembler_lights").toString());
+                    var blitter = Blitter.sprite(sprite);
+                    blitter.src(blitter.getSrcX() + 2, blitter.getSrcY() + 2, blitter.getSrcWidth() - 4,
+                            blitter.getSrcHeight() - 4)
                             .dest(slot.xPos - 1, slot.yPos - 1, 18, 18)
                             .blit(guiGraphics);
                 }
@@ -514,7 +514,7 @@ public class MEStorageScreen<C extends MEStorageMenu>
         }
 
         // handler for middle mouse button crafting in survival mode
-        if (Minecraft.getMinecraft().gameSettings.keyPickItem.matchesMouse(btn)) {
+        if (Minecraft.getMinecraft().gameSettings.keyBindPickBlock.isActiveAndMatches(btn - 100)) {
             Slot slot = this.findSlot(xCoord, yCoord);
             if (slot instanceof RepoSlot repoSlot && repoSlot.isCraftable()) {
                 handleGridInventoryEntryMouseClick(repoSlot.getEntry(), btn, ClickType.CLONE);
@@ -721,7 +721,7 @@ public class MEStorageScreen<C extends MEStorageMenu>
             var stack = itemKey.getReadOnlyStack();
             // By using the overload of the renderTooltip method that takes an ItemStack, we support the Forge tooltip
             // event system
-            guiGraphics.renderTooltip(font, currentToolTip, stack.getTooltipImage(), stack, x, y);
+            guiGraphics.renderTooltip(font, currentToolTip, TooltipImages.getTooltipImage(stack), stack, x, y);
         } else {
             guiGraphics.renderComponentTooltip(font, currentToolTip, x, y);
         }
@@ -743,7 +743,7 @@ public class MEStorageScreen<C extends MEStorageMenu>
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int p_keyPressed_3_) {
-        if (this.searchField.isFocused() && keyCode == GLFW.GLFW_KEY_ENTER) {
+        if (this.searchField.isFocused() && keyCode == Keyboard.KEY_RETURN) {
             this.searchField.setFocused(false);
             this.setFocused(null);
             return true;
@@ -849,7 +849,7 @@ public class MEStorageScreen<C extends MEStorageMenu>
         if (hotkeyId != null) {
             var hotkey = Hotkeys.getHotkeyMapping(hotkeyId);
             if (hotkey != null) {
-                return hotkey.mapping().matches(keyCode, scanCode);
+                return Keys.matches(hotkey.mapping(), keyCode);
             } else {
                 LOG.warn("Terminal host returned unknown hotkey id: {}", hotkeyId);
             }

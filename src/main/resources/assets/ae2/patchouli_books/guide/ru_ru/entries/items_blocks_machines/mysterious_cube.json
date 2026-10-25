@@ -1,0 +1,25 @@
+{
+  "name": "Таинственный куб",
+  "icon": "ae2:mysterious_cube",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:mysterious_cube",
+      "link_recipe": true,
+      "anchor": "the-mysterious-cube",
+      "text": "Помните, как раньше приходилось искать кучу метеоритов, чтобы собрать все прессы? Больше не нужно! Теперь в метеоритах есть таинственный куб.$(br2)Интересно, что будет, если его сломать (без шёлкового касания)...$(br2)Можно сделать и копию — не"
+    },
+    {
+      "type": "text",
+      "text": "такой уж и таинственный куб"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:shaped/not_so_mysterious_cube",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

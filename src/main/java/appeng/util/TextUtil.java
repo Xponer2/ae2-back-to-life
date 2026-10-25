@@ -36,6 +36,25 @@ public final class TextUtil {
         return component;
     }
 
+    /**
+     * A style with a color (1.21 {@code Style.EMPTY.withColor(...)}). 1.12.2 tooltip lines aren't italic by default, so
+     * 1.21's {@code withItalic(false)} needs nothing.
+     */
+    public static Style style(TextFormatting color) {
+        return new Style().setColor(color);
+    }
+
+    public static Style style(TextFormatting color, boolean italic) {
+        return new Style().setColor(color).setItalic(italic);
+    }
+
+    /**
+     * 1.12.2 text only has the 16 chat colors: the closest one to an RGB color.
+     */
+    public static Style style(int rgb) {
+        return style(nearestColor(rgb));
+    }
+
     public static ITextComponent withStyle(ITextComponent component, Style style) {
         var target = component.getStyle();
         if (style.getColor() != null) {

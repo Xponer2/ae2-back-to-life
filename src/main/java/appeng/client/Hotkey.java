@@ -1,9 +1,8 @@
 package appeng.client;
 
-import net.neoforged.neoforge.network.PacketDistributor;
-
 import net.minecraft.client.settings.KeyBinding;
 
+import appeng.core.network.PacketDistributor;
 import appeng.core.network.ServerboundPacket;
 import appeng.core.network.serverbound.HotkeyPacket;
 
@@ -44,7 +43,7 @@ public final class Hotkey {
     }
 
     public void check() {
-        while (mapping().consumeClick()) {
+        while (mapping().isPressed()) {
             ServerboundPacket message = new HotkeyPacket(this);
             PacketDistributor.sendToServer(message);
         }

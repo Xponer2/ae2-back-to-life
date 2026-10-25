@@ -23,7 +23,6 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import net.neoforged.neoforge.capabilities.ICapabilityInvalidationListener;
 import org.jetbrains.annotations.Nullable;
 
 import appeng.api.components.DataComponentMap;
@@ -91,6 +90,8 @@ import appeng.util.ConfigInventory;
 import appeng.util.Platform;
 import appeng.util.SettingsFrom;
 import appeng.util.prioritylist.IPartitionList;
+import java.lang.ref.WeakReference;
+import net.minecraft.tileentity.TileEntity;
 
 public class StorageBusPart extends UpgradeablePart
         implements IGridTickable, IStorageProvider, IPriorityHost, IConfigInvHost {
@@ -129,16 +130,9 @@ public class StorageBusPart extends UpgradeablePart
     private PendingUpdateStatus updateStatus = PendingUpdateStatus.FAST_UPDATE;
     private ITickingMonitor monitor = null;
 
-    // Capability listener.
-    // Stored as a field because it will be stored in a WeakReference by the capability invalidation system.
-    private final ICapabilityInvalidationListener capabilityListener = () -> {
-        if (!PartAdjacentApi.isPartValid(this)) {
-            return false;
-        }
-
-        this.onCapabilityInvalidation();
-        return true;
-    };
+    // There are no capability invalidation events in this version: a different block entity next to the bus (or
+    // none) after a neighbor change means a different target
+    private WeakReference<TileEntity> lastTarget = new WeakReference<>(null);
 
     public StorageBusPart(IPartItem<?> partItem) {
         super(partItem);
@@ -163,7 +157,7 @@ public class StorageBusPart extends UpgradeablePart
         super.addToWorld();
         if (getLevel() instanceof WorldServer serverLevel) {
             var targetPos = getTileEntity().getPos().offset(getSide());
-            serverLevel.registerCapabilityListener(targetPos, this.capabilityListener);
+            this.lastTarget = new WeakReference<>(serverLevel.getTileEntity(targetPos));
         }
     }
 
@@ -240,7 +234,7 @@ public class StorageBusPart extends UpgradeablePart
 
     @Override
     public ItemStack getMainMenuIcon() {
-        return new ItemStack(getPartItem());
+        return new ItemStack(getPartItem().asItem());
     }
 
     public MenuType<?> getMenuType() {
@@ -269,6 +263,11 @@ public class StorageBusPart extends UpgradeablePart
         if (pos.offset(getSide()).equals(neighbor)) {
             // Tick again to update the monitor.
             if (!isClientSide()) {
+                var target = level.getTileEntity(neighbor);
+                if (target != this.lastTarget.get()) {
+                    this.lastTarget = new WeakReference<>(target);
+                    this.onCapabilityInvalidation();
+                }
                 getMainNode().ifPresent((grid, node) -> {
                     grid.getTickManager().alertDevice(node);
                 });
@@ -532,7 +531,7 @@ public class StorageBusPart extends UpgradeablePart
         super.exportSettings(mode, builder);
 
         if (mode == SettingsFrom.MEMORY_CARD) {
-            AEComponents.EXPORTED_CONFIG_INV.set(builder, config.collect(Collectors.toList()));
+            AEComponents.EXPORTED_CONFIG_INV.set(builder, config.toList());
         }
     }
 

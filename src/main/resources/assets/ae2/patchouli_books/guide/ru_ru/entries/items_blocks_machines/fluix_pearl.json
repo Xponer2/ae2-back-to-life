@@ -1,0 +1,21 @@
+{
+  "name": "Флюисовый жемчуг",
+  "icon": "ae2:fluix_pearl",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:fluix_pearl",
+      "link_recipe": true,
+      "anchor": "fluix-pearl",
+      "text": "Жемчуг Края, покрытый материалом $(l:items_blocks_machines/fluix_crystal)Флюисовый кристалл$(/l); используется для производства нескольких компонентов AE2."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:misc/fluixpearl",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "Эндер-пыль",
+  "icon": "ae2:ender_dust",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:ender_dust",
+      "link_recipe": true,
+      "anchor": "ender-dust",
+      "text": "Жемчуг Края, измельчённый в механизме $(l:items_blocks_machines/inscriber)Высекатель$(/l). Используется для изготовления предметов $(l:items_blocks_machines/wireless_access_point)Беспроводной усилитель$(/l) и пар предметов $(l:items_blocks_machines/singularities)Сингулярность квантовой запутанности$(/l)."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Высекатель",
+      "top": "",
+      "middle": "minecraft:ender_pearl",
+      "bottom": "",
+      "output": "ae2:ender_dust",
+      "text": "Прессы не расходуются.",
+      "anchor": "recipe"
+    }
+  ]
+}

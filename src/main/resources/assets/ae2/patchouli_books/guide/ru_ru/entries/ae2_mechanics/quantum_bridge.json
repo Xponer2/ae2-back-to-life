@@ -1,0 +1,13 @@
+{
+  "name": "Квантовый мост",
+  "icon": "ae2:quantum_ring",
+  "category": "ae2_mechanics",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-quantum-network-bridge",
+      "text": "См. $(l:items_blocks_machines/quantum_bridge)квантовый сетевой мост$(/l)"
+    }
+  ]
+}

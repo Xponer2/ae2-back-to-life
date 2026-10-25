@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 import com.google.common.primitives.Longs;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.util.text.TextComponentString;
 
 import appeng.api.stacks.GenericStack;
 import appeng.client.gui.AESubScreen;
@@ -61,8 +61,7 @@ public class SetProcessingPatternAmountScreen<C extends PatternEncodingTermMenu>
         widgets.addButton("save", GuiText.Set.text(), this::confirm);
 
         var icon = getMenu().getHost().getMainMenuIcon();
-        RenderItem itemRenderer = Minecraft.getMinecraft().getItemRenderer();
-        var button = new TabButton(Icon.BACK, icon.getDisplayNameComponent(), btn -> {
+        var button = new TabButton(Icon.BACK, new TextComponentString(icon.getDisplayName()), btn -> {
             returnToParent();
         });
         widgets.add("back", button);

@@ -21,10 +21,6 @@ package appeng.client.gui.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.client.gui.ComponentPath;
-import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.util.text.ITextComponent;
 
 import appeng.client.gui.Icon;
@@ -64,12 +60,5 @@ public class ValidationIcon extends IconButton {
     @Override
     protected Icon getIcon() {
         return Icon.INVALID;
-    }
-
-    @Nullable
-    @Override
-    public ComponentPath nextFocusPath(FocusNavigationEvent focusNavigationEvent) {
-        // Cannot focus this element
-        return null;
     }
 }

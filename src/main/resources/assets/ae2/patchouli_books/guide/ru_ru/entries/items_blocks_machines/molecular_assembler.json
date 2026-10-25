@@ -1,0 +1,93 @@
+{
+  "name": "Молекулярный сборщик",
+  "icon": "ae2:molecular_assembler",
+  "category": "items_blocks_machines/machines",
+  "sortnum": 310,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:molecular_assembler",
+      "link_recipe": true,
+      "anchor": "the-molecular-assembler",
+      "text": "Молекулярный сборщик берёт вставленные в него предметы, выполняет операцию, заданную соседним поставщиком шаблонов ($(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l)) или вставленным предметом $(l:items_blocks_machines/patterns)Шаблон изготовления$(/l), $(l:items_blocks_machines/patterns)Шаблон кузнечного стола$(/l) или $(l:items_blocks_machines/patterns)Шаблон камнерезного станка$(/l), и выталкивает результат в соседние инвентари."
+    },
+    {
+      "type": "text",
+      "text": "В этом сборщике стоит шаблон изготовления с рецептом «1 дубовое бревно = 4 дубовые доски». Когда в верхнюю воронку подают дубовые брёвна, сборщик изготавливает дубовые доски и выплёвывает их в нижнюю воронку."
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "B ",
+            "C "
+          ],
+          [
+            "0 ",
+            "  "
+          ]
+        ],
+        "mapping": {
+          "A": "minecraft:hopper[facing=down]",
+          "B": "ae2:molecular_assembler[powered=true]",
+          "C": "minecraft:hopper[facing=west]",
+          "0": "minecraft:hopper[facing=down]"
+        }
+      },
+      "text": "$(bold)Главное применение молекулярного сборщика$()",
+      "anchor": "the-main-use-of-the-molecular-assembler"
+    },
+    {
+      "type": "text",
+      "text": "Однако главное применение сборщиков — рядом с поставщиком шаблонов ($(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l)). В этом случае поставщики ведут себя особым образом: они отправляют соседним сборщикам сведения о нужном шаблоне вместе с ингредиентами. А так как сборщики сами выталкивают результат в соседние инвентари (и, значит, в слоты возврата поставщика шаблонов), для автоматизации шаблонов изготовления"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "BA",
+            "AB",
+            "BA",
+            "AB"
+          ],
+          [
+            "0B",
+            "BA",
+            "AB",
+            "BA"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:molecular_assembler[powered=true]",
+          "B": "ae2:pattern_provider[push_direction=all]",
+          "0": "ae2:molecular_assembler[powered=true]"
+        }
+      },
+      "text": "достаточно поставить сборщик на поставщик шаблонов."
+    },
+    {
+      "type": "text",
+      "title": "Улучшения",
+      "anchor": "upgrades",
+      "text": "Молекулярный сборщик поддерживает следующие $(l:items_blocks_machines/upgrade_cards)улучшения$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Карта ускорения$(/l)"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crafting/molecular_assembler",
+      "anchor": "recipe",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Примечание",
+      "anchor": "note",
+      "text": "Optifine ломает функцию «выталкивания в соседние инвентари», поэтому большинство систем изготовления со сборщиками работать не будет."
+    }
+  ]
+}

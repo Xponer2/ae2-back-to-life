@@ -1,0 +1,91 @@
+{
+  "name": "Цветущий истинный кварц",
+  "icon": "ae2:flawless_budding_quartz",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "budding-certus-quartz",
+      "text": "(см. также $(l:ae2_mechanics/certus_growth)«Рост истинного кварца»$(/l))"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          [
+            "0",
+            "B",
+            "C",
+            "D"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:flawless_budding_quartz",
+          "B": "ae2:flawed_budding_quartz",
+          "C": "ae2:chipped_budding_quartz",
+          "D": "ae2:damaged_budding_quartz",
+          "E": "ae2:quartz_cluster[facing=up]",
+          "F": "ae2:large_quartz_bud[facing=up]",
+          "G": "ae2:medium_quartz_bud[facing=up]",
+          "H": "ae2:small_quartz_bud[facing=up]",
+          "0": "ae2:flawless_budding_quartz"
+        }
+      },
+      "text": "Бутоны истинного кварца растут на цветущих блоках истинного кварца, как аметист."
+    },
+    {
+      "type": "text",
+      "text": "Эти блоки встречаются в $(l:ae2_mechanics/meteorites)метеоритах$(/l). Есть 4 ступени цветущих блоков: безупречный, несовершенный, потрескавшийся и повреждённый. Проще всего различать их с помощью мода вроде HWYLA, Jade, The One Probe и т. п. (или на экране F3)$(br2)У несовершенных, потрескавшихся и повреждённых цветущих блоков каждый раз, когда бутон вырастает на очередную стадию, есть шанс опуститься на ступень ниже и"
+    },
+    {
+      "type": "text",
+      "text": "в итоге превратиться в обычный $(l:items_blocks_machines/quartz_block)Блок истинного кварца$(/l).$(br2)Безупречный цветущий блок не теряет ступеней от роста бутонов и служит бесконечным источником.$(br2)Если сломать цветущий блок обычной киркой, он опустится на 1 ступень. Если сломать его киркой с шёлковым касанием, ступень не теряется, если только блок не был безупречным. $(bold)Это значит,$()"
+    },
+    {
+      "type": "text",
+      "text": "$(bold)что безупречные цветущие блоки нельзя забрать и перенести киркой$(). Вместо этого их можно вырезать и вставить с помощью $(l:ae2_mechanics/spatial_io)пространственного хранилища$(/l)."
+    },
+    {
+      "type": "text",
+      "title": "Рецепты",
+      "anchor": "recipes",
+      "text": "Несовершенные, потрескавшиеся и повреждённые цветущие блоки можно получить, бросив в воду цветущий блок предыдущей ступени (или $(l:items_blocks_machines/quartz_block)Блок истинного кварца$(/l)) вместе с одним или несколькими предметами $(l:items_blocks_machines/certus_quartz_crystal_charged)Заряженный кристалл истинного кварца$(/l).$(br2)Безупречный цветущий блок нельзя скрафтить — только найти в мире."
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Бросить в воду",
+      "in0": "ae2:charged_certus_quartz_crystal",
+      "in1": "ae2:quartz_block",
+      "output": "ae2:damaged_budding_quartz",
+      "machine": "minecraft:water_bucket",
+      "text": "Бросьте предметы в воду вместе."
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Бросить в воду",
+      "in0": "ae2:charged_certus_quartz_crystal",
+      "in1": "ae2:damaged_budding_quartz",
+      "output": "ae2:chipped_budding_quartz",
+      "machine": "minecraft:water_bucket",
+      "text": "Бросьте предметы в воду вместе."
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Бросить в воду",
+      "in0": "ae2:charged_certus_quartz_crystal",
+      "in1": "ae2:chipped_budding_quartz",
+      "output": "ae2:flawed_budding_quartz",
+      "machine": "minecraft:water_bucket",
+      "text": "Бросьте предметы в воду вместе."
+    }
+  ]
+}

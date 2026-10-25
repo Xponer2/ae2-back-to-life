@@ -129,7 +129,7 @@ public final class AEItems {
     /// FLUIX TOOLS
     ///
 
-    public static final ItemDefinition<FluixSmithingTemplateItem> FLUIX_UPGRADE_SMITHING_TEMPLATE = item("Fluix Upgrade", AEItemIds.FLUIX_UPGRADE_SMITHING_TEMPLATE, p -> new FluixSmithingTemplateItem());
+    public static final ItemDefinition<FluixSmithingTemplateItem> FLUIX_UPGRADE_SMITHING_TEMPLATE = item("Fluix Upgrade", AEItemIds.FLUIX_UPGRADE_SMITHING_TEMPLATE, FluixSmithingTemplateItem::new);
     public static final ItemDefinition<FluixAxeItem> FLUIX_AXE = item("Fluix Axe", AEItemIds.FLUIX_AXE, FluixAxeItem::new);
     public static final ItemDefinition<FluixHoeItem> FLUIX_HOE = item("Fluix Hoe", AEItemIds.FLUIX_HOE, FluixHoeItem::new);
     public static final ItemDefinition<FluixSpadeItem> FLUIX_SHOVEL = item("Fluix Shovel", AEItemIds.FLUIX_SHOVEL, FluixSpadeItem::new);

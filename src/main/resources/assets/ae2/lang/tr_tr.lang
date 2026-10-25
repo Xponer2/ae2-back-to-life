@@ -273,6 +273,7 @@ death.attack.matter_cannon=%1$s, %2$s tarafından vuruldu
 death.attack.matter_cannon.item=%1$s, %2$s tarafından %3$s kullanılarak vuruldu
 entity.ae2.tiny_tnt_primed=Mini TNT Hazır
 entity.minecraft.villager.ae2.fluix_researcher=Fluix Araştırmacısı
+entity.Villager.fluix_researcher=Fluix Araştırmacısı
 exported_setting.ae2.exported_config_inv=Filtre
 exported_setting.ae2.exported_custom_name=Özel Ad
 exported_setting.ae2.exported_level_emitter_value=Seviye Verici Değeri

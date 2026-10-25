@@ -1,0 +1,32 @@
+{
+  "name": "Автоматический умножитель руды",
+  "icon": "ae2:guide",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "automation-of-ore-fortuning",
+      "text": "$(l:items_blocks_machines/annihilation_plane)МЭ плоскость уничтожения$(/l) можно зачаровать любыми чарами кирки, включая удачу, поэтому очевидное применение — зачаровать несколько плоскостей на удачу и заставить плоскости формирования ($(l:items_blocks_machines/formation_plane)МЭ плоскость формирования$(/l)) и плоскости уничтожения ($(l:items_blocks_machines/annihilation_plane)МЭ плоскость уничтожения$(/l)) быстро ставить и ломать руду."
+    },
+    {
+      "type": "text",
+      "text": "Шины импорта ($(l:items_blocks_machines/import_bus)Мэ шина импорта$(/l)) «разгоняются», поэтому постройка сначала работает медленно и выходит на полную скорость за несколько секунд.$(br2)$(#555)$(o)(3D-сцена недоступна в этой версии)$()"
+    },
+    {
+      "type": "text",
+      "title": "Настройки",
+      "anchor": "configurations",
+      "text": "$(li)В шине $(l:items_blocks_machines/import_bus)Мэ шина импорта$(/l) (1) стоит несколько карт $(l:items_blocks_machines/upgrade_cards)Карта ускорения$(/l). Чем больше плоскостей формирования в массиве, тем больше карт нужно, ведь с ними шина импорта забирает больше предметов за раз.$(li)Плоскости формирования ($(l:items_blocks_machines/formation_plane)МЭ плоскость формирования$(/l)) (2) в настройках по умолчанию.$(li)Плоскости уничтожения ($(l:items_blocks_machines/annihilation_plane)МЭ плоскость уничтожения$(/l)) (3) не имеют интерфейса и не"
+    },
+    {
+      "type": "text",
+      "anchor": "how-it-works",
+      "text": "настраиваются, но зачарованы на удачу.$(li)$(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l) (4) в настройках по умолчанию.$(br2)$(bold)Как это работает$()$(br2)1. $(l:items_blocks_machines/import_bus)Мэ шина импорта$(/l) в зелёной подсети забирает блоки из первой бочки в $(l:ae2_mechanics/import_export_storage)сетевое хранилище$(/l)$(br2)2. Единственное хранилище в зелёной подсети — $(l:items_blocks_machines/formation_plane)МЭ плоскость формирования$(/l), которая ставит блоки."
+    },
+    {
+      "type": "text",
+      "text": "3. $(l:items_blocks_machines/annihilation_plane)МЭ плоскость уничтожения$(/l) в оранжевой подсети ломает блоки с удачей.$(br2)4. $(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l) в оранжевой подсети складывает добытое во вторую бочку."
+    }
+  ]
+}

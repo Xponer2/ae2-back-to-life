@@ -20,7 +20,6 @@ package appeng.client.gui.implementations;
 
 import java.util.OptionalInt;
 
-import guideme.PageAnchor;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.entity.player.InventoryPlayer;
@@ -60,10 +59,10 @@ public class PriorityScreen extends AEBaseScreen<PriorityMenu> {
     }
 
     @Override
-    protected @Nullable PageAnchor getHelpTopic() {
+    protected @Nullable String getHelpTopic() {
         // This screen is used as a sub-screen for the UI of many machines. We try to jump to the right
         // subsection in those machines docs by linking to the "priority" anchor in those pages.
         var topic = super.getHelpTopic();
-        return topic != null && topic.anchor() == null ? new PageAnchor(topic.pageId(), "priority") : null;
+        return topic != null && topic.indexOf('#') < 0 ? topic + "#priority" : null;
     }
 }

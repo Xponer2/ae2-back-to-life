@@ -35,8 +35,8 @@ public class PatternSlot extends AppEngSlot {
     public PatternSlot(PatternContainerRecord machineInv, int machineInvSlot, int x, int y) {
         super(machineInv.getInventory(), machineInvSlot);
         this.machineInv = machineInv;
-        this.x = x;
-        this.y = y;
+        this.xPos = x;
+        this.yPos = y;
     }
 
     @Override

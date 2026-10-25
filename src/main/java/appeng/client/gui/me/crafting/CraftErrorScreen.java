@@ -45,12 +45,12 @@ public class CraftErrorScreen extends AESubScreen<CraftConfirmMenu, CraftConfirm
                     for (int i = 0; i < stats.size(); i++) {
                         var stat = stats.get(i);
                         if (i != 0) {
-                            suffix = suffix.appendSibling(", ");
+                            suffix = suffix.appendText(", ");
                         }
                         suffix = suffix.appendSibling(stat);
                     }
-                    suffix = suffix.appendSibling(")");
-                    text = text.appendSibling(" ").appendSibling(suffix);
+                    suffix = suffix.appendText(")");
+                    text = text.appendText(" ").appendSibling(suffix);
                 }
 
                 yield text;

@@ -1,0 +1,105 @@
+{
+  "name": "Квантовый мост",
+  "icon": "ae2:quantum_ring",
+  "category": "items_blocks_machines/network_infrastructure",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-quantum-network-bridge",
+      "text": "Квантовые сетевые мосты протягивают $(l:ae2_mechanics/me_network_connections)сеть$(/l) на бесконечные расстояния и даже между измерениями. Они передают всего 32 канала (независимо от того, как кабели подключены к граням), по сути работая как беспроводной $(l:items_blocks_machines/cables#dense-cable)плотный кабель$(/l)."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/quantum_bridge_demonstration.png"
+      ],
+      "border": true,
+      "text": ""
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " "
+          ],
+          [
+            "A",
+            "A",
+            "A",
+            " ",
+            "A",
+            "A",
+            "A"
+          ],
+          [
+            "A",
+            "B",
+            "A",
+            " ",
+            "A",
+            "B",
+            "A"
+          ],
+          [
+            "0",
+            "A",
+            "A",
+            " ",
+            "A",
+            "A",
+            "A"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:quantum_ring[formed=true]",
+          "B": "ae2:quantum_link[formed=true]",
+          "0": "ae2:quantum_ring[formed=true]"
+        }
+      },
+      "text": "$(#555)$(o)(3D-сцена недоступна в этой версии)$()"
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:quantum_ring",
+      "link_recipe": true,
+      "anchor": "quantum-ring",
+      "text": "Важно: $(bold)обе стороны должны быть прогружены$(), поэтому, если стороны далеко друг от друга, нужен $(l:items_blocks_machines/spatial_anchor)Пространственный якорь$(/l) или другой загрузчик чанков.$(br2)$(bold)Квантовое кольцо$()$(br2)Восемь таких блоков вокруг блока $(item)МЭ камера квантовой связи$() образуют квантовый"
+    },
+    {
+      "type": "text",
+      "text": "сетевой мост. Сетевые соединения принимают только 4 блока $(item)МЭ квантовое кольцо$(), примыкающие к блоку $(item)МЭ камера квантовой связи$(); 4 угловых блока к кабелям не подключаются."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/quantum_ring",
+      "anchor": "recipe",
+      "text": "$(bold)Камера квантовой связи$()"
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:quantum_link",
+      "link_recipe": true,
+      "text": "Один такой блок, окружённый кольцом из блоков $(item)МЭ квантовое кольцо$(), образует квантовый сетевой мост. Этот блок не подключается к кабелям и становится частью сети только тогда, когда мост собран полностью.$(br2)Инвентарь этого блока вмещает только одну $(l:items_blocks_machines/singularities)Сингулярность квантовой$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "$(l:items_blocks_machines/singularities)запутанности$(/l) и доступен для автоматизации."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/quantum_link",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

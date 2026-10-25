@@ -27,7 +27,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.level.block.RedStoneWireBlock;
+import net.minecraft.block.BlockRedstoneWire;
 
 import appeng.api.networking.IGridNodeListener;
 import appeng.api.parts.IPartItem;
@@ -129,13 +129,13 @@ public class RedstoneP2PTunnelPart extends P2PTunnelPart<RedstoneP2PTunnelPart> 
             final Block b = state.getBlock();
             if (b != null && !this.isOutput()) {
                 EnumFacing srcSide = this.getSide();
-                if (b instanceof RedStoneWireBlock) {
+                if (b instanceof BlockRedstoneWire) {
                     srcSide = EnumFacing.UP;
                 }
 
-                this.power = state.getSignal(this.getTileEntity().getWorld(), target, srcSide);
+                this.power = state.getWeakPower(this.getTileEntity().getWorld(), target, srcSide);
                 this.power = Math.max(this.power,
-                        state.getSignal(this.getTileEntity().getWorld(), target, srcSide));
+                        state.getStrongPower(this.getTileEntity().getWorld(), target, srcSide));
                 this.sendToOutput(this.power);
             } else {
                 this.sendToOutput(0);

@@ -22,15 +22,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -38,6 +36,7 @@ import net.minecraft.util.text.TextComponentString;
 import appeng.client.Point;
 import appeng.client.gui.GuiGraphics;
 import appeng.client.gui.Rect2i;
+import appeng.client.gui.compat.EditBox;
 import appeng.client.gui.style.Blitter;
 import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.style.ScreenStyle;
@@ -48,7 +47,7 @@ import appeng.client.gui.style.ScreenStyle;
  * <p>
  * The rendering does pay attention to the size of the '_' caret.
  */
-public class AETextField extends GuiTextField implements IResizableWidget, ITooltip {
+public class AETextField extends EditBox implements IResizableWidget, ITooltip {
     private static final Blitter BLITTER = Blitter.texture("guis/text_field.png", 128, 128);
 
     private static final int PADDING = 2;
@@ -113,7 +112,7 @@ public class AETextField extends GuiTextField implements IResizableWidget, ITool
 
         // Swallow all key presses except for focus escape when we're focused to prevent "e" from
         // closing the window instead of typing into the text field
-        return isFocused() && canConsumeInput() && keyCode != GLFW.GLFW_KEY_TAB && keyCode != GLFW.GLFW_KEY_ESCAPE;
+        return isFocused() && canConsumeInput() && keyCode != Keyboard.KEY_TAB && keyCode != Keyboard.KEY_ESCAPE;
     }
 
     @Override
@@ -197,10 +196,10 @@ public class AETextField extends GuiTextField implements IResizableWidget, ITool
         endX = MathHelper.clamp(endX, getX(), getX() + this.width);
         startX = MathHelper.clamp(startX, getX(), getX() + this.width);
 
-        RenderSystem.enableColorLogicOp();
-        RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
+        GlStateManager.enableColorLogic();
+        GlStateManager.colorLogicOp(GlStateManager.LogicOp.OR_REVERSE);
         guiGraphics.fill(startX, startY, endX, endY, this.selectionColor);
-        RenderSystem.disableColorLogicOp();
+        GlStateManager.disableColorLogic();
     }
 
     @Override

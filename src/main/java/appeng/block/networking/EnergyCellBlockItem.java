@@ -18,6 +18,7 @@
 
 package appeng.block.networking;
 
+import appeng.util.ItemTooltipContext;
 import appeng.util.ItemProperties;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public class EnergyCellBlockItem extends AEBaseBlockItem implements IAEItemPower
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addCheckedInformation(ItemStack stack, TooltipContext context, List<ITextComponent> lines,
+    public void addCheckedInformation(ItemStack stack, ItemTooltipContext context, List<ITextComponent> lines,
             ITooltipFlag advancedTooltips) {
         var storedEnergy = getAECurrentPower(stack);
         var maxEnergy = getAEMaxPower(stack);

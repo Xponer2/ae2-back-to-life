@@ -1,0 +1,7 @@
+{
+  "name": "Сетевая инфраструктура",
+  "description": "Сетевая инфраструктура Applied Energistics 2.",
+  "icon": "ae2:fluix_glass_cable",
+  "parent": "items_blocks_machines",
+  "sortnum": 1
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Материальная пушка",
+  "icon": "ae2:matter_cannon",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:matter_cannon",
+      "link_recipe": true,
+      "anchor": "the-matter-cannon",
+      "text": "Материальная пушка — переносной рельсотрон, стреляющий мелкими предметами, например шариками материи ($(l:items_blocks_machines/matter_ball)Шарик материи$(/l)) и металлическими самородками. Урон зависит от снаряда: «тяжёлые» предметы вроде золотых самородков (10 урона) бьют сильнее лёгких вроде шариков материи (2 урона). Базовый расход энергии — 1600"
+    },
+    {
+      "type": "text",
+      "text": "AE за выстрел.$(br2)Если параметр конфигурации «matterCannonBlockDamage» включён, пушка ломает блоки в зависимости от их твёрдости и урона снаряда.$(br2)Его энергию можно восполнить в устройстве $(l:items_blocks_machines/charger)Зарядник$(/l).$(br2)Материальные пушки работают как $(l:items_blocks_machines/storage_cells)ячейки хранения$(/l), и их магазин проще всего пополнить, вставив пушку в слот ячейки хранения"
+    },
+    {
+      "type": "text",
+      "text": "устройства $(l:items_blocks_machines/chest)МЭ сундук$(/l)"
+    },
+    {
+      "type": "text",
+      "title": "Улучшения",
+      "anchor": "upgrades",
+      "text": "Материальные пушки поддерживают следующие $(l:items_blocks_machines/upgrade_cards)улучшения$(/l), которые вставляются в устройстве $(l:items_blocks_machines/cell_workbench)Верстак для ячеек$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Карта размытости$(/l) позволяет размечать ячейку по уровню повреждения и/или игнорировать NBT предмета$(li)$(l:items_blocks_machines/upgrade_cards)Карта-инвертер$(/l) превращает белый список фильтра в чёрный$(li)$(l:items_blocks_machines/upgrade_cards)Карта ускорения$(/l) увеличивает расход энергии на выстрел, делая выстрел мощнее."
+    },
+    {
+      "type": "text",
+      "text": "$(li)$(l:items_blocks_machines/upgrade_cards)Пустотная карта$(/l) уничтожает вставляемые предметы, если ячейка заполнена. Не забудьте её разметить!$(li)$(l:items_blocks_machines/upgrade_cards)Энергетическая карта$(/l) увеличивает ёмкость батареи"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/matter_cannon",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

@@ -47,6 +47,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.client.render.PoseStack;
 import appeng.client.render.TooltipImages;
+import appeng.hooks.GuiGraphicsHooks;
 
 /**
  * Stand-in for the 1.21 GuiGraphics on top of the 1.12.2 immediate mode renderer. Everything is drawn right away with
@@ -163,33 +164,36 @@ public class GuiGraphics {
     // ------------------------------------------------------------------------------------------ items
 
     public void renderItem(ItemStack stack, int x, int y) {
-        renderItem(null, stack, x, y, 0);
+        renderItem(null, null, stack, x, y, 0, 0);
     }
 
     public void renderItem(ItemStack stack, int x, int y, int seed) {
-        renderItem(null, stack, x, y, 0);
+        renderItem(null, null, stack, x, y, seed, 0);
     }
 
     public void renderItem(ItemStack stack, int x, int y, int seed, int guiOffset) {
-        renderItem(null, stack, x, y, guiOffset);
+        renderItem(null, null, stack, x, y, seed, guiOffset);
     }
 
     public void renderFakeItem(ItemStack stack, int x, int y) {
-        renderItem(null, stack, x, y, 0);
+        renderItem(null, null, stack, x, y, 0, 0);
     }
 
     public void renderItem(@Nullable EntityLivingBase entity, @Nullable World level, ItemStack stack, int x, int y,
             int seed) {
-        renderItem(entity, stack, x, y, 0);
+        renderItem(entity, level, stack, x, y, seed, 0);
     }
 
     public void renderItem(@Nullable EntityLivingBase entity, @Nullable World level, ItemStack stack, int x, int y,
             int seed, int guiOffset) {
-        renderItem(entity, stack, x, y, guiOffset);
-    }
-
-    private void renderItem(@Nullable EntityLivingBase entity, ItemStack stack, int x, int y, int guiOffset) {
         if (stack.isEmpty()) {
+            return;
+        }
+        if (level == null) {
+            level = minecraft.world;
+        }
+        // Wrapped generic stacks and encoded patterns (while shift is held) are drawn differently
+        if (GuiGraphicsHooks.onRenderGuiItem(this, entity, level, stack, x, y, seed, guiOffset)) {
             return;
         }
         var renderItem = minecraft.getRenderItem();

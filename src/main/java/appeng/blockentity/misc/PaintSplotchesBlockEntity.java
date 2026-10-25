@@ -18,6 +18,7 @@
 
 package appeng.blockentity.misc;
 
+import net.minecraft.block.state.BlockFaceShape;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -126,9 +127,9 @@ public class PaintSplotchesBlockEntity extends AEBaseBlockEntity {
     }
 
     public boolean isSideValid(EnumFacing side) {
-        final BlockPos p = this.worldPosition.offset(side);
-        final IBlockState blk = this.level.getBlockState(p);
-        return blk.isFaceSturdy(level, p, side.getOpposite());
+        final BlockPos p = this.pos.offset(side);
+        final IBlockState blk = this.world.getBlockState(p);
+        return blk.getBlockFaceShape(world, p, side.getOpposite()) == BlockFaceShape.SOLID;
     }
 
     private void removeSide(EnumFacing side) {
@@ -144,7 +145,7 @@ public class PaintSplotchesBlockEntity extends AEBaseBlockEntity {
         }
 
         if (this.dots == null) {
-            this.level.removeBlock(this.worldPosition, false);
+            this.world.setBlockToAir(this.pos);
         } else {
             var lumenCount = 0;
             for (Splotch dot : dots) {
@@ -155,7 +156,7 @@ public class PaintSplotchesBlockEntity extends AEBaseBlockEntity {
                     }
                 }
             }
-            this.level.setBlockState(getPos(),
+            this.world.setBlockState(getPos(),
                     getBlockState().withProperty(PaintSplotchesBlock.LIGHT_LEVEL, lumenCount));
         }
     }
@@ -175,9 +176,9 @@ public class PaintSplotchesBlockEntity extends AEBaseBlockEntity {
     }
 
     public void addBlot(AEColor color, boolean lit, EnumFacing side, Vec3d hitVec) {
-        var p = this.worldPosition.offset(side);
-        var blk = this.level.getBlockState(p);
-        if (blk.isFaceSturdy(this.level, p, side.getOpposite())) {
+        var p = this.pos.offset(side);
+        var blk = this.world.getBlockState(p);
+        if (blk.getBlockFaceShape(this.world, p, side.getOpposite()) == BlockFaceShape.SOLID) {
             if (this.dots == null) {
                 this.dots = new ArrayList<>();
             }

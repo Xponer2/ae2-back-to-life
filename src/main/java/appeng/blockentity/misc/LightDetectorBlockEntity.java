@@ -49,11 +49,11 @@ public class LightDetectorBlockEntity extends AEBaseBlockEntity implements Commo
     }
 
     public void updateLight() {
-        final int val = this.level.getMaxLocalRawBrightness(this.worldPosition);
+        final int val = this.world.getLightFromNeighbors(this.pos);
 
         if (this.lastLight != val) {
             this.lastLight = val;
-            Platform.notifyBlocksOfNeighbors(this.level, this.worldPosition);
+            Platform.notifyBlocksOfNeighbors(this.world, this.pos);
         }
     }
 }

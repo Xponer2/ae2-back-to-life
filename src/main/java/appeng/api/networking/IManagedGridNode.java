@@ -23,6 +23,7 @@
 
 package appeng.api.networking;
 
+import net.minecraft.item.Item;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -138,6 +139,10 @@ public interface IManagedGridNode {
     /**
      * Shortcut for {@link #setVisualRepresentation(AEItemKey)} based on an {@link ItemStack}.
      */
+    default IManagedGridNode setVisualRepresentation(Item visualRepresentation) {
+        return setVisualRepresentation(new ItemStack(visualRepresentation));
+    }
+
     default IManagedGridNode setVisualRepresentation(ItemStack visualRepresentation) {
         return setVisualRepresentation(AEItemKey.of(visualRepresentation));
     }

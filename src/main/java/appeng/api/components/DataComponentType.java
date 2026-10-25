@@ -172,6 +172,29 @@ public final class DataComponentType<T> {
         return key.get(this);
     }
 
+    /**
+     * Same as {@code map.get(this)}, for code written as {@code TYPE.get(components)}.
+     */
+    @Nullable
+    public T get(DataComponentMap map) {
+        return map.get(this);
+    }
+
+    public T getOrDefault(DataComponentMap map, T defaultValue) {
+        return map.getOrDefault(this, defaultValue);
+    }
+
+    public boolean has(DataComponentMap map) {
+        return map.has(this);
+    }
+
+    /**
+     * Same as {@code builder.set(this, value)}, for code written as {@code TYPE.set(builder, value)}.
+     */
+    public void set(DataComponentMap.Builder builder, @Nullable T value) {
+        builder.set(this, value);
+    }
+
     public T getOrDefault(ItemStack stack, T defaultValue) {
         var value = get(stack);
         return value != null ? value : defaultValue;

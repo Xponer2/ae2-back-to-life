@@ -18,6 +18,8 @@
 
 package appeng.block.spatial;
 
+import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
 import appeng.block.BlockProperties;
 
 import appeng.core.CreativeTabOutput;
@@ -29,7 +31,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.level.block.RenderShape;
+import appeng.block.RenderShape;
 
 import appeng.block.AEBaseBlock;
 import appeng.util.shape.CollisionContext;
@@ -78,13 +80,9 @@ public class MatrixFrameBlock extends AEBaseBlock {
         // Don't explode.
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
-    public boolean propagatesSkylightDown(IBlockState state, IBlockAccess reader, BlockPos pos) {
-        return true;
-    }
-
-    @Override
-    public float getShadeBrightness(IBlockState state, IBlockAccess level, BlockPos pos) {
+    public float getAmbientOcclusionLightValue(IBlockState state) {
         return 1.0f;
     }
 

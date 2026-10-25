@@ -18,8 +18,6 @@
 
 package appeng.decorative.solid;
 
-import appeng.block.BlockProperties;
-
 import java.util.Random;
 
 import net.minecraft.block.state.IBlockState;
@@ -28,6 +26,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import appeng.block.BlockProperties;
+import appeng.client.render.effects.AEParticles;
 import appeng.client.render.effects.ParticleTypes;
 import appeng.core.AEConfig;
 import appeng.core.AppEngClient;
@@ -50,9 +50,8 @@ public class QuartzLampBlock extends QuartzGlassBlock {
             final double d1 = (r.nextFloat() - 0.5F) * 0.96D;
             final double d2 = (r.nextFloat() - 0.5F) * 0.96D;
 
-            level.addParticle(ParticleTypes.VIBRANT, 0.5 + pos.getX() + d0, 0.5 + pos.getY() + d1,
-                    0.5 + pos.getZ() + d2, 0,
-                    0, 0);
+            AEParticles.add(ParticleTypes.VIBRANT, 0.5 + pos.getX() + d0, 0.5 + pos.getY() + d1,
+                    0.5 + pos.getZ() + d2, 0, 0, 0);
         }
     }
 }

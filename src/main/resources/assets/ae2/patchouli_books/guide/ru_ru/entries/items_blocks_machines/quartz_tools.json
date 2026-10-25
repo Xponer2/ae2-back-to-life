@@ -1,0 +1,82 @@
+{
+  "name": "Кварцевые инструменты",
+  "icon": "ae2:certus_quartz_pickaxe",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "quartz-tools",
+      "text": "Кварцевые инструменты по свойствам такие же, как железные: тот же урон, прочность, скорость добычи и т. д. Бывают из кварца Нижнего мира и из $(l:items_blocks_machines/fluix_crystal)истинного кварца$(/l)."
+    },
+    {
+      "type": "ae2:item_row_5",
+      "item0": "ae2:certus_quartz_axe",
+      "item1": "ae2:certus_quartz_hoe",
+      "item2": "ae2:certus_quartz_shovel",
+      "item3": "ae2:certus_quartz_pickaxe",
+      "item4": "ae2:certus_quartz_sword",
+      "text": ""
+    },
+    {
+      "type": "ae2:item_row_5",
+      "item0": "ae2:nether_quartz_axe",
+      "item1": "ae2:nether_quartz_hoe",
+      "item2": "ae2:nether_quartz_shovel",
+      "item3": "ae2:nether_quartz_pickaxe",
+      "item4": "ae2:nether_quartz_sword",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/certus_quartz_axe",
+      "anchor": "recipes",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/certus_quartz_hoe",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/certus_quartz_spade",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/certus_quartz_pickaxe",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/certus_quartz_sword",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/nether_quartz_axe",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/nether_quartz_hoe",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/nether_quartz_spade",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/nether_quartz_pickaxe",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/nether_quartz_sword",
+      "text": ""
+    }
+  ]
+}

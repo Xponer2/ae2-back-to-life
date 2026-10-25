@@ -22,8 +22,8 @@ import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.components.Button.OnPress;
+import appeng.client.gui.compat.Button;
+import appeng.client.gui.compat.Button.OnPress;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 
@@ -31,7 +31,7 @@ import appeng.client.gui.GuiGraphics;
 import appeng.client.gui.Icon;
 import appeng.client.gui.Rect2i;
 
-public class TabButton extends GuiButton implements ITooltip {
+public class TabButton extends Button implements ITooltip {
     private Style style = Style.BOX;
     private Icon icon = null;
     private ItemStack item;
@@ -47,7 +47,7 @@ public class TabButton extends GuiButton implements ITooltip {
     }
 
     public TabButton(Icon ico, ITextComponent message, OnPress onPress) {
-        super(0, 0, 22, 22, message, onPress, GuiButton.DEFAULT_NARRATION);
+        super(0, 0, 22, 22, message, onPress, Button.DEFAULT_NARRATION);
 
         this.icon = ico;
     }
@@ -59,7 +59,7 @@ public class TabButton extends GuiButton implements ITooltip {
      * @param message mouse over message
      */
     public TabButton(ItemStack ico, ITextComponent message, OnPress onPress) {
-        super(0, 0, 22, 22, message, onPress, GuiButton.DEFAULT_NARRATION);
+        super(0, 0, 22, 22, message, onPress, Button.DEFAULT_NARRATION);
         this.item = ico;
     }
 

@@ -210,7 +210,7 @@ public class ConversionMonitorPart extends AbstractMonitorPart implements ISubMe
                     new PlayerSource(player, this));
             if (retrieved != 0) {
                 var newItems = itemKey.toStack((int) retrieved);
-                if (!player.inventory.add(newItems)) {
+                if (!player.inventory.addItemStackToInventory(newItems)) {
                     player.dropItem(newItems, false);
                 }
 
@@ -234,6 +234,6 @@ public class ConversionMonitorPart extends AbstractMonitorPart implements ISubMe
 
     @Override
     public ItemStack getMainMenuIcon() {
-        return new ItemStack(getPartItem());
+        return new ItemStack(getPartItem().asItem());
     }
 }

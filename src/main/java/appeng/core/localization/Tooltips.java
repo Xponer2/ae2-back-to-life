@@ -12,11 +12,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.platform.InputConstants;
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
@@ -44,13 +42,18 @@ public final class Tooltips {
 
     public static final TextFormatting MUTED_COLOR = TextFormatting.DARK_GRAY;
 
-    public static final Style NORMAL_TOOLTIP_TEXT = Style.EMPTY.withColor(TextFormatting.GRAY).withItalic(false);
-    public static final Style QUOTE_TEXT = NORMAL_TOOLTIP_TEXT.withItalic(true);
-    public static final Style NUMBER_TEXT = Style.EMPTY.withColor(TextColor.fromRgb(0x886eff)).withItalic(false);
-    public static final Style UNIT_TEXT = Style.EMPTY.withColor(TextColor.fromRgb(0xffde7d)).withItalic(false);
+    // LWJGL 2 mouse button numbers (1.21 InputConstants)
+    private static final int MOUSE_BUTTON_LEFT = 0;
+    private static final int MOUSE_BUTTON_RIGHT = 1;
+    private static final int MOUSE_BUTTON_MIDDLE = 2;
 
-    public static final Style RED = Style.EMPTY.withColor(TextFormatting.RED);
-    public static final Style GREEN = Style.EMPTY.withColor(TextFormatting.GREEN);
+    public static final Style NORMAL_TOOLTIP_TEXT = TextUtil.style(TextFormatting.GRAY);
+    public static final Style QUOTE_TEXT = TextUtil.style(TextFormatting.GRAY, true);
+    public static final Style NUMBER_TEXT = TextUtil.style(0x886eff);
+    public static final Style UNIT_TEXT = TextUtil.style(0xffde7d);
+
+    public static final Style RED = TextUtil.style(TextFormatting.RED);
+    public static final Style GREEN = TextUtil.style(TextFormatting.GREEN);
 
     private Tooltips() {
     }
@@ -102,18 +105,19 @@ public final class Tooltips {
         if (components.size() == 2) {
             return components.get(0)
                     .createCopy()
-                    .appendSibling(" ")
-                    .append(lastJoiner.text())
-                    .append(" ")
-                    .append(components.get(1));
+                    .appendText(" ")
+                    .appendSibling(lastJoiner.text())
+                    .appendText(" ")
+                    .appendSibling(components.get(1));
         }
 
         var current = components.get(0);
         for (int i = 1; i < components.size(); i++) {
             if (i + 1 < components.size()) {
-                current = current.createCopy().appendSibling(", ").appendSibling(components.get(i));
+                current = current.createCopy().appendText(", ").appendSibling(components.get(i));
             } else {
-                current = current.createCopy().appendSibling(", ").appendSibling(lastJoiner.text()).appendSibling(" ").appendSibling(components.get(i));
+                current = current.createCopy().appendText(", ").appendSibling(lastJoiner.text()).appendText(" ")
+                        .appendSibling(components.get(i));
             }
         }
 
@@ -123,24 +127,26 @@ public final class Tooltips {
     public static List<ITextComponent> getEmptyingTooltip(ButtonToolTips baseAction, ItemStack carried,
             EmptyingAction emptyingAction) {
         return ImmutableList.of(
-                baseAction.text(
-                        getMouseButtonText(InputConstants.MOUSE_BUTTON_LEFT),
-                        TextUtil.withStyle(Platform.getHoverName(carried).createCopy(), NORMAL_TOOLTIP_TEXT)).withStyle(MUTED_COLOR),
-                baseAction.text(
-                        getMouseButtonText(InputConstants.MOUSE_BUTTON_RIGHT),
-TextUtil.withStyle(                        TextUtil.withStyle(emptyingAction.description().createCopy(), NORMAL_TOOLTIP_TEXT)), MUTED_COLOR));
+                TextUtil.withStyle(baseAction.text(
+                        getMouseButtonText(MOUSE_BUTTON_LEFT),
+                        TextUtil.withStyle(Platform.getHoverName(carried).createCopy(), NORMAL_TOOLTIP_TEXT)),
+                        MUTED_COLOR),
+                TextUtil.withStyle(baseAction.text(
+                        getMouseButtonText(MOUSE_BUTTON_RIGHT),
+                        TextUtil.withStyle(emptyingAction.description().createCopy(), NORMAL_TOOLTIP_TEXT)),
+                        MUTED_COLOR));
     }
 
     public static ITextComponent getSetAmountTooltip() {
-        return ButtonToolTips.ModifyAmountAction.text(Tooltips.getMouseButtonText(InputConstants.MOUSE_BUTTON_MIDDLE))
-                .withStyle(MUTED_COLOR);
+        return TextUtil.withStyle(
+                ButtonToolTips.ModifyAmountAction.text(Tooltips.getMouseButtonText(MOUSE_BUTTON_MIDDLE)), MUTED_COLOR);
     }
 
     public static ITextComponent getMouseButtonText(int button) {
         return switch (button) {
-            case InputConstants.MOUSE_BUTTON_LEFT -> ButtonToolTips.LeftClick.text();
-            case InputConstants.MOUSE_BUTTON_RIGHT -> ButtonToolTips.RightClick.text();
-            case InputConstants.MOUSE_BUTTON_MIDDLE -> ButtonToolTips.MiddleClick.text();
+            case MOUSE_BUTTON_LEFT -> ButtonToolTips.LeftClick.text();
+            case MOUSE_BUTTON_RIGHT -> ButtonToolTips.RightClick.text();
+            case MOUSE_BUTTON_MIDDLE -> ButtonToolTips.MiddleClick.text();
             default -> ButtonToolTips.MouseButton.text(button);
         };
     }
@@ -157,7 +163,8 @@ TextUtil.withStyle(                        TextUtil.withStyle(emptyingAction.des
                 || what.getUnitSymbol() != null
                 // Damaged items always get their amount shown in the tooltip because
                 // the amount is sometimes hard to read superimposed on the damage bar
-                || what instanceof AEItemKey itemKey && itemKey.getReadOnlyStack().isBarVisible();
+                || what instanceof AEItemKey itemKey
+                        && itemKey.getItem().showDurabilityBar(itemKey.getReadOnlyStack());
     }
 
     public static ITextComponent getAmountTooltip(ButtonToolTips baseText, GenericStack stack) {
@@ -266,16 +273,16 @@ TextUtil.withStyle(                        TextUtil.withStyle(emptyingAction.des
         ITextComponent durationStr = new TextComponentString("");
         var hours = TimeUnit.HOURS.convert(seconds, TimeUnit.SECONDS);
         if (hours > 0) {
-            durationStr.appendSibling(Long.toString(hours)).appendSibling("h");
+            durationStr.appendText(hours + "h");
             seconds -= hours * 60 * 60;
         }
         var minutes = TimeUnit.MINUTES.convert(seconds, TimeUnit.SECONDS);
         if (minutes > 0) {
-            durationStr.appendSibling(Long.toString(minutes)).appendSibling("m");
+            durationStr.appendText(minutes + "m");
             seconds -= minutes * 60;
         }
         if (seconds > 0) {
-            durationStr.appendSibling(Long.toString(seconds)).appendSibling("s");
+            durationStr.appendText(seconds + "s");
         }
 
         return TextUtil.withStyle(durationStr, NUMBER_TEXT);
@@ -424,7 +431,7 @@ TextUtil.withStyle(                        TextUtil.withStyle(emptyingAction.des
         int g = (int) (255d * (Math.max(0, Math.min(2 * p, 1))));
         int rgb = 0xFF000000 + (r << 16) + (g << 8);
 
-        return Style.EMPTY.withItalic(false).withColor(TextColor.fromRgb(rgb));
+        return TextUtil.style(rgb);
     }
 
     public static ITextComponent ofPercent(double percent) {
@@ -471,9 +478,11 @@ TextUtil.withStyle(                        TextUtil.withStyle(emptyingAction.des
 
     private static ITextComponent ofNumber(MaxedAmount number) {
         boolean numberUnit = !number.digit().equals("0");
-        return TextUtil.withStyle(new TextComponentString(number.digit() + (numberUnit ? number.unit() : "")), NUMBER_TEXT)
-                .append(TextUtil.withStyle(new TextComponentString("/"), NORMAL_TOOLTIP_TEXT))
-                .append(number.maxDigit() + number.unit()).withStyle(NUMBER_TEXT);
+        return TextUtil.withStyle(new TextComponentString(number.digit() + (numberUnit ? number.unit() : "")),
+                NUMBER_TEXT)
+                .appendSibling(TextUtil.withStyle(new TextComponentString("/"), NORMAL_TOOLTIP_TEXT))
+                .appendSibling(TextUtil.withStyle(new TextComponentString(number.maxDigit() + number.unit()),
+                        NUMBER_TEXT));
     }
 
     public static ITextComponent of(ITextComponent... components) {

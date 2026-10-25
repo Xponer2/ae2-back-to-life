@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.components.AbstractWidget;
+import appeng.client.gui.compat.Button;
+import appeng.client.gui.compat.AbstractWidget;
 
 import appeng.client.Point;
 import appeng.client.gui.AEBaseScreen;
@@ -40,7 +40,7 @@ public class VerticalButtonBar implements ICompositeWidget {
     private static final int VERTICAL_SPACING = 6;
     // The margin between the right side of the buttons and the GUI
     private static final int MARGIN = 2;
-    private final List<GuiButton> buttons = new ArrayList<>();
+    private final List<Button> buttons = new ArrayList<>();
     // The origin of the last initialized screen in window coordinates
     private Point screenOrigin = Point.ZERO;
     // This bounding rectangle relative to the screens origin
@@ -50,7 +50,7 @@ public class VerticalButtonBar implements ICompositeWidget {
     public VerticalButtonBar() {
     }
 
-    public void add(GuiButton button) {
+    public void add(Button button) {
         buttons.add(button);
     }
 
@@ -78,7 +78,7 @@ public class VerticalButtonBar implements ICompositeWidget {
         int maxWidth = 0;
 
         // Align the button's right edge with the UI and account for margin
-        for (GuiButton button : buttons) {
+        for (Button button : buttons) {
             if (!button.visible) {
                 continue;
             }

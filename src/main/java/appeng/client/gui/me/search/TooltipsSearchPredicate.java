@@ -2,7 +2,6 @@ package appeng.client.gui.me.search;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 import net.minecraft.util.text.TextFormatting;
@@ -14,6 +13,8 @@ import appeng.menu.me.common.GridInventoryEntry;
 import appeng.util.Platform;
 
 final class TooltipsSearchPredicate implements Predicate<GridInventoryEntry> {
+    // Starts a formatting code in strings
+    private static final char FORMATTING_CODE = '§';
     private final String tooltip;
     private final Map<AEKey, String> tooltipCache;
 
@@ -45,8 +46,8 @@ final class TooltipsSearchPredicate implements Predicate<GridInventoryEntry> {
                 if (i > 0 && i >= lines.size() - 1 && !AEConfig.instance().isSearchModNameInTooltips()) {
                     var text = line.getUnformattedText();
                     boolean hadFormatting = false;
-                    if (text.indexOf(TextFormatting.PREFIX_CODE) != -1) {
-                        text = TextFormatting.stripFormatting(text);
+                    if (text.indexOf(FORMATTING_CODE) != -1) {
+                        text = TextFormatting.getTextWithoutFormattingCodes(text);
                         hadFormatting = true;
                     } else {
                         hadFormatting = !line.getStyle().isEmpty();
@@ -59,13 +60,11 @@ final class TooltipsSearchPredicate implements Predicate<GridInventoryEntry> {
                     if (i > 0) {
                         tooltipText.append('\n');
                     }
-                    line.visit(text -> {
-                        if (text.indexOf(TextFormatting.PREFIX_CODE) != -1) {
-                            text = TextFormatting.stripFormatting(text);
-                        }
-                        tooltipText.append(text);
-                        return Optional.empty();
-                    });
+                    var text = line.getUnformattedText();
+                    if (text.indexOf(FORMATTING_CODE) != -1) {
+                        text = TextFormatting.getTextWithoutFormattingCodes(text);
+                    }
+                    tooltipText.append(text);
                 }
             }
 

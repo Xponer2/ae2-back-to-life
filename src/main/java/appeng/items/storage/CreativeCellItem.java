@@ -46,6 +46,7 @@ import appeng.items.AEBaseItem;
 import appeng.items.contents.CellConfig;
 import appeng.me.cells.CreativeCellHandler;
 import appeng.util.ConfigInventory;
+import appeng.util.ItemTooltipContext;
 
 public class CreativeCellItem extends AEBaseItem implements ICellWorkbenchItem {
     public CreativeCellItem(ItemProperties props) {
@@ -68,14 +69,14 @@ public class CreativeCellItem extends AEBaseItem implements ICellWorkbenchItem {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<ITextComponent> lines,
+    public void appendHoverText(ItemStack stack, ItemTooltipContext context, List<ITextComponent> lines,
             ITooltipFlag advancedTooltips) {
         var inventory = StorageCells.getCellInventory(stack, null);
 
         if (inventory != null) {
             var cc = getConfigInventory(stack);
             if (!cc.isEmpty()) {
-                if (GuiScreen.hasShiftDown()) {
+                if (GuiScreen.isShiftKeyDown()) {
                     for (var key : cc.keySet()) {
                         lines.add(Tooltips.of(AEKeyRendering.getDisplayName(key)));
                     }
@@ -95,7 +96,7 @@ public class CreativeCellItem extends AEBaseItem implements ICellWorkbenchItem {
         var cell = AEItems.CREATIVE_CELL.stack();
         var configInv = AEItems.CREATIVE_CELL.get().getConfigInventory(cell);
         for (int i = 0; i < items.length; i++) {
-            configInv.setStack(i, GenericStack.fromItemStack(new ItemStack(items[i])));
+            configInv.setStack(i, GenericStack.fromItemStack(new ItemStack(items[i].asItem())));
         }
         return cell;
     }

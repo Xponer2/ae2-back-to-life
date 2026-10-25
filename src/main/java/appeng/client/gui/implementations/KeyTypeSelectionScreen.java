@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractWidget;
+import appeng.client.gui.compat.AbstractWidget;
 import net.minecraft.util.text.ITextComponent;
 
 import appeng.api.stacks.AEKeyType;
@@ -107,7 +107,7 @@ public class KeyTypeSelectionScreen<C extends AEBaseMenu & KeyTypeSelectionMenu,
                 var text = keyType.getDescription();
 
                 // Dynamic width based on text size
-                int textboxWidth = 24 + Minecraft.getMinecraft().fontRenderer.width(text);
+                int textboxWidth = 24 + Minecraft.getMinecraft().fontRenderer.getStringWidth(text.getFormattedText());
 
                 var checkbox = new AECheckbox(xPos, yPos, textboxWidth, AECheckbox.SIZE, screen.getStyle(),
                         keyType.getDescription());

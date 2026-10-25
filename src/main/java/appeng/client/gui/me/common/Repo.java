@@ -33,6 +33,7 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
@@ -414,8 +415,12 @@ public class Repo implements IClientRepo {
     @Override
     public List<GridInventoryEntry> getByIngredient(Ingredient ingredient) {
         var entries = new ArrayList<GridInventoryEntry>();
-        for (int i = 0; i < ingredient.getStackingIds().size(); i++) {
-            var itemId = ingredient.getStackingIds().getInt(i);
+        // Packed stacks are (item id << 16 | meta), several of them can be variants of the same item
+        var itemIds = new IntLinkedOpenHashSet();
+        for (int packed : ingredient.getValidItemStacksPacked()) {
+            itemIds.add(packed >>> 16);
+        }
+        for (int itemId : itemIds) {
             for (var entry : getByItemId(itemId)) {
                 if (((AEItemKey) entry.getWhat()).matches(ingredient)) {
                     entries.add(entry);

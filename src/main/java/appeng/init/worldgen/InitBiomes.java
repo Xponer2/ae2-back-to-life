@@ -18,13 +18,10 @@
 
 package appeng.init.worldgen;
 
-import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.level.biome.BiomeGenerationSettings;
-import net.minecraft.world.level.biome.BiomeSpecialEffects;
-import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraftforge.registries.IForgeRegistry;
 
-import appeng.api.util.Registries;
+import appeng.spatial.SpatialStorageBiome;
 import appeng.spatial.SpatialStorageDimensionIds;
 
 public final class InitBiomes {
@@ -32,20 +29,8 @@ public final class InitBiomes {
     private InitBiomes() {
     }
 
-    public static void init(BootstrapContext<Biome> context) {
-        var placedFeatures = context.lookup(Registries.PLACED_FEATURE);
-        var configuredCarvers = context.lookup(Registries.CONFIGURED_CARVER);
-
-        Biome biome = new Biome.BiomeBuilder()
-                .generationSettings(new BiomeGenerationSettings.Builder(placedFeatures, configuredCarvers).build())
-                .hasPrecipitation(false)
-                // Copied from the vanilla void biome
-                .temperature(0.5F).downfall(0.5F)
-                .specialEffects(new BiomeSpecialEffects.Builder().waterColor(4159204).waterFogColor(329011).fogColor(0)
-                        .skyColor(0x111111).build())
-                .mobSpawnSettings(new MobSpawnSettings.Builder().creatureGenerationProbability(0).build()).build();
-
-        context.register(SpatialStorageDimensionIds.BIOME_KEY, biome);
+    public static void init(IForgeRegistry<Biome> registry) {
+        // Not added to the BiomeManager: it only exists in the spatial storage dimension
+        registry.register(new SpatialStorageBiome().setRegistryName(SpatialStorageDimensionIds.BIOME_KEY));
     }
-
 }

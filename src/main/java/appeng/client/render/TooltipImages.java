@@ -14,18 +14,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.client.gui.GuiGraphics;
+import appeng.items.AEBaseItem;
 import appeng.items.storage.StorageCellTooltipComponent;
 
 /**
@@ -97,6 +100,45 @@ public final class TooltipImages {
         }
         pending = image;
         return result;
+    }
+
+    /**
+     * @return The tooltip data of the item (1.21 ItemStack.getTooltipImage), empty for items without one.
+     */
+    public static Optional<?> getTooltipImage(ItemStack stack) {
+        if (!stack.isEmpty() && stack.getItem() instanceof AEBaseItem item) {
+            return item.getTooltipImage(stack);
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Item tooltips rendered by the game itself (inventory screens, other mods) also get the image of the item.
+     */
+    @SubscribeEvent
+    public static void onTooltipPre(RenderTooltipEvent.Pre event) {
+        if (pending != null) {
+            // Prepared by GuiGraphics#renderTooltip
+            return;
+        }
+        var image = create(getTooltipImage(event.getStack()).orElse(null));
+        if (image == null) {
+            return;
+        }
+        var lines = event.getLines();
+        for (var line : lines) {
+            if (line.startsWith(MARKER)) {
+                return;
+            }
+        }
+        var withImage = addPlaceholders(lines, image);
+        try {
+            lines.clear();
+            lines.addAll(withImage);
+        } catch (UnsupportedOperationException e) {
+            // A caller passed fixed lines, show the tooltip without the image
+            pending = null;
+        }
     }
 
     @SubscribeEvent

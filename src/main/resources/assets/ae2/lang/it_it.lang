@@ -276,6 +276,7 @@ death.attack.matter_cannon=%1$s è stato colpito da %2$s
 death.attack.matter_cannon.item=%1$s è stato colpito da %2$s usando %3$s
 entity.ae2.tiny_tnt_primed=Tiny TNT Primed
 entity.minecraft.villager.ae2.fluix_researcher=Ricercatore Fluix
+entity.Villager.fluix_researcher=Ricercatore Fluix
 exported_setting.ae2.exported_config_inv=Filtro
 exported_setting.ae2.exported_custom_name=Nome Personalizzato
 exported_setting.ae2.exported_level_emitter_value=Valore Emettitore Di Livello

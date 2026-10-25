@@ -1,0 +1,72 @@
+{
+  "name": "Беспроводные терминалы",
+  "icon": "ae2:wireless_crafting_terminal",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "wireless-terminals",
+      "text": "Беспроводные терминалы — переносные версии обычных проводных $(l:items_blocks_machines/terminals)терминалов$(/l). У них точно такой же интерфейс, как у проводных, только вместо слотов для ячеек просмотра ($(l:items_blocks_machines/view_cell)Ячейка просмотра$(/l)) есть слоты для $(l:items_blocks_machines/upgrade_cards)карт улучшений$(/l)$(br2)Чтобы привязать терминал к сети, вставьте его в правый верхний слот устройства $(l:items_blocks_machines/wireless_access_point)МЭ беспроводная точка доступа$(/l), подключённого к этой сети."
+    },
+    {
+      "type": "ae2:item_row_2",
+      "item0": "ae2:wireless_terminal",
+      "item1": "ae2:wireless_crafting_terminal",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "anchor": "wireless-terminal",
+      "text": "(Это слот с изображением беспроводного терминала и стрелкой под ним.)$(br2)Для работы они должны находиться в зоне действия устройства $(l:items_blocks_machines/wireless_access_point)МЭ беспроводная точка доступа$(/l).$(br2)Их энергию можно восполнить в устройстве $(l:items_blocks_machines/charger)Зарядник$(/l).$(br2)$(bold)Беспроводной терминал$()"
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:wireless_terminal",
+      "link_recipe": true,
+      "text": "Ваш базовый терминал, теперь переносной! Просматривайте содержимое $(l:ae2_mechanics/import_export_storage)сетевого хранилища$(/l), получайте к нему доступ и заказывайте предметы у системы $(l:ae2_mechanics/autocrafting)автокрафта$(/l) откуда угодно в зоне действия устройства $(l:items_blocks_machines/wireless_access_point)МЭ беспроводная точка доступа$(/l)."
+    },
+    {
+      "type": "text",
+      "title": "Интерфейс",
+      "anchor": "the-ui",
+      "text": "См. $(l:items_blocks_machines/terminals)терминалы$(/l)"
+    },
+    {
+      "type": "text",
+      "title": "Улучшения",
+      "anchor": "upgrades",
+      "text": "Беспроводной терминал поддерживает следующие $(l:items_blocks_machines/upgrade_cards)улучшения$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Энергетическая карта$(/l) увеличивает ёмкость батареи"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/wireless_terminal",
+      "anchor": "recipe",
+      "text": "$(bold)Беспроводной терминал изготовления$()"
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:wireless_crafting_terminal",
+      "link_recipe": true,
+      "text": "Беспроводной терминал изготовления похож на обычный беспроводной терминал — те же настройки и части, — но в нём есть ещё сетка крафта, которая автоматически пополняется из $(l:ae2_mechanics/import_export_storage)сетевого хранилища$(/l). Осторожнее со щелчком с Shift по результату!"
+    },
+    {
+      "type": "text",
+      "title": "Интерфейс",
+      "anchor": "the-ui",
+      "text": "См. $(l:items_blocks_machines/terminals)терминалы$(/l)"
+    },
+    {
+      "type": "text",
+      "title": "Улучшения",
+      "anchor": "upgrades",
+      "text": "Беспроводной терминал изготовления поддерживает следующие $(l:items_blocks_machines/upgrade_cards)улучшения$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Энергетическая карта$(/l) увеличивает ёмкость батареи"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/upgrade_wireless_crafting_terminal",
+      "recipe2": "ae2:network/wireless_crafting_terminal",
+      "anchor": "recipe"
+    }
+  ]
+}

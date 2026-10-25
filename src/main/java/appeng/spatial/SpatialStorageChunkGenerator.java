@@ -18,145 +18,83 @@
 
 package appeng.spatial;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import javax.annotation.Nullable;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.core.HolderGetter;
-import net.minecraft.resources.RegistryOps;
-import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.level.LevelHeightAccessor;
-import net.minecraft.world.level.NoiseColumn;
-import net.minecraft.world.level.StructureManager;
-import net.minecraft.world.level.biome.BiomeManager;
-import net.minecraft.world.level.biome.FixedBiomeSource;
-import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.GenerationStep.Carving;
-import net.minecraft.world.level.levelgen.Heightmap.Types;
-import net.minecraft.world.level.levelgen.RandomState;
-import net.minecraft.world.level.levelgen.blending.Blender;
+import net.minecraft.world.chunk.ChunkPrimer;
+import net.minecraft.world.gen.IChunkGenerator;
 
-import appeng.api.util.Registries;
 import appeng.core.definitions.AEBlocks;
 
 /**
- * Chunk generator the spatial storage level.
+ * Fills every chunk of the spatial storage dimension with matrix frames, like the 1.21 generator.
  */
-public class SpatialStorageChunkGenerator extends ChunkGenerator {
-
+public class SpatialStorageChunkGenerator implements IChunkGenerator {
     public static final int MIN_Y = 0;
-
     public static final int HEIGHT = 256;
 
-    /**
-     * This codec is necessary to restore the actual instance of the Biome we use, since it is sources from the dynamic
-     * registries and <em>must be the same object as in the registry!</em>.
-     * <p>
-     * If it was not the same object, then the Object->ID lookup would fail since it uses an identity hashmap
-     * internally.
-     */
-    public static final MapCodec<SpatialStorageChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
-            .group(
-                    RegistryOps.retrieveGetter(Registries.BIOME))
-            .apply(instance, instance.stable(SpatialStorageChunkGenerator::new)));
+    private final World level;
 
-    private final NoiseColumn columnSample;
-
-    private final IBlockState defaultBlockState;
-
-    public SpatialStorageChunkGenerator(HolderGetter<Biome> biomeRegistry) {
-        super(createBiomeSource(biomeRegistry));
-        this.defaultBlockState = AEBlocks.MATRIX_FRAME.block().getDefaultState();
-
-        // Vertical sample is mostly used for Feature generation, for those purposes
-        // we're all filled with matrix blocks
-        IBlockState[] columnSample = new IBlockState[HEIGHT];
-        Arrays.fill(columnSample, this.defaultBlockState);
-        this.columnSample = new NoiseColumn(MIN_Y, columnSample);
+    public SpatialStorageChunkGenerator(World level) {
+        this.level = level;
     }
 
     @Override
-    protected MapCodec<? extends ChunkGenerator> codec() {
-        return CODEC;
-    }
-
-    private static FixedBiomeSource createBiomeSource(HolderGetter<Biome> biomeRegistry) {
-        return new FixedBiomeSource(biomeRegistry.getOrThrow(SpatialStorageDimensionIds.BIOME_KEY));
-    }
-
-    @Override
-    public int getGenDepth() {
-        return 256;
-    }
-
-    @Override
-    public int getMinY() {
-        return MIN_Y;
-    }
-
-    @Override
-    public void buildSurface(WorldGenRegion worldGenRegion, StructureManager structureManager, RandomState randomState,
-            Chunk chunk) {
-        this.fillChunk(chunk);
-        chunk.setUnsaved(false);
-    }
-
-    private void fillChunk(Chunk chunk) {
-        MutableBlockPos mutPos = new MutableBlockPos();
+    public Chunk generateChunk(int x, int z) {
+        var primer = new ChunkPrimer();
+        var defaultBlockState = AEBlocks.MATRIX_FRAME.block().getDefaultState();
         for (int cx = 0; cx < 16; cx++) {
-            mutPos.setX(cx);
             for (int cz = 0; cz < 16; cz++) {
-                // FIXME: It's likely a bad idea to fill Y in the inner-loop given the storage
-                // layout of chunks
-                mutPos.setZ(cz);
-                for (int cy = 0; cy < HEIGHT; cy++) {
-                    mutPos.setY(cy);
-                    chunk.setBlockState(mutPos, defaultBlockState, false);
+                for (int cy = MIN_Y; cy < HEIGHT; cy++) {
+                    primer.setBlockState(cx, cy, cz, defaultBlockState);
                 }
             }
         }
+
+        var chunk = new Chunk(this.level, primer, x, z);
+        var biomeId = (byte) Biome.getIdForBiome(level.provider.getBiomeForCoords(BlockPos.ORIGIN));
+        var biomes = chunk.getBiomeArray();
+        for (int i = 0; i < biomes.length; i++) {
+            biomes[i] = biomeId;
+        }
+        chunk.generateSkylightMap();
+        return chunk;
     }
 
     @Override
-    public int getSeaLevel() {
-        return 0;
+    public void populate(int x, int z) {
     }
 
     @Override
-    public CompletableFuture<Chunk> fillFromNoise(Blender blender, RandomState randomState,
-            StructureManager structureManager, Chunk chunk) {
-        return CompletableFuture.completedFuture(chunk);
+    public boolean generateStructures(Chunk chunk, int x, int z) {
+        return false;
     }
 
     @Override
-    public int getBaseHeight(int i, int j, Types types, LevelHeightAccessor levelHeightAccessor,
-            RandomState randomState) {
-        return MIN_Y;
+    public List<Biome.SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos) {
+        return Collections.emptyList();
+    }
+
+    @Nullable
+    @Override
+    public BlockPos getNearestStructurePos(World world, String structureName, BlockPos position,
+            boolean findUnexplored) {
+        return null;
     }
 
     @Override
-    public NoiseColumn getBaseColumn(int i, int j, LevelHeightAccessor levelHeightAccessor, RandomState randomState) {
-        return columnSample;
+    public void recreateStructures(Chunk chunk, int x, int z) {
     }
 
     @Override
-    public void addDebugScreenInfo(List<String> list, RandomState randomState, BlockPos blockPos) {
-    }
-
-    @Override
-    public void applyCarvers(WorldGenRegion worldGenRegion, long l, RandomState randomState, BiomeManager biomeManager,
-            StructureManager structureManager, Chunk chunkAccess, Carving carving) {
-    }
-
-    @Override
-    public void spawnOriginalMobs(WorldGenRegion level) {
+    public boolean isInsideStructure(World world, String structureName, BlockPos pos) {
+        return false;
     }
 }

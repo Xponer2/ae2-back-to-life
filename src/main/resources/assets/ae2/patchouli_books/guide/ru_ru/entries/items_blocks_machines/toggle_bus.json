@@ -1,0 +1,28 @@
+{
+  "name": "Шина переключения",
+  "icon": "ae2:toggle_bus",
+  "category": "items_blocks_machines/network_infrastructure",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-toggle-bus",
+      "text": "$(#555)$(o)(3D-сцена недоступна в этой версии)$()$(br2)Шина, которая работает как $(l:items_blocks_machines/cables)МЭ флюисовый стеклянный кабель$(/l) или другие кабели, но её соединение можно включать и выключать редстоуном. Так можно отрезать часть $(l:ae2_mechanics/me_network_connections)МЭ-сети$(/l).$(br2)Получая сигнал редстоуна, эта часть включает соединение; $(item)ME перевёрнутая шина переключения$() работает"
+    },
+    {
+      "type": "text",
+      "text": "наоборот — выключает соединение.$(br2)Учтите: при переключении сеть может перезагрузиться и заново пересчитать подключённые устройства.$(br2)Это $(l:ae2_mechanics/cable_subparts)части кабеля$(/l)."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/toggle_bus",
+      "recipe2": "ae2:network/parts/toggle_bus_alt",
+      "anchor": "recipes"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/toggle_bus_inverted_alt",
+      "text": ""
+    }
+  ]
+}

@@ -276,6 +276,7 @@ death.attack.matter_cannon=%1$s вистрілює %2$s
 death.attack.matter_cannon.item=%1$s був застрілений %2$s за допомогою %3$s
 entity.ae2.tiny_tnt_primed=Активований крихітний динаміт
 entity.minecraft.villager.ae2.fluix_researcher=Дослідник флюїксу
+entity.Villager.fluix_researcher=Дослідник флюїксу
 exported_setting.ae2.exported_config_inv=Фільтр
 exported_setting.ae2.exported_custom_name=Власне ім'я
 exported_setting.ae2.exported_level_emitter_value=Значення Емітера рівня

@@ -1,0 +1,30 @@
+{
+  "name": "Кварцевая арматура",
+  "icon": "ae2:quartz_fixture",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "quartz-fixtures",
+      "text": "Арматура из заряженного кварца — маленькая светящаяся деталька.$(br2)Осветительная арматура обнаружения света вместо этого подаёт сигнал редстоуна в зависимости от уровня освещённости своего блока."
+    },
+    {
+      "type": "ae2:item_row_2",
+      "item0": "ae2:quartz_fixture",
+      "item1": "ae2:light_detector",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:decorative/quartz_fixture",
+      "recipe2": "ae2:decorative/quartz_fixture_from_anchors",
+      "anchor": "recipes"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:decorative/light_detector",
+      "text": ""
+    }
+  ]
+}

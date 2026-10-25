@@ -1,0 +1,57 @@
+{
+  "name": "Опустошитель вёдер",
+  "icon": "minecraft:bucket",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "bucket-emptier",
+      "text": "См. также $(l:example_setups/bucket_filler)наполнитель вёдер$(/l).$(br2)Эта постройка использует $(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l), поэтому она рассчитана на встраивание в вашу систему $(l:ae2_mechanics/autocrafting)автокрафта$(/l).$(br2)Иногда жизнь неудобна: нужна сама жидкость, а получить её можно только в ведре. Иногда это делает за вас какой-нибудь механизм (например, жидкостный транспозер из Thermal"
+    },
+    {
+      "type": "text",
+      "text": "Expansion), но удобного мода для этого может и не оказаться. К счастью, в ванильном Minecraft есть чуть менее удобный способ — $(item)Раздатчик$().$(br2)$(#555)$(o)(3D-сцена недоступна в этой версии)$()"
+    },
+    {
+      "type": "text",
+      "title": "Настройки",
+      "anchor": "configurations",
+      "text": "$(li)$(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l) (1) настроен блокировать изготовление «при сигнале редстоуна», режим блокировки включён, внутри — нужные шаблоны ($(l:items_blocks_machines/patterns)Шаблон обработки$(/l))."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/water_empty_pattern.png"
+      ],
+      "border": true,
+      "text": ""
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/lava_empty_pattern.png"
+      ],
+      "border": true,
+      "text": "$(li)$(l:items_blocks_machines/interface)МЭ интерфейс$(/l) (2) в настройках по умолчанию."
+    },
+    {
+      "type": "spotlight",
+      "item": "minecraft:bucket",
+      "anchor": "how-it-works",
+      "text": "$(li)Первая $(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l) (3) в настройках по умолчанию.$(li)$(l:items_blocks_machines/annihilation_plane)МЭ плоскость уничтожения$(/l) (4) не имеет интерфейса и не настраивается.$(li)$(l:items_blocks_machines/import_bus)Мэ шина импорта$(/l) (5) отфильтрована на вёдра.$(li)Вторая $(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l) (6) в настройках по умолчанию.$(br2)$(bold)Как это работает$()"
+    },
+    {
+      "type": "text",
+      "text": "1. $(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l) выталкивает ингредиенты в $(l:items_blocks_machines/interface)МЭ интерфейс$(/l). (На самом деле для оптимизации он выталкивает их прямо через шину хранения, как будто она продолжение сторон поставщика. В интерфейс предметы так и не попадают.)$(br2)2. Благодаря механизмам, описанным в разделе о $(l:example_setups/pipe_subnet#providing-to-multiple-places)трубных подсетях$(/l), ведро оказывается в блоке $(item)Раздатчик$()."
+    },
+    {
+      "type": "text",
+      "text": "3. $(item)Компаратор$() замечает ведро в раздатчике и одновременно запитывает раздатчик и блокирует $(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l).$(br2)4. Раздатчик выливает жидкость из ведра, и в нём остаётся пустое ведро.$(br2)5. $(l:items_blocks_machines/import_bus)Мэ шина импорта$(/l) вытаскивает пустое ведро из раздатчика и через шину хранения ($(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l)) складывает его в поставщик шаблонов, возвращая в"
+    },
+    {
+      "type": "text",
+      "text": "основную сеть.$(br2)6. Компаратор видит, что раздатчик пуст, и разблокирует поставщик."
+    }
+  ]
+}

@@ -18,7 +18,7 @@
 
 package appeng.client.gui.implementations;
 
-import net.neoforged.neoforge.network.PacketDistributor;
+import appeng.core.network.PacketDistributor;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.text.ITextComponent;

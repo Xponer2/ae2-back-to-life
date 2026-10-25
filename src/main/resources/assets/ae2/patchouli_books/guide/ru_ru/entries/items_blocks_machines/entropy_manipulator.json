@@ -1,0 +1,25 @@
+{
+  "name": "Манипулятор энтропии",
+  "icon": "ae2:entropy_manipulator",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:entropy_manipulator",
+      "link_recipe": true,
+      "anchor": "the-entropy-manipulator",
+      "text": "Манипулятор энтропии нагревает и охлаждает предметы: щелчком правой кнопкой мыши и щелчком правой кнопкой с Shift соответственно. Умеет он немного: испарять или замораживать воду, превращать лаву в обсидиан, пережигать брёвна в древесный уголь и переплавлять булыжник в камень прямо в мире."
+    },
+    {
+      "type": "text",
+      "text": "Если с блоком он ничего особого сделать не может, он работает как огниво.$(br2)Его энергию можно восполнить в устройстве $(l:items_blocks_machines/charger)Зарядник$(/l)."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/misctools_entropy_manipulator",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

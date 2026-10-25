@@ -1,0 +1,21 @@
+{
+  "name": "Беспроводной приёмник",
+  "icon": "ae2:wireless_receiver",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:wireless_receiver",
+      "link_recipe": true,
+      "anchor": "wireless-receiver",
+      "text": "$(l:items_blocks_machines/fluix_pearl)Флюисовый жемчуг$(/l) в отражающей тарелке — компонент технологии МЭ беспроводной связи на малых расстояниях."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/wireless_part",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

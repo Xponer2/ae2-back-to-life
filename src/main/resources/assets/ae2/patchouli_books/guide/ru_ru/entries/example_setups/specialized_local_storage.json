@@ -1,0 +1,36 @@
+{
+  "name": "Специализированное локальное хранилище",
+  "icon": "ae2:drive",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "specialized-local-storage",
+      "text": "Благодаря одному из $(l:items_blocks_machines/interface#special-interactions)особых свойств интерфейса$(/l) $(l:ae2_mechanics/subnetworks)подсеть$(/l) может показывать содержимое своего хранилища основной сети, не видя хранилища основной сети и занимая всего 1 $(l:ae2_mechanics/channels)канал$(/l).$(br2)Это удобно для локального хранилища на ферме, чтобы предметы не переполняли основное хранилище.$(br2)$(#555)$(o)(3D-сцена недоступна в этой$()"
+    },
+    {
+      "type": "text",
+      "text": "$(#555)$(o)версии)$()"
+    },
+    {
+      "type": "text",
+      "title": "Настройки",
+      "anchor": "configurations",
+      "text": "$(li)Первый $(l:items_blocks_machines/interface)МЭ интерфейс$(/l) (1) просто принимает предметы с вашей фермы и передаёт их в подсеть.$(li)В накопителе $(l:items_blocks_machines/drive)МЭ накопитель$(/l) (2) стоят $(l:items_blocks_machines/storage_cells)ячейки$(/l). Ячейки стоит $(l:items_blocks_machines/cell_workbench)разметить$(/l) под то, что выдаёт ферма. В ячейках могут стоять $(l:items_blocks_machines/upgrade_cards)Карта равномерного распределения$(/l) и $(l:items_blocks_machines/upgrade_cards)Пустотная карта$(/l).$(li)Второй $(l:items_blocks_machines/interface)МЭ интерфейс$(/l) (4) в настройках по умолчанию."
+    },
+    {
+      "type": "text",
+      "anchor": "how-it-works",
+      "text": "$(li)У шины $(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l) $(l:ae2_mechanics/import_export_storage#storage-priority)приоритет$(/l) выше, чем у основного хранилища. Её можно отфильтровать на то, что выдаёт ферма.$(br2)$(bold)Как это работает$()$(li)$(l:items_blocks_machines/interface)МЭ интерфейс$(/l) в подсети показывает шине $(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l) основной сети содержимое накопителя ($(l:items_blocks_machines/drive)МЭ накопитель$(/l)). Благодаря этому шина хранения может напрямую забирать предметы из ячеек накопителя и класть их туда."
+    },
+    {
+      "type": "text",
+      "text": "$(li)У шины хранения высокий $(l:ae2_mechanics/import_export_storage#storage-priority)приоритет$(/l), чтобы предметы в первую очередь возвращались в подсеть, а не в основное хранилище.$(li)Важно, что если ячейки подсети заполнятся, предметы не перельются в основную сеть. Если ферма ломается при переполнении, лишние предметы можно уничтожать картами $(l:items_blocks_machines/upgrade_cards)Пустотная карта$(/l).$(li)Если ферма выдаёт несколько разных предметов, карты $(l:items_blocks_machines/upgrade_cards)Карта равномерного$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "$(l:items_blocks_machines/upgrade_cards)распределения$(/l) не дадут одному предмету занять все ячейки и вытеснить остальные."
+    }
+  ]
+}

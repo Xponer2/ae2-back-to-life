@@ -183,12 +183,12 @@ public class ChargerBlockEntity extends AENetworkedPoweredBlockEntity implements
                     }
                 }
             } else if (this.getInternalCurrentPower() >= POWER_THRESHOLD
-                    && ChargerRecipes.findRecipe(level, myItem) != null) {
+                    && ChargerRecipes.findRecipe(world, myItem) != null) {
                 this.working = true;
-                if (level != null && level.getRandom().nextFloat() > 0.8f) {
+                if (world != null && world.rand.nextFloat() > 0.8f) {
                     this.extractAEPower(this.getInternalMaxPower(), Actionable.MODULATE, PowerMultiplier.CONFIG);
 
-                    var charged = Objects.requireNonNull(ChargerRecipes.findRecipe(level, myItem)).result;
+                    var charged = Objects.requireNonNull(ChargerRecipes.findRecipe(world, myItem)).result;
                     this.inv.setItemDirect(0, charged.copy());
 
                     changed = true;
@@ -260,7 +260,7 @@ public class ChargerBlockEntity extends AENetworkedPoweredBlockEntity implements
 
         @Override
         public boolean allowInsert(InternalInventory inv, int i, ItemStack itemstack) {
-            return Platform.isChargeable(itemstack) || ChargerRecipes.allowInsert(chargerBlockEntity.level, itemstack);
+            return Platform.isChargeable(itemstack) || ChargerRecipes.allowInsert(chargerBlockEntity.getWorld(), itemstack);
         }
 
         @Override
@@ -274,7 +274,7 @@ public class ChargerBlockEntity extends AENetworkedPoweredBlockEntity implements
                 }
             }
 
-            return ChargerRecipes.allowExtract(chargerBlockEntity.level, extractedItem);
+            return ChargerRecipes.allowExtract(chargerBlockEntity.getWorld(), extractedItem);
         }
     }
 }

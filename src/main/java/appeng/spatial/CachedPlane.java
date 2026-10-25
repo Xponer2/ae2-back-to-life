@@ -21,36 +21,30 @@ package appeng.spatial;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.core.Holder;
-import net.minecraft.core.SectionPos;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.level.ThreadedLevelLightEngine;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.NextTickListEntry;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.entity.ai.village.poi.PoiManager;
-import net.minecraft.world.entity.ai.village.poi.PoiType;
-import net.minecraft.world.level.chunk.LevelChunkSection;
-import net.minecraft.world.level.lighting.LevelLightEngine;
-import net.minecraft.world.ticks.LevelChunkTicks;
-import net.minecraft.world.ticks.ScheduledTick;
+import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
 import appeng.api.ids.AETags;
 import appeng.api.movable.BlockEntityMoveStrategies;
 import appeng.api.movable.IBlockEntityMoveStrategy;
 import appeng.core.AELog;
 import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.BlockEntityType;
 import appeng.server.services.compass.ServerCompassService;
 import appeng.util.Platform;
 
+/**
+ * A box of blocks that is swapped with another box of the same size (spatial IO). Works directly on the chunk sections
+ * like 1.21; 1.12.2 has no points of interest to move.
+ */
 public class CachedPlane {
     private final int x_size;
     private final int z_size;
@@ -63,11 +57,10 @@ public class CachedPlane {
     private final Chunk[][] myChunks;
     private final Column[][] myColumns;
     private final List<BlockEntityMoveRecord> blockEntities = new ArrayList<>();
-    private final List<ScheduledTick<Block>> ticks = new ArrayList<>();
+    private final List<NextTickListEntry> ticks = new ArrayList<>();
     private final WorldServer level;
     private final List<BlockPos> updates = new ArrayList<>();
     private final IBlockState matrixBlockState;
-    private final List<PoiMoveRecord> poiMoveRecords = new ArrayList<>();
 
     public CachedPlane(WorldServer level, int minX, int minY, int minZ, int maxX,
             int maxY, int maxZ) {
@@ -90,14 +83,11 @@ public class CachedPlane {
         this.z_offset = minZ;
 
         final int minCX = minX >> 4;
-        final int minCY = minY >> 4;
         final int minCZ = minZ >> 4;
         final int maxCX = maxX >> 4;
-        final int maxCY = maxY >> 4;
         final int maxCZ = maxZ >> 4;
 
         this.cx_size = maxCX - minCX + 1;
-        final int cy_size = maxCY - minCY + 1;
         this.cz_size = maxCZ - minCZ + 1;
 
         this.myChunks = new Chunk[this.cx_size][this.cz_size];
@@ -106,24 +96,23 @@ public class CachedPlane {
         for (int x = 0; x < this.x_size; x++) {
             for (int z = 0; z < this.z_size; z++) {
                 this.myColumns[x][z] = new Column(level.getChunk(minX + x >> 4, minZ + z >> 4), minX + x & 0xF,
-                        minZ + z & 0xF);
+                        minZ + z & 0xF, level.provider.hasSkyLight());
             }
         }
 
+        final long now = level.getTotalWorldTime();
         for (int cx = 0; cx < this.cx_size; cx++) {
             for (int cz = 0; cz < this.cz_size; cz++) {
                 final Chunk c = level.getChunk(minCX + cx, minCZ + cz);
                 this.myChunks[cx][cz] = c;
 
                 // Make a copy of the BE list in the chunk. This allows us to immediately remove BE's we're moving.
-                // We cannot simply copy the map entries since the map may reuse those if we remove entries.
-                var chunkBlockEntities = c.getBlockEntities().entrySet();
-                var blockEntities = new ArrayList<TileEntity>(chunkBlockEntities.size());
-                for (var entity : chunkBlockEntities) {
-                    var pos = entity.getKey();
+                var blockEntities = new ArrayList<TileEntity>();
+                for (var entry : c.getTileEntityMap().entrySet()) {
+                    var pos = entry.getKey();
                     if (pos.getX() >= minX && pos.getX() <= maxX && pos.getY() >= minY && pos.getY() <= maxY
                             && pos.getZ() >= minZ && pos.getZ() <= maxZ) {
-                        blockEntities.add(entity.getValue());
+                        blockEntities.add(entry.getValue());
                     }
                 }
 
@@ -138,61 +127,37 @@ public class CachedPlane {
 
                     var strategy = BlockEntityMoveStrategies.get(blockEntity);
                     var savedData = strategy.beginMove(blockEntity);
-                    var section = c.getSection(c.getSectionIndex(pos.getY()));
-
-                    // Coordinate within the section
-                    int sx = pos.getX() & (LevelChunkSection.SECTION_WIDTH - 1);
-                    int sy = pos.getY() & (LevelChunkSection.SECTION_HEIGHT - 1);
-                    int sz = pos.getZ() & (LevelChunkSection.SECTION_WIDTH - 1);
-                    var state = section.getBlockState(sx, sy, sz);
+                    var column = this.myColumns[pos.getX() - minX][pos.getZ() - minZ];
+                    var section = column.getSection(pos.getY());
+                    var state = section.get(column.x, pos.getY() & 15, column.z);
 
                     if (savedData != null) {
                         this.blockEntities.add(
                                 new BlockEntityMoveRecord(strategy, blockEntity, savedData, pos, state));
 
                         // Set the state to AIR now since that prevents it from being resurrected recursively
-                        section.setBlockState(sx, sy, sz, Blocks.AIR.getDefaultState());
-                        c.removeBlockEntity(pos);
+                        section.set(column.x, pos.getY() & 15, column.z, Blocks.AIR.getDefaultState());
+                        level.removeTileEntity(pos);
                     } else {
                         // don't skip air, just let the code replace it...
-                        if (state.isAir()) {
-                            level.removeBlock(pos, false);
+                        if (state.getBlock().isAir(state, level, pos)) {
+                            level.setBlockToAir(pos);
                         } else {
-                            this.myColumns[pos.getX() - minX][pos.getZ() - minZ].setSkip(pos.getY());
+                            column.setSkip(pos.getY());
                         }
                     }
                 }
 
-                var pending = (LevelChunkTicks<Block>) c.getBlockTicks();
-                pending.getAll().forEach(entry -> {
-                    var pos = entry.pos();
-                    if (pos.getX() >= minX && pos.getX() <= maxX && pos.getY() >= minY && pos.getY() <= maxY
-                            && pos.getZ() >= minZ && pos.getZ() <= maxZ) {
-                        this.ticks.add(entry);
-                    }
-                });
-
-                // Find any Villager point of interests that are within this section, remove them and queue
-                // re-adding them to the destination locations
-                for (int cy = 0; cy < cy_size; ++cy) {
-                    var poiSection = level.getPoiManager()
-                            .getOrLoad(SectionPos.of(c.getPos(), minCY + cy).toLong())
-                            .orElse(null);
-                    if (poiSection == null) {
-                        continue;
-                    }
-                    var poiRecords = poiSection
-                            .getRecords(poiType -> true, PoiManager.Occupancy.ANY)
-                            .iterator();
-                    while (poiRecords.hasNext()) {
-                        var poiRecord = poiRecords.next();
-                        var pos = poiRecord.getPos();
+                var pending = level.getPendingBlockUpdates(c, false);
+                if (pending != null) {
+                    for (var entry : pending) {
+                        var pos = entry.position;
                         if (pos.getX() >= minX && pos.getX() <= maxX && pos.getY() >= minY && pos.getY() <= maxY
                                 && pos.getZ() >= minZ && pos.getZ() <= maxZ) {
-                            this.poiMoveRecords.add(new PoiMoveRecord(
-                                    poiRecord.getPos().offset(-x_offset, -y_offset, -z_offset),
-                                    poiRecord.getPoiType()));
-                            poiSection.remove(poiRecord.getPos());
+                            var copy = new NextTickListEntry(pos, entry.getBlock());
+                            copy.scheduledTime = entry.scheduledTime - now;
+                            copy.setPriority(entry.priority);
+                            this.ticks.add(copy);
                         }
                     }
                 }
@@ -220,19 +185,21 @@ public class CachedPlane {
                             var srcSection = srcCol.getSection(src_y);
                             var dstSection = dstCol.getSection(dst_y);
 
-                            var srcState = srcSection.getBlockState(srcCol.x, SectionPos.sectionRelative(src_y),
-                                    srcCol.z);
+                            var srcState = srcSection.get(srcCol.x, src_y & 15, srcCol.z);
                             if (srcState == CachedPlane.this.matrixBlockState) {
                                 srcState = Blocks.AIR.getDefaultState();
                             }
-                            var dstState = dstSection.getBlockState(dstCol.x, SectionPos.sectionRelative(dst_y),
-                                    dstCol.z);
+                            var srcLight = srcSection.getBlockLight(srcCol.x, src_y & 15, srcCol.z);
+                            var dstState = dstSection.get(dstCol.x, dst_y & 15, dstCol.z);
                             if (dstState == CachedPlane.this.matrixBlockState) {
                                 dstState = Blocks.AIR.getDefaultState();
                             }
+                            var dstLight = dstSection.getBlockLight(dstCol.x, dst_y & 15, dstCol.z);
 
-                            srcSection.setBlockState(srcCol.x, SectionPos.sectionRelative(src_y), srcCol.z, dstState);
-                            dstSection.setBlockState(dstCol.x, SectionPos.sectionRelative(dst_y), dstCol.z, srcState);
+                            srcSection.set(srcCol.x, src_y & 15, srcCol.z, dstState);
+                            srcSection.setBlockLight(srcCol.x, src_y & 15, srcCol.z, dstLight);
+                            dstSection.set(dstCol.x, dst_y & 15, dstCol.z, srcState);
+                            dstSection.setBlockLight(dstCol.x, dst_y & 15, dstCol.z, srcLight);
                         } else {
                             this.markForUpdate(this.x_offset + x, src_y, this.z_offset + z);
                             dst.markForUpdate(dst.x_offset + x, dst_y, dst.z_offset + z);
@@ -246,34 +213,26 @@ public class CachedPlane {
             AELog.info("Block Copy Time: " + duration);
 
             for (var moveRecord : this.blockEntities) {
-                var pos = moveRecord.blockEntity().getPos();
+                var pos = moveRecord.pos();
                 dst.addBlockEntity(pos.getX() - this.x_offset, pos.getY() - this.y_offset,
                         pos.getZ() - this.z_offset,
                         moveRecord);
             }
 
             for (var moveRecord : dst.blockEntities) {
-                var pos = moveRecord.blockEntity().getPos();
+                var pos = moveRecord.pos();
                 this.addBlockEntity(pos.getX() - dst.x_offset, pos.getY() - dst.y_offset,
                         pos.getZ() - dst.z_offset, moveRecord);
             }
 
             for (var entry : this.ticks) {
-                var movedPos = entry.pos().offset(-this.x_offset, -this.y_offset, -this.z_offset);
+                var movedPos = entry.position.add(-this.x_offset, -this.y_offset, -this.z_offset);
                 dst.addTick(movedPos, entry);
             }
 
             for (var entry : dst.ticks) {
-                var movedPos = entry.pos().offset(-dst.x_offset, -dst.y_offset, -dst.z_offset);
+                var movedPos = entry.position.add(-dst.x_offset, -dst.y_offset, -dst.z_offset);
                 addTick(movedPos, entry);
-            }
-
-            for (var record : this.poiMoveRecords) {
-                dst.addPoi(record);
-            }
-
-            for (var record : dst.poiMoveRecords) {
-                addPoi(record);
             }
 
             startTime = System.nanoTime();
@@ -293,9 +252,9 @@ public class CachedPlane {
         }
     }
 
-    private void addTick(BlockPos pos, ScheduledTick<Block> tick) {
-        this.level.getBlockTicks().schedule(new ScheduledTick<>(
-                tick.type(), pos, tick.triggerTick(), tick.priority(), tick.subTickOrder()));
+    private void addTick(BlockPos relativePos, NextTickListEntry tick) {
+        var pos = relativePos.add(this.x_offset, this.y_offset, this.z_offset);
+        this.level.scheduleBlockUpdate(pos, tick.getBlock(), (int) tick.scheduledTime, tick.priority);
     }
 
     private void addBlockEntity(int x, int y, int z, BlockEntityMoveRecord moveRecord) {
@@ -313,13 +272,7 @@ public class CachedPlane {
             var newPosition = new BlockPos(x + this.x_offset, y + this.y_offset, z + this.z_offset);
 
             // Restore original block state to the section directly. The chunk would create the BE and notify neighbors.
-            var chunk = this.level.getChunk(newPosition);
-            var section = chunk.getSection(chunk.getSectionIndex(newPosition.getY()));
-            section.setBlockState(
-                    newPosition.getX() & (LevelChunkSection.SECTION_WIDTH - 1),
-                    newPosition.getY() & (LevelChunkSection.SECTION_HEIGHT - 1),
-                    newPosition.getZ() & (LevelChunkSection.SECTION_WIDTH - 1),
-                    moveRecord.state);
+            c.getSection(newPosition.getY()).set(c.x, newPosition.getY() & 15, c.z, moveRecord.state());
 
             var strategy = moveRecord.strategy();
             boolean success;
@@ -333,48 +286,43 @@ public class CachedPlane {
             }
 
             if (!success) {
-                attemptRecovery(x, y, z, moveRecord, c);
+                attemptRecovery(newPosition, moveRecord);
             }
         } catch (Throwable e) {
             AELog.warn(e);
         }
     }
 
-    private void addPoi(PoiMoveRecord record) {
-        level.getPoiManager().add(record.relativePos.offset(this.x_offset, this.y_offset, this.z_offset),
-                record.poiType);
-    }
-
-    private void attemptRecovery(int x, int y, int z, BlockEntityMoveRecord moveRecord, Column c) {
-        var pos = new BlockPos(x, y, z);
-        var type = moveRecord.blockEntity().getType();
-        AELog.debug("Trying to recover BE %s @ %s", BlockEntityType.getKey(type), pos);
+    private void attemptRecovery(BlockPos pos, BlockEntityMoveRecord moveRecord) {
+        var id = TileEntity.getKey(moveRecord.blockEntity().getClass());
+        AELog.debug("Trying to recover BE %s @ %s", id, pos);
 
         // attempt recovery, but do not reuse the same TE instance since we did destroy it
-        var blockState = Platform.getBlockState(moveRecord.blockEntity());
-        var recoveredEntity = TileEntity.loadStatic(pos, blockState, moveRecord.savedData());
+        NBTTagCompound data = moveRecord.savedData().copy();
+        data.setInteger("x", pos.getX());
+        data.setInteger("y", pos.getY());
+        data.setInteger("z", pos.getZ());
+        var recoveredEntity = TileEntity.create(this.level, data);
         if (recoveredEntity != null) {
             // We need to restore the block state too before re-setting the entity
+            var blockState = moveRecord.state();
             this.level.setBlockState(pos, blockState, 3);
-            c.c.addAndRegisterBlockEntity(recoveredEntity);
-            this.level.notifyBlockUpdate(pos, this.level.getBlockState(pos), this.level.getBlockState(pos), z);
+            this.level.setTileEntity(pos, recoveredEntity);
+            this.level.notifyBlockUpdate(pos, blockState, blockState, 3);
         } else {
-            AELog.warn("Failed to recover BE %s @ %s", BlockEntityType.getKey(type), pos);
+            AELog.warn("Failed to recover BE %s @ %s", id, pos);
         }
     }
 
     private void updateChunks() {
 
-        LevelLightEngine lightManager = level.getLightEngine();
-
         // update shit..
-        if (lightManager instanceof ThreadedLevelLightEngine serverLightManager) {
-            for (int x = 0; x < this.cx_size; x++) {
-                for (int z = 0; z < this.cz_size; z++) {
-                    final Chunk c = this.myChunks[x][z];
-                    serverLightManager.lightChunk(c, false);
-                    c.setUnsaved(true);
-                }
+        for (int x = 0; x < this.cx_size; x++) {
+            for (int z = 0; z < this.cz_size; z++) {
+                final Chunk c = this.myChunks[x][z];
+                c.resetRelightChecks();
+                c.generateSkylightMap();
+                c.markDirty();
             }
         }
 
@@ -386,14 +334,12 @@ public class CachedPlane {
 
                 ServerCompassService.updateArea(this.getLevel(), c);
 
-                var cdp = Platform.getFullChunkPacket(c);
-                level.getChunkProvider().chunkMap.getPlayers(c.getPos(), false)
-                        .forEach(spe -> spe.connection.send(cdp));
+                var entry = level.getPlayerChunkMap().getEntry(c.x, c.z);
+                if (entry != null) {
+                    entry.sendPacket(Platform.getFullChunkPacket(c));
+                }
             }
         }
-
-        // FIXME check if this makes any sense at all to send changes to players asap
-        level.getChunkProvider().tick(() -> false, false);
     }
 
     List<BlockPos> getUpdates() {
@@ -404,26 +350,23 @@ public class CachedPlane {
         return this.level;
     }
 
-    private static class BlockStorageData {
-        public IBlockState state;
-    }
-
     private static class Column {
         private final int x;
         private final int z;
 
         private final Chunk c;
+        private final boolean skyLight;
         private List<Integer> skipThese = null;
-        private Int2ObjectMap<IBlockState> savedBlockStates = null;
 
-        public Column(Chunk chunk, int x, int z) {
+        public Column(Chunk chunk, int x, int z, boolean skyLight) {
             this.x = x;
             this.z = z;
             this.c = chunk;
+            this.skyLight = skyLight;
         }
 
         private boolean doNotSkip(int y) {
-            var blockState = getSection(y).getBlockState(this.x, SectionPos.sectionRelative(y), this.z);
+            var blockState = getSection(y).get(this.x, y & 15, this.z);
             if (AETags.SPATIAL_BLACKLIST.contains(blockState)) {
                 return false;
             }
@@ -438,8 +381,16 @@ public class CachedPlane {
             this.skipThese.add(y);
         }
 
-        public LevelChunkSection getSection(int y) {
-            return c.getSection(c.getSectionIndexFromSectionY(SectionPos.blockToSectionCoord(y)));
+        /**
+         * The chunk section containing y, created if it doesn't exist yet.
+         */
+        public ExtendedBlockStorage getSection(int y) {
+            var storage = c.getBlockStorageArray();
+            var section = storage[y >> 4];
+            if (section == Chunk.NULL_BLOCK_STORAGE) {
+                section = storage[y >> 4] = new ExtendedBlockStorage(y >> 4 << 4, skyLight);
+            }
+            return section;
         }
     }
 
@@ -450,11 +401,12 @@ public class CachedPlane {
         private final BlockPos pos;
         private final IBlockState state;
 
-        public BlockEntityMoveRecord(IBlockEntityMoveStrategy strategy, TileEntity blockEntity, NBTTagCompound savedData, BlockPos pos, IBlockState state) {
+        public BlockEntityMoveRecord(IBlockEntityMoveStrategy strategy, TileEntity blockEntity,
+                NBTTagCompound savedData, BlockPos pos, IBlockState state) {
             this.strategy = strategy;
             this.blockEntity = blockEntity;
             this.savedData = savedData;
-            this.pos = pos;
+            this.pos = pos.toImmutable();
             this.state = state;
         }
 
@@ -479,64 +431,9 @@ public class CachedPlane {
         }
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof BlockEntityMoveRecord)) return false;
-            BlockEntityMoveRecord that = (BlockEntityMoveRecord) o;
-            return java.util.Objects.equals(strategy, that.strategy)
-                    && java.util.Objects.equals(blockEntity, that.blockEntity)
-                    && java.util.Objects.equals(savedData, that.savedData)
-                    && java.util.Objects.equals(pos, that.pos)
-                    && java.util.Objects.equals(state, that.state);
-        }
-
-        @Override
-        public int hashCode() {
-            return java.util.Objects.hash(strategy, blockEntity, savedData, pos, state);
-        }
-
-        @Override
         public String toString() {
-            return "BlockEntityMoveRecord[" + "strategy=" + strategy + ", " + "blockEntity=" + blockEntity + ", " + "savedData=" + savedData + ", " + "pos=" + pos + ", " + "state=" + state + "]";
+            return "BlockEntityMoveRecord[" + "strategy=" + strategy + ", " + "blockEntity=" + blockEntity + ", "
+                    + "savedData=" + savedData + ", " + "pos=" + pos + ", " + "state=" + state + "]";
         }
-
-    }
-
-    private final static class PoiMoveRecord {
-        private final BlockPos relativePos;
-        private final Holder<PoiType> poiType;
-
-        public PoiMoveRecord(BlockPos relativePos, Holder<PoiType> poiType) {
-            this.relativePos = relativePos;
-            this.poiType = poiType;
-        }
-
-        public BlockPos relativePos() {
-            return relativePos;
-        }
-
-        public Holder<PoiType> poiType() {
-            return poiType;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof PoiMoveRecord)) return false;
-            PoiMoveRecord that = (PoiMoveRecord) o;
-            return java.util.Objects.equals(relativePos, that.relativePos)
-                    && java.util.Objects.equals(poiType, that.poiType);
-        }
-
-        @Override
-        public int hashCode() {
-            return java.util.Objects.hash(relativePos, poiType);
-        }
-
-        @Override
-        public String toString() {
-            return "PoiMoveRecord[" + "relativePos=" + relativePos + ", " + "poiType=" + poiType + "]";
-        }
-
     }
 }

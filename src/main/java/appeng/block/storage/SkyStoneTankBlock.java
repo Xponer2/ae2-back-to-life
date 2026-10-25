@@ -1,5 +1,6 @@
 package appeng.block.storage;
 
+import appeng.block.BlockProperties;
 import appeng.util.ItemTooltipContext;
 
 import java.util.List;

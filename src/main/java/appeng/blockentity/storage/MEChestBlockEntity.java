@@ -18,9 +18,11 @@
 
 package appeng.blockentity.storage;
 
+import net.minecraftforge.fluids.capability.FluidTankProperties;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fluids.Fluid;
 import java.util.Objects;
 
-import net.neoforged.neoforge.fluids.IFluidTank;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -248,7 +250,7 @@ public class MEChestBlockEntity extends AENetworkedPoweredBlockEntity
             return null;
         }
         // Client-side we'll need to actually use the synced state
-        if (level == null || level.isRemote) {
+        if (world == null || world.isRemote) {
             return cellItem;
         }
         ItemStack cell = getCell();
@@ -334,7 +336,7 @@ public class MEChestBlockEntity extends AENetworkedPoweredBlockEntity
         // when it changes from
         // empty->non-empty, so when the cell is changed, it should re-send the state
         // because of that
-        data.writeVarInt(Item.getId(getCell().getItem()));
+        data.writeVarInt(Item.getIdFromItem(getCell().getItem()));
     }
 
     @Override
@@ -349,7 +351,7 @@ public class MEChestBlockEntity extends AENetworkedPoweredBlockEntity
         clientCellState = data.readEnum(CellState.class);
         clientPowered = data.readBoolean();
         paintedColor = data.readEnum(AEColor.class);
-        cellItem = Item.byId(data.readVarInt());
+        cellItem = Item.getItemById(data.readVarInt());
 
         return c
                 || oldCellState != clientCellState
@@ -449,7 +451,7 @@ public class MEChestBlockEntity extends AENetworkedPoweredBlockEntity
             IStorageProvider.requestUpdate(getMainNode());
 
             // update the neighbors
-            if (this.level != null) {
+            if (this.world != null) {
                 invalidateCapabilities();
                 this.markForUpdate();
             }
@@ -566,7 +568,7 @@ public class MEChestBlockEntity extends AENetworkedPoweredBlockEntity
         if (cellHandler != null) {
             cellHandler.cellInventory.persist();
         }
-        this.level.blockEntityChanged(this.worldPosition);
+        this.world.markChunkDirty(this.pos, this);
     }
 
     public void openCellInventoryMenu(EntityPlayer player) {
@@ -618,56 +620,23 @@ public class MEChestBlockEntity extends AENetworkedPoweredBlockEntity
         }
     }
 
-    private class FluidHandler implements IFluidHandler, IFluidTank {
+    private class FluidHandler implements IFluidHandler {
 
         private boolean canAcceptLiquids() {
             return MEChestBlockEntity.this.cellHandler != null;
         }
 
         @Override
-        public FluidStack getFluid() {
-            return FluidStack.EMPTY;
+        public IFluidTankProperties[] getTankProperties() {
+            return new IFluidTankProperties[] {
+                    new FluidTankProperties(null, canAcceptLiquids() ? Fluid.BUCKET_VOLUME : 0, canAcceptLiquids(),
+                            false) };
         }
 
         @Override
-        public int getFluidAmount() {
-            return 0;
-        }
-
-        @Override
-        public int getCapacity() {
-            return canAcceptLiquids() ? FluidType.BUCKET_VOLUME : 0;
-        }
-
-        @Override
-        public boolean isFluidValid(FluidStack stack) {
-            return canAcceptLiquids();
-        }
-
-        @Override
-        public int getTanks() {
-            return 1;
-        }
-
-        @Override
-        public FluidStack getFluidInTank(int tank) {
-            return FluidStack.EMPTY;
-        }
-
-        @Override
-        public int getTankCapacity(int tank) {
-            return tank == 0 ? FluidType.BUCKET_VOLUME : 0;
-        }
-
-        @Override
-        public boolean isFluidValid(int tank, FluidStack stack) {
-            return tank == 0;
-        }
-
-        @Override
-        public int fill(FluidStack resource, FluidAction action) {
+        public int fill(FluidStack resource, boolean doFill) {
             MEChestBlockEntity.this.updateHandler();
-            if (canAcceptLiquids()) {
+            if (canAcceptLiquids() && resource != null) {
                 var what = AEFluidKey.of(resource);
                 if (what != null) {
                     return (int) StorageHelper.poweredInsert(MEChestBlockEntity.this,
@@ -675,20 +644,22 @@ public class MEChestBlockEntity extends AENetworkedPoweredBlockEntity
                             what,
                             resource.amount,
                             MEChestBlockEntity.this.mySrc,
-                            Actionable.of(action));
+                            Actionable.of(doFill));
                 }
             }
             return 0;
         }
 
+        @Nullable
         @Override
-        public FluidStack drain(FluidStack resource, FluidAction action) {
-            return FluidStack.EMPTY;
+        public FluidStack drain(FluidStack resource, boolean doDrain) {
+            return null;
         }
 
+        @Nullable
         @Override
-        public FluidStack drain(int maxDrain, FluidAction action) {
-            return FluidStack.EMPTY;
+        public FluidStack drain(int maxDrain, boolean doDrain) {
+            return null;
         }
     }
 

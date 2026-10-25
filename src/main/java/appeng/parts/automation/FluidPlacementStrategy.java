@@ -6,28 +6,21 @@ import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.level.block.LiquidBlockContainer;
-import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 
 import appeng.api.behaviors.PlacementStrategy;
 import appeng.api.config.Actionable;
 import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEKey;
-import appeng.core.tags.FluidTags;
 import appeng.util.Platform;
 
 public class FluidPlacementStrategy implements PlacementStrategy {
@@ -76,8 +69,8 @@ public class FluidPlacementStrategy implements PlacementStrategy {
             return 0;
         }
 
-        // We do not support placing fluids with patched components for now
-        if (!fluidKey.toStack(1).getComponentsPatch().isEmpty()) {
+        // We do not support placing fluids with NBT for now
+        if (fluidKey.getTag() != null) {
             return 0;
         }
 
@@ -91,22 +84,18 @@ public class FluidPlacementStrategy implements PlacementStrategy {
 
         if (type == Actionable.MODULATE) {
             // Placing water in nether voids the fluid, but plays effects
-            if (level.dimensionType().ultraWarm() && FluidTags.WATER.contains(fluid)) {
+            if (level.provider.doesWaterVaporize()
+                    && fluid.doesVaporize(fluidKey.toStack((int) AEFluidKey.AMOUNT_BLOCK))) {
                 playEvaporationEffect(level, pos);
-            } else if (state.getBlock() instanceof LiquidBlockContainer liquidBlockContainer
-                    && fluid == FluidRegistry.WATER) {
-                liquidBlockContainer.placeLiquid(level, pos, state, ((FlowingFluid) fluid).getSource(false));
-                playEmptySound(level, pos, fluid);
             } else {
-                if (state.canBeReplaced(fluid) && !state.liquid()) {
+                if (state.getBlock().isReplaceable(level, pos) && !state.getMaterial().isLiquid()) {
                     level.destroyBlock(pos, true);
                 }
 
-                if (!level.setBlock(pos, fluid.defaultFluidState().createLegacyBlock(), Block.UPDATE_ALL_IMMEDIATE)
-                        && !state.getFluidState().isSource()) {
+                if (!level.setBlockState(pos, fluid.getBlock().getDefaultState(), 11)) {
                     return 0;
                 } else {
-                    playEmptySound(level, pos, fluid);
+                    playEmptySound(level, pos, fluidKey);
                 }
             }
         }
@@ -114,47 +103,41 @@ public class FluidPlacementStrategy implements PlacementStrategy {
         return AEFluidKey.AMOUNT_BLOCK;
     }
 
-    private void playEmptySound(World level, BlockPos pos, Fluid fluid) {
+    private void playEmptySound(World level, BlockPos pos, AEFluidKey fluid) {
         if (throttleEffect()) {
             return;
         }
 
-        SoundEvent soundEvent = FluidTags.LAVA.contains(fluid) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
+        var soundEvent = fluid.getFluid().getEmptySound(fluid.toStack((int) AEFluidKey.AMOUNT_BLOCK));
         level.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, 1.0F);
-        level.gameEvent(GameEvent.FLUID_PLACE, pos, GameEvent.Context.of(null, null));
     }
 
-    private void playEvaporationEffect(World level, BlockPos pos) {
+    private void playEvaporationEffect(WorldServer level, BlockPos pos) {
         if (throttleEffect()) {
             return;
         }
 
-        level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F,
+        level.playSound(null, pos, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F,
                 2.6F + (level.rand.nextFloat() - level.rand.nextFloat()) * 0.8F);
 
-        for (int l = 0; l < 8; ++l) {
-            level.addParticle(
-                    ParticleTypes.LARGE_SMOKE,
-                    (double) pos.getX() + Math.random(),
-                    (double) pos.getY() + Math.random(),
-                    (double) pos.getZ() + Math.random(),
-                    0.0D,
-                    0.0D,
-                    0.0D);
-        }
+        // The server version sends the particles to the players around
+        level.spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 8,
+                0.25, 0.25, 0.25, 0.0);
     }
 
     /**
-     * Checks from {@link net.minecraft.world.item.BucketItem#emptyContents}
+     * Checks like the bucket of the game.
      */
     private boolean canPlace(WorldServer level, IBlockState state, BlockPos pos, Fluid fluid) {
-        if (!(fluid instanceof FlowingFluid)) {
+        var fluidBlock = fluid.getBlock();
+        if (fluidBlock == null) {
+            // Fluids without a block cannot exist in the world
             return false;
         }
 
         // This check is in addition to vanilla's checks. If the fluid is already in place,
         // don't place it again. This is for water, since water is otherwise replaceable by water.
-        if (state == fluid.defaultFluidState().createLegacyBlock()) {
+        if (state == fluidBlock.getDefaultState()) {
             return false;
         }
 
@@ -162,16 +145,7 @@ public class FluidPlacementStrategy implements PlacementStrategy {
             return true;
         }
 
-        if (state.canBeReplaced(fluid)) {
-            return true;
-        }
-
-        if (state.getBlock() instanceof LiquidBlockContainer liquidBlockContainer) {
-            var fakePlayer = Platform.getFakePlayer(level, owningPlayerId);
-            return liquidBlockContainer.canPlaceLiquid(fakePlayer, level, pos, state, fluid);
-        }
-
-        return false;
+        return state.getBlock().isReplaceable(level, pos);
     }
 
     /**

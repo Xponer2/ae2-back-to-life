@@ -1,0 +1,7 @@
+{
+  "name": "Инструменты",
+  "description": "Инструменты Applied Energistics 2.",
+  "icon": "ae2:certus_quartz_wrench",
+  "parent": "items_blocks_machines",
+  "sortnum": 4
+}

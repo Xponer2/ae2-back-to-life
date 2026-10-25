@@ -26,14 +26,13 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer.Builder;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import appeng.api.orientation.IOrientationStrategy;
@@ -48,8 +47,7 @@ import appeng.util.shape.CollisionContext;
 import appeng.util.shape.Shapes;
 import appeng.util.shape.VoxelShape;
 
-public class CrystalResonanceGeneratorBlock extends AEBaseEntityBlock<CrystalResonanceGeneratorBlockEntity>
-        implements SimpleWaterloggedBlock {
+public class CrystalResonanceGeneratorBlock extends AEBaseEntityBlock<CrystalResonanceGeneratorBlockEntity> {
 
     public enum State implements StringRepresentable {
         OFF, ON, HAS_CHANNEL;
@@ -60,18 +58,16 @@ public class CrystalResonanceGeneratorBlock extends AEBaseEntityBlock<CrystalRes
         }
     }
 
-    private static final PropertyBool WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public CrystalResonanceGeneratorBlock() {
         super(glassProps().noOcclusion().forceSolidOn());
-        this.setDefaultState(this.getDefaultState().withProperty(WATERLOGGED, false));
+        this.setDefaultState(this.getDefaultState());
     }
 
     @Override
-    protected void createBlockStateDefinition(Builder<Block, IBlockState> builder) {
+    protected void createBlockStateDefinition(BlockStateContainer.Builder builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(WATERLOGGED);
-    }
+            }
 
     @Override
     public VoxelShape getShape(IBlockState state, IBlockAccess level, BlockPos pos, CollisionContext context) {
@@ -139,10 +135,6 @@ public class CrystalResonanceGeneratorBlock extends AEBaseEntityBlock<CrystalRes
         return Shapes.create(new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ));
     }
 
-    @Override
-    public boolean propagatesSkylightDown(IBlockState state, IBlockAccess reader, BlockPos pos) {
-        return true;
-    }
 
     @Override
     public IOrientationStrategy getOrientationStrategy() {
@@ -152,24 +144,13 @@ public class CrystalResonanceGeneratorBlock extends AEBaseEntityBlock<CrystalRes
     @Override
     @Nullable
     public IBlockState getStateForPlacement(BlockPlaceContext context) {
-        var fluidState = context.getLevel().getFluidState(context.getClickedPos());
-        return super.getStateForPlacement(context)
-                .setValue(WATERLOGGED, fluidState.getType() == FluidRegistry.WATER);
+        return super.getStateForPlacement(context);
     }
 
-    @Override
-    public FluidState getFluidState(IBlockState blockState) {
-        return blockState.getValue(WATERLOGGED).booleanValue()
-                ? FluidRegistry.WATER.getSource(false)
-                : super.getFluidState(blockState);
-    }
 
     @Override
     public IBlockState updateShape(IBlockState blockState, EnumFacing facing, IBlockState facingState, World level,
             BlockPos currentPos, BlockPos facingPos) {
-        if (blockState.getValue(WATERLOGGED).booleanValue()) {
-            level.scheduleTick(currentPos, FluidRegistry.WATER, FluidRegistry.WATER.getTickDelay(level));
-        }
 
         return super.updateShape(blockState, facing, facingState, level, currentPos, facingPos);
     }

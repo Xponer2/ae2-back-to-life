@@ -1,0 +1,31 @@
+{
+  "name": "Небесный камень",
+  "icon": "ae2:sky_stone_block",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:sky_stone_block",
+      "link_recipe": true,
+      "anchor": "sky-stone",
+      "text": "Материал, из которого состоят $(l:ae2_mechanics/meteorites)метеориты$(/l); используется в рецептах предметов $(l:items_blocks_machines/sky_stone_tank)Бак из небесного камня$(/l), $(l:items_blocks_machines/mysterious_cube)Не такой уж и таинственный куб$(/l), $(l:items_blocks_machines/storage_cells)256К МЭ компонент хранения$(/l) и, что важнее всего, устройства $(l:items_blocks_machines/controller)МЭ контроллер$(/l)."
+    },
+    {
+      "type": "text",
+      "title": "Рецепты",
+      "anchor": "recipes",
+      "text": "Поставьте плоскость уничтожения лицом вверх на максимальной высоте мира, чтобы получать пыль небесного камня"
+    },
+    {
+      "type": "smelting",
+      "recipe": "ae2:sky_dust",
+      "text": ""
+    },
+    {
+      "type": "smelting",
+      "recipe": "ae2:sky_stone_block",
+      "text": ""
+    }
+  ]
+}

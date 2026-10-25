@@ -74,7 +74,7 @@ public final class BlockAttackHook {
 
         // Compute the hit location within the block's space. hitResult should never be null at this point,
         // since the event itself gets the blockPos from it.
-        var localPos = hitResult.getLocation().subtract(
+        var localPos = hitResult.hitVec.subtract(
                 pos.getX(),
                 pos.getY(),
                 pos.getZ());

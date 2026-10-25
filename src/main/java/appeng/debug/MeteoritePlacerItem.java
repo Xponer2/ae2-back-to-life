@@ -22,10 +22,10 @@ import appeng.util.ItemProperties;
 
 import appeng.core.CreativeTabOutput;
 
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
@@ -66,14 +66,17 @@ public class MeteoritePlacerItem extends AEBaseItem {
 
         if (InteractionUtil.isInAlternateUseMode(player)) {
             final ItemStack itemStack = player.getHeldItem(hand);
-            NBTTagCompound.update(DataComponents.CUSTOM_DATA, itemStack, tag -> {
-                if (tag.contains(MODE_TAG)) {
-                    final byte mode = tag.getByte("mode");
-                    tag.setByte(MODE_TAG, (byte) ((mode + 1) % CraterType.values().length));
-                } else {
-                    tag.setByte(MODE_TAG, (byte) CraterType.NORMAL.ordinal());
-                }
-            });
+            NBTTagCompound tag = itemStack.getTagCompound();
+            if (tag == null) {
+                tag = new NBTTagCompound();
+                itemStack.setTagCompound(tag);
+            }
+            if (tag.hasKey(MODE_TAG)) {
+                final byte mode = tag.getByte("mode");
+                tag.setByte(MODE_TAG, (byte) ((mode + 1) % CraterType.values().length));
+            } else {
+                tag.setByte(MODE_TAG, (byte) CraterType.NORMAL.ordinal());
+            }
 
             var craterType = getCraterType(itemStack);
 
@@ -86,9 +89,8 @@ public class MeteoritePlacerItem extends AEBaseItem {
     }
 
     private CraterType getCraterType(ItemStack stack) {
-        var customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, NBTTagCompound.EMPTY);
-        var tag = customData.copy();
-        return CraterType.values()[tag.getByte(MODE_TAG)];
+        var tag = stack.getTagCompound();
+        return CraterType.values()[tag != null ? tag.getByte(MODE_TAG) : 0];
     }
 
     @Override
@@ -133,10 +135,13 @@ public class MeteoritePlacerItem extends AEBaseItem {
         // The placer will not send chunks to the player since it's used as part
         // of world-gen normally, so we'll have to do it ourselves. Since this
         // is a debug tool, we'll not care about being terribly efficient here
-        ChunkPos.rangeClosed(new ChunkPos(spawned.getPos()), 1).forEach(cp -> {
-            Chunk c = level.getChunk(cp.x, cp.z);
-            player.connection.send(Platform.getFullChunkPacket(c));
-        });
+        var center = new ChunkPos(spawned.getPos());
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                Chunk c = level.getChunk(center.x + dx, center.z + dz);
+                player.connection.sendPacket(Platform.getFullChunkPacket(c));
+            }
+        }
 
         return EnumActionResult.SUCCESS;
     }
@@ -144,7 +149,7 @@ public class MeteoritePlacerItem extends AEBaseItem {
     @Override
     public void addToMainCreativeTab(CreativeTabOutput.DisplayParameters parameters, CreativeTabOutput output) {
         if (AEConfig.instance().isDebugToolsEnabled()) {
-            output.accept(this);
+            output.accept((Item) this);
         }
     }
 }

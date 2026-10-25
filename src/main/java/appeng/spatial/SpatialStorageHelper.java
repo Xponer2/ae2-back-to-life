@@ -21,9 +21,6 @@ package appeng.spatial;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import it.unimi.dsi.fastutil.longs.LongSet;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -31,14 +28,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.level.chunk.status.ChunkStatus;
-import net.minecraft.world.level.entity.Visibility;
-import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraftforge.common.util.ITeleporter;
 
 import appeng.core.definitions.AEBlocks;
 import appeng.core.stats.AdvancementTriggers;
@@ -80,14 +73,17 @@ public class SpatialStorageHelper {
         }
         if (newLevel == oldLevel) {
             // just set the location. Minecraft will handle eventual passengers
-            newLevel.getChunkProvider().getChunk(MathHelper.floor(link.x) >> 4, MathHelper.floor(link.z) >> 4,
-                    ChunkStatus.FULL, true);
-            entity.teleportTo(link.x, link.y, link.z);
+            newLevel.getChunkProvider().provideChunk(MathHelper.floor(link.x) >> 4, MathHelper.floor(link.z) >> 4);
+            if (entity instanceof EntityPlayerMP player) {
+                player.connection.setPlayerLocation(link.x, link.y, link.z, entity.rotationYaw, entity.rotationPitch);
+            } else {
+                entity.setPositionAndUpdate(link.x, link.y, link.z);
+            }
             return entity;
         }
 
         // Are we riding something? Teleport it instead.
-        if (entity.isPassenger()) {
+        if (entity.isRiding()) {
             return this.teleportEntity(entity.getRidingEntity(), link);
         }
 
@@ -95,30 +91,41 @@ public class SpatialStorageHelper {
         final List<Entity> passengers = entity.getPassengers();
         final List<Entity> passengersOnOtherSide = new ArrayList<>(passengers.size());
         for (Entity passenger : passengers) {
-            passenger.stopRiding();
+            passenger.dismountRidingEntity();
             passengersOnOtherSide.add(this.teleportEntity(passenger, link));
         }
         // We keep track of all so we can remount them on the other side.
 
         // load the chunk!
-        newLevel.getChunkProvider().getChunk(MathHelper.floor(link.x) >> 4, MathHelper.floor(link.z) >> 4,
-                ChunkStatus.FULL, true);
+        newLevel.getChunkProvider().provideChunk(MathHelper.floor(link.x) >> 4, MathHelper.floor(link.z) >> 4);
 
-        if (entity instanceof EntityPlayerMP && link.dim.dimension() == SpatialStorageDimensionIds.WORLD_ID) {
+        if (entity instanceof EntityPlayerMP
+                && newLevel.provider.getDimension() == SpatialStorageDimensionIds.getDimensionId()) {
             AdvancementTriggers.SPATIAL_EXPLORER.trigger((EntityPlayerMP) entity);
         }
 
-        entity.changeDimension(new DimensionTransition(
-                newLevel, new Vec3d(link.x, link.y, link.z), Vec3d.ZERO, entity.rotationYaw,
-                entity.rotationPitch, transportedEntity -> {
-                    if (!passengersOnOtherSide.isEmpty()) {
-                        for (Entity passanger : passengersOnOtherSide) {
-                            passanger.startRiding(transportedEntity, true);
-                        }
-                    }
-                }));
+        // Entities other than players are recreated in the new dimension
+        var transported = entity.changeDimension(newLevel.provider.getDimension(), new ITeleporter() {
+            @Override
+            public void placeEntity(World world, Entity placed, float yaw) {
+                placed.setLocationAndAngles(link.x, link.y, link.z, placed.rotationYaw, placed.rotationPitch);
+                placed.motionX = placed.motionY = placed.motionZ = 0;
+            }
 
-        return entity;
+            @Override
+            public boolean isVanilla() {
+                return false;
+            }
+        });
+        if (transported == null) {
+            return entity;
+        }
+
+        for (Entity passenger : passengersOnOtherSide) {
+            passenger.startRiding(transported, true);
+        }
+
+        return transported;
     }
 
     private void transverseEdges(int minX, int minY, int minZ, int maxX, int maxY,
@@ -167,33 +174,26 @@ public class SpatialStorageHelper {
         // do nearly all the work... swaps blocks, block entities, and block ticks
         cSrc.swap(cDst);
 
-        // Synchronously load entities
-        var loadedSrcChunks = loadEntityChunksSynchronously(srcLevel, srcBox);
-        var loadedDestChunks = loadEntityChunksSynchronously(dstLevel, dstBox);
-        try {
-            var srcE = srcLevel.getEntitiesWithinAABB(Entity.class, srcBox);
-            var dstE = dstLevel.getEntitiesWithinAABB(Entity.class, dstBox);
+        // The chunks (and with them their entities) were loaded by the CachedPlanes
+        var srcE = srcLevel.getEntitiesWithinAABB(Entity.class, srcBox);
+        var dstE = dstLevel.getEntitiesWithinAABB(Entity.class, dstBox);
 
-            for (Entity e : dstE) {
-                this.teleportEntity(e, new TelDestination(srcLevel, srcBox, e.posX, e.posY, e.posZ,
-                        -dstX + srcX, -dstY + srcY, -dstZ + srcZ));
-            }
+        for (Entity e : dstE) {
+            this.teleportEntity(e, new TelDestination(srcLevel, srcBox, e.posX, e.posY, e.posZ,
+                    -dstX + srcX, -dstY + srcY, -dstZ + srcZ));
+        }
 
-            for (Entity e : srcE) {
-                this.teleportEntity(e, new TelDestination(dstLevel, dstBox, e.posX, e.posY, e.posZ,
-                        -srcX + dstX, -srcY + dstY, -srcZ + dstZ));
-            }
-        } finally {
-            unloadEntityChunks(srcLevel, loadedSrcChunks);
-            unloadEntityChunks(dstLevel, loadedDestChunks);
+        for (Entity e : srcE) {
+            this.teleportEntity(e, new TelDestination(dstLevel, dstBox, e.posX, e.posY, e.posZ,
+                    -srcX + dstX, -srcY + dstY, -srcZ + dstZ));
         }
 
         for (BlockPos pos : cDst.getUpdates()) {
-            cSrc.getLevel().notifyNeighborsOfStateChange(pos, Blocks.AIR);
+            cSrc.getLevel().notifyNeighborsOfStateChange(pos, Blocks.AIR, true);
         }
 
         for (BlockPos pos : cSrc.getUpdates()) {
-            cSrc.getLevel().notifyNeighborsOfStateChange(pos, Blocks.AIR);
+            cSrc.getLevel().notifyNeighborsOfStateChange(pos, Blocks.AIR, true);
         }
 
         this.transverseEdges(srcX - 1, srcY - 1, srcZ - 1, srcX + scaleX + 1, srcY + scaleY + 1, srcZ + scaleZ + 1,
@@ -207,35 +207,6 @@ public class SpatialStorageHelper {
                 new TriggerUpdates(dstLevel));
     }
 
-    // Force-loads entity-chunks that are not currently loaded and returns the chunks
-    // that we loaded explicitly (to allow unloading them)
-    private LongSet loadEntityChunksSynchronously(WorldServer level, AxisAlignedBB box) {
-        var minChunk = new ChunkPos(new BlockPos((int) box.minX, 0, (int) box.minZ));
-        var maxChunk = new ChunkPos(new BlockPos((int) Math.ceil(box.maxX), 0, (int) Math.ceil(box.maxZ)));
-
-        var chunksLoaded = new LongOpenHashSet();
-        var entityManager = level.entityManager;
-        ChunkPos.rangeClosed(minChunk, maxChunk).forEach(chunkPos -> {
-            var status = entityManager.chunkVisibility.get(chunkPos.toLong());
-            if (!status.isAccessible()) {
-                chunksLoaded.add(chunkPos.toLong());
-                entityManager.updateChunkStatus(chunkPos, Visibility.TRACKED);
-            }
-        });
-        if (!chunksLoaded.isEmpty()) {
-            entityManager.permanentStorage.flush(false);
-            entityManager.tick();
-        }
-        return chunksLoaded;
-    }
-
-    // Marks chunks previously loaded by loadEntityChunksSynchronously as unloadable
-    private static void unloadEntityChunks(WorldServer srcLevel, LongSet loadedSrcChunks) {
-        loadedSrcChunks.forEach(chunkPos -> {
-            srcLevel.entityManager.updateChunkStatus(new ChunkPos(chunkPos), Visibility.HIDDEN);
-        });
-    }
-
     private static class TriggerUpdates implements ISpatialVisitor {
 
         private final World dst;
@@ -247,7 +218,7 @@ public class SpatialStorageHelper {
         @Override
         public void visit(BlockPos pos) {
             final IBlockState state = this.dst.getBlockState(pos);
-            state.handleNeighborChanged(this.dst, pos, state.getBlock(), pos, false);
+            state.neighborChanged(this.dst, pos, state.getBlock(), pos);
         }
     }
 

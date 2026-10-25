@@ -18,11 +18,14 @@
 
 package appeng.block.misc;
 
+import appeng.client.render.effects.AEParticles;
+import net.minecraft.util.math.Vec3d;
+import javax.vecmath.Vector3f;
+import javax.vecmath.Matrix4f;
 import java.util.List;
 import java.util.Random;
 
 import com.google.common.collect.ImmutableList;
-import org.joml.Vector3f;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -68,7 +71,7 @@ public class ChargerBlock extends AEBaseEntityBlock<ChargerBlockEntity> {
     }
 
     @Override
-    public int getLightBlock(IBlockState state, IBlockAccess level, BlockPos pos) {
+    public int getLightOpacity(IBlockState state, IBlockAccess level, BlockPos pos) {
         return 2; // FIXME Double check this (esp. value range)
     }
 
@@ -124,17 +127,19 @@ public class ChargerBlock extends AEBaseEntityBlock<ChargerBlockEntity> {
 
             for (int bolts = 0; bolts < 3; bolts++) {
                 // Slightly offset the lightning arc on the x/z plane
-                var xOff = MathHelper.randomBetween(r, -0.15f, 0.15f);
-                var zOff = MathHelper.randomBetween(r, -0.15f, 0.15f);
+                var xOff = -0.15f + r.nextFloat() * 0.3f;
+                var zOff = -0.15f + r.nextFloat() * 0.3f;
 
                 // Compute two points in the charger block. One at the bottom, and one on the top.
                 // Account for the rotation while doing this.
+                var rotationMatrix = new Matrix4f();
+                rotationMatrix.set(rotation.getQuaternion());
                 var center = new Vector3f(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f);
                 var origin = new Vector3f(xOff, -0.3f, zOff);
-                origin.rotate(rotation.getQuaternion());
+                rotationMatrix.transform(origin);
                 origin.add(center);
                 var target = new Vector3f(xOff, 0.3f, zOff);
-                target.rotate(rotation.getQuaternion());
+                rotationMatrix.transform(target);
                 target.add(center);
 
                 // Split the arcs between arc coming from the top/bottom of the charger since it's symmetrical
@@ -145,12 +150,8 @@ public class ChargerBlock extends AEBaseEntityBlock<ChargerBlockEntity> {
                 }
 
                 if (AppEngClient.instance().shouldAddParticles(r)) {
-                    Minecraft.getMinecraft().effectRenderer.createParticle(
-                            new LightningArcParticleData(target),
-                            origin.x(),
-                            origin.y(),
-                            origin.z(),
-                            0.0, 0.0, 0.0);
+                    AEParticles.add(new LightningArcParticleData(new Vec3d(target.x, target.y, target.z)),
+                            origin.x, origin.y, origin.z, 0.0, 0.0, 0.0);
                 }
             }
         }

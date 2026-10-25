@@ -66,7 +66,8 @@ public class PortableCellMenuHost<T extends AbstractPortableCell> extends ItemMe
     public PortableCellMenuHost(T item, EntityPlayer player, ItemMenuHostLocator locator,
             BiConsumer<EntityPlayer, ISubMenu> returnMainMenu) {
         super(item, player, locator);
-        Preconditions.checkArgument(Platform.is(getItemStack(), item), "Stack doesn't match item");
+        Preconditions.checkArgument(Platform.is(getItemStack(), (net.minecraft.item.Item) item),
+                "Stack doesn't match item");
         this.returnMainMenu = returnMainMenu;
         this.cellStorage = new SupplierStorage(new CellStorageSupplier());
         Objects.requireNonNull(cellStorage, "Portable cell doesn't expose a cell inventory.");

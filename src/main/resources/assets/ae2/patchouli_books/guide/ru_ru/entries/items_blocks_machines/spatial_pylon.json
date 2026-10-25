@@ -1,0 +1,25 @@
+{
+  "name": "Пространственный пилон",
+  "icon": "ae2:spatial_pylon",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 210,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:spatial_pylon",
+      "link_recipe": true,
+      "anchor": "the-spatial-pylon",
+      "text": "Пространственный пилон используется в $(l:ae2_mechanics/spatial_io)пространственном вводе/выводе$(/l): пилоны создают пространственное поле и задают затрагиваемый объём.$(br2)Каждая непрерывная линия пилонов занимает 1 $(l:ae2_mechanics/channels)канал$(/l)$(br2)Чтобы работать, линия пилонов должна быть длиной не меньше"
+    },
+    {
+      "type": "text",
+      "text": "2 блоков."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/spatial_io_pylon",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

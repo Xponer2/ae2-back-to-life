@@ -32,6 +32,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.client.render.CopperTextures;
 import appeng.client.render.TooltipImages;
+import appeng.client.render.VillagerTextures;
 import appeng.client.render.effects.AEParticles;
 import appeng.client.render.model.AEModelData;
 import appeng.client.render.model.AutoRotatingBakedModel;
@@ -79,6 +80,8 @@ public final class InitRendering {
         InitPartTextures.registerTextures(map);
         InitAdditionalModels.registerTextures(map);
         CopperTextures.registerSprites(map);
+        // The texture manager exists by now (the first stitch is part of the model loading)
+        VillagerTextures.register();
     }
 
     @SubscribeEvent

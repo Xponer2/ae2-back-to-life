@@ -33,6 +33,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -46,6 +47,7 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.VillagerRegistry.VillagerProfession;
 
 import appeng.api.capabilities.AECapabilityRegistration;
 import appeng.api.capabilities.RegisterCapabilitiesEvent;
@@ -59,8 +61,10 @@ import appeng.core.definitions.AEItems;
 import appeng.core.definitions.AEParts;
 import appeng.core.network.ClientboundPacket;
 import appeng.core.network.InitNetwork;
+import appeng.core.compat.OreDictionaryCompat;
 import appeng.core.network.PacketDistributor;
 import appeng.core.tags.TagManager;
+import appeng.hooks.IntrinsicEnchantHooks;
 import appeng.hooks.SkyStoneBreakSpeed;
 import appeng.hooks.WrenchHook;
 import appeng.hooks.ticking.TickHandler;
@@ -68,13 +72,21 @@ import appeng.hotkeys.HotkeyActions;
 import appeng.init.InitAdvancementTriggers;
 import appeng.init.InitCapabilityProviders;
 import appeng.init.InitDispenserBehavior;
+import appeng.init.InitMenuTypes;
 import appeng.init.InitStats;
+import appeng.init.InitVillager;
 import appeng.init.internal.InitBlockEntityMoveStrategies;
 import appeng.init.internal.InitGridLinkables;
 import appeng.init.internal.InitGridServices;
 import appeng.init.internal.InitP2PAttunements;
 import appeng.init.internal.InitStorageCells;
 import appeng.init.internal.InitUpgrades;
+import appeng.init.worldgen.InitBiomes;
+import appeng.init.worldgen.InitDimensionTypes;
+import appeng.init.worldgen.InitStructures;
+import appeng.integration.Integrations;
+import appeng.recipes.loader.RecipeLoader;
+import appeng.server.AECommand;
 import appeng.server.services.ChunkLoadingService;
 import appeng.sounds.AppEngSounds;
 
@@ -109,6 +121,7 @@ public abstract class AppEngBase implements AppEng {
 
     public void preInit(FMLPreInitializationEvent event) {
         AEConfig.register(event.getModConfigurationDirectory());
+        InitDimensionTypes.init();
         AECapabilityRegistration.register();
 
         registerKeyTypes();
@@ -123,6 +136,7 @@ public abstract class AppEngBase implements AppEng {
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(WrenchHook.class);
         MinecraftForge.EVENT_BUS.register(SkyStoneBreakSpeed.class);
+        MinecraftForge.EVENT_BUS.register(IntrinsicEnchantHooks.class);
         HotkeyActions.init();
     }
 
@@ -134,13 +148,16 @@ public abstract class AppEngBase implements AppEng {
         InitCapabilityProviders.registerGenericAdapters(capabilities);
         InitAdvancementTriggers.init();
         InitStats.init();
-        appeng.core.compat.OreDictionaryCompat.register();
+        InitMenuTypes.init();
+        InitStructures.init();
+        ChunkLoadingService.getInstance().register();
+        OreDictionaryCompat.register();
+        Integrations.init();
     }
 
     public void postInit(FMLPostInitializationEvent event) {
         // All mods registered their ore dictionary entries now
         TagManager.invalidate();
-        appeng.integration.Integrations.init();
     }
 
     /**
@@ -160,11 +177,11 @@ public abstract class AppEngBase implements AppEng {
     }
 
     public void onServerAboutToStart(FMLServerAboutToStartEvent evt) {
-        ChunkLoadingService.getInstance().onServerAboutToStart(evt.getServer());
+        ChunkLoadingService.getInstance().onServerAboutToStart();
     }
 
     public void onServerStarting(FMLServerStartingEvent evt) {
-        appeng.server.AECommand.register(evt);
+        evt.registerServerCommand(new AECommand());
     }
 
     public void onServerStopping(FMLServerStoppingEvent event) {
@@ -192,6 +209,11 @@ public abstract class AppEngBase implements AppEng {
     }
 
     @SubscribeEvent
+    public void registerBiomes(RegistryEvent.Register<Biome> event) {
+        InitBiomes.init(event.getRegistry());
+    }
+
+    @SubscribeEvent
     public void registerSounds(RegistryEvent.Register<SoundEvent> event) {
         AppEngSounds.register(event.getRegistry());
     }
@@ -201,9 +223,14 @@ public abstract class AppEngBase implements AppEng {
         AEEntities.register(event.getRegistry());
     }
 
+    @SubscribeEvent
+    public void registerVillagerProfessions(RegistryEvent.Register<VillagerProfession> event) {
+        InitVillager.initProfession(event.getRegistry());
+    }
+
     @SubscribeEvent(priority = EventPriority.LOW)
     public void registerRecipes(RegistryEvent.Register<IRecipe> event) {
-        appeng.recipes.loader.RecipeLoader.loadAll(event.getRegistry());
+        RecipeLoader.loadAll(event.getRegistry());
     }
 
     // ---------------------------------------------------------------------------------------------------------------

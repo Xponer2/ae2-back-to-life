@@ -22,13 +22,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
 import appeng.client.gui.GuiGraphics;
 import appeng.client.gui.Rect2i;
+import appeng.client.gui.compat.AbstractWidget;
+import appeng.client.gui.compat.NarrationElementOutput;
 import appeng.client.gui.style.Blitter;
 import appeng.core.localization.GuiText;
 import appeng.menu.interfaces.IProgressProvider;
@@ -106,7 +106,7 @@ public class ProgressBar extends AbstractWidget implements ITooltip {
         return Arrays.asList(
                 result,
                 new TextComponentString(this.source.getCurrentProgress() + " ")
-                        .appendSibling(GuiText.Of.text().createCopy().appendSibling(" " + this.source.getMaxProgress())));
+                        .appendSibling(GuiText.Of.text().createCopy().appendText(" " + this.source.getMaxProgress())));
     }
 
     @Override

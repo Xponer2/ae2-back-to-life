@@ -19,7 +19,10 @@
 package appeng.core.stats;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.stats.StatBase;
+import net.minecraft.stats.StatBasic;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
 
 import appeng.core.AppEng;
 
@@ -30,17 +33,30 @@ public enum AeStats {
     ItemsExtracted("items_extracted");
 
     private final ResourceLocation registryName;
+    private StatBase stat;
 
     AeStats(String id) {
         this.registryName = AppEng.makeId(id);
     }
 
     public void addToPlayer(EntityPlayer player, int howMany) {
-        player.addStat(this.registryName, howMany);
+        if (stat != null) {
+            player.addStat(stat, howMany);
+        }
     }
 
     public ResourceLocation getRegistryName() {
         return registryName;
+    }
+
+    /**
+     * Registers the 1.12.2 stat. Its id is the 1.21 lang key {@code stat.<namespace>.<path>}.
+     */
+    public void register() {
+        if (stat == null) {
+            var key = "stat." + registryName.getNamespace() + "." + registryName.getPath();
+            stat = new StatBasic(key, new TextComponentTranslation(key)).registerStat();
+        }
     }
 
 }

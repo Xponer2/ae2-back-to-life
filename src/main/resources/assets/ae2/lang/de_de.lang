@@ -276,6 +276,7 @@ death.attack.matter_cannon=%1$s wurde von %2$s erschossen
 death.attack.matter_cannon.item=%1$s wurde von %2$s mit %3$s geschossen
 entity.ae2.tiny_tnt_primed=Kleines gezündetes TNT
 entity.minecraft.villager.ae2.fluix_researcher=Fluix Forscher
+entity.Villager.fluix_researcher=Fluix Forscher
 exported_setting.ae2.exported_config_inv=Filtern
 exported_setting.ae2.exported_custom_name=Eigener Name
 exported_setting.ae2.exported_level_emitter_value=Level Emitter Wert

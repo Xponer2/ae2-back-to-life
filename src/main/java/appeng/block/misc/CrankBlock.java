@@ -18,9 +18,10 @@
 
 package appeng.block.misc;
 
+import appeng.block.BlockProperties;
 import java.util.Arrays;
 
-import net.neoforged.neoforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.FakePlayer;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -31,7 +32,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.level.block.RenderShape;
+import appeng.block.RenderShape;
 
 import appeng.api.implementations.blockentities.ICrankable;
 import appeng.api.orientation.IOrientationStrategy;
@@ -47,7 +48,7 @@ public class CrankBlock extends AEBaseEntityBlock<CrankBlockEntity> {
 
     private static final VoxelShape[] SHAPES = Arrays.stream(EnumFacing.VALUES)
             .map(CrankBlock::createShape)
-            .toArray(new VoxelShape[0]);
+            .toArray(VoxelShape[]::new);
 
     public CrankBlock(BlockProperties props) {
         super(props);
@@ -93,13 +94,8 @@ public class CrankBlock extends AEBaseEntityBlock<CrankBlockEntity> {
     }
 
     @Override
-    public boolean canSurvive(IBlockState state, World levelReader, BlockPos pos) {
-        if (levelReader instanceof World level) {
-            return getCrankable(state, level, pos) != null;
-        } else {
-            // We'll allow it for worldgen purposes...
-            return true;
-        }
+    public boolean canSurvive(IBlockState state, World level, BlockPos pos) {
+        return getCrankable(state, level, pos) != null;
     }
 
     @Override

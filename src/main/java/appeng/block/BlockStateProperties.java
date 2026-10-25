@@ -17,8 +17,7 @@ import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.util.EnumFacing;
 
 /**
- * The block state properties of modern Minecraft that AE2 uses. {@link #WATERLOGGED} does not exist on 1.12.2: it is
- * kept so code compiles, but it is never added to a block state container.
+ * The block state properties of modern Minecraft that AE2 uses (1.12.2 has no waterlogging).
  */
 public final class BlockStateProperties {
     private BlockStateProperties() {
@@ -32,8 +31,4 @@ public final class BlockStateProperties {
     public static final PropertyEnum<EnumFacing.Axis> AXIS = PropertyEnum.create("axis", EnumFacing.Axis.class);
     public static final PropertyInteger LEVEL = PropertyInteger.create("level", 0, 15);
 
-    /**
-     * Not a real property on 1.12.2 (no waterlogging).
-     */
-    public static final PropertyBool WATERLOGGED = PropertyBool.create("waterlogged");
 }

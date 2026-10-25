@@ -1,9 +1,10 @@
 package appeng.blockentity.storage;
 
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.IFluidTank;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,7 +20,7 @@ public class SkyStoneTankBlockEntity extends AEBaseBlockEntity {
 
     public static final int BUCKET_CAPACITY = 16;
 
-    protected FluidTank tank = new FluidTank(FluidType.BUCKET_VOLUME * BUCKET_CAPACITY) {
+    protected FluidTank tank = new FluidTank(Fluid.BUCKET_VOLUME * BUCKET_CAPACITY) {
         @Override
         protected void onContentsChanged() {
             SkyStoneTankBlockEntity.this.markForUpdate();
@@ -61,7 +62,8 @@ public class SkyStoneTankBlockEntity extends AEBaseBlockEntity {
 
     protected boolean readFromStream(RegistryFriendlyByteBuf data) {
         boolean ret = super.readFromStream(data);
-        tank.readFromNBT(data.readNbt());
+        var tankTag = data.readNbt();
+        tank.readFromNBT(tankTag != null ? tankTag : new NBTTagCompound());
         return ret;
     }
 

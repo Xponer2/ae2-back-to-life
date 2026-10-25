@@ -21,6 +21,7 @@ package appeng.block.storage;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer.Builder;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumActionResult;
@@ -45,7 +46,7 @@ public class MEChestBlock extends AEBaseEntityBlock<MEChestBlockEntity> {
     }
 
     @Override
-    protected void createBlockStateDefinition(Builder<Block, IBlockState> builder) {
+    protected void createBlockStateDefinition(BlockStateContainer.Builder builder) {
         super.createBlockStateDefinition(builder);
         builder.add(LIGHTS_ON);
     }
@@ -71,7 +72,7 @@ public class MEChestBlock extends AEBaseEntityBlock<MEChestBlockEntity> {
             RayTraceResult hitResult) {
         if (level.getTileEntity(pos) instanceof MEChestBlockEntity be) {
             if (!level.isRemote) {
-                if (hitResult.getDirection() == be.getTop()) {
+                if (hitResult.sideHit == be.getTop()) {
                     if (!be.openGui(player)) {
                         player.sendStatusMessage(PlayerMessages.ChestCannotReadStorageCell.text(), true);
                     }

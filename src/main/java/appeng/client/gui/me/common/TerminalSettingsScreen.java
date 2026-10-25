@@ -91,7 +91,7 @@ public class TerminalSettingsScreen<C extends MEStorageMenu> extends AESubScreen
     }
 
     private void addBackButton() {
-        var label = menu.getHost().getMainMenuIcon().getDisplayNameComponent();
+        ITextComponent label = new TextComponentString(menu.getHost().getMainMenuIcon().getDisplayName());
         TabButton button = new TabButton(Icon.BACK, label, btn -> returnToParent());
         widgets.add("back", button);
     }

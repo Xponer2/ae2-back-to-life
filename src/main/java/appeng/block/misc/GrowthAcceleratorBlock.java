@@ -18,11 +18,13 @@
 
 package appeng.block.misc;
 
+import appeng.client.render.effects.AEParticles;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer.Builder;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
@@ -55,7 +57,7 @@ public class GrowthAcceleratorBlock extends AEBaseEntityBlock<GrowthAcceleratorB
     }
 
     @Override
-    protected void createBlockStateDefinition(Builder<Block, IBlockState> builder) {
+    protected void createBlockStateDefinition(BlockStateContainer.Builder builder) {
         super.createBlockStateDefinition(builder);
         builder.add(POWERED);
     }
@@ -133,7 +135,7 @@ public class GrowthAcceleratorBlock extends AEBaseEntityBlock<GrowthAcceleratorB
             ry += dz * forward.getYOffset();
             rz += dz * forward.getZOffset();
 
-            Minecraft.getMinecraft().effectRenderer.createParticle(ParticleTypes.LIGHTNING, rx, ry, rz, 0.0D, 0.0D,
+            AEParticles.add(ParticleTypes.LIGHTNING, rx, ry, rz, 0.0D, 0.0D,
                     0.0D);
         }
     }

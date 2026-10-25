@@ -1,0 +1,25 @@
+{
+  "name": "Пыль истинного кварца",
+  "icon": "ae2:certus_quartz_dust",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:certus_quartz_dust",
+      "link_recipe": true,
+      "anchor": "certus-quartz-dust",
+      "text": "$(l:items_blocks_machines/certus_quartz_crystal)Кристалл истинного кварца$(/l), измельчённый в механизме $(l:items_blocks_machines/inscriber)Высекатель$(/l). Используется для производства нескольких материалов и компонентов AE2."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Высекатель",
+      "top": "",
+      "middle": "ae2:certus_quartz_crystal,ae2:charged_certus_quartz_crystal,ore:crystalCertusQuartz,ore:gemCertusQuartz",
+      "bottom": "",
+      "output": "ae2:certus_quartz_dust",
+      "text": "Прессы не расходуются.",
+      "anchor": "recipe"
+    }
+  ]
+}

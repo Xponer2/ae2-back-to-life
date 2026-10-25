@@ -1,0 +1,64 @@
+{
+  "name": "Наполнитель вёдер",
+  "icon": "minecraft:water_bucket",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "bucket-filler",
+      "text": "См. также $(l:example_setups/bucket_emptier)опустошитель вёдер$(/l).$(br2)Эта постройка использует $(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l), поэтому она рассчитана на встраивание в вашу систему $(l:ae2_mechanics/autocrafting)автокрафта$(/l).$(br2)Иногда жизнь неудобна: нужны вёдра с жидкостью, а не сама жидкость. Иногда это делает за вас какой-нибудь механизм (например, жидкостный транспозер из Thermal Expansion), но удобного мода"
+    },
+    {
+      "type": "text",
+      "text": "для этого может и не оказаться. К счастью, в ванильном Minecraft есть чуть менее удобный способ — $(item)Раздатчик$().$(br2)$(bold)Учтите, что часто это делать не нужно: замена жидкостей в$() $(l:items_blocks_machines/terminals#recipe)$(bold)терминале кодирования шаблонов$()$(/l) $(bold)позволяет использовать в рецепте крафта саму жидкость вместо ведра.$()$(br2)$(#555)$(o)(3D-сцена недоступна в этой версии)$()"
+    },
+    {
+      "type": "text",
+      "title": "Настройки",
+      "anchor": "configurations",
+      "text": "$(li)$(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l) (1) настроен блокировать изготовление «при сигнале редстоуна», внутри — нужные шаблоны ($(l:items_blocks_machines/patterns)Шаблон обработки$(/l))."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/water_fill_pattern.png"
+      ],
+      "border": true,
+      "text": ""
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/lava_fill_pattern.png"
+      ],
+      "border": true,
+      "text": "$(li)$(l:items_blocks_machines/interface)МЭ интерфейс$(/l) (2) в настройках по умолчанию."
+    },
+    {
+      "type": "ae2:item_row_2",
+      "item0": "minecraft:bucket",
+      "item1": "ae2:inverter_card",
+      "text": "$(li)Первая $(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l) (3) в настройках по умолчанию.$(li)$(l:items_blocks_machines/formation_plane)МЭ плоскость формирования$(/l) (4) настроена с картой-инвертером так, чтобы вёдра были в чёрном списке.$(li)$(l:items_blocks_machines/import_bus)Мэ шина импорта$(/l) (5) настроена с картой-инвертером так, чтобы вёдра были в чёрном списке."
+    },
+    {
+      "type": "ae2:item_row_2",
+      "item0": "minecraft:bucket",
+      "item1": "ae2:inverter_card",
+      "anchor": "how-it-works",
+      "text": "$(li)Вторая $(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l) (6) в настройках по умолчанию.$(br2)$(bold)Как это работает$()$(br2)1. $(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l) выталкивает ингредиенты в $(l:items_blocks_machines/interface)МЭ интерфейс$(/l). (На самом деле для оптимизации он выталкивает их прямо через шину хранения и плоскость формирования, как будто они продолжение сторон"
+    },
+    {
+      "type": "text",
+      "text": "поставщика. В интерфейс предметы так и не попадают.)$(br2)2. Благодаря механизмам, описанным в разделе о $(l:example_setups/pipe_subnet#providing-to-multiple-places)трубных подсетях$(/l), и плоскости формирования ($(l:items_blocks_machines/formation_plane)МЭ плоскость формирования$(/l)) ведро оказывается в блоке $(item)Раздатчик$(), а жидкость ставится в мир плоскостью формирования.$(br2)3. $(item)Компаратор$() замечает ведро в раздатчике и одновременно запитывает раздатчик и"
+    },
+    {
+      "type": "text",
+      "text": "блокирует $(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l).$(br2)4. Раздатчик зачерпывает жидкость ведром, и в нём оказывается полное ведро.$(br2)5. $(l:items_blocks_machines/import_bus)Мэ шина импорта$(/l) вытаскивает полное ведро из раздатчика и через шину хранения ($(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l)) складывает его в поставщик шаблонов, возвращая в основную сеть."
+    },
+    {
+      "type": "text",
+      "text": "6. Компаратор видит, что раздатчик пуст, и разблокирует поставщик."
+    }
+  ]
+}

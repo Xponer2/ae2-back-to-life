@@ -19,14 +19,16 @@
 package appeng.parts.automation;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import appeng.api.components.DataComponentMap;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,10 +36,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 import appeng.api.behaviors.PickupStrategy;
 import appeng.api.config.Actionable;
+import appeng.api.ids.AEComponents;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridNodeListener;
@@ -85,7 +87,7 @@ public class AnnihilationPlanePart extends AEBasePart implements IGridTickable {
      * Enchantments found on the plane when it was placed will be used to enchant the fake tool used for picking up
      * blocks.
      */
-    private ItemEnchantments enchantments = ItemEnchantments.EMPTY;
+    private Map<Enchantment, Integer> enchantments = Collections.emptyMap();
 
     // Allows annihilation planes to stop pickup and instead go into a continuous generation mode
     private ContinuousGeneration continuousGeneration;
@@ -120,22 +122,20 @@ public class AnnihilationPlanePart extends AEBasePart implements IGridTickable {
     public void readFromNBT(NBTTagCompound data) {
         super.readFromNBT(data);
 
+        // Stored like the enchantments of an item stack (an "ench" list)
         var enchantmentsTag = data.getCompoundTag("enchantments");
-        var ops = NbtOps.INSTANCE;
-        this.enchantments = ItemEnchantments.CODEC.decode(ops, enchantmentsTag)
-                .ifError(err -> LOG.warn("Failed to load enchantments for part {}: {}", this, err.message()))
-                .getOrThrow()
-                .get(0);
+        var loaded = AEComponents.ENCHANTMENTS.get(enchantmentsTag);
+        this.enchantments = loaded != null ? loaded : Collections.emptyMap();
     }
 
     @Override
     public void writeToNBT(NBTTagCompound data) {
         super.writeToNBT(data);
 
-        var ops = NbtOps.INSTANCE;
-        var enchantmentsTag = ItemEnchantments.CODEC.encodeStart(ops, enchantments).getOrThrow();
-        if (enchantmentsTag instanceof NBTTagCompound compoundTag && !compoundTag.isEmpty()) {
-            data.put("enchantments", enchantmentsTag);
+        if (!enchantments.isEmpty()) {
+            var enchantmentsTag = new NBTTagCompound();
+            AEComponents.ENCHANTMENTS.set(enchantmentsTag, enchantments);
+            data.setTag("enchantments", enchantmentsTag);
         }
     }
 
@@ -144,7 +144,8 @@ public class AnnihilationPlanePart extends AEBasePart implements IGridTickable {
         super.importSettings(mode, data, player);
         // Import enchants only when the plan is placed, not from memory cards
         if (mode == SettingsFrom.DISMANTLE_ITEM) {
-            this.enchantments = data.get(DataComponents.ENCHANTMENTS);
+            var imported = data.get(AEComponents.ENCHANTMENTS);
+            this.enchantments = imported != null ? new LinkedHashMap<>(imported) : Collections.emptyMap();
         }
         pickupStrategies = null;
     }
@@ -154,11 +155,11 @@ public class AnnihilationPlanePart extends AEBasePart implements IGridTickable {
         super.exportSettings(mode, data);
         // Save enchants only when the actual plane is dismantled
         if (mode == SettingsFrom.DISMANTLE_ITEM) {
-            data.set(DataComponents.ENCHANTMENTS, enchantments);
+            data.set(AEComponents.ENCHANTMENTS, enchantments.isEmpty() ? null : enchantments);
         }
     }
 
-    public ItemEnchantments getEnchantments() {
+    public Map<Enchantment, Integer> getEnchantments() {
         return enchantments;
     }
 

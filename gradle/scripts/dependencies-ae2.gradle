@@ -1,3 +1,9 @@
 // Optional integrations (compile against, not required at runtime)
 dependencies {
+    // JEI 4.16 for 1.12.2
+    compileOnly 'mezz.jei:jei_1.12.2:4.16.1.1013:api'
+    // The One Probe 1.12-1.4.28
+    compileOnly 'curse.maven:the-one-probe-245211:2667280'
+    // Hwyla 1.8.26-B41
+    compileOnly 'curse.maven:hwyla-253449:2568751'
 }

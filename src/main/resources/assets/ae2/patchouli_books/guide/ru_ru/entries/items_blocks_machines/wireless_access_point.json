@@ -1,0 +1,37 @@
+{
+  "name": "Беспроводная точка доступа",
+  "icon": "ae2:wireless_access_point",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 210,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:wireless_access_point",
+      "link_recipe": true,
+      "anchor": "the-wireless-access-point",
+      "text": "Даёт беспроводной доступ через $(l:items_blocks_machines/wireless_terminals)Беспроводной терминал$(/l). Дальность и потребление энергии зависят от числа установленных предметов $(item)Беспроводной усилитель$().$(br2)В сети может быть сколько угодно беспроводных точек доступа с любым числом усилителей ($(item)Беспроводной усилитель$()) в каждой, так что,"
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:wireless_booster",
+      "link_recipe": true,
+      "anchor": "wireless-booster",
+      "text": "меняя конструкцию, можно подобрать баланс потребления энергии и дальности.$(br2)Требуется $(l:ae2_mechanics/channels)канал$(/l).$(br2)Также используется для привязки $(l:items_blocks_machines/wireless_terminals)беспроводных терминалов$(/l)$(br2)$(bold)Беспроводной усилитель$()"
+    },
+    {
+      "type": "text",
+      "text": "Увеличивает дальность беспроводной точки доступа."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/wireless_access_point",
+      "anchor": "recipes",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/wireless_booster",
+      "text": ""
+    }
+  ]
+}

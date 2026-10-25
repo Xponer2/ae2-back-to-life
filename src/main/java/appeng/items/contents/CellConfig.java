@@ -73,7 +73,7 @@ public final class CellConfig {
         }
 
         public void save() {
-            AEComponents.STORAGE_CELL_CONFIG_INV.set(stack, inv.collect(Collectors.toList()));
+            AEComponents.STORAGE_CELL_CONFIG_INV.set(stack, inv.toList());
         }
     }
 }

@@ -339,6 +339,61 @@ public final class AEComponents {
                 }
             }));
 
+    private static final Codec<net.minecraft.enchantment.Enchantment> ENCHANTMENT_CODEC = AECodecs.RESOURCE_LOCATION
+            .comapFlatMap(id -> {
+                var enchantment = net.minecraft.enchantment.Enchantment.REGISTRY.getObject(id);
+                return enchantment != null
+                        ? com.mojang.serialization.DataResult.success(enchantment)
+                        : com.mojang.serialization.DataResult.error("Unknown enchantment: " + id);
+            }, enchantment -> net.minecraft.enchantment.Enchantment.REGISTRY.getNameForObject(enchantment));
+
+    /**
+     * Replacement for vanilla's {@code DataComponents.ENCHANTMENTS}: maps onto the 1.12.2 enchantment list of the
+     * stack ({@code ench}, numeric ids and levels), as enchantment -> level in the order of the list.
+     */
+    public static final DataComponentType<Map<net.minecraft.enchantment.Enchantment, Integer>> ENCHANTMENTS = DataComponentType
+            .register(
+                    new net.minecraft.util.ResourceLocation("minecraft", "enchantments"),
+                    DataComponentType.virtual(Codec.unboundedMap(ENCHANTMENT_CODEC, Codec.INT),
+                            new DataComponentType.VirtualAccess<Map<net.minecraft.enchantment.Enchantment, Integer>>() {
+                                @Override
+                                public Map<net.minecraft.enchantment.Enchantment, Integer> get(NBTTagCompound tag) {
+                                    if (!tag.hasKey("ench", 9)) {
+                                        return null;
+                                    }
+                                    var list = tag.getTagList("ench", 10);
+                                    Map<net.minecraft.enchantment.Enchantment, Integer> result = new java.util.LinkedHashMap<>();
+                                    for (int i = 0; i < list.tagCount(); i++) {
+                                        var entry = list.getCompoundTagAt(i);
+                                        var enchantment = net.minecraft.enchantment.Enchantment
+                                                .getEnchantmentByID(entry.getShort("id"));
+                                        if (enchantment != null) {
+                                            result.put(enchantment, (int) entry.getShort("lvl"));
+                                        }
+                                    }
+                                    return result;
+                                }
+
+                                @Override
+                                public void set(NBTTagCompound tag,
+                                        Map<net.minecraft.enchantment.Enchantment, Integer> value) {
+                                    var list = new net.minecraft.nbt.NBTTagList();
+                                    for (var entry : value.entrySet()) {
+                                        var element = new NBTTagCompound();
+                                        element.setShort("id", (short) net.minecraft.enchantment.Enchantment
+                                                .getEnchantmentID(entry.getKey()));
+                                        element.setShort("lvl", entry.getValue().shortValue());
+                                        list.appendTag(element);
+                                    }
+                                    tag.setTag("ench", list);
+                                }
+
+                                @Override
+                                public void remove(NBTTagCompound tag) {
+                                    tag.removeTag("ench");
+                                }
+                            }));
+
     private static <T> DataComponentType<T> register(String name, Consumer<DataComponentType.Builder<T>> customizer) {
         var builder = DataComponentType.<T>builder();
         customizer.accept(builder);

@@ -24,12 +24,12 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import com.google.common.base.Preconditions;
-import net.neoforged.neoforge.network.PacketDistributor;
+import appeng.core.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Button.OnPress;
+import appeng.client.gui.compat.AbstractWidget;
+import appeng.client.gui.compat.Button.OnPress;
 import net.minecraft.util.text.ITextComponent;
 
 import appeng.client.Point;

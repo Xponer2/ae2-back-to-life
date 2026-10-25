@@ -98,7 +98,7 @@ public class SpatialIOPortBlockEntity extends AENetworkedInvBlockEntity {
     }
 
     public void updateRedstoneState() {
-        final YesNo currentState = this.level.getBestNeighborSignal(this.worldPosition) != 0 ? YesNo.YES : YesNo.NO;
+        final YesNo currentState = this.world.getRedstonePowerFromNeighbors(this.pos) != 0 ? YesNo.YES : YesNo.NO;
         if (this.lastRedstoneState != currentState) {
             this.lastRedstoneState = currentState;
             if (this.lastRedstoneState == YesNo.YES) {
@@ -108,7 +108,7 @@ public class SpatialIOPortBlockEntity extends AENetworkedInvBlockEntity {
     }
 
     public boolean isActive() {
-        if (level != null && !level.isRemote) {
+        if (world != null && !world.isRemote) {
             return this.getMainNode().isOnline();
         } else {
             return this.isActive;
@@ -140,7 +140,7 @@ public class SpatialIOPortBlockEntity extends AENetworkedInvBlockEntity {
     }
 
     private void transition() {
-        if (!(this.level instanceof WorldServer serverLevel)) {
+        if (!(this.world instanceof WorldServer serverLevel)) {
             return;
         }
 

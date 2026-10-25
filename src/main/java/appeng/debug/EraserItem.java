@@ -26,23 +26,24 @@ import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import net.minecraft.block.Block;
-import net.minecraft.core.Holder;
+import net.minecraft.block.BlockLeaves;
+import net.minecraft.block.BlockLog;
+import net.minecraft.block.BlockSand;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import appeng.core.AEConfig;
 import appeng.core.AELog;
-import appeng.core.tags.BlockTags;
 import appeng.items.AEBaseItem;
-import appeng.util.BuiltInRegistries;
 import appeng.util.InteractionUtil;
 import appeng.util.UseOnContext;
 
@@ -98,7 +99,7 @@ public class EraserItem extends AEBaseItem {
                                 if (0 == x && 0 == y && 0 == z) {
                                     continue;
                                 }
-                                final BlockPos nextPos = wc.offset(x, y, z);
+                                final BlockPos nextPos = wc.add(x, y, z);
                                 if (!closed.contains(nextPos)) {
                                     next.add(nextPos);
                                 }
@@ -135,25 +136,25 @@ public class EraserItem extends AEBaseItem {
      */
     private Set<Block> getCommonBlocks() {
         if (COMMON_BLOCKS.isEmpty()) {
+            // Andesite, granite and diorite are variants of stone here
             COMMON_BLOCKS.add(Blocks.STONE);
             COMMON_BLOCKS.add(Blocks.DIRT);
-            COMMON_BLOCKS.add(Blocks.GRASS_BLOCK);
+            COMMON_BLOCKS.add(Blocks.GRASS);
             COMMON_BLOCKS.add(Blocks.COBBLESTONE);
-            COMMON_BLOCKS.add(Blocks.ANDESITE);
-            COMMON_BLOCKS.add(Blocks.GRANITE);
-            COMMON_BLOCKS.add(Blocks.DIORITE);
             COMMON_BLOCKS.add(Blocks.GRAVEL);
             COMMON_BLOCKS.add(Blocks.SANDSTONE);
             COMMON_BLOCKS.add(Blocks.NETHERRACK);
             COMMON_BLOCKS.add(Blocks.WATER);
+            COMMON_BLOCKS.add(Blocks.FLOWING_WATER);
             COMMON_BLOCKS.add(Blocks.LAVA);
+            COMMON_BLOCKS.add(Blocks.FLOWING_LAVA);
 
-            COMMON_BLOCKS.addAll(
-                    BuiltInRegistries.BLOCK.getOrCreateTag(BlockTags.LEAVES).stream().map(Holder::value).collect(Collectors.toList()));
-            COMMON_BLOCKS.addAll(
-                    BuiltInRegistries.BLOCK.getOrCreateTag(BlockTags.SAND).stream().map(Holder::value).collect(Collectors.toList()));
-            COMMON_BLOCKS.addAll(
-                    BuiltInRegistries.BLOCK.getOrCreateTag(BlockTags.LOGS).stream().map(Holder::value).collect(Collectors.toList()));
+            // There are no block tags: leaves, sand and logs of all mods by their block class
+            for (Block block : ForgeRegistries.BLOCKS) {
+                if (block instanceof BlockLeaves || block instanceof BlockSand || block instanceof BlockLog) {
+                    COMMON_BLOCKS.add(block);
+                }
+            }
         }
 
         return COMMON_BLOCKS;
@@ -162,7 +163,7 @@ public class EraserItem extends AEBaseItem {
     @Override
     public void addToMainCreativeTab(CreativeTabOutput.DisplayParameters parameters, CreativeTabOutput output) {
         if (AEConfig.instance().isDebugToolsEnabled()) {
-            output.accept(this);
+            output.accept((Item) this);
         }
     }
 }

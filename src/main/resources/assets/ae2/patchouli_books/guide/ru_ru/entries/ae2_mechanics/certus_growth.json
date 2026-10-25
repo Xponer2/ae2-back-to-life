@@ -1,0 +1,140 @@
+{
+  "name": "Рост истинного кварца",
+  "icon": "ae2:quartz_cluster",
+  "category": "ae2_mechanics",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "certus-growth",
+      "text": "$(bold)По сути, просто скопировано со страницы «Начало работы»$()"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "B"
+          ],
+          [
+            "0"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:flawless_budding_quartz",
+          "B": "ae2:small_quartz_bud[facing=up]",
+          "0": "ae2:flawless_budding_quartz"
+        }
+      },
+      "text": "Бутоны истинного кварца растут на $(l:items_blocks_machines/budding_certus)цветущих блоках истинного кварца$(/l), как аметист."
+    },
+    {
+      "type": "text",
+      "text": "Если сломать недозревший бутон, выпадет одна единица предмета $(l:items_blocks_machines/certus_quartz_dust)Пыль истинного кварца$(/l), удача на это не влияет. Если сломать полностью выросший кластер, выпадут четыре единицы предмета $(l:items_blocks_machines/certus_quartz_crystal)Кристалл истинного кварца$(/l), а удача увеличивает это число.$(br2)Есть 4 ступени цветущих блоков истинного кварца: безупречный, несовершенный, потрескавшийся и повреждённый; изначально их"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          [
+            "0",
+            "B",
+            "C",
+            "D"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:flawless_budding_quartz",
+          "B": "ae2:flawed_budding_quartz",
+          "C": "ae2:chipped_budding_quartz",
+          "D": "ae2:damaged_budding_quartz",
+          "E": "ae2:quartz_cluster[facing=up]",
+          "F": "ae2:large_quartz_bud[facing=up]",
+          "G": "ae2:medium_quartz_bud[facing=up]",
+          "H": "ae2:small_quartz_bud[facing=up]",
+          "0": "ae2:flawless_budding_quartz"
+        }
+      },
+      "text": "можно найти в $(l:ae2_mechanics/meteorites)метеоритах$(/l)."
+    },
+    {
+      "type": "text",
+      "text": "Каждый раз, когда бутон вырастает на очередную стадию, цветущий блок может с некоторым шансом опуститься на ступень ниже и в итоге превратиться в обычный блок истинного кварца. Их можно восстановить (и создать новые цветущие блоки), бросив цветущий блок (или блок истинного кварца) в воду вместе с одним или несколькими предметами $(l:items_blocks_machines/certus_quartz_crystal_charged)Заряженный кристалл истинного кварца$(/l)."
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Бросить в воду",
+      "in0": "ae2:charged_certus_quartz_crystal",
+      "in1": "ae2:quartz_block",
+      "output": "ae2:damaged_budding_quartz",
+      "machine": "minecraft:water_bucket",
+      "text": "Бросьте предметы в воду вместе."
+    },
+    {
+      "type": "text",
+      "text": "Безупречные цветущие блоки не разрушаются и производят истинный кварц бесконечно. Однако их нельзя скрафтить или перенести киркой, даже с шёлковым касанием. (Зато их $(o)можно$() перенести с помощью $(l:ae2_mechanics/spatial_io)пространственного хранилища$(/l).)$(br2)Сами по себе бутоны истинного кварца растут очень медленно. К счастью, $(l:items_blocks_machines/growth_accelerator)Ускоритель роста$(/l), поставленный вплотную к цветущему блоку, многократно ускоряет этот процесс. Постройте несколько"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "   ",
+            " F ",
+            "   "
+          ],
+          [
+            "0A ",
+            "BCD",
+            " E "
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:growth_accelerator[facing=up,powered=true]",
+          "B": "ae2:quartz_cluster[facing=north]",
+          "C": "ae2:flawless_budding_quartz",
+          "D": "ae2:quartz_cluster[facing=south]",
+          "E": "ae2:quartz_cluster[facing=east]",
+          "F": "ae2:quartz_cluster[facing=up]"
+        }
+      },
+      "text": "ускорителей в первую очередь."
+    },
+    {
+      "type": "text",
+      "text": "Из-за сложных взаимодействий каждая закрытая сторона цветущего блока снижает общую скорость роста от этого блока, и в итоге это перевешивает пользу от дополнительных ускорителей. Опытным путём получено следующее:"
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/certus_farm_speed_chart_1.png"
+      ],
+      "border": true,
+      "text": ""
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/certus_farm_speed_chart_2.png"
+      ],
+      "border": true,
+      "text": "Если кварца не хватает ещё и на $(l:items_blocks_machines/energy_acceptor)Приёмщик энергии$(/l) или $(l:items_blocks_machines/vibration_chamber)Резонирующая камера$(/l), можно"
+    },
+    {
+      "type": "text",
+      "text": "сделать $(l:items_blocks_machines/crank)Деревянная рукоять$(/l) и поставить её на торец ускорителя.$(br2)Автоматический сбор истинного кварца $(l:example_setups/simple_certus_farm)описан здесь$(/l)."
+    }
+  ]
+}

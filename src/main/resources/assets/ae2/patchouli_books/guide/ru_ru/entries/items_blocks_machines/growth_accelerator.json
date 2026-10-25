@@ -1,0 +1,71 @@
+{
+  "name": "Ускоритель роста",
+  "icon": "ae2:growth_accelerator",
+  "category": "items_blocks_machines/machines",
+  "sortnum": 310,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:growth_accelerator",
+      "link_recipe": true,
+      "anchor": "the-growth-accelerator",
+      "text": "Ускоритель роста, поставленный вплотную к цветущему блоку, многократно ускоряет $(l:ae2_mechanics/certus_growth)рост$(/l) истинного кварца или аметиста.$(br2)Любопытно, что он $(o)также$() ускоряет рост разных растений.$(br2)Для этого он применяет к соседним блокам «случайные"
+    },
+    {
+      "type": "text",
+      "text": "такты» в дополнение к естественным. Теоретически 1 ускоритель должен ускорять рост примерно в 90 раз, а эффект нескольких ускорителей складывается."
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "   ",
+            "   ",
+            " L ",
+            "   "
+          ],
+          [
+            " E ",
+            "FG ",
+            "HIJ",
+            " K "
+          ],
+          [
+            "0A ",
+            "BCB",
+            " D ",
+            "   "
+          ]
+        ],
+        "mapping": {
+          "A": "minecraft:farmland[moisture=4]",
+          "B": "minecraft:dirt",
+          "C": "ae2:creative_energy_cell",
+          "D": "minecraft:double_stone_slab[seamless=true]",
+          "E": "minecraft:wheat[age=7]",
+          "F": "minecraft:sapling[type=oak,stage=1]",
+          "G": "ae2:growth_accelerator[facing=up,powered=true]",
+          "H": "ae2:quartz_cluster[facing=north]",
+          "I": "ae2:flawless_budding_quartz",
+          "J": "ae2:quartz_cluster[facing=south]",
+          "K": "ae2:quartz_cluster[facing=east]",
+          "L": "ae2:quartz_cluster[facing=up]"
+        }
+      },
+      "text": "Энергию можно подводить сверху или снизу — $(l:items_blocks_machines/cables)кабелями$(/l) AE2 или силовыми кабелями"
+    },
+    {
+      "type": "text",
+      "text": "других модов. Он принимает и энергию AE2 (AE), и Forge Energy (FE).$(br2)Чтобы запитать его вручную, поставьте $(l:items_blocks_machines/crank)Деревянная рукоять$(/l) сверху или снизу и щёлкайте по ней правой кнопкой мыши.$(br2)Верх и низ можно узнать по розовым флюисовым деталькам на них.$(br2)$(#555)$(o)(3D-сцена недоступна в этой версии)$()"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/crystal_processing_growth_accelerator",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

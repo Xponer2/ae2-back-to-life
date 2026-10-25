@@ -243,7 +243,7 @@ public class FormationPlanePart extends UpgradeablePart implements IStorageProvi
 
     @Override
     public ItemStack getMainMenuIcon() {
-        return new ItemStack(getPartItem());
+        return new ItemStack(getPartItem().asItem());
     }
 
     private void openConfigMenu(EntityPlayer player) {
@@ -286,7 +286,7 @@ public class FormationPlanePart extends UpgradeablePart implements IStorageProvi
 
         @Override
         public ITextComponent getDescription() {
-            return getPartItem().asItem().getDescription();
+            return getItemDescription(getPartItem().asItem());
         }
     }
 

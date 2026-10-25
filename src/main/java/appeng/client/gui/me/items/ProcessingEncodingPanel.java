@@ -55,14 +55,14 @@ public class ProcessingEncodingPanel extends EncodingModePanel {
             var effectiveRow = (i / 3) - scrollbar.getCurrentScroll();
 
             slot.setActive(effectiveRow >= 0 && effectiveRow < 3);
-            slot.y -= scrollbar.getCurrentScroll() * 18;
+            slot.yPos -= scrollbar.getCurrentScroll() * 18;
         }
         for (int i = 0; i < menu.getProcessingOutputSlots().length; i++) {
             var slot = menu.getProcessingOutputSlots()[i];
             var effectiveRow = i - scrollbar.getCurrentScroll();
 
             slot.setActive(effectiveRow >= 0 && effectiveRow < 3);
-            slot.y -= scrollbar.getCurrentScroll() * 18;
+            slot.yPos -= scrollbar.getCurrentScroll() * 18;
         }
 
         updateTooltipVisibility();

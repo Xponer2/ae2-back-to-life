@@ -18,16 +18,33 @@
 
 package appeng.server;
 
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
+import java.util.Collections;
+import java.util.List;
 
-import net.minecraft.commands.CommandSourceStack;
+import javax.annotation.Nullable;
+
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 
+/**
+ * A sub command of {@code /ae2}. 1.12.2 has no brigadier: the arguments after the sub command's literal are passed as
+ * strings, and the sub command parses them itself.
+ */
 public interface ISubCommand {
 
-    default void addArguments(LiteralArgumentBuilder<CommandSourceStack> builder) {
+    /**
+     * Usage of the arguments after the literal, e.g. {@code "[on|off]"}.
+     */
+    default String getArgumentUsage() {
+        return "";
     }
 
-    void call(MinecraftServer srv, CommandContext<CommandSourceStack> ctx, CommandSourceStack sender);
+    default List<String> getTabCompletions(MinecraftServer srv, ICommandSender sender, String[] args,
+            @Nullable BlockPos targetPos) {
+        return Collections.emptyList();
+    }
+
+    void call(MinecraftServer srv, ICommandSender sender, String[] args) throws CommandException;
 }

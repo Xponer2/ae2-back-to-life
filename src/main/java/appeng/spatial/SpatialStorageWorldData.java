@@ -51,6 +51,13 @@ public class SpatialStorageWorldData extends AESavedData {
 
     private final Int2ObjectOpenHashMap<SpatialStoragePlot> plots = new Int2ObjectOpenHashMap<>();
 
+    /**
+     * Used by the 1.12.2 map storage to load the data (needs a public constructor taking the name).
+     */
+    public SpatialStorageWorldData(String name) {
+        super(name);
+    }
+
     public SpatialStoragePlot getPlotById(int id) {
         return plots.get(id);
     }
@@ -87,8 +94,10 @@ public class SpatialStorageWorldData extends AESavedData {
         setDirty();
     }
 
-    public static SpatialStorageWorldData load(NBTTagCompound tag) {
-        SpatialStorageWorldData result = new SpatialStorageWorldData();
+    @Override
+    public void load(NBTTagCompound tag) {
+        var result = this;
+        result.plots.clear();
         int version = tag.getInteger(TAG_FORMAT);
         if (version != CURRENT_FORMAT) {
             // Currently no new format has been defined, as such anything but the current
@@ -105,7 +114,6 @@ public class SpatialStorageWorldData extends AESavedData {
             }
             result.plots.put(plot.getId(), plot);
         }
-        return result;
     }
 
     @Override

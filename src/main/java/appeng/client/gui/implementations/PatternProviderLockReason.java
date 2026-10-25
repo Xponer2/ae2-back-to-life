@@ -3,9 +3,7 @@ package appeng.client.gui.implementations;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 
 import appeng.api.client.AEKeyRendering;
@@ -61,18 +59,21 @@ public class PatternProviderLockReason implements ICompositeWidget {
 
         Icon icon;
         ITextComponent lockStatusText;
+        // Text styles only know the 16 formatting colors, so the color is given to the font instead
+        int lockStatusColor;
         if (menu.getCraftingLockedReason() == LockCraftingMode.NONE) {
             icon = Icon.UNLOCKED;
-            lockStatusText = GuiText.CraftingLockIsUnlocked.text()
-                    .setStyle(Style.EMPTY.withColor(MathHelper.color(125 / 255f, 169 / 255f, 210 / 255f)));
+            lockStatusText = GuiText.CraftingLockIsUnlocked.text();
+            lockStatusColor = 0xFF7DA9D2;
         } else {
             icon = Icon.LOCKED;
-            lockStatusText = GuiText.CraftingLockIsLocked.text()
-                    .setStyle(Style.EMPTY.withColor(MathHelper.color(193 / 255f, 66 / 255f, 75 / 255f)));
+            lockStatusText = GuiText.CraftingLockIsLocked.text();
+            lockStatusColor = 0xFFC1424B;
         }
 
         icon.getBlitter().dest(x, y).blit(guiGraphics);
-        guiGraphics.drawString(Minecraft.getMinecraft().fontRenderer, lockStatusText, x + 15, y + 5, -1, false);
+        guiGraphics.drawString(Minecraft.getMinecraft().fontRenderer, lockStatusText, x + 15, y + 5, lockStatusColor,
+                false);
     }
 
     @Nullable

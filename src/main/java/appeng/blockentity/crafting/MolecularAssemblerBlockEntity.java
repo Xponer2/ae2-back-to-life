@@ -70,6 +70,7 @@ import appeng.core.network.RegistryFriendlyByteBuf;
 import appeng.core.network.clientbound.AssemblerAnimationPacket;
 import appeng.crafting.CraftingEvent;
 import appeng.menu.AutoCraftingMenu;
+import appeng.util.CraftingInput;
 import appeng.util.Platform;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.CombinedInternalInventory;
@@ -124,7 +125,7 @@ public class MolecularAssemblerBlockEntity extends AENetworkedInvBlockEntity
         if (hasCustomName()) {
             name = getCustomName();
         } else {
-            name = AEBlocks.MOLECULAR_ASSEMBLER.asItem().getDescription();
+            name = Platform.getItemDescription(AEBlocks.MOLECULAR_ASSEMBLER.asItem());
         }
         var icon = AEItemKey.of(AEBlocks.MOLECULAR_ASSEMBLER);
 
@@ -136,7 +137,7 @@ public class MolecularAssemblerBlockEntity extends AENetworkedInvBlockEntity
         } else {
             tooltip = ImmutableList.of(
                     GuiText.CompatibleUpgrade.text(
-                            Tooltips.of(AEItems.SPEED_CARD.asItem().getDescription()),
+                            Tooltips.of(Platform.getItemDescription(AEItems.SPEED_CARD.asItem())),
                             Tooltips.ofUnformattedNumber(accelerationCards)));
         }
 
@@ -202,11 +203,11 @@ public class MolecularAssemblerBlockEntity extends AENetworkedInvBlockEntity
             return false;
         }
 
-        for (int x = 0; x < this.craftingInv.getContainerSize(); x++) {
-            this.craftingInv.setItem(x, this.gridInv.getStackInSlot(x));
+        for (int x = 0; x < this.craftingInv.getSizeInventory(); x++) {
+            this.craftingInv.setInventorySlotContents(x, this.gridInv.getStackInSlot(x));
         }
 
-        return !this.myPlan.assemble(this.craftingInv.asCraftInput(), this.getLevel()).isEmpty();
+        return !this.myPlan.assemble(CraftingInput.of(this.craftingInv), this.getLevel()).isEmpty();
     }
 
     @Override
@@ -235,7 +236,7 @@ public class MolecularAssemblerBlockEntity extends AENetworkedInvBlockEntity
             // If the plan is null it means the pattern previously loaded from NBT hasn't been decoded yet
             var pattern = myPlan != null ? myPlan.getDefinition().toStack() : myPattern;
             if (!pattern.isEmpty()) {
-                data.put("myPlan", pattern.save());
+                data.setTag("myPlan", pattern.writeToNBT(new NBTTagCompound()));
                 data.setInteger("pushDirection", this.pushDirection.ordinal());
             }
         }
@@ -253,7 +254,7 @@ public class MolecularAssemblerBlockEntity extends AENetworkedInvBlockEntity
         this.myPlan = null;
 
         if (data.hasKey("myPlan")) {
-            var pattern = ItemStack.parseOptional(data.getCompoundTag("myPlan"));
+            var pattern = new ItemStack(data.getCompoundTag("myPlan"));
             if (!pattern.isEmpty()) {
                 this.forcePlan = true;
                 this.myPattern = pattern;
@@ -420,17 +421,16 @@ public class MolecularAssemblerBlockEntity extends AENetworkedInvBlockEntity
         }
 
         if (this.progress >= 100) {
-            for (int x = 0; x < this.craftingInv.getContainerSize(); x++) {
-                this.craftingInv.setItem(x, this.gridInv.getStackInSlot(x));
+            for (int x = 0; x < this.craftingInv.getSizeInventory(); x++) {
+                this.craftingInv.setInventorySlotContents(x, this.gridInv.getStackInSlot(x));
             }
 
-            var positionedInput = craftingInv.asPositionedCraftInput();
+            var positionedInput = CraftingInput.ofPositioned(craftingInv);
             var craftinginput = positionedInput.input();
 
             this.progress = 0;
             final ItemStack output = this.myPlan.assemble(craftinginput, this.getLevel());
             if (!output.isEmpty()) {
-                output.onCraftedBySystem(level);
                 CraftingEvent.fireAutoCraftingEvent(getLevel(), this.myPlan, output, this.craftingInv);
 
                 // pushOut might reset the plan back to null, so get the remaining items before
@@ -467,10 +467,10 @@ public class MolecularAssemblerBlockEntity extends AENetworkedInvBlockEntity
 
                 var item = AEItemKey.of(output);
                 if (item != null) {
-                    PacketDistributor.sendToPlayersNear(node.getLevel(), null, worldPosition.getX(),
-                            worldPosition.getY(),
-                            worldPosition.getZ(), 32,
-                            new AssemblerAnimationPacket(this.worldPosition, (byte) speed, item));
+                    PacketDistributor.sendToPlayersNear(node.getLevel(), null, pos.getX(),
+                            pos.getY(),
+                            pos.getZ(), 32,
+                            new AssemblerAnimationPacket(this.pos, (byte) speed, item));
                 }
 
                 this.saveChanges();
@@ -487,7 +487,7 @@ public class MolecularAssemblerBlockEntity extends AENetworkedInvBlockEntity
             for (int x = 0; x < 9; x++) {
                 final ItemStack is = this.gridInv.getStackInSlot(x);
                 if (!is.isEmpty()
-                        && (this.myPlan == null || !this.myPlan.isItemValid(x, AEItemKey.of(is), this.level))) {
+                        && (this.myPlan == null || !this.myPlan.isItemValid(x, AEItemKey.of(is), this.world))) {
                     this.gridInv.setItemDirect(9, is);
                     this.gridInv.setItemDirect(x, ItemStack.EMPTY);
                     this.saveChanges();
@@ -529,7 +529,7 @@ public class MolecularAssemblerBlockEntity extends AENetworkedInvBlockEntity
             return output;
         }
 
-        var adaptor = InternalInventory.wrapExternal(getLevel(), this.worldPosition.offset(d), d.getOpposite());
+        var adaptor = InternalInventory.wrapExternal(getLevel(), this.pos.offset(d), d.getOpposite());
         if (adaptor == null) {
             return output;
         }
@@ -593,7 +593,7 @@ public class MolecularAssemblerBlockEntity extends AENetworkedInvBlockEntity
     public IMolecularAssemblerSupportedPattern getCurrentPattern() {
         if (isClientSide()) {
             var patternItem = patternInv.getStackInSlot(0);
-            var pattern = PatternDetailsHelper.decodePattern(patternItem, level);
+            var pattern = PatternDetailsHelper.decodePattern(patternItem, world);
             if (pattern instanceof IMolecularAssemblerSupportedPattern supportedPattern) {
                 return supportedPattern;
             }

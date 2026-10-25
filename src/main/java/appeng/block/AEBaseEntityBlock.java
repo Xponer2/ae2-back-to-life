@@ -136,6 +136,7 @@ public abstract class AEBaseEntityBlock<T extends AEBaseBlockEntity> extends AEB
             state = strategy.setOrientation(state, orientation.getSide(appeng.api.orientation.RelativeSide.FRONT),
                     orientation.getSpin());
         }
+        state = be.applyBlockStateProperties(state);
         return updateBlockStateFromBlockEntity(state, be);
     }
 
@@ -221,7 +222,8 @@ public abstract class AEBaseEntityBlock<T extends AEBaseBlockEntity> extends AEB
      */
     public void onPlacedWithState(World level, BlockPos pos, IBlockState placementState) {
         var be = getTileEntity(level, pos);
-        if (be instanceof IOrientationHolder holder && !getOrientationStrategy().getProperties().isEmpty()) {
+        if (be != null && !getOrientationStrategy().getProperties().isEmpty()) {
+            IOrientationHolder holder = be;
             holder.setOrientation(BlockOrientation.get(getOrientationStrategy(), placementState));
         }
     }

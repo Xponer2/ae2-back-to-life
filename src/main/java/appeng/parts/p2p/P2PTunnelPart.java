@@ -199,8 +199,8 @@ public abstract class P2PTunnelPart<T extends P2PTunnelPart<T>> extends AEBasePa
                 this.onTunnelConfigChange();
 
                 MemoryCardItem.clearCard(heldItem);
-                AEComponents.EXPORTED_SETTINGS_SOURCE.set(heldItem, getPartItem().asItem().getDescription());
-                heldItem.applyComponents(exportSettings(SettingsFrom.MEMORY_CARD));
+                AEComponents.EXPORTED_SETTINGS_SOURCE.set(heldItem, getItemDescription(getPartItem().asItem()));
+                exportSettings(SettingsFrom.MEMORY_CARD).applyTo(heldItem);
 
                 if (needsNewFrequency) {
                     mc.notifyUser(player, MemoryCardMessages.SETTINGS_RESET);
@@ -219,7 +219,7 @@ public abstract class P2PTunnelPart<T extends P2PTunnelPart<T>> extends AEBasePa
                     }
 
                     if (newBus instanceof P2PTunnelPart<?> newTunnel) {
-                        newTunnel.importSettings(SettingsFrom.MEMORY_CARD, heldItem.getComponents(), player);
+                        newTunnel.importSettings(SettingsFrom.MEMORY_CARD, DataComponentMap.of(heldItem), player);
                     }
 
                     mc.notifyUser(player, MemoryCardMessages.SETTINGS_LOADED);
@@ -309,7 +309,7 @@ public abstract class P2PTunnelPart<T extends P2PTunnelPart<T>> extends AEBasePa
     /**
      * Use {@link #deductEnergyCost} or {@link #deductTransportCost}.
      */
-    @Deprecated(forRemoval = true, since = "1.21.1")
+    @Deprecated
     protected void queueTunnelDrain(PowerUnit unit, double f) {
         final double ae_to_tax = unit.convertTo(PowerUnit.AE, f * 0.05);
 

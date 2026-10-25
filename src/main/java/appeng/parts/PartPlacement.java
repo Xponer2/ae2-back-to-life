@@ -25,6 +25,7 @@ import appeng.parts.networking.CablePart;
 import appeng.util.Platform;
 import appeng.util.SettingsFrom;
 import appeng.util.UseOnContext;
+import appeng.util.shape.VoxelShape;
 
 public class PartPlacement {
     public static EnumActionResult place(UseOnContext context) {
@@ -32,7 +33,7 @@ public class PartPlacement {
         var player = context.getPlayer();
         var level = context.getLevel();
         var pos = context.getClickedPos();
-        var partStack = context.getHeldItem();
+        var partStack = context.getItemInHand();
         var side = context.getClickedFace();
 
         if (!(partStack.getItem() instanceof IPartItem<?> partItem)) {
@@ -46,7 +47,8 @@ public class PartPlacement {
         }
 
         // Then try to place it
-        var part = placePart(player, level, partItem, partStack.getComponents(), placement.pos(), placement.side());
+        var part = placePart(player, level, partItem, DataComponentMap.of(partStack), placement.pos(),
+                placement.side());
         if (part == null) {
             // Resend the host to the client. Failure to connect for security reasons is only possible to know
             // server-side, and this will cause ghost parts on the client.
@@ -59,7 +61,7 @@ public class PartPlacement {
         if (!level.isRemote && player != null && !player.isCreative()) {
             partStack.shrink(1);
             if (partStack.getCount() == 0) {
-                player.setItemInHand(context.getHand(), ItemStack.EMPTY);
+                player.setHeldItem(context.getHand(), ItemStack.EMPTY);
             }
         }
 
@@ -95,7 +97,7 @@ public class PartPlacement {
         // simulate this without really placing the part
         var collisionShape = host.getCollisionShape(null);
         if (!collisionShape.isEmpty()
-                && !level.isUnobstructed(null, collisionShape.move(pos.getX(), pos.getY(), pos.getZ()))) {
+                && !isUnobstructed(level, collisionShape.move(pos.getX(), pos.getY(), pos.getZ()))) {
             host.removePart(addedPart);
             if (host.isEmpty()) {
                 host.cleanup();
@@ -113,10 +115,23 @@ public class PartPlacement {
         }
 
         var state = level.getBlockState(pos);
-        var ss = state.getSoundType(level, pos, player);
+        var ss = state.getBlock().getSoundType(state, level, pos, player);
         level.playSound(null, pos, ss.getPlaceSound(), SoundCategory.BLOCKS, (ss.getVolume() + 1.0F) / 2.0F,
                 ss.getPitch() * 0.8F);
         return addedPart;
+    }
+
+    /**
+     * @return True if no entity that blocks placement is inside the shape (like modern
+     *         {@code Level.isUnobstructed(null, shape)}).
+     */
+    private static boolean isUnobstructed(World level, VoxelShape shape) {
+        for (var box : shape.toAabbs()) {
+            if (!level.checkNoEntityCollision(box)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

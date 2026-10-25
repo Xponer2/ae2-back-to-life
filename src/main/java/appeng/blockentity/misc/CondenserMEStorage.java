@@ -18,6 +18,8 @@
 
 package appeng.blockentity.misc;
 
+import net.minecraft.item.Item;
+import appeng.util.Platform;
 import net.minecraft.util.text.ITextComponent;
 
 import appeng.api.config.Actionable;
@@ -70,6 +72,6 @@ class CondenserMEStorage implements MEStorage {
 
     @Override
     public ITextComponent getDescription() {
-        return target.getBlockState().getBlock().getName();
+        return Platform.getItemDescription(Item.getItemFromBlock(target.getBlockState().getBlock()));
     }
 }

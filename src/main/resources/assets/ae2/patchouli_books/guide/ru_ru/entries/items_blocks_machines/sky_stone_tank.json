@@ -1,0 +1,21 @@
+{
+  "name": "Бак из небесного камня",
+  "icon": "ae2:sky_stone_tank",
+  "category": "items_blocks_machines/machines",
+  "sortnum": 310,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:sky_stone_tank",
+      "link_recipe": true,
+      "anchor": "the-sky-stone-tank",
+      "text": "Это бак для жидкости на 16 вёдер. Не сохраняет содержимое, если его сломать. Больше особо и нечего сказать."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:misc/tank_sky_stone",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

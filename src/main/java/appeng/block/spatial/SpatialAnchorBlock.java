@@ -21,6 +21,7 @@ package appeng.block.spatial;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer.Builder;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumActionResult;
@@ -49,7 +50,7 @@ public class SpatialAnchorBlock extends AEBaseEntityBlock<SpatialAnchorBlockEnti
     }
 
     @Override
-    protected void createBlockStateDefinition(Builder<Block, IBlockState> builder) {
+    protected void createBlockStateDefinition(BlockStateContainer.Builder builder) {
         super.createBlockStateDefinition(builder);
         builder.add(POWERED);
     }

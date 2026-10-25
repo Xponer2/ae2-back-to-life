@@ -71,8 +71,8 @@ public class SpatialPylonBlockEntity extends AENetworkedBlockEntity implements I
     @Override
     public void onReady() {
         super.onReady();
-        if (level instanceof WorldServer serverLevel) {
-            this.calc.calculateMultiblock(serverLevel, worldPosition);
+        if (world instanceof WorldServer serverLevel) {
+            this.calc.calculateMultiblock(serverLevel, pos);
         }
     }
 
@@ -85,8 +85,8 @@ public class SpatialPylonBlockEntity extends AENetworkedBlockEntity implements I
     }
 
     public void neighborChanged(BlockPos changedPos) {
-        if (level instanceof WorldServer serverLevel) {
-            this.calc.updateMultiblockAfterNeighborUpdate(serverLevel, worldPosition, changedPos);
+        if (world instanceof WorldServer serverLevel) {
+            this.calc.updateMultiblockAfterNeighborUpdate(serverLevel, pos, changedPos);
         }
     }
 
@@ -132,9 +132,9 @@ public class SpatialPylonBlockEntity extends AENetworkedBlockEntity implements I
         var powered = false;
         var online = false;
         if (this.cluster != null) {
-            if (this.cluster.getBoundsMin().equals(this.worldPosition)) {
+            if (this.cluster.getBoundsMin().equals(this.pos)) {
                 pos = AxisPosition.START;
-            } else if (this.cluster.getBoundsMax().equals(this.worldPosition)) {
+            } else if (this.cluster.getBoundsMax().equals(this.pos)) {
                 pos = AxisPosition.END;
             } else {
                 pos = AxisPosition.MIDDLE;

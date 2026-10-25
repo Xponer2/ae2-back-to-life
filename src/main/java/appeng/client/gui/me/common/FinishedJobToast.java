@@ -1,12 +1,10 @@
 package appeng.client.gui.me.common;
 
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.toasts.Toast;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
-import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.toasts.GuiToast;
+import net.minecraft.client.gui.toasts.IToast;
+import net.minecraft.client.renderer.GlStateManager;
 
 import appeng.api.client.AEKeyRendering;
 import appeng.api.stacks.AEKey;
@@ -17,16 +15,17 @@ import appeng.core.localization.GuiText;
 /**
  * A Minecraft toast for a finished crafting job.
  */
-public class FinishedJobToast implements Toast {
-    private static final ResourceLocation BACKGROUND_SPRITE = new ResourceLocation("toast/recipe");
+public class FinishedJobToast implements IToast {
+    // Toasts of the game have a fixed size, the text gets one line
+    private static final int WIDTH = 160;
+    private static final int TEXT_WIDTH = WIDTH - 30 - 5;
 
     private static final long TIME_VISIBLE = 2500;
     private static final int TITLE_COLOR = 0xFF500050;
     private static final int TEXT_COLOR = 0xFF000000;
 
     private final AEKey what;
-    private final List<FormattedCharSequence> lines;
-    private final int height;
+    private final String line;
 
     public FinishedJobToast(AEKey what, long amount) {
         this.what = what;
@@ -37,37 +36,29 @@ public class FinishedJobToast implements Toast {
         var formattedAmount = what.formatAmount(amount, AmountFormat.SLOT);
 
         var text = GuiText.ToastCraftingJobFinishedText.text(formattedAmount, AEKeyRendering.getDisplayName(what));
-        lines = font.split(text, width() - 30 - 5);
-        height = Toast.super.height() + (lines.size() - 1) * font.FONT_HEIGHT;
+        line = fitToWidth(font, text.getFormattedText(), TEXT_WIDTH);
+    }
+
+    private static String fitToWidth(FontRenderer font, String text, int width) {
+        if (font.getStringWidth(text) <= width) {
+            return text;
+        }
+        return font.trimStringToWidth(text, width - font.getStringWidth("...")) + "...";
     }
 
     @Override
-    public Visibility render(GuiGraphics guiGraphics, ToastComponent toastComponent, long timeSinceLastVisible) {
-        var minecraft = Minecraft.getMinecraft();
+    public Visibility draw(GuiToast toastGui, long delta) {
+        var minecraft = toastGui.getMinecraft();
         var font = minecraft.fontRenderer;
+        var guiGraphics = new GuiGraphics(minecraft);
 
-        // stretch the middle
-        guiGraphics.blitSprite(BACKGROUND_SPRITE, 160, 32, 0, 0, 0, 0, this.width(), 8);
-        int middleHeight = height - 16;
-        for (var middleY = 0; middleY < middleHeight; middleY += 16) {
-            var tileHeight = Math.min(middleHeight - middleY, 16);
-            guiGraphics.blitSprite(BACKGROUND_SPRITE, 160, 32, 0, 8, 0, 8 + middleY, this.width(), tileHeight);
-        }
-        guiGraphics.blitSprite(BACKGROUND_SPRITE, 160, 32, 0, 32 - 8, 0, height - 8, this.width(), 8);
-        guiGraphics.drawString(toastComponent.getMinecraft().font, GuiText.ToastCraftingJobFinishedTitle.text(), 30, 7,
-                TITLE_COLOR, false);
-        var lineY = 18;
-        for (var line : lines) {
-            guiGraphics.drawString(toastComponent.getMinecraft().font, line, 30, lineY, TEXT_COLOR, false);
-            lineY += font.FONT_HEIGHT;
-        }
+        minecraft.getTextureManager().bindTexture(TEXTURE_TOASTS);
+        GlStateManager.color(1.0F, 1.0F, 1.0F);
+        toastGui.drawTexturedModalRect(0, 0, 0, 32, WIDTH, 32);
+        guiGraphics.drawString(font, GuiText.ToastCraftingJobFinishedTitle.text(), 30, 7, TITLE_COLOR, false);
+        guiGraphics.drawString(font, line, 30, 18, TEXT_COLOR, false);
         AEKeyRendering.drawInGui(minecraft, guiGraphics, 8, 8, what);
 
-        return timeSinceLastVisible >= TIME_VISIBLE ? Visibility.HIDE : Visibility.SHOW;
-    }
-
-    @Override
-    public int height() {
-        return height;
+        return delta >= TIME_VISIBLE ? Visibility.HIDE : Visibility.SHOW;
     }
 }

@@ -1,0 +1,13 @@
+{
+  "name": "Устройства",
+  "icon": "ae2:interface",
+  "category": "ae2_mechanics",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "devices",
+      "text": "«Устройство» — это компонент сети AE2, выполняющий какую-либо функцию, связанную с самой сетью. Почти всем им нужен канал; заметное исключение — $(l:items_blocks_machines/level_emitter)излучатели уровня$(/l).$(br2)Несколько примеров:$(li)$(l:items_blocks_machines/interface)МЭ интерфейс$(/l)$(li)$(l:items_blocks_machines/import_bus)Мэ шина импорта$(/l)$(li)$(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l)$(li)$(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l)$(li)$(l:items_blocks_machines/drive)МЭ накопитель$(/l)"
+    }
+  ]
+}

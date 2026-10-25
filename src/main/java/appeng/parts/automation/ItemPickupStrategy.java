@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -19,11 +20,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import appeng.api.behaviors.PickupSink;
 import appeng.api.behaviors.PickupStrategy;
@@ -36,7 +39,6 @@ import appeng.api.util.TagKey;
 import appeng.core.AppEng;
 import appeng.core.network.clientbound.BlockTransitionEffectPacket;
 import appeng.core.network.clientbound.ItemTransitionEffectPacket;
-import appeng.core.tags.BlockTags;
 import appeng.util.Platform;
 
 public class ItemPickupStrategy implements PickupStrategy {
@@ -51,14 +53,14 @@ public class ItemPickupStrategy implements PickupStrategy {
     private final WorldServer level;
     private final BlockPos pos;
     private final EnumFacing side;
-    private final ItemEnchantments enchantments;
+    private final Map<Enchantment, Integer> enchantments;
     @Nullable
     private final UUID ownerUuid;
 
     private boolean isAccepting = true;
 
     public ItemPickupStrategy(WorldServer level, BlockPos pos, EnumFacing side, TileEntity host,
-            ItemEnchantments enchantments, @Nullable UUID owningPlayerId) {
+            Map<Enchantment, Integer> enchantments, @Nullable UUID owningPlayerId) {
         this.level = level;
         this.pos = pos;
         this.side = side;
@@ -216,29 +218,61 @@ public class ItemPickupStrategy implements PickupStrategy {
         }
 
         // Note: bedrock, portals, and other unbreakable blocks have a hardness < 0, hence the >= 0 check below.
-        var hardness = state.getDestroySpeed(level, pos);
-        var ignoreAirAndFluids = Platform.isAir(state) || state.liquid();
+        var hardness = state.getBlockHardness(level, pos);
+        var ignoreAirAndFluids = Platform.isAir(state) || state.getMaterial().isLiquid();
 
-        return !ignoreAirAndFluids && hardness >= 0f && level.isLoaded(pos)
+        return !ignoreAirAndFluids && hardness >= 0f && level.isBlockLoaded(pos)
                 && level.isBlockModifiable(Platform.getFakePlayer(level, ownerUuid), pos);
     }
 
     protected List<ItemStack> obtainBlockDrops(WorldServer level, BlockPos pos) {
         var fakePlayer = Platform.getFakePlayer(level, ownerUuid);
         var state = level.getBlockState(pos);
-        var blockEntity = level.getTileEntity(pos);
+        var block = state.getBlock();
 
         var harvestTool = createHarvestTool(state);
         var harvestToolItem = harvestTool.item();
 
-        if (!state.requiresCorrectToolForDrops() && harvestTool.fallback()) {
+        if (state.getMaterial().isToolNotRequired() && harvestTool.fallback()) {
             // Do not use a tool when not required, no hints about it and not enchanted in cases like silk touch.
             harvestToolItem = ItemStack.EMPTY;
         }
 
-        var drops = Block.getDrops(state, level, pos, blockEntity, fakePlayer, harvestToolItem);
-        // Some modded blocks can have empty stacks, filter them out!
-        return drops.stream().filter(stack -> !stack.isEmpty()).collect(Collectors.toList());
+        // Drops of this version only look at fortune and silk touch, the tool is held for blocks that check it
+        fakePlayer.setHeldItem(EnumHand.MAIN_HAND, harvestToolItem);
+        try {
+            var fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, harvestToolItem);
+            var silkTouch = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, harvestToolItem) > 0
+                    && block.canSilkHarvest(level, pos, state, fakePlayer);
+
+            NonNullList<ItemStack> drops = NonNullList.create();
+            if (silkTouch) {
+                drops.add(getSilkTouchDrop(block, state));
+            } else {
+                block.getDrops(drops, level, pos, state, fortune);
+            }
+            var chance = ForgeEventFactory.fireBlockHarvesting(drops, level, pos, state, fortune, 1.0f, silkTouch,
+                    fakePlayer);
+
+            // Some modded blocks can have empty stacks, filter them out!
+            return drops.stream()
+                    .filter(stack -> !stack.isEmpty() && level.rand.nextFloat() <= chance)
+                    .collect(Collectors.toList());
+        } finally {
+            fakePlayer.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
+        }
+    }
+
+    /**
+     * Same as the (protected) silk touch drop of the game: the block item with the metadata of the state.
+     */
+    private static ItemStack getSilkTouchDrop(Block block, IBlockState state) {
+        var item = Item.getItemFromBlock(block);
+        if (item == Items.AIR) {
+            return ItemStack.EMPTY;
+        }
+        var meta = item.getHasSubtypes() ? block.getMetaFromState(state) : 0;
+        return new ItemStack(item, 1, meta);
     }
 
     /**
@@ -248,7 +282,7 @@ public class ItemPickupStrategy implements PickupStrategy {
         boolean useEnergy = true;
 
         var state = level.getBlockState(pos);
-        var hardness = state.getDestroySpeed(level, pos);
+        var hardness = state.getBlockHardness(level, pos);
 
         var requiredEnergy = 1 + hardness;
         for (var is : items) {
@@ -256,15 +290,13 @@ public class ItemPickupStrategy implements PickupStrategy {
         }
 
         if (enchantments != null) {
-            var enchantmentRegistry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
-
             var efficiencyFactor = 1f;
-            var efficiencyLevel = enchantments.getLevel(enchantmentRegistry.getHolderOrThrow(Enchantments.EFFICIENCY));
+            int efficiencyLevel = enchantments.getOrDefault(Enchantments.EFFICIENCY, 0);
             if (efficiencyLevel > 0) {
                 // Reduce total energy usage incurred by other enchantments by 15% per Efficiency level.
                 efficiencyFactor *= Math.pow(0.85, efficiencyLevel);
             }
-            var unbreakingLevel = enchantments.getLevel(enchantmentRegistry.getHolderOrThrow(Enchantments.UNBREAKING));
+            int unbreakingLevel = enchantments.getOrDefault(Enchantments.UNBREAKING, 0);
             if (unbreakingLevel > 0) {
                 // Give plane only a (100 / (level + 1))% chance to use energy.
                 // This is similar to vanilla Unbreaking behaviour for tools.
@@ -333,13 +365,15 @@ public class ItemPickupStrategy implements PickupStrategy {
         ItemStack tool;
         boolean fallback = false;
 
-        if (BlockTags.MINEABLE_WITH_PICKAXE.contains(state)) {
+        // The tool class the block asks for (there are no "mineable" tags in this version)
+        var toolClass = state.getBlock().getHarvestTool(state);
+        if ("pickaxe".equals(toolClass)) {
             tool = new ItemStack(Items.DIAMOND_PICKAXE, 1);
-        } else if (BlockTags.MINEABLE_WITH_AXE.contains(state)) {
+        } else if ("axe".equals(toolClass)) {
             tool = new ItemStack(Items.DIAMOND_AXE, 1);
-        } else if (BlockTags.MINEABLE_WITH_SHOVEL.contains(state)) {
+        } else if ("shovel".equals(toolClass)) {
             tool = new ItemStack(Items.DIAMOND_SHOVEL, 1);
-        } else if (BlockTags.MINEABLE_WITH_HOE.contains(state)) {
+        } else if ("hoe".equals(toolClass)) {
             tool = new ItemStack(Items.DIAMOND_HOE, 1);
         } else {
             // Use a pickaxe for everything else, to allow enchanting it
@@ -349,7 +383,7 @@ public class ItemPickupStrategy implements PickupStrategy {
 
         if (!enchantments.isEmpty()) {
             // For silk touch / fortune purposes, enchant the fake tool
-            EnchantmentHelper.setEnchantments(tool, enchantments);
+            EnchantmentHelper.setEnchantments(enchantments, tool);
 
             // Setting fallback to false ensures it'll be used even if not strictly required
             fallback = false;
@@ -359,11 +393,11 @@ public class ItemPickupStrategy implements PickupStrategy {
     }
 
     public static boolean isBlockBlacklisted(Block b) {
-        return b.builtInRegistryHolder().is(BLOCK_BLACKLIST);
+        return BLOCK_BLACKLIST.contains(b);
     }
 
     public static boolean isItemBlacklisted(Item i) {
-        return i.builtInRegistryHolder().is(ITEM_BLACKLIST);
+        return ITEM_BLACKLIST.contains(i);
     }
 
     final static class HarvestTool {

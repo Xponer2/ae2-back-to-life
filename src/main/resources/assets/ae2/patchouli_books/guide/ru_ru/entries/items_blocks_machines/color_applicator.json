@@ -1,0 +1,35 @@
+{
+  "name": "Аппликатор цвета",
+  "icon": "ae2:color_applicator",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:color_applicator",
+      "link_recipe": true,
+      "anchor": "the-color-applicator",
+      "text": "Аппликатор цвета красит окрашиваемые блоки: $(l:items_blocks_machines/cables)кабели$(/l), шерсть, терракоту, стекло и бетон. Он использует $(l:items_blocks_machines/paintballs)шарики с краской$(/l) или красители, а снежками можно смыть цвет с кабелей и пятна краски с блоков.$(br2)Его энергию можно восполнить в устройстве $(l:items_blocks_machines/charger)Зарядник$(/l)."
+    },
+    {
+      "type": "text",
+      "text": "Аппликаторы цвета работают как $(l:items_blocks_machines/storage_cells)ячейки хранения$(/l), и запас краски в них проще всего пополнить, вставив аппликатор в слот ячейки хранения устройства $(l:items_blocks_machines/chest)МЭ сундук$(/l)$(br2)Щёлкните правой кнопкой мыши по цели, чтобы нанести выбранный цвет. Чтобы сменить цвет, крутите колёсико мыши с зажатым Shift или щёлкните правой кнопкой мыши, не наводясь на цель."
+    },
+    {
+      "type": "text",
+      "title": "Улучшения",
+      "anchor": "upgrades",
+      "text": "Аппликаторы цвета поддерживают следующие $(l:items_blocks_machines/upgrade_cards)улучшения$(/l), которые вставляются в устройстве $(l:items_blocks_machines/cell_workbench)Верстак для ячеек$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Карта равномерного распределения$(/l) выделяет каждому типу одинаковый объём байт ячейки, чтобы один тип не мог заполнить всю ячейку$(li)$(l:items_blocks_machines/upgrade_cards)Пустотная карта$(/l) уничтожает вставляемые предметы, если ячейка заполнена (или заполнен объём, выделенный этому типу картой"
+    },
+    {
+      "type": "text",
+      "text": "равномерного распределения). Не забудьте разметить ячейку!$(li)$(l:items_blocks_machines/upgrade_cards)Энергетическая карта$(/l) увеличивает ёмкость батареи"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/network_color_applicator",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

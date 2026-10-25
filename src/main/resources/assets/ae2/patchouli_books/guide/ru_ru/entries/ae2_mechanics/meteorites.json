@@ -1,0 +1,58 @@
+{
+  "name": "Метеориты",
+  "icon": "ae2:sky_stone_block",
+  "category": "ae2_mechanics",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "meteorites",
+      "text": "С метеоритов начинается игра с AE2. В них есть важнейшие материалы: $(l:items_blocks_machines/budding_certus)цветущие блоки истинного кварца$(/l) разных видов и $(l:items_blocks_machines/mysterious_cube)Таинственный куб$(/l) в центре.$(br2)Что делать, когда найдёте метеорит, рассказано в разделе $(l:getting_started/getting_started)«Начало работы»$(/l).$(br2)$(bold)Поиск метеоритов$()$(br2)Метеориты встречаются довольно часто и оставляют в"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "AAA ",
+            "EFEA",
+            "FGFA",
+            "HEHA"
+          ],
+          [
+            "0AA ",
+            "BCDA",
+            "DDBA",
+            "BDDA"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:sky_stone_block",
+          "B": "ae2:chipped_budding_quartz",
+          "C": "ae2:damaged_budding_quartz",
+          "D": "ae2:flawless_budding_quartz",
+          "E": "ae2:large_quartz_bud[facing=up]",
+          "F": "ae2:quartz_cluster[facing=up]",
+          "G": "ae2:mysterious_cube",
+          "H": "ae2:small_quartz_bud[facing=up]",
+          "0": "ae2:sky_stone_block"
+        }
+      },
+      "text": ""
+    },
+    {
+      "type": "text",
+      "text": "земле огромные воронки, так что вы, возможно, уже нашли парочку. Если нет, $(l:items_blocks_machines/meteorite_compass)Метеоритный компас$(/l) укажет на ближайший таинственный куб."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/assemblies/meteorite-crater.png"
+      ],
+      "border": true,
+      "text": ""
+    }
+  ]
+}

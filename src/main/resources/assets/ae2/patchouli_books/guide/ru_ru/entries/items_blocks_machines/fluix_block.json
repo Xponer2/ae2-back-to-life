@@ -1,0 +1,21 @@
+{
+  "name": "Блок флюиса",
+  "icon": "ae2:fluix_block",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:fluix_block",
+      "link_recipe": true,
+      "anchor": "the-fluix-block",
+      "text": "Блок для хранения предмета $(l:items_blocks_machines/fluix_crystal)Флюисовый кристалл$(/l). Также используется в рецептах нескольких механизмов."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:decorative/fluix_block",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

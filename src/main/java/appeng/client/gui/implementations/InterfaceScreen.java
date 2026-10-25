@@ -21,7 +21,7 @@ package appeng.client.gui.implementations;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.gui.GuiButton;
+import appeng.client.gui.compat.Button;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.text.ITextComponent;
 
@@ -40,7 +40,7 @@ import appeng.menu.implementations.InterfaceMenu;
 public class InterfaceScreen<C extends InterfaceMenu> extends UpgradeableScreen<C> {
 
     private final SettingToggleButton<FuzzyMode> fuzzyMode;
-    private final List<GuiButton> amountButtons = new ArrayList<>();
+    private final List<Button> amountButtons = new ArrayList<>();
 
     public InterfaceScreen(C menu, InventoryPlayer playerInventory, ITextComponent title,
             ScreenStyle style) {
@@ -56,7 +56,7 @@ public class InterfaceScreen<C extends InterfaceMenu> extends UpgradeableScreen<
             var button = new SetAmountButton(btn -> {
                 var idx = amountButtons.indexOf(btn);
                 var configSlot = configSlots.get(idx);
-                menu.openSetAmountMenu(configSlot.slot);
+                menu.openSetAmountMenu(configSlot.getSlotIndex());
             });
             button.setDisableBackground(true);
             button.setMessage(ButtonToolTips.InterfaceSetStockAmount.text());
@@ -75,7 +75,7 @@ public class InterfaceScreen<C extends InterfaceMenu> extends UpgradeableScreen<
         var configSlots = menu.getSlots(SlotSemantics.CONFIG);
         for (int i = 0; i < amountButtons.size(); i++) {
             var button = amountButtons.get(i);
-            var item = configSlots.get(i).getItem();
+            var item = configSlots.get(i).getStack();
             button.visible = !item.isEmpty();
         }
     }

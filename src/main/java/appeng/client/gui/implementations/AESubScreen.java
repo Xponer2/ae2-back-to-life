@@ -20,7 +20,7 @@ package appeng.client.gui.implementations;
 
 import appeng.util.Platform;
 
-import net.neoforged.neoforge.network.PacketDistributor;
+import appeng.core.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.util.text.ITextComponent;

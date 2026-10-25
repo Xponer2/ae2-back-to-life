@@ -25,12 +25,14 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer.Builder;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import appeng.api.util.StringRepresentable;
@@ -82,7 +84,7 @@ public class ControllerBlock extends AEBaseEntityBlock<ControllerBlockEntity> {
     }
 
     @Override
-    protected void createBlockStateDefinition(Builder<Block, IBlockState> builder) {
+    protected void createBlockStateDefinition(BlockStateContainer.Builder builder) {
         super.createBlockStateDefinition(builder);
         builder.add(CONTROLLER_STATE);
         builder.add(CONTROLLER_TYPE);
@@ -98,15 +100,16 @@ public class ControllerBlock extends AEBaseEntityBlock<ControllerBlockEntity> {
     }
 
     /**
-     * This is called when an adjacent block is changed.
+     * 1.21 recomputes the render type when an adjacent block changes; 1.12.2 computes it with the actual state.
      */
     @Override
-    public IBlockState updateShape(IBlockState state, EnumFacing facing, IBlockState facingState, World level,
-            BlockPos pos, BlockPos facingPos) {
-        return getControllerType(state, level, pos);
+    protected IBlockState updateBlockStateFromBlockEntity(IBlockState currentState, ControllerBlockEntity be) {
+        var state = super.updateBlockStateFromBlockEntity(currentState, be);
+        var level = be.getWorld();
+        return level != null ? getControllerType(state, level, be.getPos()) : state;
     }
 
-    private IBlockState getControllerType(IBlockState baseState, World level, BlockPos pos) {
+    private IBlockState getControllerType(IBlockState baseState, IBlockAccess level, BlockPos pos) {
         // Only used for columns, really
         ControllerRenderType type = ControllerRenderType.block;
 
@@ -140,7 +143,7 @@ public class ControllerBlock extends AEBaseEntityBlock<ControllerBlockEntity> {
         return baseState.withProperty(CONTROLLER_TYPE, type);
     }
 
-    private static boolean isController(World level, int x, int y, int z) {
+    private static boolean isController(IBlockAccess level, int x, int y, int z) {
         // Do NOT query block entity:
         // - in Spatial IO movement, block entity might have been removed but block might still be there
         // - if we call getBlockEntity a new block entity will be loaded even though it has already been removed (bad!)

@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.components.AbstractWidget;
+import appeng.client.gui.compat.AbstractWidget;
 
 import appeng.client.Point;
 import appeng.client.gui.GuiGraphics;

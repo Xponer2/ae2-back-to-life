@@ -37,7 +37,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.level.redstone.NeighborUpdater;
 
 import appeng.api.networking.IGridNode;
 import appeng.api.parts.IFacadeContainer;
@@ -90,7 +89,7 @@ public class CableBusBlockEntity extends AEBaseBlockEntity implements AEMultiBlo
         final int newLV = this.getCableBus().getLightValue();
         if (newLV != this.oldLV) {
             this.oldLV = newLV;
-            this.level.getLightEngine().checkBlock(this.worldPosition);
+            this.world.checkLight(this.pos);
             ret = true;
         }
 
@@ -146,14 +145,14 @@ public class CableBusBlockEntity extends AEBaseBlockEntity implements AEMultiBlo
 
     @Override
     public void markForUpdate() {
-        if (this.level == null) {
+        if (this.world == null) {
             return;
         }
 
         final int newLV = this.getCableBus().getLightValue();
         if (newLV != this.oldLV) {
             this.oldLV = newLV;
-            this.level.getLightEngine().checkBlock(this.worldPosition);
+            this.world.checkLight(this.pos);
         }
 
         super.markForUpdate();
@@ -175,8 +174,8 @@ public class CableBusBlockEntity extends AEBaseBlockEntity implements AEMultiBlo
     public void onReady() {
         super.onReady();
         if (this.getCableBus().isEmpty()) {
-            if (this.level.getTileEntity(this.worldPosition) == this) {
-                this.level.destroyBlock(this.worldPosition, true);
+            if (this.world.getTileEntity(this.pos) == this) {
+                this.world.destroyBlock(this.pos, true);
             }
         } else {
             this.getCableBus().addToWorld();
@@ -271,24 +270,23 @@ public class CableBusBlockEntity extends AEBaseBlockEntity implements AEMultiBlo
 
     @Override
     public void cleanup() {
-        this.getLevel().removeBlock(this.worldPosition, false);
+        this.getLevel().setBlockToAir(this.pos);
     }
 
     @Override
     public void notifyNeighbors() {
-        if (this.level != null && this.level.isBlockLoaded(this.worldPosition) && !CableBusContainer.isLoading()) {
-            Platform.notifyBlocksOfNeighbors(this.level, this.worldPosition);
+        if (this.world != null && this.world.isBlockLoaded(this.pos) && !CableBusContainer.isLoading()) {
+            Platform.notifyBlocksOfNeighbors(this.world, this.pos);
         }
     }
 
     @Override
     public void notifyNeighborNow(EnumFacing side) {
         var targetPos = getPos().offset(side);
-        if (this.level != null && this.level.isBlockLoaded(targetPos) && !CableBusContainer.isLoading()) {
-            var targetState = this.level.getBlockState(targetPos);
-            if (!targetState.isAir()) {
-                NeighborUpdater.executeUpdate(level, targetState, targetPos,
-                        getBlockState().getBlock(), getPos(), false);
+        if (this.world != null && this.world.isBlockLoaded(targetPos) && !CableBusContainer.isLoading()) {
+            var targetState = this.world.getBlockState(targetPos);
+            if (!Platform.isAir(targetState)) {
+                targetState.neighborChanged(world, targetPos, getBlockType(), getPos());
             }
         }
     }
@@ -319,7 +317,7 @@ public class CableBusBlockEntity extends AEBaseBlockEntity implements AEMultiBlo
         }
 
         CableBusRenderState renderState = this.cb.getRenderState();
-        renderState.setPos(worldPosition);
+        renderState.setPos(pos);
         return ModelData.builder().with(CableBusRenderState.PROPERTY, renderState).build();
 
     }
@@ -334,7 +332,7 @@ public class CableBusBlockEntity extends AEBaseBlockEntity implements AEMultiBlo
 
             AppEng.instance().setPartInteractionPlayer(player);
             try {
-                sp = cb.selectPartWorld(hitResult.getLocation());
+                sp = cb.selectPartWorld(hitResult.hitVec);
             } finally {
                 AppEng.instance().setPartInteractionPlayer(null);
             }
@@ -343,7 +341,7 @@ public class CableBusBlockEntity extends AEBaseBlockEntity implements AEMultiBlo
             if (sp.part != null) {
                 sp.part.addPartDrop(is, true);
                 sp.part.addAdditionalDrops(is, true);
-                if (remove) {
+                if (tileEntityInvalid) {
                     sp.part.clearContent();
                 }
 
@@ -368,7 +366,7 @@ public class CableBusBlockEntity extends AEBaseBlockEntity implements AEMultiBlo
             }
 
             for (var item : is) {
-                player.inventory.placeItemBackInInventory(item);
+                Platform.placeItemBackInInventory(player, item);
             }
         }
 

@@ -92,14 +92,11 @@ public class ControllerBlockEntity extends AENetworkedPoweredBlockEntity {
             metaState = ControllerBlockState.offline;
         }
 
-        if (this.checkController(this.worldPosition)
-                && this.level.getBlockState(this.worldPosition)
-                        .getValue(ControllerBlock.CONTROLLER_STATE) != metaState) {
+        if (this.checkController(this.pos)
+                && getBlockState().getValue(ControllerBlock.CONTROLLER_STATE) != metaState) {
             // We don't want to be sending neighbor updates when a controller is being moved by spatial IO.
             // So we never send one, and only notify the clients.
-            this.level.setBlock(this.worldPosition,
-                    this.level.getBlockState(this.worldPosition).setValue(ControllerBlock.CONTROLLER_STATE, metaState),
-                    Block.UPDATE_CLIENTS);
+            setBlockStateProperty(ControllerBlock.CONTROLLER_STATE, metaState);
         }
 
     }

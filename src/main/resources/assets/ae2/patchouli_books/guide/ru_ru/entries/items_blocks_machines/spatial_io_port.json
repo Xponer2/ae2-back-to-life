@@ -1,0 +1,25 @@
+{
+  "name": "Пространственный порт ввода/вывода",
+  "icon": "ae2:spatial_io_port",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 210,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:spatial_io_port",
+      "link_recipe": true,
+      "anchor": "the-spatial-io-port",
+      "text": "Пространственный порт ввода/вывода используется в $(l:ae2_mechanics/spatial_io)пространственном вводе/выводе$(/l): он хранит $(l:items_blocks_machines/spatial_cells)пространственную ячейку$(/l) и управляет операцией пространственного ввода/вывода.$(br2)Если нужна автоматизация, ячейку можно вставлять и забирать любой логистикой"
+    },
+    {
+      "type": "text",
+      "text": "предметов, например воронками или шинами AE2."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/spatial_io_port",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

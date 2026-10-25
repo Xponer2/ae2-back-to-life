@@ -1,0 +1,24 @@
+{
+  "name": "Метеоритный компас",
+  "icon": "ae2:meteorite_compass",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:meteorite_compass",
+      "link_recipe": true,
+      "anchor": "the-meteorite-compass",
+      "text": "Метеоритный компас указывает на ближайший $(l:items_blocks_machines/mysterious_cube)Таинственный куб$(/l), а значит, и на ближайший $(l:ae2_mechanics/meteorites)метеорит$(/l). Это один из первых предметов AE2, который стоит сделать."
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Зарядник",
+      "in0": "minecraft:compass:0",
+      "output": "ae2:meteorite_compass",
+      "machine": "ae2:charger",
+      "text": "",
+      "anchor": "recipe"
+    }
+  ]
+}

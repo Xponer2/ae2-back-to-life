@@ -1,0 +1,90 @@
+{
+  "name": "Автоматизация процессоров",
+  "icon": "ae2:logic_processor",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "automation-of-processor-production",
+      "text": "Автоматизировать $(l:items_blocks_machines/processors)процессоры$(/l) можно многими способами, и это один из них.$(br2)Такую общую схему можно собрать из любых логистических труб, проводов, каналов или как их там называет мод, лишь бы их можно было фильтровать."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/processor_flow_diagram.png"
+      ],
+      "border": true,
+      "text": "Здесь подробно описано, как сделать это средствами одного AE2 с помощью $(l:example_setups/pipe_subnet)«трубных»$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "$(l:example_setups/pipe_subnet)подсетей$(/l).$(br2)Эта постройка использует $(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l), поэтому она рассчитана на встраивание в вашу систему $(l:ae2_mechanics/autocrafting)автокрафта$(/l). Если нужно просто автоматизировать процессоры отдельно, замените поставщик шаблонов ещё одной бочкой и кладите ингредиенты прямо в верхнюю бочку.$(br2)Эта схема совместима и с предыдущими версиями AE2: даже если высекатели"
+    },
+    {
+      "type": "text",
+      "anchor": "a-lesson-in-pattern-encoding",
+      "text": "($(l:items_blocks_machines/inscriber)Высекатель$(/l)) различают стороны, трубные подсети всё равно подают и забирают предметы через правильные грани.$(br2)$(bold)Урок кодирования шаблонов$()$(br2)Часто $(l:items_blocks_machines/patterns)шаблон$(/l), который нужно закодировать, $(bold)НЕ СОВПАДАЕТ С ТЕМ, ЧТО ВЫ ВИДИТЕ В JEI$(), или с тем, что JEI выдаёт по кнопке +. В этом случае JEI выдаст 2 отдельных шаблона — один для печатных"
+    },
+    {
+      "type": "text",
+      "text": "компонентов, другой для финальной сборки, — и в шаблоне печатных компонентов будет $(l:items_blocks_machines/presses)пресс$(/l). Нам это не подходит, потому что постройка работает не так. Нужен 1 шаблон, который принимает сырьё и выдаёт готовый процессор, а так как пресс уже стоит в высекателе, в шаблон его класть не нужно.$(br2)---$(br2)$(#555)$(o)(3D-сцена недоступна в этой версии)$()"
+    },
+    {
+      "type": "text",
+      "title": "Настройки",
+      "anchor": "configurations",
+      "text": "$(li)$(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l) (1) в настройках по умолчанию, внутри — нужные шаблоны ($(l:items_blocks_machines/patterns)Шаблон обработки$(/l)). Обратите внимание: шаблоны ведут прямо от сырья к готовому процессору и $(bold)НЕ$() включают $(l:items_blocks_machines/presses)пресс$(/l)."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/logic_pattern.png"
+      ],
+      "border": true,
+      "text": ""
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/calculation_pattern.png"
+      ],
+      "border": true,
+      "text": ""
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/engineering_pattern.png"
+      ],
+      "border": true,
+      "text": "$(li)Шины хранения ($(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l)) (2, 17, 18, 20) в"
+    },
+    {
+      "type": "ae2:item_row_5",
+      "item0": "ae2:silicon",
+      "item1": "minecraft:gold_ingot",
+      "item2": "ae2:certus_quartz_crystal",
+      "item3": "minecraft:diamond",
+      "item4": "minecraft:redstone",
+      "text": "настройках по умолчанию.$(li)Шины экспорта ($(l:items_blocks_machines/export_bus)МЭ шина экспорта$(/l)) (3–7) отфильтрованы на нужные ингредиенты. В них по 2 карты $(l:items_blocks_machines/upgrade_cards)Карта ускорения$(/l).$(li)Шины импорта ($(l:items_blocks_machines/import_bus)Мэ шина импорта$(/l)) (13–16, 19) в настройках по умолчанию. В них по 2 карты $(l:items_blocks_machines/upgrade_cards)Карта ускорения$(/l).$(li)Высекатели ($(l:items_blocks_machines/inscriber)Высекатель$(/l)) в настройках по умолчанию. В них стоит нужный $(l:items_blocks_machines/presses)пресс$(/l) и по 4"
+    },
+    {
+      "type": "ae2:item_row_4",
+      "item0": "ae2:silicon_press",
+      "item1": "ae2:logic_processor_press",
+      "item2": "ae2:calculation_processor_press",
+      "item3": "ae2:engineering_processor_press",
+      "anchor": "how-it-works",
+      "text": "карты $(l:items_blocks_machines/upgrade_cards)Карта ускорения$(/l).$(br2)$(bold)Как это работает$()$(br2)1. $(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l) выталкивает ингредиенты в бочку.$(br2)2. Первая $(l:example_setups/pipe_subnet)трубная подсеть$(/l) (оранжевая) забирает из бочки кремний, редстоун и ингредиент нужного процессора (золотой слиток, кристалл"
+    },
+    {
+      "type": "text",
+      "text": "истинного кварца или алмаз) и кладёт их в нужный высекатель ($(l:items_blocks_machines/inscriber)Высекатель$(/l)).$(br2)3. Первые четыре высекателя ($(l:items_blocks_machines/inscriber)Высекатель$(/l)) делают $(l:items_blocks_machines/processors)Печатный кремний$(/l) и $(l:items_blocks_machines/processors)Печатная логическая схема$(/l), $(l:items_blocks_machines/processors)Печатная вычислительная схема$(/l) или $(l:items_blocks_machines/processors)Печатная инженерная схема$(/l).$(br2)4. Вторая и третья $(l:example_setups/pipe_subnet)трубные подсети$(/l) (зелёные) забирают печатные схемы из первых четырёх высекателей ($(l:items_blocks_machines/inscriber)Высекатель$(/l)) и кладут их в"
+    },
+    {
+      "type": "text",
+      "text": "пятый, сборочный высекатель ($(l:items_blocks_machines/inscriber)Высекатель$(/l)).$(br2)5. Пятый высекатель ($(l:items_blocks_machines/inscriber)Высекатель$(/l)) собирает $(l:items_blocks_machines/processors)процессор$(/l).$(br2)6. Четвёртая $(l:example_setups/pipe_subnet)трубная подсеть$(/l) (фиолетовая) кладёт процессор в поставщик шаблонов, возвращая его в основную сеть."
+    }
+  ]
+}

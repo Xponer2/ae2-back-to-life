@@ -1,0 +1,36 @@
+{
+  "name": "Приёмщик энергии",
+  "icon": "ae2:energy_acceptor",
+  "category": "items_blocks_machines/network_infrastructure",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:energy_acceptor",
+      "link_recipe": true,
+      "anchor": "the-energy-acceptor",
+      "text": "$(#555)$(o)(3D-сцена недоступна в этой версии)$()$(br2)Приёмщик энергии преобразует распространённые виды энергии из других технических модов во внутреннюю $(l:ae2_mechanics/energy)энергию$(/l) AE2 — AE. $(l:items_blocks_machines/controller)МЭ контроллер$(/l) тоже это умеет, но грани контроллера ценны, поэтому чаще лучше использовать приёмщик энергии."
+    },
+    {
+      "type": "text",
+      "text": "Коэффициенты преобразования Forge Energy и TechReborn Energy:$(li)2 FE = 1 AE (Forge)$(li)1 E = 2 AE (Fabric)$(br2)Скорость преобразования полностью зависит от того, сколько AE может хранить сеть; причины объяснены $(l:ae2_mechanics/energy)на этой странице$(/l)."
+    },
+    {
+      "type": "text",
+      "title": "Варианты",
+      "anchor": "variants",
+      "text": "Приёмщики энергии бывают двух видов: обычные и плоские ($(l:ae2_mechanics/cable_subparts)части кабеля$(/l)). Это позволяет делать некоторые постройки компактнее.$(br2)Обычный и плоский приёмщики энергии превращаются друг в друга в сетке крафта."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/energy_energy_acceptor",
+      "recipe2": "ae2:network/blocks/energy_energy_acceptor_alt",
+      "anchor": "recipe"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/parts/energy_acceptor",
+      "text": ""
+    }
+  ]
+}

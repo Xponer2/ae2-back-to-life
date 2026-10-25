@@ -55,7 +55,7 @@ public class CrankBlockEntity extends AEBaseBlockEntity implements ServerTicking
 
         var blockState = getBlockState();
         if (blockState.getBlock() instanceof CrankBlock crankBlock) {
-            return crankBlock.getCrankable(blockState, level, getPos());
+            return crankBlock.getCrankable(blockState, world, getPos());
         }
         return null;
     }
@@ -92,7 +92,7 @@ public class CrankBlockEntity extends AEBaseBlockEntity implements ServerTicking
                 } else {
                     this.hits++;
                     if (this.hits > 10) {
-                        level.destroyBlock(this.getPos(), false);
+                        world.destroyBlock(this.getPos(), false);
                     }
                 }
             }

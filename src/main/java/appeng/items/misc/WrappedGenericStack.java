@@ -33,8 +33,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.entity.SlotAccess;
-import net.minecraft.world.inventory.ClickAction;
 
 import appeng.api.behaviors.ContainerItemStrategies;
 import appeng.api.config.Actionable;
@@ -100,11 +98,14 @@ public class WrappedGenericStack extends AEBaseItem {
     }
 
     /**
-     * Allows picking up the contained fluid with a bucket.
+     * Allows picking up the contained fluid with a bucket. Items of this version have no hook for clicks with a carried
+     * stack: menus call this when the player clicks a slot holding a wrapped stack.
+     *
+     * @param primaryClick true for a left click
+     * @return true if the click was handled (the menu must not run its normal slot click)
      */
-    @Override
     public boolean overrideOtherStackedOnMe(ItemStack itemInSlot, ItemStack otherStack, Slot slot,
-            ClickAction clickAction, EntityPlayer player, SlotAccess access) {
+            boolean primaryClick, EntityPlayer player) {
         if (player.openContainer == null) {
             // We need the opened menu since we're ignoring slotAccess due to no helper being available for it in the
             // transfer API
@@ -114,13 +115,14 @@ public class WrappedGenericStack extends AEBaseItem {
         // When trying to stack onto degenerate wrapped stacks, delete them
         var what = unwrapWhat(itemInSlot);
         if (what == null && slot.getStack() == itemInSlot) {
-            LOG.error("Removing a broken wrapped generic stack from player {} slot {}", player, slot.slot);
-            slot.setByPlayer(ItemStack.EMPTY, itemInSlot);
+            LOG.error("Removing a broken wrapped generic stack from player {} slot {}", player,
+                    slot.getSlotIndex());
+            slot.putStack(ItemStack.EMPTY);
             return true;
         }
 
         // Allow picking up fluids items with a fluid container, this is a special case for fluids
-        if (clickAction == ClickAction.PRIMARY) {
+        if (primaryClick) {
             var heldContainer = ContainerItemStrategies.findCarriedContextForKey(what, player, player.openContainer);
             if (heldContainer != null) {
                 long amount = unwrapAmount(itemInSlot);

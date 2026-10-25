@@ -43,7 +43,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.phys.shapes.EntityCollisionContext;
 
 import appeng.api.config.YesNo;
 import appeng.api.implementations.parts.ICablePart;
@@ -85,7 +84,7 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
      */
     private static final String[] NBT_KEY_SIDES = Arrays.stream(Platform.DIRECTIONS_WITH_NULL)
             .map(d -> d == null ? "cable" : d.getName())
-            .toArray(new String[0]);
+            .toArray(String[]::new);
 
     private static final ThreadLocal<Boolean> IS_LOADING = new ThreadLocal<>();
     private final CableBusStorage storage = new CableBusStorage();
@@ -294,7 +293,7 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
         this.markForUpdate();
         this.markForSave();
         this.partChanged();
-        getTileEntity().invalidateCapabilities();
+        // Capabilities aren't cached by neighbors in this version, nothing to invalidate
 
         updateNeighborShapeOnSide(side);
     }
@@ -1017,7 +1016,7 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
             World level = getTileEntity().getWorld();
             if (blockState != null && level != null) {
                 return new FacadeRenderState(blockState,
-                        !facade.getBlockState().isSolidRender(level, getTileEntity().getPos()));
+                        !facade.getBlockState().isOpaqueCube());
             }
         }
 
@@ -1042,8 +1041,7 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
      */
     public VoxelShape getCollisionShape(CollisionContext context) {
         // This is a hack for annihilation planes
-        var itemEntity = context instanceof EntityCollisionContext entityContext
-                && entityContext.getEntity() instanceof EntityItem;
+        var itemEntity = context.getEntity() instanceof EntityItem;
 
         if (itemEntity) {
             if (cachedCollisionShapeLiving == null) {
@@ -1097,14 +1095,11 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
         if (be != null && be.getWorld() != null && !be.getWorld().isRemote) {
             TickHandler.instance().addCallable(be.getWorld(), level -> {
                 if (!be.isInvalid()) {
-                    var ourPos = be.getPos();
-                    var neighborPos = ourPos.offset(side);
+                    // Blocks like walls look at their neighbors when they are drawn: send the neighbor to the
+                    // clients again so it is redrawn
+                    var neighborPos = be.getPos().offset(side);
                     var neighborState = level.getBlockState(neighborPos);
-                    var ourState = Platform.getBlockState(be);
-                    IBlockState newNeighborState = neighborState.updateShape(side.getOpposite(), ourState, level,
-                            neighborPos, ourPos);
-                    Block.updateOrDestroy(neighborState, newNeighborState, level, neighborPos, Block.UPDATE_ALL,
-                            Block.UPDATE_LIMIT);
+                    level.notifyBlockUpdate(neighborPos, neighborState, neighborState, 3);
                 }
             });
         }

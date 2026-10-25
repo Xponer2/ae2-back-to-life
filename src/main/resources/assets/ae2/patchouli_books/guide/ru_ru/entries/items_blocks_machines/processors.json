@@ -1,0 +1,92 @@
+{
+  "name": "Процессоры",
+  "icon": "ae2:logic_processor",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "processors",
+      "text": "Процессоры — один из основных ингредиентов $(l:ae2_mechanics/devices)устройств$(/l) и механизмов AE2. А ещё это одна из первых больших задач по автоматизации. Есть три вида процессоров: из золота, из предмета $(l:items_blocks_machines/certus_quartz_crystal)Кристалл истинного кварца$(/l) и из алмаза. Их делают с помощью $(l:items_blocks_machines/presses)прессов$(/l) в механизме $(l:items_blocks_machines/inscriber)Высекатель$(/l) за несколько шагов (обычно с помощью цепочки высекателей и труб с фильтрами)."
+    },
+    {
+      "type": "ae2:item_row_3",
+      "item0": "ae2:logic_processor",
+      "item1": "ae2:calculation_processor",
+      "item2": "ae2:engineering_processor",
+      "text": ""
+    },
+    {
+      "type": "smelting",
+      "recipe": "ae2:certus_quartz_dust",
+      "text": "$(bold)Этапы производства$()$(br2)1. Добудьте или сделайте нужные ингредиенты: кремний, редстоун, золото, $(l:items_blocks_machines/certus_quartz_crystal)Кристалл истинного кварца$(/l), алмаз.$(br2)2. Напечатайте нужные печатные схемы"
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Высекатель",
+      "top": "ae2:silicon_press",
+      "middle": "ae2:silicon,ore:itemSilicon",
+      "bottom": "",
+      "output": "ae2:printed_silicon",
+      "text": "Прессы не расходуются."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Высекатель",
+      "top": "ae2:logic_processor_press",
+      "middle": "minecraft:gold_ingot,ore:ingotGold",
+      "bottom": "",
+      "output": "ae2:printed_logic_processor",
+      "text": "Прессы не расходуются."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Высекатель",
+      "top": "ae2:calculation_processor_press",
+      "middle": "ae2:certus_quartz_crystal",
+      "bottom": "",
+      "output": "ae2:printed_calculation_processor",
+      "text": "Прессы не расходуются."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Высекатель",
+      "top": "ae2:engineering_processor_press",
+      "middle": "minecraft:diamond,ore:gemDiamond",
+      "bottom": "",
+      "output": "ae2:printed_engineering_processor",
+      "text": "Прессы не расходуются."
+    },
+    {
+      "type": "text",
+      "text": "3. Финальная сборка"
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Высекатель",
+      "top": "ae2:printed_logic_processor",
+      "middle": "minecraft:redstone",
+      "bottom": "ae2:printed_silicon",
+      "output": "ae2:logic_processor",
+      "text": "Все ингредиенты расходуются."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Высекатель",
+      "top": "ae2:printed_calculation_processor",
+      "middle": "minecraft:redstone",
+      "bottom": "ae2:printed_silicon",
+      "output": "ae2:calculation_processor",
+      "text": "Все ингредиенты расходуются."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Высекатель",
+      "top": "ae2:printed_engineering_processor",
+      "middle": "minecraft:redstone",
+      "bottom": "ae2:printed_silicon",
+      "output": "ae2:engineering_processor",
+      "text": "Все ингредиенты расходуются."
+    }
+  ]
+}

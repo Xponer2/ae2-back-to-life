@@ -1,0 +1,73 @@
+{
+  "name": "Прессы",
+  "icon": "ae2:silicon_press",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "presses",
+      "text": "В механизме $(l:items_blocks_machines/inscriber)Высекатель$(/l) используются 5 разных прессов."
+    },
+    {
+      "type": "ae2:item_row_4",
+      "item0": "ae2:silicon_press",
+      "item1": "ae2:logic_processor_press",
+      "item2": "ae2:calculation_processor_press",
+      "item3": "ae2:engineering_processor_press",
+      "text": ""
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:name_press",
+      "link_recipe": true,
+      "anchor": "processor-presses",
+      "text": "$(bold)Прессы для процессоров$()$(br2)Кремниевый, логический, вычислительный и инженерный прессы нужны для производства $(l:items_blocks_machines/processors)процессоров$(/l). Эти 4 пресса выпадают из блока $(l:items_blocks_machines/mysterious_cube)Таинственный куб$(/l) в $(l:ae2_mechanics/meteorites)метеорите$(/l). Их также можно копировать в механизме $(l:items_blocks_machines/inscriber)Высекатель$(/l)."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Высекатель",
+      "top": "ae2:silicon_press",
+      "middle": "minecraft:iron_block",
+      "bottom": "",
+      "output": "ae2:silicon_press",
+      "text": "Прессы не расходуются."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Высекатель",
+      "top": "ae2:logic_processor_press",
+      "middle": "minecraft:iron_block",
+      "bottom": "",
+      "output": "ae2:logic_processor_press",
+      "text": "Прессы не расходуются."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Высекатель",
+      "top": "ae2:calculation_processor_press",
+      "middle": "minecraft:iron_block",
+      "bottom": "",
+      "output": "ae2:calculation_processor_press",
+      "text": "Прессы не расходуются."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Высекатель",
+      "top": "ae2:engineering_processor_press",
+      "middle": "minecraft:iron_block",
+      "bottom": "",
+      "output": "ae2:engineering_processor_press",
+      "text": "Прессы не расходуются."
+    },
+    {
+      "type": "text",
+      "anchor": "name-press",
+      "text": "$(bold)Именующий пресс$()$(br2)Именующим прессом в высекателе можно давать имена предметам, как на наковальне.$(br2)Чтобы его сделать, щёлкните правой кнопкой мыши предметом $(l:items_blocks_machines/cutting_knives)Режущий нож из истинного кварца$(/l) или $(l:items_blocks_machines/cutting_knives)Режущий нож из незер-кварца$(/l) и вставьте слиток металла, затем введите имя, которое хотите нанести на пластину, и просто заберите готовую пластину. В высекателе можно использовать"
+    },
+    {
+      "type": "text",
+      "text": "одну или две пластины одновременно; если пластин две, имя будет составлено из обоих имён: сначала из верхнего слота, затем из нижнего."
+    }
+  ]
+}

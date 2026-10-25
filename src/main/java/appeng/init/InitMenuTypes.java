@@ -18,11 +18,6 @@
 
 package appeng.init;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import net.minecraft.core.Registry;
-import net.minecraft.util.ResourceLocation;
 
 import appeng.menu.MenuType;
 import appeng.menu.implementations.CellWorkbenchMenu;
@@ -62,13 +57,11 @@ import appeng.menu.me.networktool.NetworkStatusMenu;
 import appeng.menu.me.networktool.NetworkToolMenu;
 
 public final class InitMenuTypes {
-    private static final Map<ResourceLocation, MenuType<?>> REGISTRATION_QUEUE = new HashMap<>();
-
     private InitMenuTypes() {
     }
 
-    public static void init(Registry<MenuType<?>> registry) {
-        registerAll(registry,
+    public static void init() {
+        checkAll(
                 BasicCellChestMenu.TYPE,
                 CellWorkbenchMenu.TYPE,
                 MEChestMenu.TYPE,
@@ -111,24 +104,15 @@ public final class InitMenuTypes {
                 WirelessAccessPointMenu.TYPE);
     }
 
-    private static void registerAll(Registry<MenuType<?>> registry, MenuType<?>... types) {
-        // Flush the registration queue. Calling the static ctor of each menu class will have
-        // filled it.
-        for (var entry : REGISTRATION_QUEUE.entrySet()) {
-            Registry.register(registry, entry.getKey(), entry.getValue());
-        }
-        REGISTRATION_QUEUE.clear();
-
+    /**
+     * There is no menu type registry in 1.12.2: touching the TYPE fields above loads the menu classes, whose
+     * MenuTypeBuilder.build() registers them in {@link MenuType}. This checks that none is missing.
+     */
+    private static void checkAll(MenuType<?>... types) {
         for (var type : types) {
-            if (registry.getResourceKey(type).isEmpty()) {
+            if (type == null || MenuType.byId(type.getId()) != type) {
                 throw new IllegalStateException("Menu Type " + type + " is not registered");
             }
-        }
-    }
-
-    public static void queueRegistration(ResourceLocation id, MenuType<?> menuType) {
-        if (REGISTRATION_QUEUE.put(id, menuType) != null) {
-            throw new IllegalStateException("Duplicate menu id: " + id);
         }
     }
 }

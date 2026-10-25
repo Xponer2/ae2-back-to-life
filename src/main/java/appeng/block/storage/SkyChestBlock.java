@@ -18,6 +18,7 @@
 
 package appeng.block.storage;
 
+import appeng.block.BlockProperties;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Random;
@@ -27,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer.Builder;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumActionResult;
@@ -37,9 +39,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.material.FluidState;
+import appeng.block.RenderShape;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import appeng.api.orientation.IOrientationStrategy;
@@ -56,7 +56,7 @@ import appeng.util.shape.CollisionContext;
 import appeng.util.shape.Shapes;
 import appeng.util.shape.VoxelShape;
 
-public class SkyChestBlock extends AEBaseEntityBlock<SkyChestBlockEntity> implements SimpleWaterloggedBlock {
+public class SkyChestBlock extends AEBaseEntityBlock<SkyChestBlockEntity> {
 
     private static final double AABB_OFFSET_BOTTOM = 0.00;
     private static final double AABB_OFFSET_SIDES = 0.06;
@@ -66,7 +66,6 @@ public class SkyChestBlock extends AEBaseEntityBlock<SkyChestBlockEntity> implem
     // direction
     private static final Map<EnumFacing, VoxelShape> SHAPES = new EnumMap<>(EnumFacing.class);
 
-    private static final PropertyBool WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     static {
         for (EnumFacing up : EnumFacing.VALUES) {
@@ -84,14 +83,13 @@ public class SkyChestBlock extends AEBaseEntityBlock<SkyChestBlockEntity> implem
     public SkyChestBlock(SkyChestType type, BlockProperties props) {
         super(props);
         this.type = type;
-        setDefaultState(getDefaultState().withProperty(WATERLOGGED, false));
+        setDefaultState(getDefaultState());
     }
 
     @Override
-    protected void createBlockStateDefinition(Builder<Block, IBlockState> builder) {
+    protected void createBlockStateDefinition(BlockStateContainer.Builder builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(WATERLOGGED);
-    }
+            }
 
     @Override
     public IOrientationStrategy getOrientationStrategy() {
@@ -102,11 +100,6 @@ public class SkyChestBlock extends AEBaseEntityBlock<SkyChestBlockEntity> implem
     @Override
     public RenderShape getRenderShape(IBlockState state) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
-    }
-
-    @Override
-    public boolean propagatesSkylightDown(IBlockState state, IBlockAccess reader, BlockPos pos) {
-        return true;
     }
 
     @Override
@@ -123,7 +116,7 @@ public class SkyChestBlock extends AEBaseEntityBlock<SkyChestBlockEntity> implem
     }
 
     @Override
-    public void tick(IBlockState state, WorldServer level, BlockPos pos, Random random) {
+    public void tick(IBlockState state, World level, BlockPos pos, Random random) {
         var chest = AEBlockEntities.SKY_CHEST.getTileEntity(level, pos);
         if (chest != null) {
             chest.recheckOpen();
@@ -163,24 +156,13 @@ public class SkyChestBlock extends AEBaseEntityBlock<SkyChestBlockEntity> implem
     @Override
     @Nullable
     public IBlockState getStateForPlacement(BlockPlaceContext context) {
-        var fluidState = context.getLevel().getFluidState(context.getClickedPos());
-        return super.getStateForPlacement(context)
-                .setValue(WATERLOGGED, fluidState.getType() == FluidRegistry.WATER);
+        return super.getStateForPlacement(context);
     }
 
-    @Override
-    public FluidState getFluidState(IBlockState blockState) {
-        return blockState.getValue(WATERLOGGED).booleanValue()
-                ? FluidRegistry.WATER.getSource(false)
-                : super.getFluidState(blockState);
-    }
 
     @Override
     public IBlockState updateShape(IBlockState blockState, EnumFacing facing, IBlockState facingState, World level,
             BlockPos currentPos, BlockPos facingPos) {
-        if (blockState.getValue(WATERLOGGED)) {
-            level.scheduleTick(currentPos, FluidRegistry.WATER, FluidRegistry.WATER.getTickDelay(level));
-        }
 
         return super.updateShape(blockState, facing, facingState, level, currentPos, facingPos);
     }

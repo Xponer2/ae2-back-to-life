@@ -47,12 +47,12 @@ public final class InventoryHotkeyAction implements HotkeyAction {
     }
 
     public InventoryHotkeyAction(ItemLike item, Opener opener) {
-        this((stack) -> stack.is(item.asItem()), opener);
+        this((stack) -> stack.getItem() == item.asItem(), opener);
     }
 
     @Override
     public boolean run(EntityPlayer player) {
-        var items = player.inventory.items;
+        var items = player.inventory.mainInventory;
         for (int i = 0; i < items.size(); i++) {
             if (locatable.test(items.get(i))) {
                 if (opener.open(player, MenuLocators.forInventorySlot(i))) {

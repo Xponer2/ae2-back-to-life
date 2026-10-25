@@ -18,6 +18,7 @@
 
 package appeng.blockentity.misc;
 
+import net.minecraft.tileentity.TileEntityFurnace;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
@@ -281,7 +282,7 @@ public class VibrationChamberBlockEntity extends AENetworkedInvBlockEntity
 
                 if (is.getCount() <= 1) {
                     // fuel was fully consumed. for items like lava-bucket, put the remainder in the slot
-                    this.inv.setItemDirect(0, fuelItem.getCraftingRemainingItem(is));
+                    this.inv.setItemDirect(0, fuelItem.getContainerItem(is));
                 } else {
                     is.shrink(1);
                     this.inv.setItemDirect(0, is);
@@ -302,13 +303,13 @@ public class VibrationChamberBlockEntity extends AENetworkedInvBlockEntity
             this.markForUpdate();
 
             if (this.hasLevel()) {
-                Platform.notifyBlocksOfNeighbors(this.level, this.worldPosition);
+                Platform.notifyBlocksOfNeighbors(this.world, this.pos);
             }
         }
     }
 
     public static int getBurnTime(ItemStack is) {
-        return is.getBurnTime(null);
+        return TileEntityFurnace.getItemBurnTime(is);
     }
 
     public static boolean hasBurnTime(ItemStack is) {

@@ -23,19 +23,17 @@ import appeng.util.ItemProperties;
 import appeng.core.CreativeTabOutput;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -46,7 +44,6 @@ import appeng.api.networking.GridHelper;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.spatial.ISpatialService;
-import appeng.api.util.Registries;
 import appeng.core.AEConfig;
 import appeng.items.AEBaseItem;
 import appeng.util.InteractionUtil;
@@ -59,7 +56,17 @@ public class ReplicatorCardItem extends AEBaseItem {
     }
 
     private NBTTagCompound getTag(ItemStack stack) {
-        return stack.getOrDefault(DataComponents.CUSTOM_DATA, NBTTagCompound.EMPTY).copy();
+        var tag = stack.getTagCompound();
+        return tag != null ? tag.copy() : new NBTTagCompound();
+    }
+
+    private NBTTagCompound getOrCreateTag(ItemStack stack) {
+        var tag = stack.getTagCompound();
+        if (tag == null) {
+            tag = new NBTTagCompound();
+            stack.setTagCompound(tag);
+        }
+        return tag;
     }
 
     private int getReplications(ItemStack stack) {
@@ -70,15 +77,14 @@ public class ReplicatorCardItem extends AEBaseItem {
     public ActionResult<ItemStack> use(World level, EntityPlayer playerIn, EnumHand handIn) {
         if (!level.isRemote) {
             var stack = playerIn.getHeldItem(handIn);
-            NBTTagCompound.update(DataComponents.CUSTOM_DATA, stack, tag -> {
-                final int replications;
-                if (tag.contains("r")) {
-                    replications = (tag.getInt("r") + 1) % 4;
-                } else {
-                    replications = 0;
-                }
-                tag.setInteger("r", replications);
-            });
+            var tag = getOrCreateTag(stack);
+            final int newReplications;
+            if (tag.hasKey("r")) {
+                newReplications = (tag.getInteger("r") + 1) % 4;
+            } else {
+                newReplications = 0;
+            }
+            tag.setInteger("r", newReplications);
 
             var replications = getReplications(stack);
             playerIn.sendMessage(new TextComponentString(replications + 1 + "³ Replications"));
@@ -112,14 +118,14 @@ public class ReplicatorCardItem extends AEBaseItem {
             var gridHost = GridHelper.getNodeHost(level, pos);
 
             if (gridHost != null) {
-                NBTTagCompound.update(DataComponents.CUSTOM_DATA, player.getHeldItem(hand), tag -> {
-                    tag.setInteger("x", x);
-                    tag.setInteger("y", y);
-                    tag.setInteger("z", z);
-                    tag.setInteger("side", side.ordinal());
-                    tag.setString("w", level.dimension().location().toString());
-                    tag.setInteger("r", 0);
-                });
+                var tag = getOrCreateTag(player.getHeldItem(hand));
+                tag.setInteger("x", x);
+                tag.setInteger("y", y);
+                tag.setInteger("z", z);
+                tag.setInteger("side", side.ordinal());
+                // Dimensions are numbers in this version
+                tag.setInteger("w", level.provider.getDimension());
+                tag.setInteger("r", 0);
 
                 this.outputMsg(player, "Set replicator source");
             } else {
@@ -132,9 +138,8 @@ public class ReplicatorCardItem extends AEBaseItem {
                 final int src_y = ish.getInteger("y");
                 final int src_z = ish.getInteger("z");
                 final int src_side = ish.getInteger("side");
-                final String worldId = ish.getString("w");
-                final World src_w = level.getMinecraftServer()
-                        .getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(worldId)));
+                final int worldId = ish.getInteger("w");
+                final World src_w = level.getMinecraftServer().getWorld(worldId);
                 final int replications = ish.getInteger("r") + 1;
 
                 var gh = GridHelper.getNodeHost(src_w, new BlockPos(src_x, src_y, src_z));
@@ -195,12 +200,16 @@ public class ReplicatorCardItem extends AEBaseItem {
                                                     final IBlockState prev = level.getBlockState(d);
 
                                                     level.setBlockState(d, state);
-                                                    if (state.hasBlockEntity()) {
+                                                    if (state.getBlock().hasTileEntity(state)) {
                                                         final TileEntity ote = src_w.getTileEntity(p);
-                                                        var data = ote.writeToNBT();
-                                                        var newBe = TileEntity.loadStatic(d, state, data);
+                                                        var data = ote.writeToNBT(new NBTTagCompound());
+                                                        // The copy belongs at the new position
+                                                        data.setInteger("x", d.getX());
+                                                        data.setInteger("y", d.getY());
+                                                        data.setInteger("z", d.getZ());
+                                                        var newBe = TileEntity.create(level, data);
                                                         if (newBe != null) {
-                                                            level.setBlockEntity(newBe);
+                                                            level.setTileEntity(d, newBe);
                                                         }
                                                     }
                                                     level.notifyBlockUpdate(d, prev, state, 3);
@@ -233,7 +242,7 @@ public class ReplicatorCardItem extends AEBaseItem {
     @Override
     public void addToMainCreativeTab(CreativeTabOutput.DisplayParameters parameters, CreativeTabOutput output) {
         if (AEConfig.instance().isDebugToolsEnabled()) {
-            output.accept(this);
+            output.accept((Item) this);
         }
     }
 }

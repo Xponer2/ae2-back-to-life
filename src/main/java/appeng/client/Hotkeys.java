@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.settings.KeyBinding;
 
@@ -23,7 +23,7 @@ public class Hotkeys {
         if (finalized) {
             throw new IllegalStateException("Hotkey registration already finalized!");
         }
-        return new Hotkey(id, new KeyBinding("key.ae2." + id, GLFW.GLFW_KEY_UNKNOWN, "key.ae2.category"));
+        return new Hotkey(id, new KeyBinding("key.ae2." + id, Keyboard.KEY_NONE, "key.ae2.category"));
     }
 
     private static void registerHotkey(Hotkey hotkey) {

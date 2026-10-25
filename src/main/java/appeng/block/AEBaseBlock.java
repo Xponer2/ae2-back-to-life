@@ -18,6 +18,7 @@
 
 package appeng.block;
 
+import appeng.util.ItemTooltipContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -250,7 +251,7 @@ public abstract class AEBaseBlock extends Block implements IOrientableBlock {
      * Tooltip lines for the block item.
      */
     @SideOnly(Side.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable World level, List<ITextComponent> tooltip,
+    public void appendHoverText(ItemStack stack, ItemTooltipContext context, List<ITextComponent> tooltip,
             ITooltipFlag flag) {
     }
 
@@ -296,6 +297,16 @@ public abstract class AEBaseBlock extends Block implements IOrientableBlock {
     /**
      * Modern canSurvive: whether the block can stay at its position.
      */
+    /**
+     * 1.21 Block.canSupportCenter: the face of the block at pos can hold something attached to its center (torches,
+     * fixtures).
+     */
+    public static boolean canSupportCenter(IBlockAccess level, BlockPos pos, EnumFacing face) {
+        var shape = level.getBlockState(pos).getBlockFaceShape(level, pos, face);
+        return shape == BlockFaceShape.SOLID || shape == BlockFaceShape.CENTER || shape == BlockFaceShape.CENTER_BIG
+                || shape == BlockFaceShape.MIDDLE_POLE || shape == BlockFaceShape.MIDDLE_POLE_THICK;
+    }
+
     public boolean canSurvive(IBlockState state, World level, BlockPos pos) {
         return true;
     }
@@ -584,9 +595,6 @@ public abstract class AEBaseBlock extends Block implements IOrientableBlock {
      */
     public IBlockState updateShape(IBlockState state, EnumFacing facing, IBlockState facingState, World level,
             BlockPos currentPos, BlockPos facingPos) {
-        if (!canSurvive(state, level, currentPos)) {
-            return Blocks.AIR.getDefaultState();
-        }
         return state;
     }
 

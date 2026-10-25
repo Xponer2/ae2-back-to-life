@@ -18,30 +18,27 @@
 
 package appeng.server.services.compass;
 
-import com.mojang.brigadier.context.CommandContext;
-
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.core.SectionPos;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
 import appeng.core.localization.PlayerMessages;
+import appeng.server.AECommand;
 import appeng.server.ISubCommand;
 
 public class TestCompassCommand implements ISubCommand {
     @Override
-    public void call(MinecraftServer srv, CommandContext<CommandSourceStack> ctx, CommandSourceStack sender) {
-        var level = sender.getLevel();
-        var chunkPos = new ChunkPos(BlockPos.containing(sender.getPosition()));
+    public void call(MinecraftServer srv, ICommandSender sender, String[] args) {
+        var level = AECommand.getLevel(srv, sender);
+        var chunkPos = new ChunkPos(sender.getPosition());
         var compassRegion = CompassRegion.get(level, chunkPos);
 
-        for (var i = 0; i <= level.getSectionsCount(); i++) {
+        // 16 sections of 16 blocks in 1.12.2
+        for (var i = 0; i < 16; i++) {
             var hasSkyStone = compassRegion.hasCompassTarget(chunkPos.x, chunkPos.z, i);
-            var yMin = i * SectionPos.SECTION_SIZE;
-            var yMax = (i + 1) * SectionPos.SECTION_SIZE - 1;
-            var iFinal = i;
-            sender.sendSuccess(() -> PlayerMessages.CompassTestSection.text(yMin, yMax, iFinal, hasSkyStone), false);
+            var yMin = i * 16;
+            var yMax = (i + 1) * 16 - 1;
+            AECommand.sendSuccess(sender, PlayerMessages.CompassTestSection.text(yMin, yMax, i, hasSkyStone));
         }
     }
 }

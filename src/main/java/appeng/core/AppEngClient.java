@@ -25,6 +25,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 
+import javax.annotation.Nullable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,6 +50,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import appeng.api.parts.CableRenderMode;
 import appeng.blockentity.networking.CableBusBlockEntity;
 import appeng.client.EffectType;
+import appeng.client.commands.ClientCommands;
 import appeng.client.Hotkeys;
 import appeng.client.gui.me.common.PendingCraftingJobs;
 import appeng.client.gui.me.common.PinnedKeys;
@@ -64,7 +67,8 @@ import appeng.hooks.BlockAttackHook;
 import appeng.init.client.InitRendering;
 import appeng.init.client.InitScreens;
 import appeng.init.client.InitStackRenderHandlers;
-import appeng.items.contents.IMouseWheelItem;
+import appeng.helpers.IMouseWheelItem;
+import appeng.integration.modules.patchouli.PatchouliGuide;
 import appeng.util.Platform;
 
 /**
@@ -113,6 +117,19 @@ public class AppEngClient extends AppEngBase {
         Hotkeys.finalizeRegistration(ClientRegistry::registerKeyBinding);
         InitScreens.init();
         BlockAttackHook.install();
+        ClientCommands.register();
+        PatchouliGuide.init();
+    }
+
+    @Override
+    public void openGuideAtAnchor(@Nullable ResourceLocation page) {
+        if (PatchouliGuide.isAvailable()) {
+            if (page == null) {
+                PatchouliGuide.open(null, null);
+            } else {
+                PatchouliGuide.openTopic(page.toString());
+            }
+        }
     }
 
     @Override

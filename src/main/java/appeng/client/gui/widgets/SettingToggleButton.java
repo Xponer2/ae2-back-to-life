@@ -29,7 +29,7 @@ import java.util.function.Predicate;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
+import appeng.client.gui.compat.Button;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.Item;
 import net.minecraft.util.text.ITextComponent;
@@ -309,7 +309,7 @@ public class SettingToggleButton<T extends Enum<T>> extends IconButton {
         }
     }
 
-    private static void onPress(GuiButton btn) {
+    private static void onPress(Button btn) {
         if (btn instanceof SettingToggleButton) {
             ((SettingToggleButton<?>) btn).triggerPress();
         }

@@ -18,7 +18,7 @@
 
 package appeng.client.gui.me.crafting;
 
-import net.minecraft.client.gui.GuiButton;
+import appeng.client.gui.compat.Button;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.text.ITextComponent;
 
@@ -35,7 +35,7 @@ import appeng.menu.me.crafting.CraftAmountMenu;
  */
 public class CraftAmountScreen extends AEBaseScreen<CraftAmountMenu> {
 
-    private final GuiButton next;
+    private final Button next;
 
     private final NumberEntryWidget amountToCraft;
 
@@ -72,7 +72,7 @@ public class CraftAmountScreen extends AEBaseScreen<CraftAmountMenu> {
         }
 
         this.next.setMessage(hasShiftDown() ? GuiText.Start.text() : GuiText.Next.text());
-        this.next.enabled = this.amountToCraft.getIntValue().orElse(0) > 0;
+        this.next.active = this.amountToCraft.getIntValue().orElse(0) > 0;
     }
 
     private void confirm() {

@@ -1,0 +1,47 @@
+{
+  "name": "Сингулярности",
+  "icon": "ae2:singularity",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:singularity",
+      "link_recipe": true,
+      "anchor": "singularity",
+      "text": "Очень плотный шар материи.$(br2)Делается из 256 000 предметов или вёдер в устройстве $(l:items_blocks_machines/condenser)Конденсатор материи$(/l) в режиме сингулярности.$(br2)$(bold)Сингулярность квантовой запутанности$()"
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:quantum_entangled_singularity",
+      "link_recipe": true,
+      "text": "Нужна, чтобы связать два $(l:items_blocks_machines/quantum_bridge)квантовых сетевых моста$(/l); такие сингулярности всегда получаются парами. Чтобы создать связь, поместите по одной сингулярности из пары в блок $(l:items_blocks_machines/quantum_bridge)МЭ камера квантовой связи$(/l) моста на каждой стороне.$(br2)Их получают, вызвав реакцию между предметом $(item)Жемчуг Края$()"
+    },
+    {
+      "type": "text",
+      "text": "или $(l:items_blocks_machines/ender_dust)Эндер-пыль$(/l) и предметом $(item)Сингулярность$(). Для запуска реакции хватит любого взрыва."
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Взрыв",
+      "in0": "ae2:singularity",
+      "in1": "ae2:ender_dust,ore:dustEnder,ore:dustEnderPearl",
+      "output": "ae2:quantum_entangled_singularity#2",
+      "machine": "minecraft:tnt",
+      "text": "Бросьте предметы и взорвите их."
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Взрыв",
+      "in0": "ae2:singularity",
+      "in1": "minecraft:ender_pearl,ore:enderpearl",
+      "output": "ae2:quantum_entangled_singularity#2",
+      "machine": "minecraft:tnt",
+      "text": "Бросьте предметы и взорвите их."
+    },
+    {
+      "type": "text",
+      "text": "$(bold)$(o)Подойдёт почти любой взрыв — даже крипер.$()$(br2)Всегда получаются парами, но требуют лишь одну $(item)Сингулярность$().$(br2)При создании их стоит подписать на ванильной наковальне."
+    }
+  ]
+}

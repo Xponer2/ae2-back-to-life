@@ -18,6 +18,9 @@
 
 package appeng.block.paint;
 
+import net.minecraft.block.properties.IProperty;
+import java.util.List;
+import java.util.Collections;
 import appeng.core.CreativeTabOutput;
 
 import net.minecraft.block.Block;
@@ -51,7 +54,7 @@ public class PaintSplotchesBlock extends AEBaseEntityBlock<PaintSplotchesBlockEn
     public static final PropertyInteger LIGHT_LEVEL = PropertyInteger.create("light_level", 0, 2);
 
     public PaintSplotchesBlock() {
-        super(defaultProps(MapColor.NONE, SoundType.WET_GRASS).noOcclusion().air().lightLevel(state -> {
+        super(defaultProps(MapColor.AIR, SoundType.SLIME).noOcclusion().air().lightLevel(state -> {
             var lightLevel = state.getValue(LIGHT_LEVEL);
             return switch (lightLevel) {
                 default -> 0;
@@ -93,20 +96,26 @@ public class PaintSplotchesBlock extends AEBaseEntityBlock<PaintSplotchesBlockEn
         }
     }
 
+    /**
+     * The light level is set by the block entity and has to survive saving, so it is kept in the metadata.
+     */
     @Override
-    public void handlePrecipitation(IBlockState state, World level, BlockPos pos, Biome.Precipitation precipitation) {
-        if (!level.isRemote && precipitation == Biome.Precipitation.RAIN) {
-            level.removeBlock(pos, false);
+    protected List<IProperty<?>> getMetaProperties() {
+        return Collections.singletonList(LIGHT_LEVEL);
+    }
+
+    /**
+     * Rain washes the paint away (1.21 handlePrecipitation).
+     */
+    @Override
+    public void fillWithRain(World level, BlockPos pos) {
+        if (!level.isRemote) {
+            level.setBlockToAir(pos);
         }
     }
 
     @Override
-    public boolean canBeReplaced(IBlockState state, BlockPlaceContext useContext) {
-        return true;
-    }
-
-    @Override
-    public boolean canBeReplaced(IBlockState state, Fluid fluid) {
+    public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos) {
         return true;
     }
 

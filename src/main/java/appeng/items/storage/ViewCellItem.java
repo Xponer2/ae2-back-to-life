@@ -23,7 +23,6 @@ import appeng.util.ItemProperties;
 import java.util.Collection;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.item.ItemProperties;
 
 import appeng.api.config.FuzzyMode;
 import appeng.api.ids.AEComponents;

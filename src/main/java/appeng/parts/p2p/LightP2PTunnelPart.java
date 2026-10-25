@@ -93,7 +93,7 @@ public class LightP2PTunnelPart extends P2PTunnelPart<LightP2PTunnelPart> implem
         final TileEntity te = this.getTileEntity();
         final World level = te.getWorld();
 
-        final int newLevel = level.getMaxLocalRawBrightness(te.getPos().offset(this.getSide()));
+        final int newLevel = level.getLight(te.getPos().offset(this.getSide()));
 
         if (this.lastValue != newLevel && this.getMainNode().isActive()) {
             this.lastValue = newLevel;
@@ -134,7 +134,7 @@ public class LightP2PTunnelPart extends P2PTunnelPart<LightP2PTunnelPart> implem
             var be = getHost().getTileEntity();
             var level = be.getWorld();
             var pos = be.getPos();
-            this.opacity = level.getMaxLocalRawBrightness(pos.offset(getSide()));
+            this.opacity = level.getLight(pos.offset(getSide()));
         }
 
         return Math.max(0, emit - opacity);

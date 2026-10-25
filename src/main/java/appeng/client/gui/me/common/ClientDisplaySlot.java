@@ -17,7 +17,7 @@ public class ClientDisplaySlot extends ClientReadOnlySlot {
     }
 
     @Override
-    public ItemStack getItem() {
+    public ItemStack getStack() {
         return item;
     }
 }

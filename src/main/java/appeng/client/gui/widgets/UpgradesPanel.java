@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.gui.components.AbstractWidget;
+import appeng.client.gui.compat.AbstractWidget;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.text.ITextComponent;
 

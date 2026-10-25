@@ -27,6 +27,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer.Builder;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumActionResult;
@@ -36,8 +37,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import appeng.api.orientation.IOrientationStrategy;
@@ -55,8 +54,7 @@ import appeng.util.shape.CollisionContext;
 import appeng.util.shape.Shapes;
 import appeng.util.shape.VoxelShape;
 
-public class WirelessAccessPointBlock extends AEBaseEntityBlock<WirelessAccessPointBlockEntity>
-        implements SimpleWaterloggedBlock {
+public class WirelessAccessPointBlock extends AEBaseEntityBlock<WirelessAccessPointBlockEntity> {
 
     public enum State implements StringRepresentable {
         OFF, ON, HAS_CHANNEL;
@@ -69,12 +67,10 @@ public class WirelessAccessPointBlock extends AEBaseEntityBlock<WirelessAccessPo
 
     public static final PropertyEnum<State> STATE = PropertyEnum.create("state", State.class);
 
-    private static final PropertyBool WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public WirelessAccessPointBlock() {
         super(glassProps().noOcclusion().forceSolidOn());
-        this.setDefaultState(this.getDefaultState().withProperty(STATE, State.OFF)
-                .withProperty(WATERLOGGED, false));
+        this.setDefaultState(this.getDefaultState().withProperty(STATE, State.OFF));
     }
 
     @Override
@@ -91,11 +87,10 @@ public class WirelessAccessPointBlock extends AEBaseEntityBlock<WirelessAccessPo
     }
 
     @Override
-    protected void createBlockStateDefinition(Builder<Block, IBlockState> builder) {
+    protected void createBlockStateDefinition(BlockStateContainer.Builder builder) {
         super.createBlockStateDefinition(builder);
         builder.add(STATE);
-        builder.add(WATERLOGGED);
-    }
+            }
 
     @Override
     protected EnumActionResult useWithoutItem(IBlockState state, World level, BlockPos pos, EntityPlayer player,
@@ -178,10 +173,6 @@ public class WirelessAccessPointBlock extends AEBaseEntityBlock<WirelessAccessPo
         return Shapes.create(new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ));
     }
 
-    @Override
-    public boolean propagatesSkylightDown(IBlockState state, IBlockAccess reader, BlockPos pos) {
-        return true;
-    }
 
     @Override
     public IOrientationStrategy getOrientationStrategy() {
@@ -191,24 +182,13 @@ public class WirelessAccessPointBlock extends AEBaseEntityBlock<WirelessAccessPo
     @Override
     @Nullable
     public IBlockState getStateForPlacement(BlockPlaceContext context) {
-        var fluidState = context.getLevel().getFluidState(context.getClickedPos());
-        return super.getStateForPlacement(context)
-                .setValue(WATERLOGGED, fluidState.getType() == FluidRegistry.WATER);
+        return super.getStateForPlacement(context);
     }
 
-    @Override
-    public FluidState getFluidState(IBlockState blockState) {
-        return blockState.getValue(WATERLOGGED).booleanValue()
-                ? FluidRegistry.WATER.getSource(false)
-                : super.getFluidState(blockState);
-    }
 
     @Override
     public IBlockState updateShape(IBlockState blockState, EnumFacing facing, IBlockState facingState, World level,
             BlockPos currentPos, BlockPos facingPos) {
-        if (blockState.getValue(WATERLOGGED).booleanValue()) {
-            level.scheduleTick(currentPos, FluidRegistry.WATER, FluidRegistry.WATER.getTickDelay(level));
-        }
 
         return super.updateShape(blockState, facing, facingState, level, currentPos, facingPos);
     }

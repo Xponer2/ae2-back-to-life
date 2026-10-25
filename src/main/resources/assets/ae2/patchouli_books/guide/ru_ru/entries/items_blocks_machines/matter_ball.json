@@ -1,0 +1,15 @@
+{
+  "name": "Шарик материи",
+  "icon": "ae2:matter_ball",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:matter_ball",
+      "link_recipe": true,
+      "anchor": "matter-balls",
+      "text": "Шарик обобщённой материи — годится как боеприпас для устройства $(l:items_blocks_machines/matter_cannon)Материальная пушка$(/l) или для изготовления $(l:items_blocks_machines/paintballs)шариков с краской$(/l).$(br2)Делается из 256 предметов или вёдер в устройстве $(l:items_blocks_machines/condenser)Конденсатор материи$(/l) в режиме шариков материи."
+    }
+  ]
+}

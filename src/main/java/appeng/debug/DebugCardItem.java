@@ -282,8 +282,8 @@ public class DebugCardItem extends AEBaseItem {
     private void outputLabeledMessage(Entity player, String label, String value,
             TextFormatting... chatFormattings) {
         player.sendMessage(new TextComponentString("")
-                .append(TextUtil.withStyle(new TextComponentString(label + ": "), chatFormattings))
-                .append(value));
+                .appendSibling(TextUtil.withStyle(new TextComponentString(label + ": "), chatFormattings))
+                .appendText(value));
     }
 
 }

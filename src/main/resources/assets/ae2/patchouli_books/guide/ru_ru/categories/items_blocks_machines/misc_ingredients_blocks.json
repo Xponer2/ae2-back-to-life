@@ -1,0 +1,7 @@
+{
+  "name": "Прочие ингредиенты и блоки",
+  "description": "Прочие ингредиенты и блоки Applied Energistics 2.",
+  "icon": "ae2:certus_quartz_crystal",
+  "parent": "items_blocks_machines",
+  "sortnum": 0
+}

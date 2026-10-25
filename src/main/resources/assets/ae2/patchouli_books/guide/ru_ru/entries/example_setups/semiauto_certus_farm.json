@@ -1,0 +1,60 @@
+{
+  "name": "Полуавтоматическая ферма истинного кварца",
+  "icon": "ae2:certus_quartz_crystal",
+  "category": "example_setups",
+  "sortnum": 115,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "semi-auto-certus-farm",
+      "text": "К сожалению, для полностью автоматической работы $(l:example_setups/simple_certus_farm)простой фермы истинного кварца$(/l) нужен $(l:items_blocks_machines/budding_certus)Безупречный цветущий блок истинного кварца$(/l). Для этого нужен либо $(l:ae2_mechanics/spatial_io)пространственный ввод/вывод$(/l), либо ферма прямо на $(l:ae2_mechanics/meteorites)метеорите$(/l).$(br2)Однако AE2 умеет ставить и ломать блоки, так что, возможно, ферма сможет $(o)сама менять цветущие блоки$(). (Периодически придётся класть"
+    },
+    {
+      "type": "text",
+      "text": "$(l:items_blocks_machines/budding_certus)Несовершенный цветущий блок истинного кварца$(/l) во входную бочку и забирать $(l:items_blocks_machines/quartz_block)Блок истинного кварца$(/l) из бочки для истощённых цветущих блоков.)$(br2)Как сделать это полностью автоматически, см. в разделе $(l:example_setups/advanced_certus_farm)«Продвинутая ферма истинного кварца»$(/l).$(br2)Эта ферма чуть сложнее $(l:example_setups/simple_certus_farm)простой фермы истинного кварца$(/l), потому что на самом деле это 3 отдельные постройки, втиснутые в одну."
+    },
+    {
+      "type": "text",
+      "text": "Ориентировочную скорость см. в разделе $(l:ae2_mechanics/certus_growth)«Рост истинного кварца»$(/l).$(br2)$(bold)ЭТО СЛОЖНАЯ ПОСТРОЙКА, ГДЕ ОДНО СПРЯТАНО ЗА ДРУГИМ, ОСМОТРИТЕ ЕЁ СО ВСЕХ СТОРОН$()$(br2)$(#555)$(o)(3D-сцена недоступна в этой версии)$()"
+    },
+    {
+      "type": "text",
+      "title": "Настройки",
+      "anchor": "configurations",
+      "text": "$(bold)Ломатель кластеров:$()$(li)Первая $(l:items_blocks_machines/annihilation_plane)МЭ плоскость уничтожения$(/l) (1) не имеет интерфейса и не настраивается, но её можно зачаровать на удачу.$(li)Первая $(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l) (2) отфильтрована на $(l:items_blocks_machines/certus_quartz_crystal)Кристалл истинного кварца$(/l).$(br2)$(bold)Ломатель блоков истинного кварца:$()$(li)Вторая $(l:items_blocks_machines/annihilation_plane)МЭ плоскость уничтожения$(/l) (3) не имеет интерфейса и не"
+    },
+    {
+      "type": "text",
+      "anchor": "budding-block-placer",
+      "text": "настраивается, но её обязательно нужно зачаровать на шёлковое касание.$(li)Вторая $(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l) (4) отфильтрована на $(l:items_blocks_machines/quartz_block)Блок истинного кварца$(/l).$(br2)$(bold)Установщик цветущих блоков:$()$(li)$(l:items_blocks_machines/formation_plane)МЭ плоскость формирования$(/l) (5) в настройках по умолчанию.$(li)$(l:items_blocks_machines/import_bus)Мэ шина импорта$(/l) (6) в настройках по умолчанию.$(br2)$(bold)В основной сети:$()"
+    },
+    {
+      "type": "text",
+      "anchor": "how-it-works",
+      "text": "$(li)Третья $(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l) (7) отфильтрована на $(l:items_blocks_machines/certus_quartz_crystal)Кристалл истинного кварца$(/l), и её $(l:ae2_mechanics/import_export_storage#storage-priority)приоритет$(/l) выше, чем у основного хранилища.$(br2)$(bold)Как это работает$()$(br2)$(bold)Ломатель кластеров:$()$(br2)Подсеть ломателя кластеров работает почти так же, как подсеть в $(l:example_setups/simple_certus_farm)простой ферме истинного кварца$(/l)."
+    },
+    {
+      "type": "text",
+      "anchor": "certus-block-breaker",
+      "text": "1. $(l:items_blocks_machines/annihilation_plane)МЭ плоскость уничтожения$(/l) пытается сломать то, что перед ней, но может сломать только $(l:items_blocks_machines/budding_certus)Кластер истинного кварца$(/l), потому что единственное хранилище в подсети — $(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l), отфильтрованная на $(l:items_blocks_machines/certus_quartz_crystal)Кристалл истинного кварца$(/l).$(br2)2. $(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l) складывает кристаллы истинного кварца в бочку.$(br2)$(bold)Ломатель блоков истинного кварца$()"
+    },
+    {
+      "type": "text",
+      "text": "Подсеть ломателя блоков истинного кварца ломает истощённый цветущий блок, когда он превращается в обычный $(l:items_blocks_machines/quartz_block)Блок истинного кварца$(/l). Она работает так же, как ломатель кластеров.$(br2)1. $(l:items_blocks_machines/annihilation_plane)МЭ плоскость уничтожения$(/l) пытается сломать то, что перед ней, но может сломать только $(l:items_blocks_machines/quartz_block)Блок истинного кварца$(/l), потому что единственное хранилище в подсети — $(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l), отфильтрованная на $(l:items_blocks_machines/quartz_block)Блок$(/l)"
+    },
+    {
+      "type": "text",
+      "anchor": "budding-block-placer",
+      "text": "$(l:items_blocks_machines/quartz_block)истинного кварца$(/l). Плоскость должна быть с шёлковым касанием, чтобы цветущий блок не терял ступень при разрушении и плоскость не сломала его раньше времени.$(br2)2. $(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l) складывает блок истинного кварца в бочку для истощённых цветущих блоков; вручную бросьте его в воду вместе с предметом $(l:items_blocks_machines/certus_quartz_crystal_charged)Заряженный кристалл истинного кварца$(/l), чтобы восстановить."
+    },
+    {
+      "type": "text",
+      "text": "$(bold)Установщик цветущих блоков$()$(br2)Подсеть установщика ставит новый $(l:items_blocks_machines/budding_certus)Несовершенный цветущий блок истинного кварца$(/l), когда подсеть-ломатель ломает старый истощённый блок.$(br2)1. $(l:items_blocks_machines/import_bus)Мэ шина импорта$(/l) забирает цветущий блок из входной бочки.$(br2)2. Единственное хранилище в подсети — $(l:items_blocks_machines/formation_plane)МЭ плоскость формирования$(/l), которая и"
+    },
+    {
+      "type": "text",
+      "anchor": "on-the-main-network",
+      "text": "ставит цветущий блок.$(br2)$(bold)В основной сети$()$(li)$(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l) даёт основной сети (а также $(l:example_setups/charger_automation)автоматизации зарядника$(/l)) доступ ко всем кристаллам истинного кварца в бочке. У неё высокий $(l:ae2_mechanics/import_export_storage#storage-priority)приоритет$(/l), чтобы кристаллы истинного кварца в первую очередь возвращались в бочку, а не в основное хранилище."
+    }
+  ]
+}

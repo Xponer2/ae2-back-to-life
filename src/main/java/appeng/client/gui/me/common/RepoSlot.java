@@ -64,7 +64,7 @@ public class RepoSlot extends ClientReadOnlySlot {
     }
 
     @Override
-    public ItemStack getItem() {
+    public ItemStack getStack() {
         GridInventoryEntry entry = getEntry();
         if (entry != null) {
             return entry.getWhat().wrapForDisplayOrFilter();
@@ -73,7 +73,7 @@ public class RepoSlot extends ClientReadOnlySlot {
     }
 
     @Override
-    public boolean hasItem() {
+    public boolean getHasStack() {
         return getEntry() != null;
     }
 

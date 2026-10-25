@@ -25,13 +25,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer.Builder;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import appeng.block.AEBaseEntityBlock;
@@ -65,34 +65,32 @@ public class LightDetectorBlock extends AEBaseEntityBlock<LightDetectorBlockEnti
     // Used to alternate between two variants of the fixture on adjacent blocks
     public static final PropertyBool ODD = PropertyBool.create("odd");
 
-    public static final PropertyBool WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public LightDetectorBlock() {
         super(fixtureProps());
 
         this.setDefaultState(
-                this.getDefaultState().withProperty(BlockStateProperties.FACING, EnumFacing.UP).withProperty(ODD, false)
-                        .withProperty(WATERLOGGED, false));
+                this.getDefaultState().withProperty(BlockStateProperties.FACING, EnumFacing.UP).withProperty(ODD, false));
     }
 
     @Override
-    protected void createBlockStateDefinition(Builder<Block, IBlockState> builder) {
+    protected void createBlockStateDefinition(BlockStateContainer.Builder builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(BlockStateProperties.FACING, ODD, WATERLOGGED);
+        builder.add(BlockStateProperties.FACING, ODD);
     }
 
     @Override
     public int getSignal(IBlockState state, IBlockAccess level, BlockPos pos, EnumFacing side) {
         if (level instanceof World && this.getTileEntity(level, pos).isExposedToLight()) {
             // FIXME: This is ... uhm... fishy
-            return ((World) level).getMaxLocalRawBrightness(pos) - 6;
+            return ((World) level).getLightFromNeighbors(pos) - 6;
         }
 
         return 0;
     }
 
     @Override
-    public void onNeighborChange(IBlockState state, World level, BlockPos pos, BlockPos neighbor) {
+    public void onNeighborChange(IBlockState state, IBlockAccess level, BlockPos pos, BlockPos neighbor) {
         var tld = this.getTileEntity(level, pos);
         if (tld != null) {
             tld.updateLight();
@@ -127,11 +125,10 @@ public class LightDetectorBlock extends AEBaseEntityBlock<LightDetectorBlockEnti
     public IBlockState getStateForPlacement(BlockPlaceContext context) {
         IBlockState state = super.getStateForPlacement(context);
         BlockPos pos = context.getClickedPos();
-        FluidState fluidState = context.getLevel().getFluidState(pos);
 
         // Set the even/odd property
         boolean oddPlacement = (pos.getX() + pos.getY() + pos.getZ()) % 2 != 0;
-        state = state.withProperty(ODD, oddPlacement).withProperty(WATERLOGGED, fluidState.getType() == FluidRegistry.WATER);
+        state = state.withProperty(ODD, oddPlacement);
 
         var levelReader = context.getLevel();
         var adirection = context.getNearestLookingDirections();
@@ -146,21 +143,12 @@ public class LightDetectorBlock extends AEBaseEntityBlock<LightDetectorBlockEnti
         return null;
     }
 
-    @Override
-    public FluidState getFluidState(IBlockState blockState) {
-        return blockState.getValue(WATERLOGGED).booleanValue()
-                ? FluidRegistry.WATER.getSource(false)
-                : super.getFluidState(blockState);
-    }
 
     @Override
     public IBlockState updateShape(IBlockState state, EnumFacing direction, IBlockState facingState, World level,
             BlockPos currentPos, BlockPos facingPos) {
-        if (state.getValue(WATERLOGGED).booleanValue()) {
-            level.scheduleTick(currentPos, FluidRegistry.WATER, FluidRegistry.WATER.getTickDelay(level));
-        }
 
-        if (direction.getOpposite() == state.getValue(FACING) && !state.canSurvive(level, currentPos)) {
+        if (direction.getOpposite() == state.getValue(FACING) && !canSurvive(state, level, currentPos)) {
             return Blocks.AIR.getDefaultState();
         }
 

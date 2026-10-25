@@ -1,0 +1,240 @@
+{
+  "name": "Ячейки хранения",
+  "icon": "ae2:item_storage_cell_1k",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "storage-cells",
+      "text": "Ячейки хранения — один из основных способов хранения в Applied Energistics. Их вставляют в накопители ($(l:items_blocks_machines/drive)МЭ накопитель$(/l)) или МЭ-сундуки ($(l:items_blocks_machines/chest)МЭ сундук$(/l)).$(br2)Объяснение их вместимости в байтах и типах см. в разделе $(l:ae2_mechanics/bytes_and_types)«Байты и типы»$(/l).$(br2)Если ячейка пуста, компонент хранения можно вынуть из корпуса, щёлкнув правой"
+    },
+    {
+      "type": "ae2:item_row_5",
+      "item0": "ae2:item_storage_cell_1k",
+      "item1": "ae2:item_storage_cell_4k",
+      "item2": "ae2:item_storage_cell_16k",
+      "item3": "ae2:item_storage_cell_64k",
+      "item4": "ae2:item_storage_cell_256k",
+      "text": ""
+    },
+    {
+      "type": "ae2:item_row_5",
+      "item0": "ae2:fluid_storage_cell_1k",
+      "item1": "ae2:fluid_storage_cell_4k",
+      "item2": "ae2:fluid_storage_cell_16k",
+      "item3": "ae2:fluid_storage_cell_64k",
+      "item4": "ae2:fluid_storage_cell_256k",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "anchor": "storage-capacity-with-varying-type-count",
+      "text": "кнопкой мыши с Shift с ячейкой в руке.$(br2)Ячейки хранения можно улучшать до более высоких уровней, объединив их в сетке крафта с компонентом хранения более высокого уровня. Содержимое сохранится, а компонент более низкого уровня вернётся.$(br2)$(bold)Вместимость при разном числе типов$()"
+    },
+    {
+      "type": "text",
+      "text": "Из-за $(l:ae2_mechanics/bytes_and_types)начальной стоимости типов$(/l) ячейка с 1 типом вмещает в 2 раза больше, чем ячейка, в которой заняты все 63 типа.$(li)$(item)$(bold)1К МЭ предметная ячейка хранения$(): Полная вместимость ячейки с 1 занятым типом 8,128; Полная вместимость ячейки с 63 занятыми типами 4,160$(li)$(item)$(bold)4К МЭ предметная ячейка хранения$(): Полная вместимость ячейки с 1 занятым типом 32,512; Полная вместимость ячейки с 63"
+    },
+    {
+      "type": "text",
+      "text": "занятыми типами 16,640$(li)$(item)$(bold)16К МЭ предметная ячейка хранения$(): Полная вместимость ячейки с 1 занятым типом 130,048; Полная вместимость ячейки с 63 занятыми типами 66,560$(li)$(item)$(bold)64К МЭ предметная ячейка хранения$(): Полная вместимость ячейки с 1 занятым типом 520,192; Полная вместимость ячейки с 63 занятыми типами 266,240$(li)$(item)$(bold)256К МЭ предметная ячейка хранения$(): Полная вместимость ячейки с 1"
+    },
+    {
+      "type": "text",
+      "text": "занятым типом 2,080,768; Полная вместимость ячейки с 63 занятыми типами 1,064,960"
+    },
+    {
+      "type": "text",
+      "title": "Разметка",
+      "anchor": "partitioning",
+      "text": "Ячейки можно отфильтровать так, чтобы они принимали только определённые предметы, — так же, как фильтруются шины хранения ($(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l)). Это делается в устройстве $(l:items_blocks_machines/cell_workbench)Верстак для ячеек$(/l).$(br2)Предметы можно перетаскивать в слоты из JEI/REI, даже если у вас их на самом деле нет."
+    },
+    {
+      "type": "text",
+      "title": "Улучшения",
+      "anchor": "upgrades",
+      "text": "Ячейки хранения поддерживают следующие $(l:items_blocks_machines/upgrade_cards)улучшения$(/l), которые вставляются в устройстве $(l:items_blocks_machines/cell_workbench)Верстак для ячеек$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Карта размытости$(/l) (недоступна для жидкостных ячеек) позволяет размечать ячейку по уровню повреждения и/или игнорировать NBT предмета$(li)$(l:items_blocks_machines/upgrade_cards)Карта-инвертер$(/l) превращает белый список фильтра в чёрный$(li)$(l:items_blocks_machines/upgrade_cards)Карта равномерного распределения$(/l) выделяет каждому типу одинаковый объём"
+    },
+    {
+      "type": "text",
+      "text": "байт ячейки, чтобы один тип не мог заполнить всю ячейку$(li)$(l:items_blocks_machines/upgrade_cards)Пустотная карта$(/l) уничтожает вставляемые предметы, если ячейка заполнена (или заполнен объём, выделенный этому типу картой равномерного распределения), — полезно, чтобы фермы не забивались. Не забудьте разметить ячейку!$(li)В переносные ячейки можно вставить $(l:items_blocks_machines/upgrade_cards)Энергетическая карта$(/l), чтобы увеличить ёмкость батареи"
+    },
+    {
+      "type": "text",
+      "title": "Окрашивание",
+      "anchor": "coloring",
+      "text": "Переносные ячейки для предметов и жидкостей можно красить, как кожаную броню, скрафтив их вместе с красителями."
+    },
+    {
+      "type": "text",
+      "title": "Корпуса",
+      "anchor": "housings",
+      "text": "Ячейки делаются из компонента хранения и корпуса либо по рецепту корпуса вокруг компонента хранения:"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_cell_1k",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_cell_1k_storage",
+      "text": "Сами корпуса делаются так:"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_cell_housing",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/fluid_cell_housing",
+      "anchor": "storage-components",
+      "text": "$(bold)Компоненты хранения$()$(br2)Компоненты хранения — основа всех ячеек AE2, они определяют вместимость ячеек. Каждый следующий уровень вчетверо вместительнее и стоит 3 компонента"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_components_cell_1k_part",
+      "text": "предыдущего уровня."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_components_cell_4k_part",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_components_cell_16k_part",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_components_cell_64k_part",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_components_cell_256k_part",
+      "anchor": "item-storage-cells",
+      "text": "$(bold)Предметные ячейки хранения$()$(br2)Предметные ячейки хранения вмещают до 63 разных типов предметов и бывают всех стандартных объёмов."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_cell_1k_storage",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_cell_4k_storage",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_cell_16k_storage",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_cell_64k_storage",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/item_storage_cell_256k_storage",
+      "anchor": "portable-item-storage",
+      "text": "$(bold)Переносное хранилище предметов$()$(br2)Работает как крошечный МЭ-сундук ($(l:items_blocks_machines/chest)МЭ сундук$(/l)) в кармане или как своего рода рюкзак. Заряжается в устройстве $(l:items_blocks_machines/charger)Зарядник$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "В отличие от обычных ячеек хранения, у них с ростом объёма в байтах число типов $(o)уменьшается$(), а общий объём в байтах вдвое меньше.$(br2)Помимо карт улучшений, доступных всем ячейкам, в них также можно вставить $(l:items_blocks_machines/upgrade_cards)Энергетическая карта$(/l), чтобы улучшить внутреннюю батарею."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_item_cell_1k",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_item_cell_4k",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_item_cell_16k",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_item_cell_64k",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_item_cell_256k",
+      "anchor": "fluid-storage-cells",
+      "text": "$(bold)Жидкостные ячейки хранения$()$(br2)Жидкостные ячейки хранения вмещают до 5 разных типов жидкостей и бывают всех стандартных объёмов."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/fluid_storage_cell_1k_storage",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/fluid_storage_cell_4k_storage",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/fluid_storage_cell_16k_storage",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/fluid_storage_cell_64k_storage",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/cells/fluid_storage_cell_256k_storage",
+      "anchor": "portable-fluid-storage",
+      "text": "$(bold)Переносное хранилище жидкостей$()$(br2)Работает как крошечный МЭ-сундук ($(l:items_blocks_machines/chest)МЭ сундук$(/l)) в кармане или как своего рода рюкзак. Заряжается в устройстве $(l:items_blocks_machines/charger)Зарядник$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "В отличие от обычных ячеек хранения, у них с ростом объёма в байтах число типов $(o)уменьшается$(), а общий объём в байтах вдвое меньше.$(br2)Помимо карт улучшений, доступных всем ячейкам, в них также можно вставить $(l:items_blocks_machines/upgrade_cards)Энергетическая карта$(/l), чтобы улучшить внутреннюю батарею."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_fluid_cell_1k",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_fluid_cell_4k",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_fluid_cell_16k",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_fluid_cell_64k",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/portable_fluid_cell_256k",
+      "anchor": "creative-storage-cell",
+      "text": "$(bold)Творческая ячейка хранения$()"
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:creative_storage_cell",
+      "text": "Творческие ячейки $(bold)не дают бесконечного хранилища$(). Вместо этого они служат бесконечным источником и бесконечным приёмником того предмета или жидкости, на которые вы их $(l:items_blocks_machines/cell_workbench)разметили$(/l)."
+    }
+  ]
+}

@@ -206,7 +206,7 @@ public class DriveBlockEntity extends AENetworkedInvBlockEntity
     @Override
     public Item getCellItem(int slot) {
         // Client-side we'll need to actually use the synced state
-        if (level == null || level.isRemote) {
+        if (world == null || world.isRemote) {
             return clientSideCellItems[slot];
         }
 
@@ -419,7 +419,7 @@ public class DriveBlockEntity extends AENetworkedInvBlockEntity
      * will then be serialized to NBT.
      */
     private void onCellContentChanged() {
-        this.level.blockEntityChanged(this.worldPosition);
+        this.world.markChunkDirty(this.pos, this);
     }
 
     private static class CellValidInventoryFilter implements IAEItemFilter {

@@ -39,8 +39,7 @@ public class CrystalResonanceGeneratorBlockEntity extends AENetworkedBlockEntity
     // This needs to be synchronized to allow visual indication / Jade tooltips
     private boolean suppressed;
 
-    public CrystalResonanceGeneratorBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos,
-            IBlockState blockState) {
+    public CrystalResonanceGeneratorBlockEntity() {
         super();
         // we're supposed to be *generating* power, so no consumption
         getMainNode().setIdlePowerUsage(0);

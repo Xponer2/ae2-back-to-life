@@ -25,21 +25,16 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.storage.WorldSavedData;
 
 import appeng.core.AELog;
 import appeng.core.AppEng;
+import appeng.core.worlddata.AESavedData;
 import appeng.core.definitions.AEBlocks;
 
 /**
  * Allocates and manages plots for spatial storage in the spatial storage level.
  */
 public final class SpatialStoragePlotManager {
-
-    private static final WorldSavedData.Factory<SpatialStorageWorldData> FACTORY = new WorldSavedData.Factory<>(
-            SpatialStorageWorldData::new,
-            SpatialStorageWorldData::load,
-            null);
 
     public static final SpatialStoragePlotManager INSTANCE = new SpatialStoragePlotManager();
 
@@ -54,7 +49,8 @@ public final class SpatialStoragePlotManager {
         if (server == null) {
             throw new IllegalStateException("No server is currently running.");
         }
-        WorldServer level = server.getLevel(SpatialStorageDimensionIds.WORLD_ID);
+        // loads the dimension if needed
+        WorldServer level = server.getWorld(SpatialStorageDimensionIds.getDimensionId());
         if (level == null) {
             throw new IllegalStateException("The storage cell level is missing.");
         }
@@ -62,9 +58,8 @@ public final class SpatialStoragePlotManager {
     }
 
     private SpatialStorageWorldData getWorldData() {
-        return getLevel().getChunkProvider().getDataStorage().computeIfAbsent(
-                FACTORY,
-                SpatialStorageWorldData.ID);
+        return AESavedData.getOrCreatePerWorld(getLevel(), SpatialStorageWorldData.class,
+                SpatialStorageWorldData.ID, SpatialStorageWorldData::new);
     }
 
     @Nullable
@@ -104,7 +99,7 @@ public final class SpatialStoragePlotManager {
 
         if (resetBlocks) {
             BlockPos from = plot.getOrigin();
-            BlockPos to = from.offset(plot.getSize()).offset(-1, -1, -1);
+            BlockPos to = from.add(plot.getSize()).add(-1, -1, -1);
 
             AELog.info("Clearing spatial storage plot %s (%s -> %s)", plotId, from, to);
 

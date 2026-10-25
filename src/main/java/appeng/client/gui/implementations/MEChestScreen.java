@@ -39,7 +39,7 @@ public class MEChestScreen extends AEBaseScreen<MEChestMenu> {
         super.updateBeforeRender();
 
         // Show a custom name for the ME Chest on the screen
-        if (!this.title.getString().isEmpty()) {
+        if (!this.title.getUnformattedText().isEmpty()) {
             setTextContent(TEXT_ID_DIALOG_TITLE, this.title);
         }
     }

@@ -174,13 +174,13 @@ public class SpatialStoragePlot {
         BlockPos origin = this.getOrigin();
         ChunkPos originChunk = new ChunkPos(origin);
 
-        return String.format(Locale.ROOT, "r.%d.%d.mca", originChunk.getRegionX(), originChunk.getRegionZ());
+        return String.format(Locale.ROOT, "r.%d.%d.mca", originChunk.x >> 5, originChunk.z >> 5);
     }
 
     public NBTTagCompound toTag() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setInteger(TAG_ID, id);
-        tag.put(TAG_SIZE, NBTUtil.writeBlockPos(size));
+        tag.setTag(TAG_SIZE, NBTUtil.createPosTag(size));
         tag.setInteger(TAG_OWNER, owner);
         if (lastTransition != null) {
             tag.setTag(TAG_LAST_TRANSITION, lastTransition.toTag());
@@ -190,7 +190,7 @@ public class SpatialStoragePlot {
 
     public static SpatialStoragePlot fromTag(NBTTagCompound tag) {
         int id = tag.getInteger(TAG_ID);
-        BlockPos size = NBTUtil.readBlockPos(tag, TAG_SIZE).orElseThrow();
+        BlockPos size = NBTUtil.getPosFromTag(tag.getCompoundTag(TAG_SIZE));
         int ownerId = tag.getInteger(TAG_OWNER);
         SpatialStoragePlot plot = new SpatialStoragePlot(id, size, ownerId);
 

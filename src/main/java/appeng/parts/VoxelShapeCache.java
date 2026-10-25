@@ -25,7 +25,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.phys.shapes.BooleanOp;
 
 import appeng.util.shape.Shapes;
 import appeng.util.shape.VoxelShape;
@@ -64,17 +63,8 @@ final class VoxelShapeCache {
     }
 
     private static VoxelShape create(List<AxisAlignedBB> boxes) {
-        if (boxes.isEmpty()) {
-            return Shapes.empty();
-        }
-
-        int i = 0;
-        VoxelShape shape = Shapes.create(boxes.get(i));
-        for (; i < boxes.size(); i++) {
-            AxisAlignedBB box = boxes.get(i);
-            shape = Shapes.joinUnoptimized(shape, Shapes.create(box), BooleanOp.OR);
-        }
-        return shape.optimize();
+        // Shapes are plain lists of boxes in this version, joining them is cheap
+        return Shapes.of(boxes).optimize();
     }
 
 }

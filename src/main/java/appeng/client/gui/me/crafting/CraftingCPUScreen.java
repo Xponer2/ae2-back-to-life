@@ -31,7 +31,7 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.client.gui.GuiButton;
+import appeng.client.gui.compat.Button;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -59,8 +59,8 @@ public class CraftingCPUScreen<T extends CraftingCPUMenu> extends AEBaseScreen<T
 
     private final CraftingStatusTableRenderer table;
 
-    private final GuiButton cancel;
-    private final GuiButton suspend;
+    private final Button cancel;
+    private final Button suspend;
 
     private final Scrollbar scrollbar;
 
@@ -104,12 +104,12 @@ public class CraftingCPUScreen<T extends CraftingCPUMenu> extends AEBaseScreen<T
                 final long etaInMilliseconds = TimeUnit.MILLISECONDS.convert(eta, TimeUnit.NANOSECONDS);
                 final String etaTimeText = DurationFormatUtils.formatDuration(etaInMilliseconds,
                         GuiText.ETAFormat.getLocal());
-                title = title.createCopy().appendSibling(" - " + etaTimeText);
+                title = title.createCopy().appendText(" - " + etaTimeText);
             }
         }
         // Mention that items can't be stored if applicable
         if (menu.isCantStoreItems()) {
-            title = title.createCopy().appendSibling(" - ").appendSibling(TextUtil.withStyle(GuiText.CantStoreItems.text(), TextFormatting.RED));
+            title = title.createCopy().appendText(" - ").appendSibling(TextUtil.withStyle(GuiText.CantStoreItems.text(), TextFormatting.RED));
         }
         setTextContent(TEXT_ID_DIALOG_TITLE, title);
 
@@ -125,8 +125,8 @@ public class CraftingCPUScreen<T extends CraftingCPUMenu> extends AEBaseScreen<T
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float btn) {
-        this.cancel.enabled = !getVisualEntries().isEmpty();
-        this.suspend.enabled = this.cancel.enabled;
+        this.cancel.active = !getVisualEntries().isEmpty();
+        this.suspend.active = this.cancel.active;
 
         super.render(guiGraphics, mouseX, mouseY, btn);
     }

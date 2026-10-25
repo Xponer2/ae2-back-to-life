@@ -122,25 +122,16 @@ public abstract class CapabilityP2PTunnelPart<P extends CapabilityP2PTunnelPart<
         }
     }
 
+    /**
+     * Capabilities aren't cached by neighbors in this version (there is no invalidation to forward): the handlers of
+     * the tunnel look up the other side whenever they are used.
+     */
     protected void forwardCapabilityInvalidation() {
-        if (isOutput()) {
-            P input = getInput();
-
-            if (input != null) {
-                input.getTileEntity().invalidateCapabilities();
-            }
-        } else {
-            for (P output : getOutputs()) {
-                output.getTileEntity().invalidateCapabilities();
-            }
-        }
     }
 
     @Override
     public void onTunnelNetworkChange() {
-        // This might be invoked while the network is being unloaded,
-        // however the capability system should handle this fine.
-        // (Not OK for block updates though, thankfully we don't need them anymore!)
-        getTileEntity().invalidateCapabilities();
+        // Nothing to invalidate, see forwardCapabilityInvalidation. No block updates either: this might be invoked
+        // while the network is being unloaded.
     }
 }

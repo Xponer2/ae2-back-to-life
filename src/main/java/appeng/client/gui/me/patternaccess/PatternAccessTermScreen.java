@@ -33,11 +33,8 @@ import java.util.WeakHashMap;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
-import guideme.color.ConstantColor;
-import guideme.document.LytRect;
-import guideme.render.SimpleRenderContext;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.neoforged.neoforge.network.PacketDistributor;
+import appeng.core.network.PacketDistributor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,8 +43,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.locale.Language;
-import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -185,7 +180,7 @@ public class PatternAccessTermScreen<C extends PatternAccessTermMenu> extends AE
     public void drawFG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX,
             int mouseY) {
 
-        this.menu.slots.removeIf(slot -> slot instanceof PatternSlot);
+        this.menu.inventorySlots.removeIf(slot -> slot instanceof PatternSlot);
 
         int textColor = style.getColor(PaletteColor.DEFAULT_TEXT_COLOR).toARGB();
         var level = Minecraft.getMinecraft().world;
@@ -204,34 +199,35 @@ public class PatternAccessTermScreen<C extends PatternAccessTermMenu> extends AE
                                 slotsRow.offset + col,
                                 col * SLOT_SIZE + GUI_PADDING_X,
                                 (i + 1) * SLOT_SIZE);
-                        this.menu.slots.add(slot);
+                        this.menu.inventorySlots.add(slot);
 
                         // Indicate invalid patterns
                         var pattern = container.getInventory().getStackInSlot(slotsRow.offset + col);
                         if (!pattern.isEmpty() && PatternDetailsHelper.decodePattern(pattern, level) == null) {
                             guiGraphics.fill(
-                                    slot.x,
-                                    slot.y,
-                                    slot.x + 16,
-                                    slot.y + 16,
+                                    slot.xPos,
+                                    slot.yPos,
+                                    slot.xPos + 16,
+                                    slot.yPos + 16,
                                     0x7fff0000);
                         }
                     }
                 } else if (row instanceof GroupHeaderRow headerRow) {
                     var group = headerRow.group;
                     if (group.icon() != null) {
-                        var renderContext = new SimpleRenderContext(LytRect.empty(), guiGraphics);
-                        renderContext.renderItem(
-                                group.icon().getReadOnlyStack(),
-                                GUI_PADDING_X + PATTERN_PROVIDER_NAME_MARGIN_X,
-                                GUI_PADDING_Y + GUI_HEADER_HEIGHT + i * ROW_HEIGHT,
-                                8,
-                                8);
+                        // The icon at half size
+                        var pose = guiGraphics.pose();
+                        pose.pushPose();
+                        pose.translate(GUI_PADDING_X + PATTERN_PROVIDER_NAME_MARGIN_X,
+                                GUI_PADDING_Y + GUI_HEADER_HEIGHT + i * ROW_HEIGHT, 0);
+                        pose.scale(0.5f, 0.5f, 1);
+                        guiGraphics.renderItem(group.icon().getReadOnlyStack(), 0, 0);
+                        pose.popPose();
                     }
 
                     final int rows = this.byGroup.get(group).size();
 
-                    FormattedText displayName;
+                    ITextComponent displayName;
                     if (rows > 1) {
                         displayName = new TextComponentString("")
                                 .appendSibling(group.name())
@@ -240,8 +236,7 @@ public class PatternAccessTermScreen<C extends PatternAccessTermMenu> extends AE
                         displayName = group.name();
                     }
 
-                    var text = Language.getInstance().getVisualOrder(
-                            this.font.substrByWidth(displayName, TEXT_MAX_WIDTH - 10));
+                    var text = this.font.trimStringToWidth(displayName.getFormattedText(), TEXT_MAX_WIDTH - 10);
 
                     guiGraphics.drawString(font, text, GUI_PADDING_X + PATTERN_PROVIDER_NAME_MARGIN_X + 10,
                             GUI_PADDING_Y + GUI_HEADER_HEIGHT + i * ROW_HEIGHT, textColor, false);
@@ -256,21 +251,23 @@ public class PatternAccessTermScreen<C extends PatternAccessTermMenu> extends AE
     private void renderLinkStatus(GuiGraphics guiGraphics, ILinkStatus linkStatus) {
         // Draw an overlay indicating the grid is disconnected
         if (!linkStatus.connected()) {
-            var renderContext = new SimpleRenderContext(LytRect.empty(), guiGraphics);
-
-            var rect = new LytRect(
+            var rect = new Rect2i(
                     GUI_PADDING_X - 1,
                     GUI_HEADER_HEIGHT,
                     COLUMNS * 18,
                     visibleRows * ROW_HEIGHT);
 
-            renderContext.fillRect(rect, new ConstantColor(0x3f000000));
+            // In front of the items in the slots
+            guiGraphics.pose().pushPose();
+            guiGraphics.pose().translate(0, 0, 200);
+            fillRect(guiGraphics, rect, 0x3f000000);
 
             // Draw the disconnect status on top of the grid
             var statusDescription = linkStatus.statusDescription();
             if (statusDescription != null) {
-                renderContext.renderTextCenteredIn(statusDescription.getUnformattedText(), ERROR_TEXT_STYLE, rect);
+                renderTextCenteredIn(guiGraphics, statusDescription, ERROR_TEXT_COLOR, rect);
             }
+            guiGraphics.pose().popPose();
         }
     }
 
@@ -332,7 +329,7 @@ public class PatternAccessTermScreen<C extends PatternAccessTermMenu> extends AE
                     break;
 
                 case CLONE: // creative dupe:
-                    if (getPlayer().capabilities.instabuild) {
+                    if (getPlayer().capabilities.isCreativeMode) {
                         action = InventoryAction.CREATIVE_DUPLICATE;
                     }
 
@@ -564,16 +561,13 @@ public class PatternAccessTermScreen<C extends PatternAccessTermMenu> extends AE
     }
 
     private String getPatternSearchText(ItemStack stack) {
-        var level = menu.getPlayer().level();
+        var level = menu.getPlayer().world;
         var text = new StringBuilder();
         var pattern = PatternDetailsHelper.decodePattern(stack, level);
 
         if (pattern != null) {
             for (var output : pattern.getOutputs()) {
-                output.what().getDisplayName().visit(content -> {
-                    text.append(content.toLowerCase());
-                    return Optional.empty();
-                });
+                text.append(output.what().getDisplayName().getUnformattedText().toLowerCase());
                 text.append('\n');
             }
         }

@@ -1,0 +1,73 @@
+{
+  "name": "Флюисовые инструменты",
+  "icon": "ae2:fluix_pickaxe",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "fluix-tools",
+      "text": "$(l:items_blocks_machines/fluix_crystal)Флюисовые$(/l) инструменты похожи на железные, но втрое прочнее и наносят чуть больше урона и добывают чуть быстрее.$(br2)Все флюисовые инструменты работают так, будто на них есть как минимум удача/добыча I, — это полезно, пока нет стола зачарований.$(br2)Понадобится сделать $(l:items_blocks_machines/fluix_upgrade_smithing_template)Токовое улучшение$(/l)"
+    },
+    {
+      "type": "ae2:item_row_5",
+      "item0": "ae2:fluix_axe",
+      "item1": "ae2:fluix_hoe",
+      "item2": "ae2:fluix_shovel",
+      "item3": "ae2:fluix_pickaxe",
+      "item4": "ae2:fluix_sword",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_3",
+      "title": "Кузнечный стол",
+      "in0": "ae2:fluix_upgrade_smithing_template",
+      "in1": "ae2:certus_quartz_axe,ae2:nether_quartz_axe",
+      "in2": "ae2:fluix_block",
+      "output": "ae2:fluix_axe",
+      "machine": "",
+      "text": "Рецепт кузнечного стола.",
+      "anchor": "recipes"
+    },
+    {
+      "type": "ae2:recipe_3",
+      "title": "Кузнечный стол",
+      "in0": "ae2:fluix_upgrade_smithing_template",
+      "in1": "ae2:certus_quartz_hoe,ae2:nether_quartz_hoe",
+      "in2": "ae2:fluix_block",
+      "output": "ae2:fluix_hoe",
+      "machine": "",
+      "text": "Рецепт кузнечного стола."
+    },
+    {
+      "type": "ae2:recipe_3",
+      "title": "Кузнечный стол",
+      "in0": "ae2:fluix_upgrade_smithing_template",
+      "in1": "ae2:certus_quartz_shovel,ae2:nether_quartz_shovel",
+      "in2": "ae2:fluix_block",
+      "output": "ae2:fluix_shovel",
+      "machine": "",
+      "text": "Рецепт кузнечного стола."
+    },
+    {
+      "type": "ae2:recipe_3",
+      "title": "Кузнечный стол",
+      "in0": "ae2:fluix_upgrade_smithing_template",
+      "in1": "ae2:certus_quartz_pickaxe,ae2:nether_quartz_pickaxe",
+      "in2": "ae2:fluix_block",
+      "output": "ae2:fluix_pickaxe",
+      "machine": "",
+      "text": "Рецепт кузнечного стола."
+    },
+    {
+      "type": "ae2:recipe_3",
+      "title": "Кузнечный стол",
+      "in0": "ae2:fluix_upgrade_smithing_template",
+      "in1": "ae2:certus_quartz_sword,ae2:nether_quartz_sword",
+      "in2": "ae2:fluix_block",
+      "output": "ae2:fluix_sword",
+      "machine": "",
+      "text": "Рецепт кузнечного стола."
+    }
+  ]
+}

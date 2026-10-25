@@ -1,0 +1,28 @@
+{
+  "name": "Руководство",
+  "icon": "ae2:guide",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:guide",
+      "link_recipe": true,
+      "anchor": "the-guide",
+      "text": "$(bold)Это руководство, которое вы сейчас читаете, — на все случаи, когда нужна помощь с AE2.$()$(li)Содержание открывается на боковой панели слева$(li)Во многих статьях есть интерактивные сцены. Если рядом со сценой есть кнопки и (масштаб), камеру можно вращать и перемещать. Зажмите левую кнопку мыши и ведите,"
+    },
+    {
+      "type": "text",
+      "text": "чтобы вращать, правую — чтобы сдвигать."
+    },
+    {
+      "type": "ae2:recipe_1",
+      "title": "Зарядник",
+      "in0": "minecraft:book",
+      "output": "ae2:guide",
+      "machine": "ae2:charger",
+      "text": "",
+      "anchor": "recipe"
+    }
+  ]
+}

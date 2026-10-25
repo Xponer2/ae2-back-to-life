@@ -18,6 +18,7 @@
 
 package appeng.blockentity.storage;
 
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -28,9 +29,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraft.world.level.block.entity.ChestLidController;
-import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
-import net.minecraft.world.level.block.entity.LidBlockEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -42,45 +40,22 @@ import appeng.menu.implementations.SkyChestMenu;
 import appeng.util.inv.AppEngInternalInventory;
 
 @SuppressWarnings("JavadocReference")
-@SideOnly(value = Side.CLIENT, _interface = LidBlockEntity.class)
-public class SkyChestBlockEntity extends AEBaseInvBlockEntity implements ClientTickingBlockEntity, LidBlockEntity {
+public class SkyChestBlockEntity extends AEBaseInvBlockEntity implements ClientTickingBlockEntity {
+
+    private static final int EVENT_OPENERS = 1;
+    private static final int RECHECK_DELAY = 5;
 
     private final AppEngInternalInventory inv = new AppEngInternalInventory(this, 9 * 4);
 
-    private final ChestLidController chestLidController = new ChestLidController();
+    // Server: players looking into the chest (1.21 ContainerOpenersCounter)
+    private int openCount;
 
-    private final ContainerOpenersCounter openersCounter = new ContainerOpenersCounter() {
-        protected void onOpen(World level, BlockPos pos, IBlockState state) {
-            playSound(level, pos, SoundEvents.CHEST_OPEN);
-        }
+    // Client: lid animation (1.21 ChestLidController)
+    private boolean shouldBeOpen;
+    private float openness;
+    private float oOpenness;
 
-        protected void onClose(World level, BlockPos pos, IBlockState state) {
-            playSound(level, pos, SoundEvents.CHEST_CLOSE);
-        }
-
-        private void playSound(World level, BlockPos pos, SoundEvent event) {
-            var x = pos.getX() + 0.5D;
-            var y = pos.getY() + 0.5D;
-            var z = pos.getZ() + 0.5D;
-            level.playSound(null, x, y, z, event, SoundCategory.BLOCKS,
-                    0.5F, level.rand.nextFloat() * 0.1F + 0.9F);
-        }
-
-        protected void openerCountChanged(World level, BlockPos pos, IBlockState state, int p_155364_, int x) {
-            level.blockEvent(pos, state.getBlock(), 1, x);
-        }
-
-        protected boolean isOwnContainer(EntityPlayer player) {
-            if (player.openContainer instanceof SkyChestMenu menu) {
-                return menu.getChest() == SkyChestBlockEntity.this;
-            } else {
-                return false;
-            }
-        }
-    };
-
-    public SkyChestBlockEntity(BlockEntityType<? extends SkyChestBlockEntity> type, BlockPos pos,
-            IBlockState blockState) {
+    public SkyChestBlockEntity() {
         super();
     }
 
@@ -90,40 +65,94 @@ public class SkyChestBlockEntity extends AEBaseInvBlockEntity implements ClientT
     }
 
     public void startOpen(EntityPlayer player) {
-        if (!this.remove && !player.isSpectator()) {
-            this.openersCounter.incrementOpeners(player, this.getLevel(), this.getPos(), this.getBlockState());
+        if (!this.tileEntityInvalid && !player.isSpectator()) {
+            if (this.openCount < 0) {
+                this.openCount = 0;
+            }
+            setOpenCount(this.openCount + 1);
         }
     }
 
     public void stopOpen(EntityPlayer player) {
-        if (!this.remove && !player.isSpectator()) {
-            this.openersCounter.decrementOpeners(player, this.getLevel(), this.getPos(), this.getBlockState());
+        if (!this.tileEntityInvalid && !player.isSpectator()) {
+            setOpenCount(this.openCount - 1);
+        }
+    }
+
+    private void setOpenCount(int count) {
+        var previous = this.openCount;
+        this.openCount = count;
+        var level = getLevel();
+        if (level == null || level.isRemote || previous == count) {
+            return;
+        }
+        if (previous == 0 && count > 0) {
+            playSound(SoundEvents.BLOCK_CHEST_OPEN);
+        } else if (previous > 0 && count == 0) {
+            playSound(SoundEvents.BLOCK_CHEST_CLOSE);
+        }
+        level.addBlockEvent(this.pos, getBlockType(), EVENT_OPENERS, count);
+        if (count > 0) {
+            // Re-check later in case a player leaves without closing the menu
+            level.scheduleUpdate(this.pos, getBlockType(), RECHECK_DELAY);
+        }
+    }
+
+    private void playSound(SoundEvent event) {
+        var x = this.pos.getX() + 0.5D;
+        var y = this.pos.getY() + 0.5D;
+        var z = this.pos.getZ() + 0.5D;
+        this.world.playSound(null, x, y, z, event, SoundCategory.BLOCKS, 0.5F,
+                this.world.rand.nextFloat() * 0.1F + 0.9F);
+    }
+
+    private boolean isOwnContainer(EntityPlayer player) {
+        if (player.openContainer instanceof SkyChestMenu menu) {
+            return menu.getChest() == this;
+        } else {
+            return false;
         }
     }
 
     @Override
     public void clientTick() {
-        chestLidController.tickLid();
-    }
-
-    public boolean triggerEvent(int id, int type) {
-        if (id == 1) {
-            this.chestLidController.shouldBeOpen(type > 0);
-            return true;
-        } else {
-            return super.triggerEvent(id, type);
+        this.oOpenness = this.openness;
+        if (!this.shouldBeOpen && this.openness > 0.0F) {
+            this.openness = Math.max(this.openness - 0.1F, 0.0F);
+        } else if (this.shouldBeOpen && this.openness < 1.0F) {
+            this.openness = Math.min(this.openness + 0.1F, 1.0F);
         }
     }
 
     @Override
-    public float getOpenNess(float partialTicks) {
-        return this.chestLidController.getOpenness(partialTicks);
+    public boolean receiveClientEvent(int id, int type) {
+        if (id == EVENT_OPENERS) {
+            this.shouldBeOpen = type > 0;
+            return true;
+        } else {
+            return super.receiveClientEvent(id, type);
+        }
     }
 
+    public float getOpenNess(float partialTicks) {
+        return this.oOpenness + (this.openness - this.oOpenness) * partialTicks;
+    }
+
+    /**
+     * Counts the players that still look into this chest (scheduled block tick while it is open).
+     */
     public void recheckOpen() {
-        if (!this.remove) {
-            this.openersCounter.recheckOpeners(this.getLevel(), this.getPos(), this.getBlockState());
+        if (this.tileEntityInvalid || this.world == null) {
+            return;
         }
+        var box = new AxisAlignedBB(this.pos).grow(5.0);
+        int count = 0;
+        for (var player : this.world.getEntitiesWithinAABB(EntityPlayer.class, box)) {
+            if (isOwnContainer(player)) {
+                count++;
+            }
+        }
+        setOpenCount(count);
     }
 
     @Override

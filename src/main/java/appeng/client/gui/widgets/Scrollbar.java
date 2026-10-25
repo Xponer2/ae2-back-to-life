@@ -19,10 +19,8 @@
 package appeng.client.gui.widgets;
 
 import java.time.Duration;
+import java.util.function.Supplier;
 
-import com.mojang.blaze3d.platform.InputConstants;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
@@ -30,6 +28,7 @@ import appeng.client.Point;
 import appeng.client.gui.GuiGraphics;
 import appeng.client.gui.ICompositeWidget;
 import appeng.client.gui.Rect2i;
+import appeng.client.gui.compat.Keys;
 import appeng.client.gui.style.Blitter;
 import appeng.core.AppEng;
 
@@ -112,10 +111,10 @@ public class Scrollbar implements IScrollSource, ICompositeWidget {
         Blitter image;
         if (this.getRange() == 0) {
             yOffset = 0;
-            image = Blitter.guiSprite(style.disabledSprite());
+            image = style.disabledImage();
         } else {
             yOffset = getHandleYOffset();
-            image = Blitter.guiSprite(style.enabledSprite());
+            image = style.enabledImage();
         }
 
         image.dest(this.displayX, this.displayY + yOffset).blit(guiGraphics);
@@ -182,7 +181,7 @@ public class Scrollbar implements IScrollSource, ICompositeWidget {
 
     @Override
     public boolean onMouseDown(Point mousePos, int button) {
-        if (button != InputConstants.MOUSE_BUTTON_LEFT) {
+        if (button != Keys.MOUSE_BUTTON_LEFT) {
             return false; // Only handle left mouse button
         }
 
@@ -217,7 +216,7 @@ public class Scrollbar implements IScrollSource, ICompositeWidget {
 
     @Override
     public boolean onMouseUp(Point mousePos, int button) {
-        if (button == InputConstants.MOUSE_BUTTON_LEFT) {
+        if (button == Keys.MOUSE_BUTTON_LEFT) {
             this.dragging = false;
             this.eventRepeater.stop();
         }
@@ -295,9 +294,13 @@ public class Scrollbar implements IScrollSource, ICompositeWidget {
         this.applyRange();
     }
 
-    public static final Style DEFAULT = Style.create(
-            new ResourceLocation("minecraft", "container/creative_inventory/scroller"),
-            new ResourceLocation("minecraft", "container/creative_inventory/scroller_disabled"));
+    // The handle of the creative inventory (part of the tab texture of the game)
+    private static final ResourceLocation CREATIVE_TABS = new ResourceLocation("minecraft",
+            "textures/gui/container/creative_inventory/tabs.png");
+
+    public static final Style DEFAULT = new Style(
+            () -> Blitter.texture(CREATIVE_TABS, 256, 256).src(232, 0, 12, 15),
+            () -> Blitter.texture(CREATIVE_TABS, 256, 256).src(244, 0, 12, 15));
 
     public static final Style BIG = Style.create(
             AppEng.makeId("big_scroller"),
@@ -307,56 +310,39 @@ public class Scrollbar implements IScrollSource, ICompositeWidget {
             AppEng.makeId("small_scroller"),
             AppEng.makeId("small_scroller_disabled"));
 
+    /**
+     * The images of the scrollbar handle.
+     */
     public final static class Style {
-        private final ResourceLocation enabledSprite;
-        private final ResourceLocation disabledSprite;
+        private final Supplier<Blitter> enabledImage;
+        private final Supplier<Blitter> disabledImage;
 
-        public Style(ResourceLocation enabledSprite, ResourceLocation disabledSprite) {
-            this.enabledSprite = enabledSprite;
-            this.disabledSprite = disabledSprite;
+        public Style(Supplier<Blitter> enabledImage, Supplier<Blitter> disabledImage) {
+            this.enabledImage = enabledImage;
+            this.disabledImage = disabledImage;
         }
 
-        public ResourceLocation enabledSprite() {
-            return enabledSprite;
+        /**
+         * A style made of two GUI sprites.
+         */
+        public static Style create(ResourceLocation enabledSprite, ResourceLocation disabledSprite) {
+            return new Style(() -> Blitter.guiSprite(enabledSprite), () -> Blitter.guiSprite(disabledSprite));
         }
 
-        public ResourceLocation disabledSprite() {
-            return disabledSprite;
+        public Blitter enabledImage() {
+            return enabledImage.get();
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof Style)) return false;
-            Style that = (Style) o;
-            return java.util.Objects.equals(enabledSprite, that.enabledSprite)
-                    && java.util.Objects.equals(disabledSprite, that.disabledSprite);
-        }
-
-        @Override
-        public int hashCode() {
-            return java.util.Objects.hash(enabledSprite, disabledSprite);
-        }
-
-        @Override
-        public String toString() {
-            return "Style[" + "enabledSprite=" + enabledSprite + ", " + "disabledSprite=" + disabledSprite + "]";
-        }
-
-        public static Style create(
-                ResourceLocation enabledSprite,
-                ResourceLocation disabledSprite) {
-            return new Style(enabledSprite, disabledSprite);
+        public Blitter disabledImage() {
+            return disabledImage.get();
         }
 
         public int handleWidth() {
-            var minecraft = Minecraft.getMinecraft();
-            return minecraft.getGuiSprites().getSprite(enabledSprite).contents().width();
+            return enabledImage().getSrcWidth();
         }
 
         public int handleHeight() {
-            var minecraft = Minecraft.getMinecraft();
-            return minecraft.getGuiSprites().getSprite(enabledSprite).contents().height();
+            return enabledImage().getSrcHeight();
         }
     }
 

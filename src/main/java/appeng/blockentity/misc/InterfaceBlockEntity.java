@@ -63,7 +63,7 @@ public class InterfaceBlockEntity extends AENetworkedBlockEntity
     }
 
     protected InterfaceLogic createLogic() {
-        return new InterfaceLogic(getMainNode(), this, getItemFromBlockEntity().asItem());
+        return new InterfaceLogic(getMainNode(), this, getItemFromBlockEntity());
     }
 
     @Override

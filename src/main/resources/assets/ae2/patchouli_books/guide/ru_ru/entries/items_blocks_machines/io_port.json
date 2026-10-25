@@ -1,0 +1,33 @@
+{
+  "name": "МЭ порт ввода/вывода",
+  "icon": "ae2:io_port",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 210,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:io_port",
+      "link_recipe": true,
+      "anchor": "the-me-io-port",
+      "text": "Порт ввода/вывода позволяет быстро наполнять $(l:items_blocks_machines/storage_cells)ячейки хранения$(/l) из $(l:ae2_mechanics/import_export_storage)сетевого хранилища$(/l) или опустошать их туда.$(br2)Его можно поворачивать инструментом $(l:items_blocks_machines/wrench)Гаечный ключ из истинного кварца$(/l)."
+    },
+    {
+      "type": "text",
+      "title": "Настройки",
+      "anchor": "settings",
+      "text": "$(li)Порт ввода/вывода можно настроить перекладывать ячейку в выходные слоты, когда она пуста, полна или когда работа завершена.$(li)Если вставить $(l:items_blocks_machines/upgrade_cards)Редстоуновая карта$(/l), появятся варианты разных условий редстоуна$(li)В центре интерфейса есть стрелка, задающая направление передачи: из ячейки в $(l:ae2_mechanics/import_export_storage)сетевое хранилище$(/l) или из хранилища в ячейку."
+    },
+    {
+      "type": "text",
+      "title": "Улучшения",
+      "anchor": "upgrades",
+      "text": "Порт ввода/вывода поддерживает следующие $(l:items_blocks_machines/upgrade_cards)улучшения$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Карта ускорения$(/l) увеличивает количество перемещаемого за операцию$(li)$(l:items_blocks_machines/upgrade_cards)Редстоуновая карта$(/l) добавляет управление редстоуном: работа при высоком сигнале, при низком сигнале или один раз на импульс"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/io_port",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 package appeng.block.misc;
 
+import appeng.block.BlockProperties;
 import appeng.util.ItemTooltipContext;
 
 import java.util.List;
@@ -22,7 +23,7 @@ import appeng.server.services.compass.ServerCompassService;
 
 public class MysteriousCubeBlock extends AEBaseEntityBlock<MysteriousCubeBlockEntity> {
     // Not a redstone conductor to prevent using it as a facade.
-    public static final BlockProperties PROPERTIES = metalProps().strength(10, 1000).isRedstoneConductor(Blocks::never);
+    public static final BlockProperties PROPERTIES = metalProps().strength(10, 1000).isRedstoneConductor(null);
 
     public MysteriousCubeBlock() {
         super(PROPERTIES);

@@ -18,7 +18,7 @@
 
 package appeng.client.gui.widgets;
 
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.gui.FontRenderer;
 
@@ -34,7 +34,7 @@ public class ConfirmableTextField extends AETextField {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (canConsumeInput() && (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER)) {
+        if (canConsumeInput() && (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER)) {
             if (this.onConfirm != null) {
                 this.onConfirm.run();
             }

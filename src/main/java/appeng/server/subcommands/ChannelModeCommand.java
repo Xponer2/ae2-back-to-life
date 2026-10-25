@@ -1,12 +1,18 @@
 package appeng.server.subcommands;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
+import javax.annotation.Nullable;
 
-import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 
 import appeng.api.networking.pathing.ChannelMode;
 import appeng.core.AEConfig;
@@ -14,32 +20,50 @@ import appeng.core.AELog;
 import appeng.core.localization.PlayerMessages;
 import appeng.hooks.ticking.TickHandler;
 import appeng.me.Grid;
+import appeng.server.AECommand;
 import appeng.server.ISubCommand;
-
-import static net.minecraft.commands.Commands.literal;
 
 /**
  * Command to easily change {@link AEConfig#getChannelMode()} at runtime.
  */
 public class ChannelModeCommand implements ISubCommand {
     @Override
-    public void addArguments(LiteralArgumentBuilder<CommandSourceStack> builder) {
-        for (var mode : ChannelMode.values()) {
-            builder.then(literal(mode.name().toLowerCase(Locale.ROOT)).executes(ctx -> {
-                setChannelMode(ctx, mode);
-                return 1;
-            }));
-        }
+    public String getArgumentUsage() {
+        return "[" + String.join("|", modeNames()) + "]";
     }
 
     @Override
-    public void call(MinecraftServer srv, CommandContext<CommandSourceStack> ctx, CommandSourceStack sender) {
-        var mode = AEConfig.instance().getChannelMode();
-        sender.sendSuccess(() -> PlayerMessages.ChannelModeCurrent.text(mode.name().toLowerCase(Locale.ROOT)), true);
+    public List<String> getTabCompletions(MinecraftServer srv, ICommandSender sender, String[] args,
+            @Nullable BlockPos targetPos) {
+        return args.length == 1 ? CommandBase.getListOfStringsMatchingLastWord(args, modeNames()) : Collections.emptyList();
     }
 
-    private void setChannelMode(CommandContext<CommandSourceStack> ctx, ChannelMode mode) {
-        AELog.info("%s is changing channel mode to %s", ctx.getSource(), mode);
+    @Override
+    public void call(MinecraftServer srv, ICommandSender sender, String[] args) throws CommandException {
+        if (args.length == 0) {
+            var mode = AEConfig.instance().getChannelMode();
+            AECommand.sendSuccess(sender, PlayerMessages.ChannelModeCurrent.text(mode.name().toLowerCase(Locale.ROOT)));
+            return;
+        }
+        for (var mode : ChannelMode.values()) {
+            if (mode.name().toLowerCase(Locale.ROOT).equals(args[0])) {
+                setChannelMode(sender, mode);
+                return;
+            }
+        }
+        throw new WrongUsageException("/ae2 channelmode " + getArgumentUsage());
+    }
+
+    private static List<String> modeNames() {
+        var names = new ArrayList<String>();
+        for (var mode : ChannelMode.values()) {
+            names.add(mode.name().toLowerCase(Locale.ROOT));
+        }
+        return names;
+    }
+
+    private void setChannelMode(ICommandSender sender, ChannelMode mode) {
+        AELog.info("%s is changing channel mode to %s", sender.getName(), mode);
 
         AEConfig.instance().setChannelModel(mode);
         AEConfig.instance().save();
@@ -49,9 +73,8 @@ public class ChannelModeCommand implements ISubCommand {
             grid.getPathingService().repath();
             gridCount++;
         }
-        var finalGridCount = gridCount;
 
         var modeName = mode.name().toLowerCase(Locale.ROOT);
-        ctx.getSource().sendSuccess(() -> PlayerMessages.ChannelModeSet.text(modeName, finalGridCount), true);
+        AECommand.sendSuccess(sender, PlayerMessages.ChannelModeSet.text(modeName, gridCount));
     }
 }

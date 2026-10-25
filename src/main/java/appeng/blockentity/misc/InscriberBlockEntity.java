@@ -295,7 +295,7 @@ public class InscriberBlockEntity extends AENetworkedPoweredBlockEntity
 
     @Nullable
     public InscriberRecipe getTask() {
-        if (this.cachedTask == null && level != null) {
+        if (this.cachedTask == null && world != null) {
             ItemStack input = this.sideItemHandler.getStackInSlot(0);
             ItemStack plateA = this.topItemHandler.getStackInSlot(0);
             ItemStack plateB = this.bottomItemHandler.getStackInSlot(0);
@@ -303,7 +303,7 @@ public class InscriberBlockEntity extends AENetworkedPoweredBlockEntity
                 return null; // No input to handle
             }
 
-            this.cachedTask = InscriberRecipes.findRecipe(level, input, plateA, plateB, true);
+            this.cachedTask = InscriberRecipes.findRecipe(world, input, plateA, plateB, true);
         }
         return this.cachedTask;
     }
@@ -397,7 +397,7 @@ public class InscriberBlockEntity extends AENetworkedPoweredBlockEntity
         }
 
         for (var dir : pushSides) {
-            var target = InternalInventory.wrapExternal(level, getPos().offset(dir), dir.getOpposite());
+            var target = InternalInventory.wrapExternal(world, getPos().offset(dir), dir.getOpposite());
 
             if (target != null) {
                 int startItems = this.sideItemHandler.getStackInSlot(1).getCount();
@@ -560,7 +560,7 @@ public class InscriberBlockEntity extends AENetworkedPoweredBlockEntity
             if (inv == topItemHandler)
                 top = stack;
 
-            for (var holder : InscriberRecipes.getRecipes(level)) {
+            for (var holder : InscriberRecipes.getRecipes(world)) {
                 var recipe = holder.value();
                 if (!middle.isEmpty() && !recipe.getMiddleInput().test(middle)) {
                     continue;

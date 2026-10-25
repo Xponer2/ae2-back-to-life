@@ -1,0 +1,225 @@
+{
+  "name": "Многоблочный ЦП изготовления (хранилище, сопроцессор, монитор, блок)",
+  "icon": "ae2:1k_crafting_storage",
+  "category": "items_blocks_machines/devices",
+  "sortnum": 210,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "the-crafting-cpu",
+      "text": "ЦП изготовления управляют запросами и заданиями на изготовление. Они хранят промежуточные ингредиенты, пока выполняются многошаговые задания, и определяют, насколько большими могут быть задания и отчасти — как быстро они выполняются. Подробнее см. раздел $(l:ae2_mechanics/autocrafting)«Автокрафт»$(/l).$(br2)Каждый ЦП изготовления выполняет 1 запрос или"
+    },
+    {
+      "type": "multiblock",
+      "name": "",
+      "enable_visualize": false,
+      "multiblock": {
+        "pattern": [
+          [
+            "DD",
+            "EB",
+            "  ",
+            "  ",
+            "  ",
+            "  "
+          ],
+          [
+            "CD",
+            "CD",
+            "  ",
+            " D",
+            "  ",
+            "  "
+          ],
+          [
+            "0A",
+            "AA",
+            "  ",
+            " B",
+            "  ",
+            " B"
+          ]
+        ],
+        "mapping": {
+          "A": "ae2:16k_crafting_storage[formed=true,powered=true]",
+          "B": "ae2:1k_crafting_storage[formed=true,powered=true]",
+          "C": "ae2:crafting_unit[formed=true,powered=true]",
+          "D": "ae2:crafting_accelerator[formed=true,powered=true]",
+          "E": "ae2:crafting_monitor[formed=true,powered=true]",
+          "0": "ae2:16k_crafting_storage[formed=true,powered=true]"
+        }
+      },
+      "text": ""
+    },
+    {
+      "type": "ae2:item_row_4",
+      "item0": "ae2:1k_crafting_storage",
+      "item1": "ae2:crafting_accelerator",
+      "item2": "ae2:crafting_monitor",
+      "item3": "ae2:crafting_unit",
+      "text": ""
+    },
+    {
+      "type": "text",
+      "text": "задание, поэтому, если вы хотите одновременно заказать вычислительный процессор и 256 гладкого камня, понадобятся 2 многоблочных ЦП.$(br2)Их можно настроить на обработку запросов от игроков, от автоматики (шин экспорта и интерфейсов) или от тех и других.$(br2)Щелчок правой кнопкой мыши по ЦП открывает окно состояния изготовления, где"
+    },
+    {
+      "type": "text",
+      "text": "можно следить за ходом задания, которое выполняет ЦП."
+    },
+    {
+      "type": "text",
+      "title": "Настройки",
+      "anchor": "settings",
+      "text": "$(li)ЦП можно настроить принимать запросы только от игроков, только от автоматики (например, от шин экспорта — $(l:items_blocks_machines/export_bus)МЭ шина экспорта$(/l) — с картами $(l:items_blocks_machines/upgrade_cards)Карта изготовления$(/l)) или от тех и других."
+    },
+    {
+      "type": "text",
+      "title": "Сборка",
+      "anchor": "construction",
+      "text": "ЦП изготовления — многоблочные структуры, это должны быть сплошные прямоугольные параллелепипеды без пустот. Они состоят из нескольких компонентов.$(br2)В каждом ЦП должен быть хотя бы 1 блок хранилища создания (минимальный рабочий ЦП — это вообще один блок хранилища создания на 1k)."
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:crafting_unit",
+      "link_recipe": true,
+      "anchor": "crafting-unit",
+      "text": "(Необязательно) Блоки создания просто заполняют пространство в ЦП, чтобы он был сплошным прямоугольным параллелепипедом, если других компонентов не хватает. Они же — основной ингредиент остальных компонентов."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crafting/cpu_crafting_unit",
+      "anchor": "crafting-storage",
+      "text": "$(bold)Хранилище создания$()"
+    },
+    {
+      "type": "ae2:item_row_5",
+      "item0": "ae2:1k_crafting_storage",
+      "item1": "ae2:4k_crafting_storage",
+      "item2": "ae2:16k_crafting_storage",
+      "item3": "ae2:64k_crafting_storage",
+      "item4": "ae2:256k_crafting_storage",
+      "text": "(Обязательно) Хранилища создания бывают всех стандартных размеров ячеек (1k, 4k, 16k, 64k, 256k). Они хранят ингредиенты и промежуточные продукты изготовления, поэтому для заданий с большим количеством ингредиентов ЦП нужны более ёмкие или многочисленные хранилища."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crafting/1k_cpu_crafting_storage",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Улучшение",
+      "in0": "ae2:crafting_unit",
+      "in1": "ae2:cell_component_1k",
+      "output": "ae2:1k_crafting_storage",
+      "machine": "",
+      "text": "Щёлкните правой кнопкой мыши по блоку создания этим компонентом."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crafting/4k_cpu_crafting_storage",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Улучшение",
+      "in0": "ae2:crafting_unit",
+      "in1": "ae2:cell_component_4k",
+      "output": "ae2:4k_crafting_storage",
+      "machine": "",
+      "text": "Щёлкните правой кнопкой мыши по блоку создания этим компонентом."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crafting/16k_cpu_crafting_storage",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Улучшение",
+      "in0": "ae2:crafting_unit",
+      "in1": "ae2:cell_component_16k",
+      "output": "ae2:16k_crafting_storage",
+      "machine": "",
+      "text": "Щёлкните правой кнопкой мыши по блоку создания этим компонентом."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crafting/64k_cpu_crafting_storage",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Улучшение",
+      "in0": "ae2:crafting_unit",
+      "in1": "ae2:cell_component_64k",
+      "output": "ae2:64k_crafting_storage",
+      "machine": "",
+      "text": "Щёлкните правой кнопкой мыши по блоку создания этим компонентом."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crafting/256k_cpu_crafting_storage",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Улучшение",
+      "in0": "ae2:crafting_unit",
+      "in1": "ae2:cell_component_256k",
+      "output": "ae2:256k_crafting_storage",
+      "machine": "",
+      "text": "Щёлкните правой кнопкой мыши по блоку создания этим компонентом."
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:crafting_accelerator",
+      "link_recipe": true,
+      "anchor": "crafting-co-processing-unit",
+      "text": "$(bold)Блок обработки создания$()$(br2)(Необязательно) Сопроцессоры заставляют систему чаще отправлять партии ингредиентов из поставщиков шаблонов ($(l:items_blocks_machines/pattern_provider)МЭ поставщик шаблонов$(/l)), ускоряя такты ЦП. Это позволяет не отставать от быстро работающих механизмов. Например, поставщик шаблонов, окружённый молекулярными"
+    },
+    {
+      "type": "text",
+      "text": "сборщиками ($(l:items_blocks_machines/molecular_assembler)Молекулярный сборщик$(/l)), может выдавать ингредиенты быстрее, чем их успевает обработать один сборщик, и распределять партии между соседними сборщиками.$(br2)У некоторых сложных рецептов есть шаги, которые можно выполнять параллельно, например одновременно делать доски и книги для книжных полок. В окне состояния изготовления (его можно открыть, щёлкнув правой"
+    },
+    {
+      "type": "text",
+      "text": "кнопкой мыши по ЦП, или значком молотка в $(l:items_blocks_machines/terminals)терминале$(/l)) все такие шаги отображаются как «запланированные». Каждый дополнительный сопроцессор позволяет выполнять параллельно ещё один такой шаг (и тогда он отображается как «изготавливается»). Впрочем, это не так важно: обычно сопроцессоров ставят больше ради скорости подачи, чем в рецепте может быть параллельных шагов."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crafting/cpu_crafting_accelerator",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Улучшение",
+      "in0": "ae2:crafting_unit",
+      "in1": "ae2:engineering_processor",
+      "output": "ae2:crafting_accelerator",
+      "machine": "",
+      "text": "Щёлкните правой кнопкой мыши по блоку создания этим компонентом."
+    },
+    {
+      "type": "spotlight",
+      "item": "ae2:crafting_monitor",
+      "link_recipe": true,
+      "anchor": "crafting-monitor",
+      "text": "$(bold)Монитор создания$()$(br2)(Необязательно) Монитор создания показывает задание, которое ЦП выполняет в данный момент. Экран можно перекрасить с помощью предмета $(l:items_blocks_machines/color_applicator)Аппликатор цвета$(/l)."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crafting/cpu_crafting_monitor",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Улучшение",
+      "in0": "ae2:crafting_unit",
+      "in1": "ae2:storage_monitor",
+      "output": "ae2:crafting_monitor",
+      "machine": "",
+      "text": "Щёлкните правой кнопкой мыши по блоку создания этим компонентом."
+    }
+  ]
+}

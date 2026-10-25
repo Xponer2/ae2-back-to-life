@@ -71,7 +71,7 @@ public class CraftingBlockEntity extends AENetworkedBlockEntity
 
     @Override
     protected Item getItemFromBlockEntity() {
-        if (this.level == null) {
+        if (this.world == null) {
             return Items.AIR;
         }
         return getUnitBlock().type.getItemFromType();
@@ -86,10 +86,10 @@ public class CraftingBlockEntity extends AENetworkedBlockEntity
     }
 
     public AbstractCraftingUnitBlock<?> getUnitBlock() {
-        if (this.level == null || this.notLoaded() || this.isRemoved()) {
+        if (this.world == null || this.notLoaded() || this.isRemoved()) {
             return AEBlocks.CRAFTING_UNIT.block();
         }
-        return (AbstractCraftingUnitBlock<?>) this.level.getBlockState(this.worldPosition).getBlock();
+        return (AbstractCraftingUnitBlock<?>) this.world.getBlockState(this.pos).getBlock();
     }
 
     public long getStorageBytes() {
@@ -104,14 +104,14 @@ public class CraftingBlockEntity extends AENetworkedBlockEntity
     public void onReady() {
         super.onReady();
         this.getMainNode().setVisualRepresentation(this.getItemFromBlockEntity());
-        if (level instanceof WorldServer serverLevel) {
-            this.calc.calculateMultiblock(serverLevel, worldPosition);
+        if (world instanceof WorldServer serverLevel) {
+            this.calc.calculateMultiblock(serverLevel, pos);
         }
     }
 
     public void updateMultiBlock(BlockPos changedPos) {
-        if (level instanceof WorldServer serverLevel) {
-            this.calc.updateMultiblockAfterNeighborUpdate(serverLevel, worldPosition, changedPos);
+        if (world instanceof WorldServer serverLevel) {
+            this.calc.updateMultiblockAfterNeighborUpdate(serverLevel, pos, changedPos);
         }
     }
 
@@ -125,26 +125,20 @@ public class CraftingBlockEntity extends AENetworkedBlockEntity
     }
 
     public void updateSubType(boolean updateFormed) {
-        if (this.level == null || this.notLoaded() || this.isRemoved()) {
+        if (this.world == null || this.notLoaded() || this.isRemoved()) {
             return;
         }
 
         final boolean formed = this.isFormed();
         boolean power = this.getMainNode().isOnline();
 
-        final IBlockState current = this.level.getBlockState(this.worldPosition);
+        final IBlockState current = this.world.getBlockState(this.pos);
 
         // The block entity might try to update while being destroyed
         if (current.getBlock() instanceof AbstractCraftingUnitBlock) {
-            final IBlockState newState = current.withProperty(AbstractCraftingUnitBlock.POWERED, power)
-                    .withProperty(AbstractCraftingUnitBlock.FORMED, formed);
-
-            if (current != newState) {
-                // Not using flag 2 here (only send to clients, prevent block update) will cause
-                // infinite loops
-                // In case there is an inconsistency in the crafting clusters.
-                this.level.setBlock(this.worldPosition, newState, Block.UPDATE_CLIENTS);
-            }
+            // 1.12.2: the block entity keeps these properties (only re-renders, no block update)
+            setBlockStateProperty(AbstractCraftingUnitBlock.POWERED, power);
+            setBlockStateProperty(AbstractCraftingUnitBlock.FORMED, formed);
         }
 
         if (updateFormed) {
@@ -227,12 +221,12 @@ public class CraftingBlockEntity extends AENetworkedBlockEntity
 
             for (var blockEntity : (Iterable<CraftingBlockEntity>) this.cluster::getBlockEntities) {
                 if (this == blockEntity) {
-                    places.add(worldPosition);
+                    places.add(pos);
                 } else {
                     for (var d : EnumFacing.VALUES) {
-                        var p = blockEntity.worldPosition.offset(d);
+                        var p = blockEntity.getPos().offset(d);
 
-                        if (this.level.isEmptyBlock(p)) {
+                        if (this.world.isAirBlock(p)) {
                             places.add(p);
                         }
                     }
@@ -245,10 +239,10 @@ public class CraftingBlockEntity extends AENetworkedBlockEntity
             }
 
             for (var entry : inv.list) {
-                var position = Util.getRandom(places, level.getRandom());
+                var position = places.get(world.rand.nextInt(places.size()));
                 var stacks = new ArrayList<ItemStack>();
-                entry.getKey().addDrops(entry.getLongValue(), stacks, this.level, position);
-                Platform.spawnDrops(this.level, position, stacks);
+                entry.getKey().addDrops(entry.getLongValue(), stacks, this.world, position);
+                Platform.spawnDrops(this.world, position, stacks);
             }
 
             inv.clear(); // Ensure items only ever get dropped once
@@ -260,7 +254,7 @@ public class CraftingBlockEntity extends AENetworkedBlockEntity
     @Override
     public boolean isPowered() {
         if (isClientSide()) {
-            return this.level.getBlockState(this.worldPosition).getValue(AbstractCraftingUnitBlock.POWERED);
+            return this.world.getBlockState(this.pos).getValue(AbstractCraftingUnitBlock.POWERED);
         }
         return this.getMainNode().isActive();
     }
@@ -295,14 +289,14 @@ public class CraftingBlockEntity extends AENetworkedBlockEntity
     }
 
     protected EnumSet<EnumFacing> getConnections() {
-        if (level == null) {
+        if (world == null) {
             return EnumSet.noneOf(EnumFacing.class);
         }
 
         EnumSet<EnumFacing> connections = EnumSet.noneOf(EnumFacing.class);
 
         for (EnumFacing facing : EnumFacing.VALUES) {
-            if (this.isConnected(level, worldPosition, facing)) {
+            if (this.isConnected(world, pos, facing)) {
                 connections.add(facing);
             }
         }

@@ -1,18 +1,20 @@
 package appeng.parts.automation;
 
+import java.util.Map;
 import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.block.BlockLiquid;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
-import net.minecraft.world.level.block.BucketPickup;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.IFluidBlock;
 
 import appeng.api.behaviors.PickupSink;
 import appeng.api.behaviors.PickupStrategy;
@@ -22,8 +24,6 @@ import appeng.api.networking.energy.IEnergySource;
 import appeng.api.stacks.AEFluidKey;
 import appeng.core.AppEng;
 import appeng.core.network.clientbound.BlockTransitionEffectPacket;
-import appeng.util.GenericContainerHelper;
-import appeng.util.Platform;
 
 public class FluidPickupStrategy implements PickupStrategy {
     private final WorldServer level;
@@ -38,7 +38,7 @@ public class FluidPickupStrategy implements PickupStrategy {
     private long lastEffect;
 
     public FluidPickupStrategy(WorldServer level, BlockPos pos, EnumFacing side, TileEntity host,
-            ItemEnchantments enchantments, @Nullable UUID owningPlayerId) {
+            Map<Enchantment, Integer> enchantments, @Nullable UUID owningPlayerId) {
         this.level = level;
         this.pos = pos;
         this.side = side;
@@ -62,27 +62,26 @@ public class FluidPickupStrategy implements PickupStrategy {
     @Override
     public Result tryPickup(IEnergySource energySource, PickupSink sink) {
         var blockstate = level.getBlockState(pos);
-        if (blockstate.getBlock() instanceof BucketPickup bucketPickup) {
-            var fluidState = blockstate.getFluidState();
+        // Only fluid blocks (of the game or of Forge fluids), never the tanks of block entities
+        if (blockstate.getBlock() instanceof BlockLiquid || blockstate.getBlock() instanceof IFluidBlock) {
+            var handler = FluidUtil.getFluidHandler(level, pos, side);
+            // Draining a full bucket only works on source blocks
+            var source = handler != null ? handler.drain(Fluid.BUCKET_VOLUME, false) : null;
+            if (source != null && source.amount >= Fluid.BUCKET_VOLUME) {
+                if (isFluidBlacklisted(source.getFluid())) {
+                    return Result.CANT_PICKUP;
+                }
 
-            var fluid = fluidState.getType();
-            if (isFluidBlacklisted(fluid)) {
-                return Result.CANT_PICKUP;
-            }
-
-            if (fluid != FluidRegistry.EMPTY && fluidState.isSource()) {
                 // Attempt to store the fluid in the network
-                var what = AEFluidKey.of(fluid);
-                if (this.storeFluid(sink, what, AEFluidKey.AMOUNT_BLOCK, false)) {
+                var what = AEFluidKey.of(source);
+                if (this.storeFluid(sink, what, source.amount, false)) {
                     // If that would succeed, actually slurp up the liquid as if we were using a
                     // bucket
                     // This _MIGHT_ change the liquid, and if it does, and we dont have enough
                     // space, tough luck. you loose the source block.
-                    var fakePlayer = Platform.getFakePlayer(level, owningPlayerId);
-                    var fluidContainer = bucketPickup.pickupBlock(fakePlayer, level, pos, blockstate);
-                    var pickedUpStack = GenericContainerHelper.getContainedFluidStack(fluidContainer);
-                    if (pickedUpStack != null && pickedUpStack.what() instanceof AEFluidKey fluidKey) {
-                        this.storeFluid(sink, fluidKey, pickedUpStack.amount(), true);
+                    var drained = handler.drain(Fluid.BUCKET_VOLUME, true);
+                    if (drained != null && drained.amount > 0) {
+                        this.storeFluid(sink, AEFluidKey.of(drained), drained.amount, true);
                     }
 
                     if (!throttleEffect()) {
@@ -106,7 +105,7 @@ public class FluidPickupStrategy implements PickupStrategy {
     }
 
     private boolean isFluidBlacklisted(Fluid fluid) {
-        return AETags.ANNIHILATION_PLANE_FLUID_BLACKLIST.contains(fluid.builtInRegistryHolder());
+        return AETags.ANNIHILATION_PLANE_FLUID_BLACKLIST.contains(fluid);
     }
 
     /**

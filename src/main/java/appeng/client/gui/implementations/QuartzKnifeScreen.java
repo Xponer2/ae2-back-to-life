@@ -18,7 +18,7 @@
 
 package appeng.client.gui.implementations;
 
-import net.minecraft.client.gui.GuiTextField;
+import appeng.client.gui.compat.EditBox;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.text.ITextComponent;
 
@@ -29,7 +29,7 @@ import appeng.menu.implementations.QuartzKnifeMenu;
 
 public class QuartzKnifeScreen extends AEBaseScreen<QuartzKnifeMenu> {
 
-    private final GuiTextField name;
+    private final EditBox name;
 
     public QuartzKnifeScreen(QuartzKnifeMenu menu, InventoryPlayer playerInventory, ITextComponent title,
             ScreenStyle style) {

@@ -3,7 +3,7 @@ package appeng.blockentity.crafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraft.world.item.crafting.CraftingInput;
+import appeng.util.CraftingInput;
 
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.stacks.AEItemKey;

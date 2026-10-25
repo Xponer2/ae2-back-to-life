@@ -42,6 +42,8 @@ import appeng.core.localization.PlayerMessages;
 import appeng.items.AEBaseItem;
 import appeng.util.InteractionUtil;
 import appeng.util.UseOnContext;
+import appeng.util.ItemTooltipContext;
+import appeng.api.util.ItemLike;
 
 public class UpgradeCardItem extends AEBaseItem {
 
@@ -51,7 +53,7 @@ public class UpgradeCardItem extends AEBaseItem {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<ITextComponent> lines,
+    public void appendHoverText(ItemStack stack, ItemTooltipContext context, List<ITextComponent> lines,
             ITooltipFlag advancedTooltips) {
         super.appendHoverText(stack, context, lines, advancedTooltips);
 
@@ -108,7 +110,7 @@ public class UpgradeCardItem extends AEBaseItem {
                     return EnumActionResult.PASS;
                 }
 
-                player.setItemInHand(hand, upgrades.addItems(heldStack));
+                player.setHeldItem(hand, upgrades.addItems(heldStack));
                 return EnumActionResult.SUCCESS;
             }
         }

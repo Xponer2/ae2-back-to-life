@@ -73,7 +73,7 @@ public class CompositeStorage implements MEStorage, ITickingMonitor {
         boolean first = true;
         for (var keyType : storages.keySet()) {
             if (!first) {
-                types.appendSibling(", ");
+                types.appendText(", ");
             } else {
                 first = false;
             }

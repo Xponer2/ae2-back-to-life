@@ -1,0 +1,30 @@
+{
+  "name": "Кристалл истинного кварца",
+  "icon": "ae2:certus_quartz_crystal",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:certus_quartz_crystal",
+      "link_recipe": true,
+      "anchor": "the-certus-quartz-crystal",
+      "text": "$(o)«Кристаллы истинного кварца обладают уникальной способностью вбирать в свою кристаллическую решётку огромное количество энергии»$()$(br2)Один из основных ингредиентов блоков, $(l:ae2_mechanics/devices)устройств$(/l) и предметов AE2. Выращивается на $(l:ae2_mechanics/certus_growth)цветущих блоках истинного кварца$(/l)."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:misc/deconstruction_certus_quartz_block",
+      "anchor": "some-alternate-recipes",
+      "text": ""
+    },
+    {
+      "type": "ae2:recipe_2",
+      "title": "Бросить в воду",
+      "in0": "ae2:charged_certus_quartz_crystal",
+      "in1": "ae2:certus_quartz_dust",
+      "output": "ae2:certus_quartz_crystal#2",
+      "machine": "minecraft:water_bucket",
+      "text": "Бросьте предметы в воду вместе."
+    }
+  ]
+}

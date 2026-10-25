@@ -223,7 +223,7 @@ public class InfoBar {
             this.xPos = xPos;
             this.yPos = yPos;
             var font = Minecraft.getMinecraft().fontRenderer;
-            this.width = Math.round(font.getStringWidth(text) * scale);
+            this.width = Math.round(font.getStringWidth(text.getFormattedText()) * scale);
             this.height = Math.round(font.FONT_HEIGHT * scale);
         }
 

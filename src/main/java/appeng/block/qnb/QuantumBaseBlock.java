@@ -18,19 +18,19 @@
 
 package appeng.block.qnb;
 
+import appeng.block.BlockProperties;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer.Builder;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import appeng.block.AEBaseEntityBlock;
@@ -41,11 +41,9 @@ import appeng.util.shape.CollisionContext;
 import appeng.util.shape.Shapes;
 import appeng.util.shape.VoxelShape;
 
-public abstract class QuantumBaseBlock extends AEBaseEntityBlock<QuantumBridgeBlockEntity>
-        implements SimpleWaterloggedBlock {
+public abstract class QuantumBaseBlock extends AEBaseEntityBlock<QuantumBridgeBlockEntity> {
 
     public static final PropertyBool FORMED = PropertyBool.create("formed");
-    private static final PropertyBool WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     private static final VoxelShape SHAPE;
 
@@ -56,8 +54,7 @@ public abstract class QuantumBaseBlock extends AEBaseEntityBlock<QuantumBridgeBl
 
     public QuantumBaseBlock(BlockProperties props) {
         super(props);
-        this.setDefaultState(this.getDefaultState().withProperty(FORMED, false)
-                .withProperty(WATERLOGGED, false));
+        this.setDefaultState(this.getDefaultState().withProperty(FORMED, false));
     }
 
     @Override
@@ -66,11 +63,10 @@ public abstract class QuantumBaseBlock extends AEBaseEntityBlock<QuantumBridgeBl
     }
 
     @Override
-    protected void createBlockStateDefinition(Builder<Block, IBlockState> builder) {
+    protected void createBlockStateDefinition(BlockStateContainer.Builder builder) {
         super.createBlockStateDefinition(builder);
         builder.add(FORMED);
-        builder.add(WATERLOGGED);
-    }
+            }
 
     @Override
     protected IBlockState updateBlockStateFromBlockEntity(IBlockState currentState, QuantumBridgeBlockEntity be) {
@@ -103,24 +99,13 @@ public abstract class QuantumBaseBlock extends AEBaseEntityBlock<QuantumBridgeBl
     @Override
     @Nullable
     public IBlockState getStateForPlacement(BlockPlaceContext context) {
-        var fluidState = context.getLevel().getFluidState(context.getClickedPos());
-        return super.getStateForPlacement(context)
-                .setValue(WATERLOGGED, fluidState.getType() == FluidRegistry.WATER);
+        return super.getStateForPlacement(context);
     }
 
-    @Override
-    public FluidState getFluidState(IBlockState blockState) {
-        return blockState.getValue(WATERLOGGED).booleanValue()
-                ? FluidRegistry.WATER.getSource(false)
-                : super.getFluidState(blockState);
-    }
 
     @Override
     public IBlockState updateShape(IBlockState blockState, EnumFacing facing, IBlockState facingState, World level,
             BlockPos currentPos, BlockPos facingPos) {
-        if (blockState.getValue(WATERLOGGED).booleanValue()) {
-            level.scheduleTick(currentPos, FluidRegistry.WATER, FluidRegistry.WATER.getTickDelay(level));
-        }
 
         return super.updateShape(blockState, facing, facingState, level, currentPos, facingPos);
     }

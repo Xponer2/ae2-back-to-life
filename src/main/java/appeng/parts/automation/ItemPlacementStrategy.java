@@ -7,25 +7,21 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.item.context.DirectionalPlaceContext;
+import net.minecraftforge.common.IPlantable;
 
 import appeng.api.behaviors.PlacementStrategy;
 import appeng.api.config.Actionable;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.core.AEConfig;
-import appeng.util.BlockPlaceContext;
 import appeng.util.Platform;
 
 public class ItemPlacementStrategy implements PlacementStrategy {
@@ -48,7 +44,11 @@ public class ItemPlacementStrategy implements PlacementStrategy {
     }
 
     public void clearBlocked() {
-        this.blocked = !level.getBlockState(pos).canBeReplaced();
+        this.blocked = !isReplaceable();
+    }
+
+    private boolean isReplaceable() {
+        return level.getBlockState(pos).getBlock().isReplaceable(level, pos);
     }
 
     public final long placeInWorld(AEKey what, long amount, Actionable type, boolean placeAsEntity) {
@@ -66,7 +66,7 @@ public class ItemPlacementStrategy implements PlacementStrategy {
 
         final var placePos = pos;
 
-        if (level.getBlockState(placePos).canBeReplaced()) {
+        if (isReplaceable()) {
             if (placeAsEntity) {
                 final var sum = this.countEntitesAround(level, placePos);
 
@@ -89,15 +89,20 @@ public class ItemPlacementStrategy implements PlacementStrategy {
                     // The side the plane is attached to will be considered the look direction
                     // in terms of placing an item
                     var lookDirection = side;
-                    var context = new PlaneDirectionalPlaceContext(level, player, placePos,
-                            lookDirection, is, lookDirection.getOpposite());
 
-                    // In case the item does not look at the use context for the stack to use
-                    player.setItemInHand(EnumHand.MAIN_HAND, is);
+                    // Items are used by the player holding them
+                    player.setHeldItem(EnumHand.MAIN_HAND, is);
                     try {
-                        i.useOn(context);
+                        // Clicking the (replaceable) target block places blocks into it
+                        is.onItemUse(player, level, placePos, EnumHand.MAIN_HAND, lookDirection.getOpposite(),
+                                0.5f, 0.5f, 0.5f);
+                        if (is.getCount() == maxStorage && i instanceof IPlantable) {
+                            // Seeds are used on the soil below the target block
+                            is.onItemUse(player, level, placePos.down(), EnumHand.MAIN_HAND, EnumFacing.UP,
+                                    0.5f, 1.0f, 0.5f);
+                        }
                     } finally {
-                        player.setItemInHand(EnumHand.MAIN_HAND, ItemStack.EMPTY);
+                        player.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
                     }
                     maxStorage = Math.max(0, maxStorage - is.getCount());
 
@@ -110,7 +115,7 @@ public class ItemPlacementStrategy implements PlacementStrategy {
             }
         }
 
-        this.blocked = !level.getBlockState(placePos).canBeReplaced();
+        this.blocked = !isReplaceable();
 
         if (worked) {
             return maxStorage;
@@ -132,12 +137,12 @@ public class ItemPlacementStrategy implements PlacementStrategy {
         // When spawning downwards, we have to take into account that it spawns it at
         // their "feet" and not center like x or z. So we move it up to be flush with
         // the plane
-        final double additionalYOffset = side.getYOffset() == -1 ? 1 - entity.getBbHeight() : 0;
+        final double additionalYOffset = side.getYOffset() == -1 ? 1 - entity.height : 0;
 
         // Calculate the maximum spawn area so an entity hitbox will always be inside
         // the block.
-        final double spawnAreaHeight = Math.max(0, 1 - entity.getBbHeight());
-        final double spawnAreaWidth = Math.max(0, 1 - entity.getBbWidth());
+        final double spawnAreaHeight = Math.max(0, 1 - entity.height);
+        final double spawnAreaWidth = Math.max(0, 1 - entity.width);
 
         // Calculate the offsets to spawn it into the adjacent block, taking the sign
         // into account.
@@ -146,13 +151,13 @@ public class ItemPlacementStrategy implements PlacementStrategy {
         // block center.
         final var offsetX = side.getXOffset() == 0 //
                 ? RANDOM_OFFSET.nextFloat() * spawnAreaWidth - spawnAreaWidth / 2
-                : side.getXOffset() * (.525 + entity.getBbWidth() / 2);
+                : side.getXOffset() * (.525 + entity.width / 2);
         final var offsetY = side.getYOffset() == 0 //
                 ? RANDOM_OFFSET.nextFloat() * spawnAreaHeight
                 : side.getYOffset() + additionalYOffset;
         final var offsetZ = side.getZOffset() == 0 //
                 ? RANDOM_OFFSET.nextFloat() * spawnAreaWidth - spawnAreaWidth / 2
-                : side.getZOffset() * (.525 + entity.getBbWidth() / 2);
+                : side.getZOffset() * (.525 + entity.width / 2);
 
         final var absoluteX = centerX + offsetX;
         final var absoluteY = centerY + offsetY;
@@ -160,7 +165,9 @@ public class ItemPlacementStrategy implements PlacementStrategy {
 
         // Set to correct position and slow the motion down a bit
         entity.setPosition(absoluteX, absoluteY, absoluteZ);
-        entity.setDeltaMovement(side.getXOffset() * .1, side.getYOffset() * 0.1, side.getZOffset() * 0.1);
+        entity.motionX = side.getXOffset() * .1;
+        entity.motionY = side.getYOffset() * 0.1;
+        entity.motionZ = side.getZOffset() * 0.1;
 
         // NOTE: Vanilla generally ignores the return-value of this method when spawning items into the world
         // Forge will return false when the embedded event is canceled, but the event canceller is responsible
@@ -175,70 +182,4 @@ public class ItemPlacementStrategy implements PlacementStrategy {
 
         return list.size();
     }
-
-    /**
-     * A custom {@link DirectionalPlaceContext} which also accepts a player needed various blocks like seeds.
-     * <p>
-     * Also removed {@link DirectionalPlaceContext#replacingClickedOnBlock} as this can cause a
-     * {@link StackOverflowError} for certain replaceable blocks.
-     */
-    private static class PlaneDirectionalPlaceContext extends BlockPlaceContext {
-        private final EnumFacing lookDirection;
-
-        public PlaneDirectionalPlaceContext(World level, EntityPlayer player, BlockPos pos, EnumFacing lookDirection,
-                ItemStack itemStack, EnumFacing facing) {
-            super(level, player, EnumHand.MAIN_HAND, itemStack,
-                    new RayTraceResult(Vec3d.atBottomCenterOf(pos), facing, pos, false));
-            this.lookDirection = lookDirection;
-        }
-
-        @Override
-        public BlockPos getClickedPos() {
-            return this.getHitResult().getPos();
-        }
-
-        @Override
-        public boolean canPlace() {
-            return getLevel().getBlockState(this.getClickedPos()).canBeReplaced(this);
-        }
-
-        @Override
-        public EnumFacing getNearestLookingDirection() {
-            return EnumFacing.DOWN;
-        }
-
-        @Override
-        public EnumFacing[] getNearestLookingDirections() {
-            return switch (this.lookDirection) {
-                default -> new EnumFacing[] { EnumFacing.DOWN, EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH,
-                        EnumFacing.WEST, EnumFacing.UP };
-                case UP -> new EnumFacing[] { EnumFacing.DOWN, EnumFacing.UP, EnumFacing.NORTH, EnumFacing.EAST,
-                        EnumFacing.SOUTH, EnumFacing.WEST };
-                case NORTH -> new EnumFacing[] { EnumFacing.DOWN, EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.WEST,
-                        EnumFacing.UP, EnumFacing.SOUTH };
-                case SOUTH -> new EnumFacing[] { EnumFacing.DOWN, EnumFacing.SOUTH, EnumFacing.EAST, EnumFacing.WEST,
-                        EnumFacing.UP, EnumFacing.NORTH };
-                case WEST -> new EnumFacing[] { EnumFacing.DOWN, EnumFacing.WEST, EnumFacing.SOUTH, EnumFacing.UP,
-                        EnumFacing.NORTH, EnumFacing.EAST };
-                case EAST -> new EnumFacing[] { EnumFacing.DOWN, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.UP,
-                        EnumFacing.NORTH, EnumFacing.WEST };
-            };
-        }
-
-        @Override
-        public EnumFacing getHorizontalDirection() {
-            return this.lookDirection.getAxis() == EnumFacing.Axis.Y ? EnumFacing.NORTH : this.lookDirection;
-        }
-
-        @Override
-        public boolean isSecondaryUseActive() {
-            return false;
-        }
-
-        @Override
-        public float getRotation() {
-            return this.lookDirection.getHorizontalIndex() * 90;
-        }
-    }
-
 }

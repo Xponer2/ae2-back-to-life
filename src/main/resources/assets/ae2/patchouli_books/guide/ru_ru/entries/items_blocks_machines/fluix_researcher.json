@@ -1,0 +1,40 @@
+{
+  "name": "Исследователь флюиса (житель)",
+  "icon": "minecraft:emerald",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 310,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:charger",
+      "anchor": "the-fluix-researcher",
+      "text": "Исследователь флюиса — профессия жителя. Его рабочее место — $(l:items_blocks_machines/charger)Зарядник$(/l)."
+    },
+    {
+      "type": "image",
+      "images": [
+        "ae2:textures/guide/diagrams/ae2_villager.png"
+      ],
+      "border": true,
+      "text": ""
+    },
+    {
+      "type": "text",
+      "title": "Сделки",
+      "anchor": "trades",
+      "text": "Сделки устроены как в ванильной игре: на каждом уровне открывается случайный набор из 2 сделок (если на уровне не одна возможная сделка)$(li)$(bold)Новичок$(): Что нужно 3 $(item)Изумруд$(); Что даёт 4 $(l:items_blocks_machines/certus_quartz_crystal)Кристалл истинного кварца$(/l)$(li)$(bold)Новичок$(): Что нужно 2 $(item)Изумруд$(); Что даёт 1 $(l:items_blocks_machines/meteorite_compass)Метеоритный компас$(/l)$(li)$(bold)Ученик$(): Что нужно 3 $(l:items_blocks_machines/certus_quartz_crystal_charged)Заряженный кристалл истинного кварца$(/l); Что даёт 1 $(item)Изумруд$()"
+    },
+    {
+      "type": "text",
+      "text": "$(li)$(bold)Ученик$(): Что нужно 5 $(l:items_blocks_machines/processors)Кремний$(/l); Что даёт 1 $(item)Изумруд$()$(li)$(bold)Ученик$(): Что нужно 5 $(item)Изумруд$(); Что даёт 8 $(l:items_blocks_machines/sky_stone)Небесный камень$(/l)$(li)$(bold)Подмастерье$(): Что нужно 2 $(l:items_blocks_machines/quartz_glass)Кварцевое стекло$(/l); Что даёт 1 $(item)Изумруд$()$(li)$(bold)Подмастерье$(): Что нужно 5 $(item)Изумруд$(); Что даёт 4 $(l:items_blocks_machines/fluix_crystal)Флюисовый кристалл$(/l)$(li)$(bold)Эксперт$(): Что нужно 5 $(l:items_blocks_machines/matter_ball)Шарик материи$(/l); Что даёт 1 $(item)Изумруд$()"
+    },
+    {
+      "type": "text",
+      "text": "$(li)$(bold)Эксперт$(): Что нужно 10 $(item)Изумруд$(); Что даёт 1 $(l:items_blocks_machines/presses)Кремниевый пресс для высекателя$(/l)$(li)$(bold)Эксперт$(): Что нужно 10 $(item)Изумруд$(); Что даёт 1 $(l:items_blocks_machines/presses)Логический пресс для высекателя$(/l)$(li)$(bold)Эксперт$(): Что нужно 10 $(item)Изумруд$(); Что даёт 1 $(l:items_blocks_machines/presses)Вычислительная пресс для высекателя$(/l)$(li)$(bold)Эксперт$(): Что нужно 10 $(item)Изумруд$(); Что даёт 1 $(l:items_blocks_machines/presses)Инженерный пресс для$(/l)"
+    },
+    {
+      "type": "text",
+      "text": "$(l:items_blocks_machines/presses)высекателя$(/l)$(li)$(bold)Мастер$(): Что нужно 8 $(item)Изумруд$(); Что даёт 5 $(item)Сгусток слизи$()"
+    }
+  ]
+}

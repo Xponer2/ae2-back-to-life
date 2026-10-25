@@ -1,0 +1,21 @@
+{
+  "name": "Кристальный резонирующий генератор",
+  "icon": "ae2:crystal_resonance_generator",
+  "category": "items_blocks_machines/network_infrastructure",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:crystal_resonance_generator",
+      "link_recipe": true,
+      "anchor": "the-crystal-resonance-generator",
+      "text": "Это устройство вырабатывает энергию для МЭ-сети без топлива. Из-за кристаллических вибраций, которые оно создаёт, в каждой сети может работать только одно такое устройство. Эти вибрации проходят даже через $(l:items_blocks_machines/quartz_fiber)Кварцевое волокно$(/l).$(br2)$(bold)Выработка:$() 20 AE/т"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/crystal_resonance_generator",
+      "anchor": "recipes",
+      "text": ""
+    }
+  ]
+}

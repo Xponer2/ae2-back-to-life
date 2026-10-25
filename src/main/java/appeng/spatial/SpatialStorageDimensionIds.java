@@ -18,62 +18,72 @@
 
 package appeng.spatial;
 
-import net.minecraft.client.renderer.DimensionSpecialEffects;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraft.world.level.dimension.LevelStem;
+import java.util.HashSet;
 
-import appeng.api.util.Registries;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.DimensionType;
+import net.minecraftforge.common.DimensionManager;
+
+import appeng.core.AEConfig;
 import appeng.core.AppEng;
 
 /**
- * IDs for the spatial storage level related dimension objects.
+ * The spatial storage dimension. 1.21 defines it with data driven ids ({@code ae2:spatial_storage}); 1.12.2 needs a
+ * numeric dimension id and dimension type id, which are picked once and stored in the config.
  */
 public final class SpatialStorageDimensionIds {
 
     /**
-     * ID of the {@link DimensionType} used for the spatial storage level.
-     * <p>
-     * This is defined in {@link appeng.init.worldgen.InitDimensionTypes}.
+     * Id of the 1.21 level; also the name of the 1.12.2 dimension type.
      */
-    public static final ResourceKey<DimensionType> DIMENSION_TYPE_ID = ResourceKey
-            .create(Registries.DIMENSION_TYPE, AppEng.makeId("spatial_storage"));
+    public static final ResourceLocation WORLD_ID = AppEng.makeId("spatial_storage");
 
     /**
-     * ID of the {@link ChunkGenerator} used for the spatial storage level.
+     * Id of the {@link SpatialStorageBiome}.
      */
-    public static final ResourceLocation CHUNK_GENERATOR_ID = AppEng.makeId("spatial_storage");
+    public static final ResourceLocation BIOME_KEY = AppEng.makeId("spatial_storage");
 
-    /**
-     * ID of the {@link Biome} used for the spatial storage level.
-     */
-    public static final ResourceKey<Biome> BIOME_KEY = ResourceKey.create(Registries.BIOME,
-            AppEng.makeId("spatial_storage"));
-
-    /**
-     * ID of the {@link LevelStem} used for the spatial storage dimension.
-     * <p>
-     * This is defined in {@link appeng.init.worldgen.InitDimensionTypes}.
-     */
-    public static final ResourceKey<LevelStem> DIMENSION_ID = ResourceKey.create(Registries.LEVEL_STEM,
-            AppEng.makeId("spatial_storage"));
-
-    /**
-     * ID of the {@link World} that is instantiated from the dimension/dimension type.
-     */
-    public static final ResourceKey<World> WORLD_ID = ResourceKey.create(Registries.DIMENSION,
-            AppEng.makeId("spatial_storage"));
-
-    /**
-     * ID of the {@link DimensionSpecialEffects} used for the spatial storage level.
-     */
-    public static ResourceLocation SKY_PROPERTIES_ID = AppEng.makeId("spatial_storage");
+    private static DimensionType dimensionType;
+    private static int dimensionId;
 
     private SpatialStorageDimensionIds() {
+    }
+
+    /**
+     * Registers the dimension type and the dimension. Call once in pre-init, after the config was loaded.
+     */
+    public static void register() {
+        var config = AEConfig.instance();
+
+        if (config.getSpatialDimensionTypeId() == -1) {
+            var used = new HashSet<Integer>();
+            for (DimensionType type : DimensionType.values()) {
+                used.add(type.getId());
+            }
+            int id = -11;
+            while (used.contains(id)) {
+                --id;
+            }
+            config.setSpatialDimensionTypeId(id);
+            config.save();
+        }
+        dimensionType = DimensionType.register(WORLD_ID.toString(), "_" + WORLD_ID.getPath(),
+                config.getSpatialDimensionTypeId(), SpatialStorageWorldProvider.class, false);
+
+        if (config.getSpatialDimensionId() == -1) {
+            config.setSpatialDimensionId(DimensionManager.getNextFreeDimId());
+            config.save();
+        }
+        dimensionId = config.getSpatialDimensionId();
+        DimensionManager.registerDimension(dimensionId, dimensionType);
+    }
+
+    public static DimensionType getDimensionType() {
+        return dimensionType;
+    }
+
+    public static int getDimensionId() {
+        return dimensionId;
     }
 
 }

@@ -20,20 +20,18 @@ package appeng.debug;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.item.context.DirectionalPlaceContext;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.util.FakePlayerFactory;
 
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.core.AppEng;
-import appeng.core.definitions.BlockEntityType;
 import appeng.util.InteractionUtil;
-import appeng.util.UseOnContext;
 
 public class CubeGeneratorBlockEntity extends AEBaseBlockEntity implements ServerTickingBlockEntity {
 
@@ -64,23 +62,26 @@ public class CubeGeneratorBlockEntity extends AEBaseBlockEntity implements Serve
     }
 
     private void spawn() {
-        this.level.removeBlock(this.worldPosition, false);
+        this.world.setBlockToAir(this.pos);
 
-        final Item i = this.is.getItem();
         final EnumFacing side = EnumFacing.UP;
 
         final int half = (int) Math.floor(this.size / 2);
 
+        // Items are used by a player holding them, a fake one places the blocks
+        var placer = FakePlayerFactory.getMinecraft((WorldServer) this.world);
         for (int y = 0; y < this.size; y++) {
             for (int x = -half; x < half; x++) {
                 for (int z = -half; z < half; z++) {
-                    final BlockPos p = this.worldPosition.offset(x, y - 1, z);
-                    UseOnContext useContext = new DirectionalPlaceContext(this.level, p, side, this.is,
-                            side.getOpposite());
-                    i.useOn(useContext);
+                    final BlockPos p = this.pos.add(x, y - 1, z);
+                    var stack = this.is.copy();
+                    placer.setHeldItem(EnumHand.MAIN_HAND, stack);
+                    // Placing against an air block replaces it, so the block ends up at p
+                    stack.onItemUse(placer, this.world, p, EnumHand.MAIN_HAND, side, 0.5f, 1.0f, 0.5f);
                 }
             }
         }
+        placer.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
     }
 
     void click(EntityPlayer player) {

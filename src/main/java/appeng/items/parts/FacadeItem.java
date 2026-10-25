@@ -37,8 +37,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.level.EmptyBlockGetter;
-import net.minecraft.world.level.block.RenderShape;
 
 import appeng.api.ids.AEComponents;
 import appeng.api.ids.AETags;
@@ -49,6 +47,7 @@ import appeng.api.parts.PartHelper;
 import appeng.facade.FacadePart;
 import appeng.items.AEBaseItem;
 import appeng.util.UseOnContext;
+import net.minecraft.util.EnumBlockRenderType;
 
 public class FacadeItem extends AEBaseItem implements IFacadeItem {
 
@@ -74,7 +73,7 @@ public class FacadeItem extends AEBaseItem implements IFacadeItem {
         if (!level.isRemote && player != null && !player.isCreative()) {
             stack.grow(-1);
             if (stack.isEmpty()) {
-                player.setItemInHand(context.getHand(), ItemStack.EMPTY);
+                player.setHeldItem(context.getHand(), ItemStack.EMPTY);
             }
         }
 
@@ -106,7 +105,7 @@ public class FacadeItem extends AEBaseItem implements IFacadeItem {
 
         // Play a placement sound of the underlying block
         IBlockState blockState = facade.getBlockState();
-        SoundType soundType = blockState.getSoundType();
+        SoundType soundType = blockState.getBlock().getSoundType();
         level.playSound(null, blockPos, soundType.getPlaceSound(), SoundCategory.BLOCKS,
                 (soundType.getVolume() + 1.0F) / 2.0F,
                 soundType.getPitch() * 0.8F);
@@ -129,7 +128,7 @@ public class FacadeItem extends AEBaseItem implements IFacadeItem {
         try {
             final ItemStack in = this.getTextureItem(is);
             if (!in.isEmpty()) {
-                return super.getName(is).createCopy().appendSibling(" - ").appendSibling(Platform.getHoverName(in));
+                return super.getName(is).createCopy().appendText(" - ").appendSibling(Platform.getHoverName(in));
             }
         } catch (Throwable ignored) {
 
@@ -144,7 +143,7 @@ public class FacadeItem extends AEBaseItem implements IFacadeItem {
     }
 
     public ItemStack createFacadeForItem(ItemStack itemStack, boolean returnItem) {
-        if (itemStack.isEmpty() || !itemStack.getComponentsPatch().isEmpty()
+        if (itemStack.isEmpty() || itemStack.hasTagCompound()
                 || !(itemStack.getItem() instanceof ItemBlock blockItem)) {
             return ItemStack.EMPTY;
         }
@@ -156,12 +155,12 @@ public class FacadeItem extends AEBaseItem implements IFacadeItem {
 
         IBlockState blockState = block.getDefaultState();
 
-        final boolean isWhiteListed = AETags.FACADE_BLOCK_WHITELIST.contains(block.builtInRegistryHolder());
-        final boolean isModel = blockState.getRenderShape() == RenderShape.MODEL;
+        final boolean isWhiteListed = AETags.FACADE_BLOCK_WHITELIST.contains(block);
+        final boolean isModel = blockState.getRenderType() == EnumBlockRenderType.MODEL;
 
         final IBlockState defaultState = block.getDefaultState();
-        final boolean isBlockEntity = defaultState.hasBlockEntity();
-        final boolean isFullCube = defaultState.isCollisionShapeFullBlock(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
+        final boolean isBlockEntity = block.hasTileEntity(defaultState);
+        final boolean isFullCube = defaultState.isFullCube();
 
         final boolean isBlockEntityAllowed = !isBlockEntity || isWhiteListed;
         final boolean isBlockAllowed = isFullCube || isWhiteListed;
@@ -178,7 +177,7 @@ public class FacadeItem extends AEBaseItem implements IFacadeItem {
 
     public ItemStack createFacadeForItemUnchecked(ItemStack itemStack) {
         var is = new ItemStack(this);
-        AEComponents.FACADE_ITEM.set(is, itemStack.getItemHolder());
+        AEComponents.FACADE_ITEM.set(is, itemStack.getItem());
         return is;
     }
 
@@ -211,7 +210,7 @@ public class FacadeItem extends AEBaseItem implements IFacadeItem {
             return Blocks.GLASS.getDefaultState();
         }
 
-        Block block = Block.byItem(baseItemStack.getItem());
+        Block block = Block.getBlockFromItem(baseItemStack.getItem());
 
         if (block == Blocks.AIR) {
             return Blocks.GLASS.getDefaultState();

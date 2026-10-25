@@ -175,7 +175,7 @@ public abstract class CablePart extends AEBasePart implements ICablePart {
         if (!stack.isEmpty() && stack.getItem() instanceof ColorApplicatorItem item) {
             var color = item.getActiveColor(stack);
             if (color != null && color != getCableColor() && item.consumeColor(stack, color, true)) {
-                if (changeColor(color, player) && !player.capabilities.instabuild) {
+                if (changeColor(color, player) && !player.capabilities.isCreativeMode) {
                     item.consumeColor(stack, color, false);
                 }
             }
@@ -396,7 +396,7 @@ public abstract class CablePart extends AEBasePart implements ICablePart {
         var connections = EnumSet.noneOf(EnumFacing.class);
         var connectionsTag = data.getTagList("connections", Constants.NBT.TAG_STRING);
         for (var connectionTag : connectionsTag) {
-            var side = EnumFacing.byName(connectionTag.getAsString());
+            var side = EnumFacing.byName(((NBTTagString) connectionTag).getString());
             if (side != null) {
                 connections.add(side);
             }

@@ -64,7 +64,7 @@ public abstract class AbstractTableRenderer<T> {
         this.x = x;
         this.y = y;
         this.fontRenderer = Minecraft.getMinecraft().fontRenderer;
-        this.FONT_HEIGHT = this.fontRenderer.FONT_HEIGHT * TEXT_SCALE;
+        this.lineHeight = this.fontRenderer.FONT_HEIGHT * TEXT_SCALE;
         this.rows = rows;
     }
 
@@ -110,7 +110,7 @@ public abstract class AbstractTableRenderer<T> {
                 pose.pushPose();
                 pose.scale(TEXT_SCALE, TEXT_SCALE, 1.0f);
                 for (ITextComponent line : lines) {
-                    final int w = fontRenderer.getStringWidth(line);
+                    final int w = fontRenderer.getStringWidth(line.getFormattedText());
                     guiGraphics.drawString(fontRenderer, line,
                             (int) ((itemX - 2 - w * TEXT_SCALE) * INV_TEXT_SCALE),
                             (int) (textY * INV_TEXT_SCALE), textColor, false);

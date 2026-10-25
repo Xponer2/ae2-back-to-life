@@ -38,9 +38,7 @@ import com.google.common.primitives.Longs;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -53,10 +51,13 @@ import appeng.client.gui.MathExpressionParser;
 import appeng.client.gui.NumberEntryType;
 import appeng.client.gui.Rect2i;
 import appeng.client.gui.Rects;
+import appeng.client.gui.compat.AbstractWidget;
+import appeng.client.gui.compat.Button;
 import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.style.WidgetStyle;
 import appeng.core.localization.GuiText;
+import appeng.util.TextUtil;
 
 /**
  * A utility widget that consists of a text-field to enter a number with attached buttons to increment/decrement the
@@ -77,7 +78,7 @@ public class NumberEntryWidget implements ICompositeWidget {
     private final ConfirmableTextField textField;
     private final DecimalFormat decimalFormat;
     private NumberEntryType type;
-    private List<GuiButton> buttons;
+    private List<Button> buttons;
     private long minValue;
     private long maxValue = Long.MAX_VALUE;
     private ValidationIcon validationIcon;
@@ -95,7 +96,7 @@ public class NumberEntryWidget implements ICompositeWidget {
     private Rect2i textFieldBounds = Rects.ZERO;
     private Point currentScreenOrigin = Point.ZERO;
 
-    private List<GuiButton> amountButtons = Collections.emptyList();
+    private List<Button> amountButtons = Collections.emptyList();
 
     public NumberEntryWidget(ScreenStyle style, NumberEntryType type) {
         this.errorTextColor = style.getColor(PaletteColor.TEXTFIELD_ERROR).toARGB();
@@ -159,7 +160,7 @@ public class NumberEntryWidget implements ICompositeWidget {
 
     public void setActive(boolean active) {
         this.textField.setEditable(active);
-        this.buttons.forEach(b -> b.enabled = active);
+        this.buttons.forEach(b -> b.active = active);
     }
 
     /**
@@ -222,7 +223,7 @@ public class NumberEntryWidget implements ICompositeWidget {
         int left = bounds.getX() + this.bounds.getX();
         int top = bounds.getY() + this.bounds.getY();
 
-        List<GuiButton> buttons = new ArrayList<>(9);
+        List<Button> buttons = new ArrayList<>(9);
 
         buttons.add(new AE2Button(left, top, 22, 20, components1000[0],
                 btn -> addQty(hasShiftOrControlDown() ? STEPS_64[0] : STEPS_1000[0])));
@@ -282,7 +283,7 @@ public class NumberEntryWidget implements ICompositeWidget {
     }
 
     private static boolean hasShiftOrControlDown() {
-        return GuiScreen.hasShiftDown() || GuiScreen.hasControlDown();
+        return GuiScreen.isShiftKeyDown() || GuiScreen.isCtrlKeyDown();
     }
 
     /**
@@ -316,7 +317,7 @@ public class NumberEntryWidget implements ICompositeWidget {
      */
     public OptionalLong getLongValue() {
         var internalValue = getValueInternal();
-        if (internalValue.isEmpty()) {
+        if (!internalValue.isPresent()) {
             return OptionalLong.empty();
         }
 
@@ -424,7 +425,7 @@ public class NumberEntryWidget implements ICompositeWidget {
 
     private ITextComponent makeLabel(ITextComponent prefix, int amountIndex, boolean useDecimalSteps) {
         return prefix.createCopy()
-                .appendSibling(decimalFormat.format(useDecimalSteps ? STEPS_1000[amountIndex] : STEPS_64[amountIndex]));
+                .appendText(decimalFormat.format(useDecimalSteps ? STEPS_1000[amountIndex] : STEPS_64[amountIndex]));
     }
 
     public void setHideValidationIcon(boolean hideValidationIcon) {
@@ -469,7 +470,7 @@ public class NumberEntryWidget implements ICompositeWidget {
                     - font.getStringWidth(type.unit());
             var y = (int) (bounds.getY() + textFieldBounds.getY() + (textFieldBounds.getHeight() - font.FONT_HEIGHT) / 2f
                     + 1);
-            guiGraphics.drawString(font, type.unit(), x, y, TextFormatting.DARK_GRAY.getColor(), false);
+            guiGraphics.drawString(font, type.unit(), x, y, TextUtil.getColor(TextFormatting.DARK_GRAY), false);
         }
     }
 

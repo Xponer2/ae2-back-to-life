@@ -25,7 +25,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import net.neoforged.neoforge.network.PacketDistributor;
+import appeng.core.network.PacketDistributor;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
@@ -99,17 +99,17 @@ public class PatternEncodingTermScreen<C extends PatternEncodingTermMenu> extend
     @Override
     public boolean mouseClicked(double xCoord, double yCoord, int btn) {
         // handler for middle mouse button crafting in survival mode
-        if (this.minecraft.options.keyPickItem.matchesMouse(btn)) {
+        if (this.minecraft.gameSettings.keyBindPickBlock.isActiveAndMatches(btn - 100)) {
             var slot = this.findSlot(xCoord, yCoord);
             if (menu.canModifyAmountForSlot(slot)) {
-                var currentStack = GenericStack.fromItemStack(slot.getItem());
+                var currentStack = GenericStack.fromItemStack(slot.getStack());
                 if (currentStack != null) {
                     var screen = new SetProcessingPatternAmountScreen<>(
                             this,
                             currentStack,
                             newStack -> {
                                 ServerboundPacket message = new InventoryActionPacket(
-                                        InventoryAction.SET_FILTER, slot.index,
+                                        InventoryAction.SET_FILTER, slot.slotNumber,
                                         GenericStack.wrapInItemStack(newStack));
                                 PacketDistributor.sendToServer(message);
                             });
@@ -128,8 +128,8 @@ public class PatternEncodingTermScreen<C extends PatternEncodingTermMenu> extend
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int x, int y) {
         if (this.menu.getCarried().isEmpty() && menu.canModifyAmountForSlot(this.hoveredSlot)) {
-            var itemTooltip = new ArrayList<>(getTooltipFromContainerItem(this.hoveredSlot.getItem()));
-            var unwrapped = GenericStack.fromItemStack(this.hoveredSlot.getItem());
+            var itemTooltip = new ArrayList<>(getTooltipFromContainerItem(this.hoveredSlot.getStack()));
+            var unwrapped = GenericStack.fromItemStack(this.hoveredSlot.getStack());
             if (unwrapped != null) {
                 itemTooltip.add(Tooltips.getAmountTooltip(ButtonToolTips.Amount, unwrapped));
             }

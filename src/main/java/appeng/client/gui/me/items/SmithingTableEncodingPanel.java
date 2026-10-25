@@ -8,8 +8,6 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SmithingRecipeInput;
 
 import appeng.api.config.ActionItems;
 import appeng.client.Point;
@@ -23,6 +21,8 @@ import appeng.client.gui.widgets.ToggleButton;
 import appeng.core.localization.ButtonToolTips;
 import appeng.core.localization.GuiText;
 import appeng.menu.SlotSemantics;
+import appeng.recipes.vanilla.SmithingRecipeInput;
+import appeng.recipes.vanilla.VanillaRecipes;
 
 public class SmithingTableEncodingPanel extends EncodingModePanel {
     private static final Blitter BG = Blitter.texture("guis/pattern_modes.png").src(128, 70, 124, 66);
@@ -41,7 +41,7 @@ public class SmithingTableEncodingPanel extends EncodingModePanel {
 
         this.substitutionsBtn = createSubstitutionButton(widgets);
 
-        this.resultSlot = new Slot(new InventoryBasic(1), 0, 0, 0);
+        this.resultSlot = new Slot(new InventoryBasic("[Null]", true, 1), 0, 0, 0);
         menu.addClientSideSlot(resultSlot, SlotSemantics.SMITHING_TABLE_RESULT);
     }
 
@@ -87,13 +87,11 @@ public class SmithingTableEncodingPanel extends EncodingModePanel {
                 menu.getSmithingTableAdditionSlot().getItem());
 
         var level = menu.getPlayer().world;
-        var recipe = level.getRecipeManager()
-                .getRecipeFor(RecipeType.SMITHING, recipeInput, level)
-                .orElse(null);
+        var recipe = VanillaRecipes.getSmithingRecipeFor(recipeInput, level);
         if (recipe == null) {
             resultSlot.putStack(ItemStack.EMPTY);
         } else {
-            resultSlot.set(recipe.value().assemble(recipeInput));
+            resultSlot.putStack(recipe.value().assemble(recipeInput));
         }
     }
 

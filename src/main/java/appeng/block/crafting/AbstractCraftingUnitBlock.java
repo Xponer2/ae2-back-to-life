@@ -18,6 +18,11 @@
 
 package appeng.block.crafting;
 
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.util.Platform;
+import appeng.api.orientation.IOrientationHolder;
+import appeng.api.orientation.BlockOrientation;
+import appeng.block.BlockProperties;
 import appeng.util.TextUtil;
 
 import org.apache.logging.log4j.LogManager;
@@ -26,6 +31,7 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer.Builder;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -66,7 +72,7 @@ public abstract class AbstractCraftingUnitBlock<T extends CraftingBlockEntity> e
     }
 
     @Override
-    protected void createBlockStateDefinition(Builder<Block, IBlockState> builder) {
+    protected void createBlockStateDefinition(BlockStateContainer.Builder builder) {
         super.createBlockStateDefinition(builder);
         builder.add(POWERED);
         builder.add(FORMED);
@@ -77,7 +83,9 @@ public abstract class AbstractCraftingUnitBlock<T extends CraftingBlockEntity> e
             BlockPos currentPos, BlockPos facingPos) {
         TileEntity te = level.getTileEntity(currentPos);
         if (te != null) {
-            te.requestModelDataUpdate();
+            if (te instanceof AEBaseBlockEntity aeBlockEntity) {
+                aeBlockEntity.requestModelDataUpdate();
+            }
         }
         return super.updateShape(stateIn, facing, facingState, level, currentPos, facingPos);
     }
@@ -161,9 +169,6 @@ public abstract class AbstractCraftingUnitBlock<T extends CraftingBlockEntity> e
 
         var newState = upgradedBlock.getDefaultState();
 
-        // Makes sure Crafting Monitors are looking at the player.
-        newState = newState.trySetValue(BlockStateProperties.FACING, hit.getDirection());
-
         // Crafting Unit doesn't have a disassembly recipe, so we can ignore the drops.
         EnumActionResult result = state.getBlock() == AEBlocks.CRAFTING_UNIT.block()
                 ? this.transform(level, pos, newState) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL
@@ -171,10 +176,17 @@ public abstract class AbstractCraftingUnitBlock<T extends CraftingBlockEntity> e
 
         if (result == EnumActionResult.FAIL)
             return false;
+        // Makes sure Crafting Monitors are looking at the player (the facing is kept by the block entity in 1.12.2)
+        if (result == EnumActionResult.SUCCESS && level.getTileEntity(pos) instanceof IOrientationHolder holder
+                && !getOrientationStrategy().getProperties().isEmpty()) {
+            holder.setOrientation(BlockOrientation.get(hit.sideHit));
+        }
         // Pass => Crafting Unit is busy!
         if (result == EnumActionResult.PASS)
             return true;
-        heldItem.consume(1, player);
+        if (!player.capabilities.isCreativeMode) {
+            heldItem.shrink(1);
+        }
         return true;
     }
 
@@ -197,13 +209,13 @@ public abstract class AbstractCraftingUnitBlock<T extends CraftingBlockEntity> e
             return EnumActionResult.FAIL;
         }
 
-        player.inventory.placeItemBackInInventory(removedUpgrade);
+        Platform.placeItemBackInInventory(player, removedUpgrade);
 
         return EnumActionResult.SUCCESS;
     }
 
     private boolean transform(World level, BlockPos pos, IBlockState state) {
-        if (level.isRemote || !level.removeBlock(pos, false) || !level.setBlock(pos, state, UPDATE_ALL)) {
+        if (level.isRemote || !level.setBlockToAir(pos) || !level.setBlockState(pos, state, 3)) {
             return false;
         }
 
@@ -212,7 +224,7 @@ public abstract class AbstractCraftingUnitBlock<T extends CraftingBlockEntity> e
                 pos.getX(),
                 pos.getY(),
                 pos.getZ(),
-                SoundEvents.ITEM_FRAME_REMOVE_ITEM,
+                SoundEvents.ENTITY_ITEMFRAME_REMOVE_ITEM,
                 SoundCategory.BLOCKS,
                 0.5f,
                 1f);

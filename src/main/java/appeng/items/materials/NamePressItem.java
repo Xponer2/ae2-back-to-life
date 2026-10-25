@@ -30,6 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.api.ids.AEComponents;
 import appeng.items.AEBaseItem;
+import appeng.util.ItemTooltipContext;
 
 public class NamePressItem extends AEBaseItem {
     public NamePressItem(ItemProperties properties) {
@@ -38,7 +39,7 @@ public class NamePressItem extends AEBaseItem {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<ITextComponent> lines,
+    public void appendHoverText(ItemStack stack, ItemTooltipContext context, List<ITextComponent> lines,
             ITooltipFlag advancedTooltips) {
         super.appendHoverText(stack, context, lines, advancedTooltips);
 

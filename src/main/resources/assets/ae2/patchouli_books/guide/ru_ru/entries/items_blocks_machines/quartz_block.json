@@ -1,0 +1,21 @@
+{
+  "name": "Блок истинного кварца",
+  "icon": "ae2:quartz_block",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:quartz_block",
+      "link_recipe": true,
+      "anchor": "the-certus-quartz-block",
+      "text": "Блок для хранения предмета $(l:items_blocks_machines/certus_quartz_crystal)Кристалл истинного кварца$(/l). Из него можно сделать $(l:items_blocks_machines/budding_certus)цветущие блоки истинного кварца$(/l) или $(l:items_blocks_machines/decorative_certus)декоративные блоки истинного кварца$(/l)."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:decorative/quartz_block",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

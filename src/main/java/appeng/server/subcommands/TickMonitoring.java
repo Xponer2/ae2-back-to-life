@@ -18,13 +18,18 @@
 
 package appeng.server.subcommands;
 
-import com.mojang.brigadier.arguments.BoolArgumentType;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
+import javax.annotation.Nullable;
+
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 
 import appeng.me.service.TickManagerService;
 import appeng.server.ISubCommand;
@@ -32,16 +37,22 @@ import appeng.server.ISubCommand;
 public class TickMonitoring implements ISubCommand {
 
     @Override
-    public void addArguments(LiteralArgumentBuilder<CommandSourceStack> builder) {
-        builder.then(Commands.argument("enable", BoolArgumentType.bool()).executes(ctx -> {
-            var enable = ctx.getArgument("enable", Boolean.class);
-            TickManagerService.MONITORING_ENABLED = enable;
-            return 1;
-        }));
+    public String getArgumentUsage() {
+        return "<true|false>";
     }
 
     @Override
-    public void call(MinecraftServer srv, CommandContext<CommandSourceStack> data,
-            CommandSourceStack sender) {
+    public List<String> getTabCompletions(MinecraftServer srv, ICommandSender sender, String[] args,
+            @Nullable BlockPos targetPos) {
+        return args.length == 1 ? CommandBase.getListOfStringsMatchingLastWord(args, Arrays.asList("true", "false"))
+                : Collections.emptyList();
+    }
+
+    @Override
+    public void call(MinecraftServer srv, ICommandSender sender, String[] args) throws CommandException {
+        if (args.length == 0) {
+            throw new WrongUsageException("/ae2 tickmonitor " + getArgumentUsage());
+        }
+        TickManagerService.MONITORING_ENABLED = CommandBase.parseBoolean(args[0]);
     }
 }

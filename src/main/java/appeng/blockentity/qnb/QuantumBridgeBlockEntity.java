@@ -231,9 +231,9 @@ public class QuantumBridgeBlockEntity extends AENetworkedInvBlockEntity
     public EnumSet<EnumFacing> getAdjacentQuantumBridges() {
         var set = EnumSet.noneOf(EnumFacing.class);
 
-        if (level != null) {
+        if (world != null) {
             for (var d : EnumFacing.VALUES) {
-                var te = this.level.getTileEntity(this.worldPosition.offset(d));
+                var te = this.world.getTileEntity(this.pos.offset(d));
                 if (te instanceof QuantumBridgeBlockEntity) {
                     set.add(d);
                 }
@@ -270,8 +270,8 @@ public class QuantumBridgeBlockEntity extends AENetworkedInvBlockEntity
     }
 
     public void neighborUpdate(BlockPos fromPos) {
-        if (level instanceof WorldServer serverLevel) {
-            this.calc.updateMultiblockAfterNeighborUpdate(serverLevel, this.worldPosition, fromPos);
+        if (world instanceof WorldServer serverLevel) {
+            this.calc.updateMultiblockAfterNeighborUpdate(serverLevel, this.pos, fromPos);
         }
     }
 
@@ -286,9 +286,9 @@ public class QuantumBridgeBlockEntity extends AENetworkedInvBlockEntity
         if (this.cluster != null) {
             // Prevents cluster.destroy() from changing the block state back to an unformed QNB,
             // because that would undo the removal.
-            this.remove = true;
+            this.tileEntityInvalid = true;
             this.cluster.destroy();
-            this.remove = false;
+            this.tileEntityInvalid = false;
         }
     }
 

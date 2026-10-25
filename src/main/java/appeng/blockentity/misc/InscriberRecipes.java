@@ -94,7 +94,7 @@ public final class InscriberRecipes {
                 if (name == null) {
                     name = plateBName;
                 } else {
-                    name = name.createCopy().appendSibling(" ").appendSibling(plateBName);
+                    name = name.createCopy().appendText(" ").appendSibling(plateBName);
                 }
             }
         }

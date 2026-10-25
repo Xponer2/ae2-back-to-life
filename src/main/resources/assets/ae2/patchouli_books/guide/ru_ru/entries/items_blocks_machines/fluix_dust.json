@@ -1,0 +1,25 @@
+{
+  "name": "Флюисовая пыль",
+  "icon": "ae2:fluix_dust",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:fluix_dust",
+      "link_recipe": true,
+      "anchor": "fluix-dust",
+      "text": "$(l:items_blocks_machines/fluix_crystal)Флюисовый кристалл$(/l), измельчённый в механизме $(l:items_blocks_machines/inscriber)Высекатель$(/l). Используется для производства нескольких механизмов и компонентов AE2."
+    },
+    {
+      "type": "ae2:recipe_inscriber",
+      "title": "Высекатель",
+      "top": "",
+      "middle": "ae2:fluix_crystal,ore:crystalFluix",
+      "bottom": "",
+      "output": "ae2:fluix_dust",
+      "text": "Прессы не расходуются.",
+      "anchor": "recipe"
+    }
+  ]
+}

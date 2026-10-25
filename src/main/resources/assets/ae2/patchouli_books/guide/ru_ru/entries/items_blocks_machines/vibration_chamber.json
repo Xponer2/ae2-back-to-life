@@ -1,0 +1,47 @@
+{
+  "name": "Вибрационная камера",
+  "icon": "ae2:vibration_chamber",
+  "category": "items_blocks_machines/network_infrastructure",
+  "sortnum": 110,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:vibration_chamber",
+      "link_recipe": true,
+      "anchor": "the-vibration-chamber",
+      "text": "Основной задуманный способ снабжать сеть $(l:ae2_mechanics/energy)энергией$(/l) — $(l:items_blocks_machines/energy_acceptor)Приёмщик энергии$(/l), но вибрационная камера может напрямую вырабатывать небольшое или среднее количество AE.$(br2)По умолчанию (без $(l:items_blocks_machines/upgrade_cards)улучшений$(/l) и с настройками по умолчанию) она вырабатывает 40 AE/т."
+    },
+    {
+      "type": "text",
+      "text": "Когда хранилище $(l:ae2_mechanics/energy)энергии$(/l) сети заполнено, вибрационная камера сбавляет обороты, чтобы экономить топливо, но полностью не выключается."
+    },
+    {
+      "type": "text",
+      "title": "Настройки",
+      "anchor": "settings",
+      "text": "$(li)Вибрационная камера даёт доступ к глобальной настройке отображения энергии в AE или E/FE."
+    },
+    {
+      "type": "text",
+      "title": "Улучшения",
+      "anchor": "upgrades",
+      "text": "Вибрационная камера поддерживает следующие $(l:items_blocks_machines/upgrade_cards)улучшения$(/l):$(li)$(l:items_blocks_machines/upgrade_cards)Энергетическая карта$(/l) повышает эффективность камеры на 50%, максимум на 150%, то есть до 250% от базовой эффективности.$(li)$(l:items_blocks_machines/upgrade_cards)Карта ускорения$(/l) повышает скорость сжигания топлива на 50%, максимум на 150%, то есть до 250% от базовой мощности."
+    },
+    {
+      "type": "text",
+      "title": "Конфигурация",
+      "anchor": "config",
+      "text": "Свойства вибрационной камеры можно изменить в файле common.json в папке ae2 внутри папки config вашей директории .minecraft\\.$(li)baseEnergyPerFuelTick задаёт базовую эффективность вибрационной камеры без улучшений.$(li)minEnergyPerGameTick задаёт минимально возможную выработку энергии (камера всегда понемногу расходует топливо, даже если сети энергия не нужна)."
+    },
+    {
+      "type": "text",
+      "text": "$(li)maxEnergyPerGameTick задаёт максимальную выработку (и скорость) вибрационной камеры без улучшений."
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:network/blocks/energy_vibration_chamber",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

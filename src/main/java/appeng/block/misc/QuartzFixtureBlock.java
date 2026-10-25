@@ -28,6 +28,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer.Builder;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
@@ -35,8 +36,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -44,6 +43,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import appeng.api.orientation.RelativeSide;
 import appeng.block.AEBaseBlock;
 import appeng.block.BlockStateProperties;
+import appeng.client.render.effects.AEParticles;
 import appeng.client.render.effects.ParticleTypes;
 import appeng.core.AEConfig;
 import appeng.core.AppEngClient;
@@ -52,7 +52,7 @@ import appeng.util.shape.CollisionContext;
 import appeng.util.shape.Shapes;
 import appeng.util.shape.VoxelShape;
 
-public class QuartzFixtureBlock extends AEBaseBlock implements SimpleWaterloggedBlock {
+public class QuartzFixtureBlock extends AEBaseBlock {
 
     // Cache VoxelShapes for each facing
     private static final Map<EnumFacing, VoxelShape> SHAPES;
@@ -75,18 +75,17 @@ public class QuartzFixtureBlock extends AEBaseBlock implements SimpleWaterlogged
     // Used to alternate between two variants of the fixture on adjacent blocks
     public static final PropertyBool ODD = PropertyBool.create("odd");
 
-    public static final PropertyBool WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public QuartzFixtureBlock() {
         super(fixtureProps().lightLevel(b -> 15));
 
         this.setDefaultState(
-                getDefaultState().withProperty(FACING, EnumFacing.UP).withProperty(ODD, false).withProperty(WATERLOGGED, false));
+                getDefaultState().withProperty(FACING, EnumFacing.UP).withProperty(ODD, false));
     }
 
     @Override
-    protected void createBlockStateDefinition(Builder<Block, IBlockState> builder) {
-        builder.add(FACING, ODD, WATERLOGGED);
+    protected void createBlockStateDefinition(BlockStateContainer.Builder builder) {
+        builder.add(FACING, ODD);
     }
 
     // For reference, see WallTorchBlock
@@ -95,11 +94,10 @@ public class QuartzFixtureBlock extends AEBaseBlock implements SimpleWaterlogged
     public IBlockState getStateForPlacement(BlockPlaceContext context) {
         IBlockState state = super.getStateForPlacement(context);
         BlockPos pos = context.getClickedPos();
-        FluidState fluidState = context.getLevel().getFluidState(pos);
 
         // Set the even/odd property
         boolean oddPlacement = (pos.getX() + pos.getY() + pos.getZ()) % 2 != 0;
-        state = state.withProperty(ODD, oddPlacement).withProperty(WATERLOGGED, fluidState.getType() == FluidRegistry.WATER);
+        state = state.withProperty(ODD, oddPlacement);
 
         var levelReader = context.getLevel();
         var adirection = context.getNearestLookingDirections();
@@ -119,11 +117,8 @@ public class QuartzFixtureBlock extends AEBaseBlock implements SimpleWaterlogged
     @Override
     public IBlockState updateShape(IBlockState state, EnumFacing direction, IBlockState facingState, World level,
             BlockPos currentPos, BlockPos facingPos) {
-        if (state.getValue(WATERLOGGED).booleanValue()) {
-            level.scheduleTick(currentPos, FluidRegistry.WATER, FluidRegistry.WATER.getTickDelay(level));
-        }
 
-        if (direction.getOpposite() == state.getValue(FACING) && !state.canSurvive(level, currentPos)) {
+        if (direction.getOpposite() == state.getValue(FACING) && !canSurvive(state, level, currentPos)) {
             return Blocks.AIR.getDefaultState();
         }
 
@@ -155,7 +150,7 @@ public class QuartzFixtureBlock extends AEBaseBlock implements SimpleWaterlogged
         final double zOff = -0.3 * top.getZOffset();
         for (int bolts = 0; bolts < 3; bolts++) {
             if (AppEngClient.instance().shouldAddParticles(r)) {
-                level.addParticle(ParticleTypes.LIGHTNING, xOff + 0.5 + pos.getX(), yOff + 0.5 + pos.getY(),
+                AEParticles.add(ParticleTypes.LIGHTNING, xOff + 0.5 + pos.getX(), yOff + 0.5 + pos.getY(),
                         zOff + 0.5 + pos.getZ(), 0, 0, 0);
             }
         }
@@ -168,11 +163,5 @@ public class QuartzFixtureBlock extends AEBaseBlock implements SimpleWaterlogged
         return canSupportCenter(level, blockPos, facing);
     }
 
-    @Override
-    public FluidState getFluidState(IBlockState blockState) {
-        return blockState.getValue(WATERLOGGED).booleanValue()
-                ? FluidRegistry.WATER.getSource(false)
-                : super.getFluidState(blockState);
-    }
 
 }

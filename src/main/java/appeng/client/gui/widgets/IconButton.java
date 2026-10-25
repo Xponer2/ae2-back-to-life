@@ -23,8 +23,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -33,9 +32,10 @@ import net.minecraft.util.text.TextComponentString;
 import appeng.client.gui.GuiGraphics;
 import appeng.client.gui.Icon;
 import appeng.client.gui.Rect2i;
+import appeng.client.gui.compat.Button;
 import appeng.client.gui.style.Blitter;
 
-public abstract class IconButton extends GuiButton implements ITooltip {
+public abstract class IconButton extends Button implements ITooltip {
 
     private boolean halfSize = false;
 
@@ -44,7 +44,7 @@ public abstract class IconButton extends GuiButton implements ITooltip {
     private boolean disableBackground = false;
 
     public IconButton(OnPress onPress) {
-        super(0, 0, 16, 16, new TextComponentString(""), onPress, GuiButton.DEFAULT_NARRATION);
+        super(0, 0, 16, 16, new TextComponentString(""), onPress, Button.DEFAULT_NARRATION);
     }
 
     public void setVisibility(boolean vis) {
@@ -53,7 +53,7 @@ public abstract class IconButton extends GuiButton implements ITooltip {
     }
 
     @Override
-    public void playDownSound(SoundManager soundHandler) {
+    public void playDownSound(SoundHandler soundHandler) {
         if (!disableClickSound) {
             super.playDownSound(soundHandler);
         }

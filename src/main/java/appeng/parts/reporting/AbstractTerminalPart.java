@@ -144,7 +144,7 @@ public abstract class AbstractTerminalPart extends AbstractDisplayPart
 
     @Override
     public ItemStack getMainMenuIcon() {
-        return new ItemStack(getPartItem());
+        return new ItemStack(getPartItem().asItem());
     }
 
     public MenuType<?> getMenuType(EntityPlayer player) {

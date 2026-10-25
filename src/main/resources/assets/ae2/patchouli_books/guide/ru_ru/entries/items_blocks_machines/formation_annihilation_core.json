@@ -1,0 +1,30 @@
+{
+  "name": "Ядра формирования и уничтожения",
+  "icon": "ae2:formation_core",
+  "category": "items_blocks_machines/misc_ingredients_blocks",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "formation-and-annihilation-cores",
+      "text": "Это основные компоненты $(l:ae2_mechanics/devices)устройств$(/l) ввода и вывода AE2. Благодаря силе предмета $(l:items_blocks_machines/fluix_crystal)Флюисовый кристалл$(/l) и $(l:items_blocks_machines/processors)логического процессора$(/l) они позволяют устройствам вводить и выводить предметы, блоки, жидкости и т. д. (Сами по себе ничего не делают — это просто промежуточный компонент крафта.)"
+    },
+    {
+      "type": "ae2:item_row_2",
+      "item0": "ae2:formation_core",
+      "item1": "ae2:annihilation_core",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:materials/formationcore",
+      "anchor": "recipes",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:materials/annihilationcore",
+      "text": ""
+    }
+  ]
+}

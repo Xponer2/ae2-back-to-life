@@ -7,8 +7,6 @@ import net.minecraft.item.ItemStack;
 
 import appeng.api.features.HotkeyAction;
 import appeng.api.util.ItemLike;
-import appeng.integration.modules.curios.CuriosIntegration;
-import appeng.menu.locator.MenuLocators;
 
 public final class CuriosHotkeyAction implements HotkeyAction {
     private final Predicate<ItemStack> locatable;
@@ -47,21 +45,12 @@ public final class CuriosHotkeyAction implements HotkeyAction {
     }
 
     public CuriosHotkeyAction(ItemLike item, InventoryHotkeyAction.Opener opener) {
-        this((stack) -> stack.is(item.asItem()), opener);
+        this((stack) -> stack.getItem() == item.asItem(), opener);
     }
 
     @Override
     public boolean run(EntityPlayer player) {
-        var cap = player.getCapability(CuriosIntegration.ITEM_HANDLER);
-        if (cap == null)
-            return false;
-        for (int i = 0; i < cap.getSlots(); i++) {
-            if (locatable.test(cap.getStackInSlot(i))) {
-                if (opener.open(player, MenuLocators.forCurioSlot(i))) {
-                    return true;
-                }
-            }
-        }
+        // There is no Curios for this version, so there are no curio slots to search
         return false;
     }
 }

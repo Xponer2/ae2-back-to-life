@@ -1,6 +1,7 @@
 package appeng.server.subcommands;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Method;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -12,39 +13,39 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.annotation.Nullable;
+
 import com.google.common.base.Preconditions;
 import com.google.gson.stream.JsonWriter;
-import com.mojang.brigadier.LiteralMessage;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import appeng.core.network.PacketDistributor;
+
 import org.apache.commons.io.output.CloseShieldOutputStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.level.chunk.storage.ChunkSerializer;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.storage.AnvilChunkLoader;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import appeng.api.networking.GridHelper;
+import appeng.core.network.PacketDistributor;
 import appeng.core.network.clientbound.ExportedGridContent;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.hooks.ticking.TickHandler;
@@ -58,31 +59,49 @@ import appeng.util.Platform;
 public class GridsCommand implements ISubCommand {
     private static final Logger LOG = LogManager.getLogger(GridsCommand.class);
 
+    // AnvilChunkLoader.writeChunkToNBT is private
+    private static final Method WRITE_CHUNK_TO_NBT = ObfuscationReflectionHelper.findMethod(AnvilChunkLoader.class,
+            "func_75820_a", void.class, Chunk.class, World.class, NBTTagCompound.class);
+
     public static String buildExportCommand(int gridSerial) {
         return "/ae2 grids export " + gridSerial;
     }
 
     @Override
-    public void addArguments(LiteralArgumentBuilder<CommandSourceStack> builder) {
-        builder.then(Commands.literal("export").executes(ctx -> {
-            exportGrids(ctx.getSource());
-            return 1;
-        }).then(Commands.argument("gridSerial", IntegerArgumentType.integer()).executes(context -> {
-            var gridSerial = context.getArgument("gridSerial", Integer.class);
-
-            // Find the starting grid
-            for (var grid : TickHandler.instance().getGridList()) {
-                if (grid.getSerialNumber() == gridSerial) {
-                    exportGrid(grid, context.getSource());
-                    return 1;
-                }
-            }
-
-            throw new SimpleCommandExceptionType(new LiteralMessage("No such grid found")).create();
-        })));
+    public String getArgumentUsage() {
+        return "export [gridSerial]";
     }
 
-    private void exportGrids(CommandSourceStack source) throws CommandSyntaxException {
+    @Override
+    public List<String> getTabCompletions(MinecraftServer srv, ICommandSender sender, String[] args,
+            @Nullable BlockPos targetPos) {
+        return args.length == 1 ? CommandBase.getListOfStringsMatchingLastWord(args, "export")
+                : Collections.emptyList();
+    }
+
+    @Override
+    public void call(MinecraftServer srv, ICommandSender sender, String[] args) throws CommandException {
+        if (args.length == 0 || !args[0].equals("export")) {
+            throw new WrongUsageException("/ae2 grids " + getArgumentUsage());
+        }
+        if (args.length == 1) {
+            exportGrids(sender);
+            return;
+        }
+
+        var gridSerial = CommandBase.parseInt(args[1]);
+        // Find the starting grid
+        for (var grid : TickHandler.instance().getGridList()) {
+            if (grid.getSerialNumber() == gridSerial) {
+                exportGrid(grid, sender);
+                return;
+            }
+        }
+
+        throw new CommandException("No such grid found");
+    }
+
+    private void exportGrids(ICommandSender source) {
 
         var grids = TickHandler.instance().getGridList();
 
@@ -92,7 +111,7 @@ public class GridsCommand implements ISubCommand {
 
     }
 
-    private void exportGrid(Grid startGrid, CommandSourceStack source) throws CommandSyntaxException {
+    private void exportGrid(Grid startGrid, ICommandSender source) {
 
         // Collect all reachable grids
         var reachableGrids = Collections.newSetFromMap(new IdentityHashMap<Grid, Boolean>());
@@ -153,18 +172,11 @@ public class GridsCommand implements ISubCommand {
         }
     }
 
-    @Override
-    public void call(MinecraftServer srv, CommandContext<CommandSourceStack> data,
-            CommandSourceStack sender) {
-    }
-
-    private void exportGrids(int baseSerialNumber, Collection<Grid> grids, CommandSourceStack source)
-            throws CommandSyntaxException {
+    private void exportGrids(int baseSerialNumber, Collection<Grid> grids, ICommandSender source) {
         source.sendMessage(new TextComponentString("Exporting " + grids.size() + " grids"));
-        LOG.info("Exporting {} grids for {}", grids.size(), source);
+        LOG.info("Exporting {} grids for {}", grids.size(), source.getName());
 
-        if (source.isPlayer()) {
-            var player = source.getPlayerOrException();
+        if (source instanceof EntityPlayerMP player) {
             PacketDistributor.sendToPlayer(player,
                     new ExportedGridContent(baseSerialNumber, ExportedGridContent.ContentType.FIRST_CHUNK,
                             new byte[0]));
@@ -178,7 +190,7 @@ public class GridsCommand implements ISubCommand {
                 exportGrids(grids, out);
             } catch (IOException e) {
                 LOG.error("Failed to export grids.", e);
-                source.sendFailure(new TextComponentString("Failed to export grids: " + e));
+                source.sendMessage(new TextComponentString("Failed to export grids: " + e));
             }
         }
 
@@ -200,7 +212,7 @@ public class GridsCommand implements ISubCommand {
                 zipOut.putNextEntry(entry);
 
                 try (var writer = new JsonWriter(
-                        new OutputStreamWriter(CloseShieldOutputStream.wrap(zipOut), StandardCharsets.UTF_8))) {
+                        new OutputStreamWriter(new CloseShieldOutputStream(zipOut), StandardCharsets.UTF_8))) {
                     writer.setIndent(" ");
                     grid.export(writer);
                 }
@@ -210,14 +222,26 @@ public class GridsCommand implements ISubCommand {
             for (var entry : chunksByLevel.entrySet()) {
                 var level = entry.getKey();
                 var chunks = entry.getValue();
-                var baseName = sanitizeName(level.dimension().location().toString());
+                var baseName = sanitizeName(level.provider.getDimensionType().getName() + "_"
+                        + level.provider.getDimension());
+                // Only used to serialize chunks the way the region files store them, never saves anything
+                var chunkLoader = new AnvilChunkLoader(level.getSaveHandler().getWorldDirectory(),
+                        level.getMinecraftServer().getDataFixer());
                 for (var chunk : chunks) {
-                    var serializedChunk = ChunkSerializer.write(level, level.getChunk(chunk.x, chunk.z));
+                    var levelTag = new NBTTagCompound();
+                    try {
+                        WRITE_CHUNK_TO_NBT.invoke(chunkLoader, level.getChunk(chunk.x, chunk.z), level, levelTag);
+                    } catch (ReflectiveOperationException e) {
+                        throw new IOException("Failed to serialize chunk " + chunk, e);
+                    }
+                    var serializedChunk = new NBTTagCompound();
+                    serializedChunk.setTag("Level", levelTag);
+
                     zipOut.putNextEntry(new ZipEntry("chunks/" + baseName + "_" + chunk.x + "_" + chunk.z + ".nbt"));
-                    NbtIo.writeCompressed(serializedChunk, CloseShieldOutputStream.wrap(zipOut));
+                    CompressedStreamTools.writeCompressed(serializedChunk, new CloseShieldOutputStream(zipOut));
 
                     zipOut.putNextEntry(new ZipEntry("chunks/" + baseName + "_" + chunk.x + "_" + chunk.z + ".snbt"));
-                    zipOut.write(NBTUtil.structureToSnbt(serializedChunk).getBytes(StandardCharsets.UTF_8));
+                    zipOut.write(serializedChunk.toString().getBytes(StandardCharsets.UTF_8));
                 }
             }
 
@@ -256,7 +280,7 @@ public class GridsCommand implements ISubCommand {
         }
 
         @Override
-        public void write(@NotNull byte[] b, int off, int len) {
+        public void write(byte[] b, int off, int len) {
             Preconditions.checkState(!closed, "stream already closed");
             bout.write(b, off, len);
             if (bout.size() > FLUSH_AFTER) {

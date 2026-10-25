@@ -183,6 +183,6 @@ public class InterfacePart extends AEBasePart implements InterfaceLogicHost {
 
     @Override
     public ItemStack getMainMenuIcon() {
-        return new ItemStack(getPartItem());
+        return new ItemStack(getPartItem().asItem());
     }
 }

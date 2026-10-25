@@ -46,7 +46,7 @@ public enum PushDirection implements StringRepresentable {
 
     @Override
     public String getSerializedName() {
-        return direction != null ? direction.getSerializedName() : "all";
+        return direction != null ? direction.getName() : "all";
     }
 
     public static PushDirection fromDirection(@Nullable EnumFacing direction) {

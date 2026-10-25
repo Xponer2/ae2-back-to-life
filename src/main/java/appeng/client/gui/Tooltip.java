@@ -21,9 +21,7 @@ package appeng.client.gui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import net.minecraft.network.chat.FormattedText.StyledContentConsumer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
@@ -46,9 +44,40 @@ public final class Tooltip {
     }
 
     private static void splitLine(ITextComponent unprocessedLine, List<ITextComponent> lines) {
-        LineSplittingVisitor visitor = new LineSplittingVisitor(lines);
-        unprocessedLine.visit(visitor, Style.EMPTY);
-        visitor.flush();
+        ITextComponent currentPart = null;
+        // Iterating a component visits it and all of its siblings (with their effective style)
+        for (ITextComponent piece : unprocessedLine) {
+            Style style = piece.getStyle();
+            // a new-line character in the text should split the line and "flush" the
+            // current part into the lines list
+            String[] parts = piece.getUnformattedComponentText().split("\n", -1);
+            for (int i = 0; i < parts.length; i++) {
+                if (i > 0) {
+                    flush(currentPart, lines);
+                    currentPart = null;
+                }
+
+                ITextComponent part = new TextComponentString(parts[i]).setStyle(style.createDeepCopy());
+                if (currentPart != null) {
+                    currentPart.appendSibling(part);
+                } else {
+                    currentPart = part;
+                }
+            }
+        }
+        flush(currentPart, lines);
+    }
+
+    private static void flush(ITextComponent currentPart, List<ITextComponent> lines) {
+        if (currentPart == null) {
+            return;
+        }
+        // Set default tooltip styles only if no explicit style has been set
+        if (currentPart.getStyle().isEmpty()) {
+            // First line should be white, other lines gray
+            currentPart.getStyle().setColor(lines.isEmpty() ? TextFormatting.WHITE : TextFormatting.GRAY);
+        }
+        lines.add(currentPart);
     }
 
     public Tooltip(ITextComponent... content) {
@@ -60,53 +89,5 @@ public final class Tooltip {
      */
     public List<ITextComponent> getContent() {
         return content;
-    }
-
-    private static class LineSplittingVisitor implements StyledContentConsumer<Object> {
-        private final List<ITextComponent> lines;
-
-        private ITextComponent currentPart;
-
-        public LineSplittingVisitor(List<ITextComponent> lines) {
-            this.lines = lines;
-        }
-
-        @Override
-        public Optional<Object> accept(Style style, String text) {
-            // a new-line character in the text should split the line and "flush" the
-            // current part into the lines list
-            String[] parts = text.split("\n", -1);
-            for (int i = 0; i < parts.length; i++) {
-                if (i > 0) {
-                    flush();
-                }
-
-                String line = parts[i];
-                ITextComponent part = new TextComponentString(line).setStyle(style);
-                if (currentPart != null) {
-                    currentPart = currentPart.appendSibling(part);
-                } else {
-                    currentPart = part;
-                }
-            }
-            return Optional.empty();
-        }
-
-        public void flush() {
-            if (currentPart != null) {
-                // Set default tooltip styles only if no explicit style has been set
-                if (currentPart.getStyle() == Style.EMPTY) {
-                    // First line should be white, other lines gray
-                    if (lines.isEmpty()) {
-                        currentPart.setStyle(Style.EMPTY.applyFormat(TextFormatting.WHITE));
-                    } else {
-                        currentPart.setStyle(Style.EMPTY.applyFormat(TextFormatting.GRAY));
-                    }
-                }
-
-                lines.add(currentPart);
-                currentPart = null;
-            }
-        }
     }
 }

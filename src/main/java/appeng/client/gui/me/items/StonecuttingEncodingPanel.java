@@ -1,17 +1,12 @@
 package appeng.client.gui.me.items;
 
-import java.util.Objects;
-
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import appeng.util.RecipeHolder;
-import appeng.recipes.vanilla.StonecutterRecipe;
 
 import appeng.client.Point;
 import appeng.client.gui.GuiGraphics;
@@ -23,6 +18,8 @@ import appeng.client.gui.style.Blitter;
 import appeng.client.gui.widgets.Scrollbar;
 import appeng.core.localization.GuiText;
 import appeng.menu.SlotSemantics;
+import appeng.recipes.vanilla.StonecutterRecipe;
+import appeng.util.RecipeHolder;
 
 /**
  * Implements the panel for encoding stonecutting recipes.
@@ -64,10 +61,6 @@ public final class StonecuttingEncodingPanel extends EncodingModePanel {
         drawRecipes(guiGraphics, bounds, mouse);
     }
 
-    private RegistryAccess getRegistryAccess() {
-        return Objects.requireNonNull(Minecraft.getMinecraft().world).registryAccess();
-    }
-
     private void drawRecipes(GuiGraphics guiGraphics, Rect2i bounds, Point mouse) {
         var recipes = menu.getStonecuttingRecipes();
         var startIndex = scrollbar.getCurrentScroll() * COLS;
@@ -91,7 +84,7 @@ public final class StonecuttingEncodingPanel extends EncodingModePanel {
             var renderX = bounds.getX() + slotBounds.getX();
             var renderY = bounds.getY() + slotBounds.getY();
             blitter.dest(renderX, renderY).blit(guiGraphics);
-            ItemStack resultItem = recipe.value().getResultItem(getRegistryAccess());
+            ItemStack resultItem = recipe.value().getResultItem();
             if (selected || mouse.isIn(slotBounds)) {
                 guiGraphics.renderItem(resultItem, renderX + 2, renderY + 3);
                 guiGraphics.renderItemDecorations(Minecraft.getMinecraft().fontRenderer, resultItem, renderX + 2, renderY + 3);
@@ -107,8 +100,9 @@ public final class StonecuttingEncodingPanel extends EncodingModePanel {
         var recipe = getRecipeAt(mousePos);
         if (recipe != null) {
             menu.setStonecuttingRecipeId(recipe.id());
+            // There is no stonecutter in this version, so no stonecutter sound either
             Minecraft.getMinecraft().getSoundHandler()
-                    .play(SimpleSoundInstance.forUI(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0F));
+                    .playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             return true;
         }
         return false;
@@ -119,7 +113,7 @@ public final class StonecuttingEncodingPanel extends EncodingModePanel {
     public Tooltip getTooltip(int mouseX, int mouseY) {
         var recipe = getRecipeAt(new Point(mouseX, mouseY));
         if (recipe != null) {
-            var lines = screen.getTooltipFromContainerItem(recipe.value().getResultItem(getRegistryAccess()));
+            var lines = screen.getTooltipFromContainerItem(recipe.value().getResultItem());
             return new Tooltip(lines);
         }
         return null;

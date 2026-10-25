@@ -1,0 +1,28 @@
+{
+  "name": "Поддержание запаса интерфейсами",
+  "icon": "ae2:interface",
+  "category": "example_setups",
+  "sortnum": 500,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "interface-autostocking",
+      "text": "Можно спросить: «Как поддерживать запас разных предметов, изготавливая недостающее по мере необходимости?»$(br2)Одно из решений — $(l:items_blocks_machines/interface)МЭ интерфейс$(/l) с картой $(l:items_blocks_machines/upgrade_cards)Карта изготовления$(/l), который автоматически заказывает новые предметы через $(l:ae2_mechanics/autocrafting)автокрафт$(/l) сети. Эта постройка лучше подходит для поддержания небольшого запаса"
+    },
+    {
+      "type": "text",
+      "text": "самых разных предметов.$(br2)Демонстрационная постройка укорочена, чтобы не была слишком широкой; оптимальнее всего, скорее всего, использовать 4 интерфейса ($(l:items_blocks_machines/interface)МЭ интерфейс$(/l)) и 4 шины хранения ($(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l)), чтобы задействовать все 8 $(l:ae2_mechanics/channels)каналов$(/l) обычного $(l:items_blocks_machines/cables)кабеля$(/l).$(br2)$(#555)$(o)(3D-сцена недоступна в этой версии)$()"
+    },
+    {
+      "type": "text",
+      "title": "Настройки",
+      "anchor": "configurations",
+      "text": "$(li)Интерфейсы ($(l:items_blocks_machines/interface)МЭ интерфейс$(/l)) (1) настроены держать в себе нужные предметы: щёлкните нужным предметом по их верхним слотам или перетащите его туда из JEI, затем нажмите на значок гаечного ключа над слотами, чтобы задать количество. В них стоят карты $(l:items_blocks_machines/upgrade_cards)Карта изготовления$(/l).$(li)У шин хранения ($(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l)) (2) «Режим ввода/вывода» установлен на"
+    },
+    {
+      "type": "text",
+      "anchor": "how-it-works",
+      "text": "«Только извлечение».$(br2)$(bold)Как это работает$()$(br2)1. Если $(l:items_blocks_machines/interface)МЭ интерфейс$(/l) не может получить из $(l:ae2_mechanics/import_export_storage)сетевого хранилища$(/l) достаточно настроенного предмета (и в нём есть $(l:items_blocks_machines/upgrade_cards)Карта изготовления$(/l)), он попросит $(l:ae2_mechanics/autocrafting)автокрафт$(/l) сети изготовить ещё этого предмета.$(br2)2. Шины хранения ($(l:items_blocks_machines/storage_bus)МЭ шина хранения$(/l)) дают сети доступ к содержимому интерфейсов."
+    }
+  ]
+}

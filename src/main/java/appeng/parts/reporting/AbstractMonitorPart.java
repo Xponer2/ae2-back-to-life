@@ -20,7 +20,6 @@ package appeng.parts.reporting;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -279,8 +278,7 @@ public abstract class AbstractMonitorPart extends AbstractDisplayPart
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void renderDynamic(float partialTicks, PoseStack poseStack, MultiBufferSource buffers,
-            int combinedLightIn, int combinedOverlayIn) {
+    public void renderDynamic(float partialTicks, PoseStack poseStack, int combinedLightIn) {
 
         if (!isActive()) {
             return;
@@ -298,7 +296,7 @@ public abstract class AbstractMonitorPart extends AbstractDisplayPart
         BlockEntityRenderHelper.rotateToFace(poseStack, orientation);
         poseStack.translate(0, 0.05, 0.5);
 
-        BlockEntityRenderHelper.renderItem2dWithAmount(poseStack, buffers, getDisplayed(), amount, canCraft,
+        BlockEntityRenderHelper.renderItem2dWithAmount(poseStack, getDisplayed(), amount, canCraft,
                 0.4f, -0.23f, getColor().contrastTextColor, getLevel());
 
         poseStack.popPose();

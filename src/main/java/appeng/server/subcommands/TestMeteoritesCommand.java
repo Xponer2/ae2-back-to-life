@@ -18,108 +18,75 @@
 
 package appeng.server.subcommands;
 
-import appeng.util.TextUtil;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-import com.google.common.math.StatsAccumulator;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import javax.annotation.Nullable;
 
-import net.minecraft.commands.CommandSourceStack;
+import com.google.common.math.StatsAccumulator;
+
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.ClickEvent.Action;
-import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.level.chunk.status.ChunkStatus;
-import net.minecraft.world.level.levelgen.Heightmap.Types;
-import net.minecraft.world.level.levelgen.structure.Structure;
 
-import appeng.api.util.Registries;
+import appeng.server.AECommand;
 import appeng.server.ISubCommand;
-import appeng.worldgen.meteorite.MeteoriteStructure;
-import appeng.worldgen.meteorite.MeteoriteStructurePiece;
+import appeng.worldgen.meteorite.MeteoriteSpawnData;
 import appeng.worldgen.meteorite.PlacedMeteoriteSettings;
 
-import static net.minecraft.commands.Commands.literal;
-
 /**
- * This is a testing command to validate quartz ore generation.
+ * Lists the meteorites around the player. 1.12.2 has no structure starts: the meteorites decided so far are in
+ * {@link MeteoriteSpawnData}; "force" generates the chunks of the closest ones to finalize them.
  */
 public class TestMeteoritesCommand implements ISubCommand {
 
     @Override
-    public void addArguments(LiteralArgumentBuilder<CommandSourceStack> builder) {
-        builder.then(literal("force").executes(ctx -> {
-            test(ctx.getSource().getServer(), ctx.getSource(), true);
-            return 1;
-        }));
+    public String getArgumentUsage() {
+        return "[force]";
     }
 
     @Override
-    public void call(MinecraftServer srv, CommandContext<CommandSourceStack> ctx,
-            CommandSourceStack sender) {
-        test(srv, sender, false);
+    public List<String> getTabCompletions(MinecraftServer srv, ICommandSender sender, String[] args,
+            @Nullable BlockPos targetPos) {
+        return args.length == 1 ? CommandBase.getListOfStringsMatchingLastWord(args, "force")
+                : Collections.emptyList();
     }
 
-    private static void test(MinecraftServer srv, CommandSourceStack sender, boolean force) {
+    @Override
+    public void call(MinecraftServer srv, ICommandSender sender, String[] args) {
+        test(srv, sender, args.length > 0 && args[0].equals("force"));
+    }
+
+    private static void test(MinecraftServer srv, ICommandSender sender, boolean force) {
         int radius = 100;
 
-        EntityPlayerMP player = null;
-        try {
-            player = sender.getPlayerOrException();
-        } catch (CommandSyntaxException ignored) {
-        }
         WorldServer level;
         BlockPos centerBlock;
-        if (player != null) {
-            level = player.serverLevel();
-            centerBlock = BlockPos.containing(player.posX, 0, player.posZ);
+        if (sender instanceof EntityPlayerMP player) {
+            level = player.getServerWorld();
+            centerBlock = new BlockPos(player.posX, 0, player.posZ);
         } else {
-            level = srv.getLevel(World.OVERWORLD);
+            level = srv.getWorld(0);
             centerBlock = level.getSpawnPoint();
         }
 
         ChunkPos center = new ChunkPos(centerBlock);
-
-        var structures = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
-        var structure = structures.get(MeteoriteStructure.KEY);
-        var structureSets = level.registryAccess().registryOrThrow(Registries.STRUCTURE_SET);
-        var structureSet = structureSets.getHolderOrThrow(MeteoriteStructure.STRUCTURE_SET_KEY);
-
-        var generatorState = level.getChunkProvider().getGeneratorState();
+        var data = MeteoriteSpawnData.get(level);
 
         // Find all meteorites in the given rectangle
-        List<PlacedMeteoriteSettings> found = new ArrayList<>();
-        int chunksChecked = 0;
-        for (int cx = center.x - radius; cx <= center.x + radius; cx++) {
-            for (int cz = center.z - radius; cz <= center.z + radius; cz++) {
-                chunksChecked++;
-                if (!generatorState.hasStructureChunkInRange(structureSet, cx, cz, 0)) {
-                    continue;
-                }
-
-                var chunk = level.getChunk(cx, cz, ChunkStatus.STRUCTURE_STARTS);
-                // The actual relevant information is in the structure piece
-                MeteoriteStructurePiece piece = getMeteoritePieceFromChunk(chunk, structure);
-                if (piece != null) {
-                    found.add(piece.getSettings());
-                }
-            }
-        }
+        List<PlacedMeteoriteSettings> found = new ArrayList<>(data.getMeteoritesNear(center, radius));
+        int chunksChecked = (2 * radius + 1) * (2 * radius + 1);
 
         // Create stats on how far apart the meteorites are
         StatsAccumulator stats = new StatsAccumulator();
@@ -156,12 +123,13 @@ public class TestMeteoritesCommand implements ISubCommand {
             String state = "not final";
 
             if (force && settings.getFallout() == null) {
-                Chunk chunk = level.getChunk(pos);
-                MeteoriteStructurePiece piece = getMeteoritePieceFromChunk(chunk, structure);
-                if (piece == null) {
+                // Generating the chunk places the meteorite and finalizes its settings
+                level.getChunk(pos);
+                var placed = findAt(data.getMeteoritesNear(new ChunkPos(pos), 1), pos);
+                if (placed == null) {
                     state = "removed";
                 } else {
-                    settings = piece.getSettings();
+                    settings = placed;
                     pos = settings.getPos();
                 }
             }
@@ -172,28 +140,38 @@ public class TestMeteoritesCommand implements ISubCommand {
                         String.format(Locale.ROOT, ", radius=%.2f [%s]", settings.getMeteoriteRadius(), state));
             } else {
                 restOfLine = new TextComponentString(String.format(Locale.ROOT, ", radius=%.2f, crater=%s, fallout=%s",
-                        settings.getMeteoriteRadius(), settings.getCraterType().name().toLowerCase(),
-                        settings.getFallout().name().toLowerCase()));
+                        settings.getMeteoriteRadius(), settings.getCraterType().name().toLowerCase(Locale.ROOT),
+                        settings.getFallout().name().toLowerCase(Locale.ROOT)));
             }
 
             ITextComponent msg = new TextComponentString(" #" + (i + 1) + " ");
             msg.appendSibling(getClickablePosition(level, settings, pos)).appendSibling(restOfLine);
 
             // Add a tooltip
-            String biomeId = level.getBiome(pos).unwrapKey().map(bk -> bk.location().toString()).orElse("unknown");
-            ITextComponent tooltip = new TextComponentString(settings + "\nBiome: ").createCopy()
-                    .appendSibling(biomeId);
-            TextUtil.withStyle(msg, style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltip)));
+            var biome = level.getBiome(pos).getRegistryName();
+            String biomeId = biome != null ? biome.toString() : "unknown";
+            ITextComponent tooltip = new TextComponentString(settings + "\nBiome: " + biomeId);
+            msg.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltip));
 
-            sender.sendSuccess(() -> msg, true);
+            AECommand.sendSuccess(sender, msg);
         }
+    }
+
+    @Nullable
+    private static PlacedMeteoriteSettings findAt(List<PlacedMeteoriteSettings> list, BlockPos pos) {
+        for (var settings : list) {
+            if (settings.getPos().equals(pos)) {
+                return settings;
+            }
+        }
+        return null;
     }
 
     // Add a clickable link to teleport the user to the Meteorite
     private static ITextComponent getClickablePosition(WorldServer level, PlacedMeteoriteSettings settings,
             BlockPos pos) {
-        BlockPos tpPos = pos.above((int) Math.ceil(settings.getMeteoriteRadius()));
-        int surfaceY = level.getHeightmapPos(Types.WORLD_SURFACE, tpPos).getY();
+        BlockPos tpPos = pos.up((int) Math.ceil(settings.getMeteoriteRadius()));
+        int surfaceY = level.getHeight(tpPos).getY();
         if (surfaceY > tpPos.getY()) {
             tpPos = new BlockPos(tpPos.getX(), surfaceY, tpPos.getZ());
         }
@@ -201,23 +179,13 @@ public class TestMeteoritesCommand implements ISubCommand {
         String displayText = String.format(Locale.ROOT, "pos=%d,%d,%d", tpPos.getX(), tpPos.getY(), tpPos.getZ());
         String tpCommand = String.format(Locale.ROOT, "/tp @s %d %d %d", tpPos.getX(), tpPos.getY(), tpPos.getZ());
 
-        return TextUtil.withStyle(new TextComponentString(displayText), TextFormatting.UNDERLINE)
-                .withStyle(style -> style.withClickEvent(new ClickEvent(Action.RUN_COMMAND, tpCommand)));
+        var link = new TextComponentString(displayText);
+        link.getStyle().setUnderlined(true).setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, tpCommand));
+        return link;
     }
 
-    private static MeteoriteStructurePiece getMeteoritePieceFromChunk(Chunk chunk,
-            Structure structure) {
-        var start = chunk.getStartForStructure(structure);
-
-        if (start != null && start.getPieces().size() > 0
-                && start.getPieces().get(0) instanceof MeteoriteStructurePiece) {
-            return (MeteoriteStructurePiece) start.getPieces().get(0);
-        }
-        return null;
-    }
-
-    private static void sendLine(CommandSourceStack sender, String text, Object... args) {
-        sender.sendSuccess(() -> new TextComponentString(String.format(Locale.ROOT, text, args)), true);
+    private static void sendLine(ICommandSender sender, String text, Object... args) {
+        AECommand.sendSuccess(sender, new TextComponentString(String.format(Locale.ROOT, text, args)));
     }
 
 }

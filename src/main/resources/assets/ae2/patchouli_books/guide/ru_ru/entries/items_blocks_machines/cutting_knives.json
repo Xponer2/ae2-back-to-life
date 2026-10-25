@@ -1,0 +1,30 @@
+{
+  "name": "Режущие ножи",
+  "icon": "ae2:certus_quartz_cutting_knife",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "text",
+      "anchor": "quartz-tools",
+      "text": "Режущие ножи нужны для изготовления предметов $(l:items_blocks_machines/presses)Именующий пресс для высекателя$(/l) и $(l:items_blocks_machines/cable_anchor)Кабельный якорь$(/l).$(br2)Чтобы сделать именующий пресс, щёлкните ножом правой кнопкой мыши и вставьте слиток металла, затем введите имя, которое хотите нанести на пластину, и просто заберите готовую пластину."
+    },
+    {
+      "type": "ae2:item_row_2",
+      "item0": "ae2:certus_quartz_cutting_knife",
+      "item1": "ae2:nether_quartz_cutting_knife",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/certus_quartz_cutting_knife",
+      "anchor": "recipes",
+      "text": ""
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/nether_quartz_cutting_knife",
+      "text": ""
+    }
+  ]
+}

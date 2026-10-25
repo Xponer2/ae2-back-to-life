@@ -23,10 +23,11 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer.Builder;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -56,7 +57,7 @@ public final class VibrationChamberBlock extends AEBaseEntityBlock<VibrationCham
     }
 
     @Override
-    protected void createBlockStateDefinition(Builder<Block, IBlockState> builder) {
+    protected void createBlockStateDefinition(BlockStateContainer.Builder builder) {
         super.createBlockStateDefinition(builder);
         builder.add(ACTIVE);
     }
@@ -114,8 +115,8 @@ public final class VibrationChamberBlock extends AEBaseEntityBlock<VibrationCham
             f2 += west_y * (0.3 * ox - 0.15);
             f3 += west_z * (0.3 * ox - 0.15);
 
-            level.addParticle(ParticleTypes.SMOKE, f1, f2, f3, 0.0D, 0.0D, 0.0D);
-            level.addParticle(ParticleTypes.FLAME, f1, f2, f3, 0.0D, 0.0D, 0.0D);
+            level.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, f1, f2, f3, 0.0D, 0.0D, 0.0D);
+            level.spawnParticle(EnumParticleTypes.FLAME, f1, f2, f3, 0.0D, 0.0D, 0.0D);
         }
     }
 }

@@ -48,6 +48,24 @@ public final class CraftingInput {
         return ofPositioned(width, height, items).input();
     }
 
+    /**
+     * 1.21 CraftingContainer.asCraftInput().
+     */
+    public static CraftingInput of(InventoryCrafting inventory) {
+        return ofPositioned(inventory).input();
+    }
+
+    /**
+     * 1.21 CraftingContainer.asPositionedCraftInput().
+     */
+    public static Positioned ofPositioned(InventoryCrafting inventory) {
+        var items = new ArrayList<ItemStack>(inventory.getSizeInventory());
+        for (int i = 0; i < inventory.getSizeInventory(); i++) {
+            items.add(inventory.getStackInSlot(i));
+        }
+        return ofPositioned(inventory.getWidth(), inventory.getHeight(), items);
+    }
+
     public static Positioned ofPositioned(int width, int height, List<ItemStack> items) {
         if (width == 0 || height == 0) {
             return Positioned.EMPTY;

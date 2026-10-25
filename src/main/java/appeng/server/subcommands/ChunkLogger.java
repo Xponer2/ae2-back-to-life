@@ -18,21 +18,18 @@
 
 package appeng.server.subcommands;
 
-import com.mojang.brigadier.context.CommandContext;
-import net.neoforged.neoforge.event.level.ChunkEvent;
-
-import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import appeng.core.AEConfig;
 import appeng.core.AELog;
+import appeng.server.AECommand;
 import appeng.server.ISubCommand;
 
 public class ChunkLogger implements ISubCommand {
@@ -45,7 +42,7 @@ public class ChunkLogger implements ISubCommand {
             for (StackTraceElement e : Thread.currentThread().getStackTrace()) {
                 if (output) {
                     AELog.info(
-                            "		" + e.getClassName() + '.' + e.getMethodName() + " (" + e.getLineNumber() + ')');
+                            "\t\t" + e.getClassName() + '.' + e.getMethodName() + " (" + e.getLineNumber() + ')');
                 } else {
                     output = e.getClassName().contains("EventBus") && e.getMethodName().contains("post");
                 }
@@ -55,47 +52,41 @@ public class ChunkLogger implements ISubCommand {
 
     @SubscribeEvent
     public void onChunkLoadEvent(final ChunkEvent.Load event) {
-        if (event.getLevel() instanceof WorldServer level) {
+        if (event.getWorld() instanceof WorldServer level) {
             var chunk = event.getChunk();
-            var chunkPos = chunk.getPos();
-            var center = getCenter(chunk);
-            AELog.info("Loaded chunk " + chunkPos.x + "," + chunkPos.z + " [center: " + center + "] in "
-                    + level.dimension().location());
+            AELog.info("Loaded chunk " + chunk.x + "," + chunk.z + " [center: " + getCenter(chunk) + "] in "
+                    + level.provider.getDimensionType().getName());
             this.displayStack();
         }
     }
 
     @SubscribeEvent
     public void onChunkUnloadEvent(final ChunkEvent.Unload event) {
-        if (event.getLevel() instanceof WorldServer level) {
+        if (event.getWorld() instanceof WorldServer level) {
             var chunk = event.getChunk();
-            var chunkPos = chunk.getPos();
-            var center = getCenter(chunk);
-            AELog.info("Unloaded chunk " + chunkPos.x + "," + chunkPos.z + " [center: " + center + "] in "
-                    + level.dimension().location());
+            AELog.info("Unloaded chunk " + chunk.x + "," + chunk.z + " [center: " + getCenter(chunk) + "] in "
+                    + level.provider.getDimensionType().getName());
             this.displayStack();
         }
     }
 
     private static String getCenter(Chunk chunk) {
-        var chunkPos = chunk.getPos();
-        var x = chunkPos.getMiddleBlockX();
-        var z = chunkPos.getMiddleBlockZ();
-        var y = chunk.getHeight(Heightmap.Types.WORLD_SURFACE, x, z) + 1;
+        var x = chunk.getPos().getXStart() + 8;
+        var z = chunk.getPos().getZStart() + 8;
+        var y = chunk.getHeightValue(8, 8) + 1;
         return x + " " + y + " " + z;
     }
 
     @Override
-    public void call(MinecraftServer srv, CommandContext<CommandSourceStack> data,
-            CommandSourceStack sender) {
+    public void call(MinecraftServer srv, ICommandSender sender, String[] args) {
         this.enabled = !this.enabled;
 
         if (this.enabled) {
             MinecraftForge.EVENT_BUS.register(this);
-            sender.sendSuccess(() -> new TextComponentTranslation("commands.ae2.ChunkLoggerOn"), true);
+            AECommand.sendSuccess(sender, new TextComponentTranslation("commands.ae2.ChunkLoggerOn"));
         } else {
             MinecraftForge.EVENT_BUS.unregister(this);
-            sender.sendSuccess(() -> new TextComponentTranslation("commands.ae2.ChunkLoggerOff"), true);
+            AECommand.sendSuccess(sender, new TextComponentTranslation("commands.ae2.ChunkLoggerOff"));
         }
     }
 }

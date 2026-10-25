@@ -86,7 +86,7 @@ public final class WrenchHook {
             var state = level.getBlockState(pos);
             var strategy = IOrientationStrategy.get(state);
             if (strategy.allowsPlayerRotation()) {
-                var clickedFace = hitResult.getDirection();
+                var clickedFace = hitResult.sideHit;
                 var orientation = BlockOrientation.get(strategy, state);
                 orientation = orientation.rotateClockwiseAround(clickedFace);
                 var newState = strategy.setOrientation(state, orientation.getSide(RelativeSide.FRONT),

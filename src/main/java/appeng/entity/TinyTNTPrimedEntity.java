@@ -18,170 +18,157 @@
 
 package appeng.entity;
 
-import appeng.util.Platform;
-
 import java.util.List;
 
-import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
-import net.neoforged.neoforge.event.EventHooks;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
+
+import io.netty.buffer.ByteBuf;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityTNTPrimed;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.level.Explosion.BlockInteraction;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 import appeng.core.AEConfig;
 import appeng.core.AppEng;
 import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEEntities;
-import appeng.core.definitions.EntityType;
-import appeng.core.network.RegistryFriendlyByteBuf;
 import appeng.core.network.clientbound.MockExplosionPacket;
 
-public final class TinyTNTPrimedEntity extends EntityTNTPrimed implements IEntityWithComplexSpawn {
+public final class TinyTNTPrimedEntity extends EntityTNTPrimed implements IEntityAdditionalSpawnData {
 
-    private EntityLivingBase placedBy;
+    private static final float SIZE = 0.5f;
 
-    public TinyTNTPrimedEntity(EntityType<? extends TinyTNTPrimedEntity> type, World level) {
-        super(type, level);
-        this.blocksBuilding = true;
+    public TinyTNTPrimedEntity(World level) {
+        super(level);
+        this.setSize(SIZE, SIZE);
     }
 
     public TinyTNTPrimedEntity(World level, double x, double y, double z,
             @Nullable EntityLivingBase igniter) {
-        super(AEEntities.TINY_TNT_PRIMED.get(), level);
-        this.setPos(x, y, z);
-        double d0 = level.rand.nextDouble() * ((float) Math.PI * 2F);
-        this.setDeltaMovement(-Math.sin(d0) * 0.02D, 0.2F, -Math.cos(d0) * 0.02D);
-        this.setFuse(80);
-        this.xo = x;
-        this.yo = y;
-        this.zo = z;
-        this.placedBy = igniter;
+        // Sets the position, a small random push, the fuse of 80 ticks and the igniter
+        super(level, x, y, z, igniter);
+        this.setSize(SIZE, SIZE);
     }
 
     @Nullable
-    @Override
     public EntityLivingBase getOwner() {
-        return this.placedBy;
+        return this.getTntPlacedBy();
     }
 
     /**
      * Called to update the entity's position/logic.
      */
     @Override
-    public void tick() {
-        this.updateInWaterStateAndDoFluidPushing();
+    public void onUpdate() {
+        this.handleWaterMovement();
 
-        this.xo = this.getX();
-        this.yo = this.getY();
-        this.zo = this.getZ();
-        this.setDeltaMovement(this.getDeltaMovement().subtract(0, 0.03999999910593033D, 0));
-        this.move(MoverType.SELF, this.getDeltaMovement());
-        this.setDeltaMovement(
-                this.getDeltaMovement().multiply(0.9800000190734863D, 0.9800000190734863D, 0.9800000190734863D));
+        this.prevPosX = this.posX;
+        this.prevPosY = this.posY;
+        this.prevPosZ = this.posZ;
+        this.motionY -= 0.03999999910593033D;
+        this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+        this.motionX *= 0.9800000190734863D;
+        this.motionY *= 0.9800000190734863D;
+        this.motionZ *= 0.9800000190734863D;
 
-        if (this.onGround()) {
-            this.setDeltaMovement(this.getDeltaMovement().multiply(0.699999988079071D, 0.699999988079071D, -0.5D));
+        if (this.onGround) {
+            this.motionX *= 0.699999988079071D;
+            this.motionZ *= 0.699999988079071D;
+            this.motionY *= -0.5D;
         }
 
-        if (this.isInWater() && !this.level().isRemote) // put out the fuse.
+        if (this.isInWater() && !this.world.isRemote) // put out the fuse.
         {
-            ItemStack tntStack = AEBlocks.TINY_TNT.stack();
+            final EntityItem item = new EntityItem(this.world, this.posX, this.posY, this.posZ,
+                    AEBlocks.TINY_TNT.stack());
 
-            final EntityItem item = new EntityItem(this.level(), this.getX(), this.getY(), this.getZ(),
-                    tntStack);
-
-            item.setDeltaMovement(this.getDeltaMovement());
+            item.motionX = this.motionX;
+            item.motionY = this.motionY;
+            item.motionZ = this.motionZ;
             item.prevPosX = this.prevPosX;
             item.prevPosY = this.prevPosY;
             item.prevPosZ = this.prevPosZ;
 
-            this.level().spawnEntity(item);
-            this.discard();
+            this.world.spawnEntity(item);
+            this.setDead();
         }
 
         if (this.getFuse() <= 0) {
-            this.discard();
+            this.setDead();
 
-            if (!this.level().isRemote) {
+            if (!this.world.isRemote) {
                 this.explode();
             }
         } else {
-            this.level().addParticle(ParticleTypes.SMOKE, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D,
+            this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX, this.posY, this.posZ, 0.0D, 0.0D,
                     0.0D);
         }
         this.setFuse(this.getFuse() - 1);
     }
 
-    // override :P
-    @Override
-    protected void explode() {
-        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.GENERIC_EXPLODE.value(),
+    // The explosion of the game is private and much bigger
+    private void explode() {
+        this.world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE,
                 SoundCategory.BLOCKS, 4.0F,
-                (1.0F + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2F) * 32.9F);
+                (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 32.9F);
 
         if (this.isInWater()) {
             return;
         }
 
-        final Explosion ex = new Explosion(this.level(), this, this.getX(), this.getY(), this.getZ(),
-                0.2f, false, AEConfig.instance().isTinyTntBlockDamageEnabled() ? BlockInteraction.DESTROY_WITH_DECAY
-                        : BlockInteraction.KEEP);
-        final AxisAlignedBB area = new AxisAlignedBB(this.getX() - 1.5, this.getY() - 1.5f, this.getZ() - 1.5,
-                this.getX() + 1.5, this.getY() + 1.5, this.getZ() + 1.5);
-        final List<Entity> list = this.level().getEntities(this, area);
+        boolean blockDamage = AEConfig.instance().isTinyTntBlockDamageEnabled();
+        final Explosion ex = new Explosion(this.world, this, this.posX, this.posY, this.posZ, 0.2f, false,
+                blockDamage);
+        final AxisAlignedBB area = new AxisAlignedBB(this.posX - 1.5, this.posY - 1.5f, this.posZ - 1.5,
+                this.posX + 1.5, this.posY + 1.5, this.posZ + 1.5);
+        final List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, area);
 
-        EventHooks.onExplosionDetonate(this.level(), ex, list, 0.2f * 2d);
+        ForgeEventFactory.onExplosionDetonate(this.world, ex, list, 0.2f * 2d);
 
         for (Entity e : list) {
-            e.hurt(level().damageSources().explosion(ex), 6);
+            e.attackEntityFrom(DamageSource.causeExplosionDamage(ex), 6);
         }
 
-        if (AEConfig.instance().isTinyTntBlockDamageEnabled()) {
-            this.setPos(this.getX(), this.getY() - 0.25, this.getZ());
+        if (blockDamage) {
+            this.posY -= 0.25;
 
-            for (int x = (int) (this.getX() - 2); x <= this.getX() + 2; x++) {
-                for (int y = (int) (this.getY() - 2); y <= this.getY() + 2; y++) {
-                    for (int z = (int) (this.getZ() - 2); z <= this.getZ() + 2; z++) {
+            for (int x = (int) (this.posX - 2); x <= this.posX + 2; x++) {
+                for (int y = (int) (this.posY - 2); y <= this.posY + 2; y++) {
+                    for (int z = (int) (this.posZ - 2); z <= this.posZ + 2; z++) {
                         final BlockPos point = new BlockPos(x, y, z);
-                        final IBlockState state = this.level().getBlockState(point);
+                        final IBlockState state = this.world.getBlockState(point);
                         final Block block = state.getBlock();
 
-                        if (!Platform.isAir(state)) {
+                        if (!block.isAir(state, this.world, point)) {
                             float strength = (float) (2.3f
-                                    - ((x + 0.5f - this.getX()) * (x + 0.5f - this.getX())
-                                            + (y + 0.5f - this.getY()) * (y + 0.5f - this.getY())
-                                            + (z + 0.5f - this.getZ()) * (z + 0.5f - this.getZ())));
+                                    - ((x + 0.5f - this.posX) * (x + 0.5f - this.posX)
+                                            + (y + 0.5f - this.posY) * (y + 0.5f - this.posY)
+                                            + (z + 0.5f - this.posZ) * (z + 0.5f - this.posZ)));
 
-                            final float fluidResistance = !state.getFluidState().isEmpty()
-                                    ? state.getFluidState().getExplosionResistance()
-                                    : 0f;
-                            final float resistance = Math
-                                    .max(block.getExplosionResistance(state, this.level(), point, ex), fluidResistance);
+                            // Fluids are blocks here, their resistance is the block resistance
+                            final float resistance = block.getExplosionResistance(this.world, point, this, ex);
                             strength -= (resistance + 0.3F) * 0.11f;
 
-                            if (strength > 0.01 && !Platform.isAir(state)) {
-                                if (state.canDropFromExplosion(this.level(), point, ex)) {
-                                    Block.dropResources(state, this.level(), point, this.level().getTileEntity(point));
+                            if (strength > 0.01) {
+                                if (block.canDropFromExplosion(ex)) {
+                                    block.dropBlockAsItemWithChance(this.world, point, state, 1.0F, 0);
                                 }
 
-                                level().setBlock(point, Blocks.AIR.getDefaultState(), 3);
-                                state.onBlockExploded(this.level(), point, ex);
+                                // Removes the block and runs its explosion logic
+                                block.onBlockExploded(this.world, point, ex);
                             }
                         }
                     }
@@ -189,17 +176,17 @@ public final class TinyTNTPrimedEntity extends EntityTNTPrimed implements IEntit
             }
         }
 
-        AppEng.instance().sendToAllNearExcept(null, this.getX(), this.getY(), this.getZ(), 64, this.level(),
-                new MockExplosionPacket(this.getX(), this.getY(), this.getZ()));
+        AppEng.instance().sendToAllNearExcept(null, this.posX, this.posY, this.posZ, 64, this.world,
+                new MockExplosionPacket(this.posX, this.posY, this.posZ));
     }
 
     @Override
-    public void writeSpawnData(RegistryFriendlyByteBuf buffer) {
+    public void writeSpawnData(ByteBuf buffer) {
         buffer.writeByte(this.getFuse());
     }
 
     @Override
-    public void readSpawnData(RegistryFriendlyByteBuf additionalData) {
+    public void readSpawnData(ByteBuf additionalData) {
         this.setFuse(additionalData.readByte());
     }
 }

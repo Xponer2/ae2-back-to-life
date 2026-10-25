@@ -21,6 +21,7 @@ package appeng.debug;
 import java.util.EnumSet;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
@@ -28,7 +29,6 @@ import appeng.api.networking.GridHelper;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IManagedGridNode;
 import appeng.blockentity.grid.AENetworkedBlockEntity;
-import appeng.core.definitions.BlockEntityType;
 import appeng.me.helpers.BlockEntityNodeListener;
 
 public class PhantomNodeBlockEntity extends AENetworkedBlockEntity {
@@ -54,8 +54,8 @@ public class PhantomNodeBlockEntity extends AENetworkedBlockEntity {
         super.onReady();
         this.proxy = GridHelper.createManagedNode(this, BlockEntityNodeListener.INSTANCE)
                 .setInWorldNode(true)
-                .setVisualRepresentation(getItemFromBlockEntity());
-        this.proxy.create(level, worldPosition);
+                .setVisualRepresentation(new ItemStack(getItemFromBlockEntity()));
+        this.proxy.create(world, pos);
         this.crashMode = true;
     }
 

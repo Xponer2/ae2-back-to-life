@@ -155,10 +155,10 @@ public class EncodedPatternItem<T extends IPatternDetails> extends AEBaseItem {
 
         if (tooltip != null) {
             var label = new TextComponentString("").appendSibling(tooltip.getOutputMethod())
-                    .appendSibling(": ").withStyle(TextFormatting.GRAY);
+                    .appendText(": ").withStyle(TextFormatting.GRAY);
             var and = new TextComponentString(" ").appendSibling(GuiText.And.text())
-                    .appendSibling(" ").withStyle(TextFormatting.GRAY);
-            var with = GuiText.With.text().createCopy().appendSibling(": ").withStyle(TextFormatting.GRAY);
+                    .appendText(" ").withStyle(TextFormatting.GRAY);
+            var with = GuiText.With.text().createCopy().appendText(": ").withStyle(TextFormatting.GRAY);
 
             boolean first = true;
             for (var output : tooltip.getOutputs()) {

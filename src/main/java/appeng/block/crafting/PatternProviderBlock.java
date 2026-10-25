@@ -67,7 +67,7 @@ public class PatternProviderBlock extends AEBaseEntityBlock<PatternProviderBlock
     protected ItemInteractionResult useItemOn(ItemStack heldItem, IBlockState state, World level, BlockPos pos,
             EntityPlayer player, EnumHand hand, RayTraceResult hit) {
         if (InteractionUtil.canWrenchRotate(heldItem)) {
-            setSide(level, pos, hit.getDirection());
+            setSide(level, pos, hit.sideHit);
             return ItemInteractionResult.SUCCESS;
         }
         return super.useItemOn(heldItem, state, level, pos, player, hand, hit);

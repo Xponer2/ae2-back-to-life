@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
+import appeng.client.gui.compat.Button;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -55,7 +55,7 @@ public class NetworkStatusScreen extends AEBaseScreen<NetworkStatusMenu> {
     // Dimensions of each table cell
     private static final int CELL_WIDTH = 30;
     private static final int CELL_HEIGHT = 18;
-    private final GuiButton exportGridButton;
+    private final Button exportGridButton;
 
     private NetworkStatus status = new NetworkStatus();
 
@@ -162,8 +162,8 @@ public class NetworkStatusScreen extends AEBaseScreen<NetworkStatusMenu> {
         }
 
         // Keep in mind the text will be scaled down 50%
-        float textWidth = this.font.width(str) / 2.0f;
-        float textHeight = this.font.lineHeight / 2.0f;
+        float textWidth = this.font.getStringWidth(str) / 2.0f;
+        float textHeight = this.font.FONT_HEIGHT / 2.0f;
 
         // Draw the count at half-size
         var poseStack = guiGraphics.pose();

@@ -18,13 +18,12 @@
 
 package appeng.integration;
 
-import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
-
-import appeng.integration.modules.theoneprobe.TOP;
-
 public class Integrations {
 
-    public static void enqueueIMC(InterModEnqueueEvent event) {
-        TOP.enqueueIMC(event);
+    /**
+     * Registers the optional mod integrations. Runs during init, so that inter-mod messages are sent in time (The One
+     * Probe and Hwyla providers are added here once they are ported; JEI finds its plugin by itself).
+     */
+    public static void init() {
     }
 }

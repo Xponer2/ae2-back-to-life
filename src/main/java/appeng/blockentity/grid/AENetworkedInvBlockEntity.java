@@ -72,7 +72,7 @@ public abstract class AENetworkedInvBlockEntity extends AEBaseInvBlockEntity
     @Override
     public void onReady() {
         super.onReady();
-        this.getMainNode().create(level, worldPosition);
+        this.getMainNode().create(world, pos);
     }
 
     @Override

@@ -1,0 +1,21 @@
+{
+  "name": "Флюисовый кузнечный шаблон",
+  "icon": "ae2:fluix_upgrade_smithing_template",
+  "category": "items_blocks_machines/tools",
+  "sortnum": 410,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "ae2:fluix_upgrade_smithing_template",
+      "link_recipe": true,
+      "anchor": "fluix-smithing-template",
+      "text": "В отличие от ванильного кузнечного шаблона, этот можно сделать с нуля.$(br2)Нужен для $(l:items_blocks_machines/fluix_tools)флюисовых инструментов$(/l)"
+    },
+    {
+      "type": "crafting",
+      "recipe": "ae2:tools/fluix_upgrade_smithing_template",
+      "anchor": "recipe",
+      "text": ""
+    }
+  ]
+}

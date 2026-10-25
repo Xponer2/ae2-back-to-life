@@ -18,7 +18,7 @@
 
 package appeng.client.gui.widgets;
 
-import net.neoforged.neoforge.network.PacketDistributor;
+import appeng.core.network.PacketDistributor;
 
 import appeng.api.config.Setting;
 import appeng.core.network.ServerboundPacket;

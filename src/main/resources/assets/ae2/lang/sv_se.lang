@@ -276,6 +276,7 @@ death.attack.matter_cannon=%1$s sköts av %2$s
 death.attack.matter_cannon.item=%1$s sköts av %2$s med %3$s
 entity.ae2.tiny_tnt_primed=Liten TNT Primerad
 entity.minecraft.villager.ae2.fluix_researcher=Fluixforskare
+entity.Villager.fluix_researcher=Fluixforskare
 exported_setting.ae2.exported_config_inv=Filtrera
 exported_setting.ae2.exported_custom_name=Anpassat namn
 exported_setting.ae2.exported_level_emitter_value=Nivå Emitter-värde
