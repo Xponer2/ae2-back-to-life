@@ -69,8 +69,8 @@ public final class InteractionUtil {
         var y = playerIn.prevPosY + (playerIn.posY - playerIn.prevPosY) + playerIn.getEyeHeight();
         var z = playerIn.prevPosZ + (playerIn.posZ - playerIn.prevPosZ);
 
-        var playerPitch = playerIn.xRotO + (playerIn.rotationPitch - playerIn.xRotO);
-        var playerYaw = playerIn.yRotO + (playerIn.rotationYaw - playerIn.yRotO);
+        var playerPitch = playerIn.prevRotationPitch + (playerIn.rotationPitch - playerIn.prevRotationPitch);
+        var playerYaw = playerIn.prevRotationYaw + (playerIn.rotationYaw - playerIn.prevRotationYaw);
 
         var yawRayX = MathHelper.sin(-playerYaw * 0.017453292f - (float) Math.PI);
         var yawRayZ = MathHelper.cos(-playerYaw * 0.017453292f - (float) Math.PI);

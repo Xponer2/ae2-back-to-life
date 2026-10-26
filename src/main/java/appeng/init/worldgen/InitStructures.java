@@ -18,6 +18,7 @@
 
 package appeng.init.worldgen;
 
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import appeng.worldgen.CopperOreWorldGen;
@@ -36,7 +37,9 @@ public final class InitStructures {
      * Registers the world generators. Call once during init.
      */
     public static void init() {
-        GameRegistry.registerWorldGenerator(new MeteoriteWorldGen(), 0);
+        var meteorites = new MeteoriteWorldGen();
+        GameRegistry.registerWorldGenerator(meteorites, 0);
+        MinecraftForge.EVENT_BUS.register(meteorites);
         GameRegistry.registerWorldGenerator(new CopperOreWorldGen(), 0);
     }
 }

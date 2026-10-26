@@ -237,14 +237,14 @@ public class CraftingTreeNode {
                             .stream()
                             .map(GenericStack::toString)
                             .collect(Collectors.joining(", "));
-                    String errorMessage = """
+                    String errorMessage = String.format("""
                             Unexpected error in the crafting calculation: can't find created items.
                             This is an AE2 bug, please report it, with the following important information:
 
                             - Found none of %s. Remaining request: %d of %d*%d.
                             - Tried crafting %d times the pattern %s.
                             - Pattern outputs: %s.
-                            """.formatted(what, totalRequestedItems, requestedAmount, amount, times, pattern, outputs);
+                            """, what, totalRequestedItems, requestedAmount, amount, times, pattern, outputs);
                     throw new UnsupportedOperationException(errorMessage);
                 }
             }

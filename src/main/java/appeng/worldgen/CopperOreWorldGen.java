@@ -47,10 +47,11 @@ public final class CopperOreWorldGen implements IWorldGenerator {
             generator = new WorldGenMinable(AEBlocks.COPPER_ORE.block().getDefaultState(), VEIN_SIZE);
         }
         for (int i = 0; i < TRIES_PER_CHUNK; i++) {
-            // Offset by 8 like vanilla decoration so that no neighbor chunk has to be generated
-            int x = (chunkX << 4) + 8 + random.nextInt(16);
+            // From the chunk corner like the vanilla ores: WorldGenMinable adds the decoration offset of 8 itself, so
+            // the vein stays in the chunks that are being populated
+            int x = (chunkX << 4) + random.nextInt(16);
             int y = random.nextInt(PEAK_Y + 1) + random.nextInt(PEAK_Y + 1);
-            int z = (chunkZ << 4) + 8 + random.nextInt(16);
+            int z = (chunkZ << 4) + random.nextInt(16);
             generator.generate(world, random, new BlockPos(x, y, z));
         }
     }

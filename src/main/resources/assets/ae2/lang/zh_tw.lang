@@ -720,3 +720,6 @@ waila.ae2.Showing=顯示中
 waila.ae2.Unlocked=未鎖定
 item.ae2.copper_ingot=銅錠
 block.ae2.copper_ore=銅礦石
+ae2.jei.stonecutting=切石機
+item.minecraft.smithing_template.applies_to=可套用於：
+item.minecraft.smithing_template.ingredients=材料：

@@ -25,25 +25,27 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
 
 import appeng.core.AppEng;
 import appeng.core.network.RegistryFriendlyByteBuf;
 import appeng.core.network.codec.ByteBufCodecs;
 import appeng.core.network.codec.StreamCodec;
 import appeng.recipes.AERecipeTypes;
+import appeng.recipes.RecipeCodecs;
 import appeng.util.AECodecs;
+import appeng.recipes.RecipeInput;
+import appeng.recipes.RecipeSerializer;
+import appeng.recipes.RecipeType;
+import appeng.recipes.AERecipe;
+import appeng.recipes.ingredient.IngredientCodecs;
 
-public class InscriberRecipe implements IRecipe<RecipeInput> {
+public class InscriberRecipe implements AERecipe<RecipeInput> {
 
-    private static final Codec<InscriberProcessType> MODE_CODEC = Codec.stringResolver(
+    private static final Codec<InscriberProcessType> MODE_CODEC = RecipeCodecs.stringResolver(
             mode -> switch (mode) {
                 case INSCRIBE -> "inscribe";
                 case PRESS -> "press";
@@ -71,10 +73,10 @@ public class InscriberRecipe implements IRecipe<RecipeInput> {
             InscriberRecipe::getProcessType,
             InscriberRecipe::new);
 
-    @Deprecated(forRemoval = true, since = "1.21.1")
+    @Deprecated
     public static final ResourceLocation TYPE_ID = AppEng.makeId("inscriber");
 
-    @Deprecated(forRemoval = true, since = "1.21.1")
+    @Deprecated
     public static final RecipeType<InscriberRecipe> TYPE = AERecipeTypes.INSCRIBER;
 
     private final Ingredient middleInput;
@@ -112,10 +114,6 @@ public class InscriberRecipe implements IRecipe<RecipeInput> {
     }
 
     @Override
-    public ItemStack getResultItem() {
-        return getResultItem();
-    }
-
     public ItemStack getResultItem() {
         return this.output;
     }
@@ -211,20 +209,20 @@ public class InscriberRecipe implements IRecipe<RecipeInput> {
         }
 
         public static final Codec<Ingredients> CODEC = RecordCodecBuilder.create(builder -> builder.group(
-                Ingredient.CODEC.optionalFieldOf("top", Ingredient.EMPTY)
+                IngredientCodecs.CODEC.optionalFieldOf("top", Ingredient.EMPTY)
                         .forGetter(Ingredients::top),
-                Ingredient.CODEC_NONEMPTY.fieldOf("middle")
+                IngredientCodecs.CODEC_NONEMPTY.fieldOf("middle")
                         .forGetter(Ingredients::middle),
-                Ingredient.CODEC.optionalFieldOf("bottom", Ingredient.EMPTY)
+                IngredientCodecs.CODEC.optionalFieldOf("bottom", Ingredient.EMPTY)
                         .forGetter(Ingredients::bottom))
                 .apply(builder, Ingredients::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, Ingredients> STREAM_CODEC = StreamCodec.composite(
-                Ingredient.CONTENTS_STREAM_CODEC,
+                IngredientCodecs.STREAM_CODEC,
                 Ingredients::top,
-                Ingredient.CONTENTS_STREAM_CODEC,
+                IngredientCodecs.STREAM_CODEC,
                 Ingredients::middle,
-                Ingredient.CONTENTS_STREAM_CODEC,
+                IngredientCodecs.STREAM_CODEC,
                 Ingredients::bottom,
                 Ingredients::new);
     }

@@ -1021,3 +1021,6 @@ waila.ae2.Suppressed=抑制されました
 waila.ae2.Unlocked=解錠された
 item.ae2.copper_ingot=銅インゴット
 block.ae2.copper_ore=銅鉱石
+ae2.jei.stonecutting=石切台
+item.minecraft.smithing_template.applies_to=適用対象:
+item.minecraft.smithing_template.ingredients=材料:

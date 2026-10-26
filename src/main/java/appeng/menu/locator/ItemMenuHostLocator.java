@@ -3,7 +3,7 @@ package appeng.menu.locator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
-import org.jline.utils.Log;
+import org.apache.logging.log4j.LogManager;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -27,11 +27,11 @@ public interface ItemMenuHostLocator extends MenuHostLocator {
             if (hostInterface.isInstance(menuHost)) {
                 return hostInterface.cast(menuHost);
             } else if (menuHost != null) {
-                Log.warn("Item in {} of {} did not create a compatible menu of type {}: {}",
+                LogManager.getLogger(ItemMenuHostLocator.class).warn("Item in {} of {} did not create a compatible menu of type {}: {}",
                         this, player, hostInterface, menuHost);
             }
         } else {
-            Log.warn("Item in {} of {} is not an IMenuItem: {}",
+            LogManager.getLogger(ItemMenuHostLocator.class).warn("Item in {} of {} is not an IMenuItem: {}",
                     this, player, it);
         }
 

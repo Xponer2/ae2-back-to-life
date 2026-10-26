@@ -18,21 +18,27 @@
 
 package appeng.block.misc;
 
+import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer.Builder;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.block.AEBaseEntityBlock;
 import appeng.block.BlockStateProperties;
@@ -77,6 +83,15 @@ public class LightDetectorBlock extends AEBaseEntityBlock<LightDetectorBlockEnti
     protected void createBlockStateDefinition(BlockStateContainer.Builder builder) {
         super.createBlockStateDefinition(builder);
         builder.add(BlockStateProperties.FACING, ODD);
+    }
+
+    /**
+     * Facing and odd placement are set when placed and aren't kept by the block entity, so they are stored in the
+     * metadata (6 x 2 values).
+     */
+    @Override
+    protected List<IProperty<?>> getMetaProperties() {
+        return Arrays.asList(FACING, ODD);
     }
 
     @Override
@@ -153,5 +168,11 @@ public class LightDetectorBlock extends AEBaseEntityBlock<LightDetectorBlockEnti
         }
 
         return state;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 }

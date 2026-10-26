@@ -18,28 +18,29 @@
 
 package appeng.hooks;
 
-import net.minecraft.core.dispenser.BlockSource;
-import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.block.BlockDispenser;
+import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
+import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.WorldServer;
 
 import appeng.items.tools.powered.MatterCannonItem;
 import appeng.util.LookDirection;
 import appeng.util.Platform;
 
-public final class MatterCannonDispenseItemBehavior extends DefaultDispenseItemBehavior {
+public final class MatterCannonDispenseItemBehavior extends BehaviorDefaultDispenseItem {
 
     @Override
-    protected ItemStack execute(BlockSource source, ItemStack dispensedItem) {
-        if (dispensedItem.getItem() instanceof MatterCannonItem tm) {
-            var position = DispenserBlock.getDispensePosition(source);
-            var direction = source.state().getValue(DispenserBlock.FACING);
+    protected ItemStack dispenseStack(IBlockSource source, ItemStack dispensedItem) {
+        if (dispensedItem.getItem() instanceof MatterCannonItem tm && source.getWorld() instanceof WorldServer level) {
+            var position = BlockDispenser.getDispensePosition(source);
+            var direction = source.getBlockState().getValue(BlockDispenser.FACING);
 
             var src = new Vec3d(
-                    position.x(),
-                    position.y(),
-                    position.z());
+                    position.getX(),
+                    position.getY(),
+                    position.getZ());
             var dir = new LookDirection(
                     src,
                     src.add(
@@ -47,9 +48,8 @@ public final class MatterCannonDispenseItemBehavior extends DefaultDispenseItemB
                             32 * direction.getYOffset(),
                             32 * direction.getZOffset()));
 
-            var level = source.level();
             var p = Platform.getFakePlayer(level, null);
-            Platform.configurePlayer(p, direction, source.blockEntity());
+            Platform.configurePlayer(p, direction, source.getBlockTileEntity());
             tm.fireCannon(level, dispensedItem, p, dir);
         }
         return dispensedItem;

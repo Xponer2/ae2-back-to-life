@@ -158,8 +158,13 @@ public class SpatialPylonBlockEntity extends AENetworkedBlockEntity implements I
 
         var state = new ClientState(powered, online, pos, axis);
         if (!clientState.equals(state)) {
+            boolean lightChanged = clientState.powered() != state.powered();
             this.clientState = state;
             this.markForUpdate();
+            // The light level depends on POWERED_ON, which 1.12.2 doesn't re-check by itself
+            if (lightChanged && world != null) {
+                world.checkLight(this.pos);
+            }
         }
     }
 
@@ -168,7 +173,11 @@ public class SpatialPylonBlockEntity extends AENetworkedBlockEntity implements I
         final boolean c = super.readFromStream(data);
         var state = ClientState.readFromStream(data);
         if (!clientState.equals(state)) {
+            boolean lightChanged = clientState.powered() != state.powered();
             clientState = state;
+            if (lightChanged && world != null) {
+                world.checkLight(this.pos);
+            }
             return true;
         }
         return c;

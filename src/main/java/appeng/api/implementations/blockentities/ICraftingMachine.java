@@ -46,7 +46,8 @@ public interface ICraftingMachine {
             return null;
         }
 
-        return AECapabilities.CRAFTING_MACHINE.getCapability(blockEntity.getLevel(),  blockEntity.getPos(), blockEntity.getBlockState(),
+        return AECapabilities.CRAFTING_MACHINE.getCapability(blockEntity.getWorld(), blockEntity.getPos(),
+                blockEntity.getWorld().getBlockState(blockEntity.getPos()),
                 blockEntity, side);
     }
 

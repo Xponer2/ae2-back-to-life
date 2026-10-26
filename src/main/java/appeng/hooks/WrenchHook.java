@@ -1,6 +1,12 @@
 package appeng.hooks;
 
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import appeng.api.orientation.IOrientationHolder;
+import appeng.block.AEBaseEntityBlock;
+import appeng.block.AEBaseBlock;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -34,12 +40,16 @@ public final class WrenchHook {
         return Boolean.TRUE.equals(IS_DISASSEMBLING.get());
     }
 
+    @SubscribeEvent
     public static void onPlayerUseBlockEvent(PlayerInteractEvent.RightClickBlock event) {
         if (event.isCanceled()) {
             // See https://github.com/AppliedEnergistics/Applied-Energistics-2/issues/6900
             return;
         }
-        var result = onPlayerUseBlock(event.getEntity(), event.getLevel(), event.getHand(), event.getHitVec());
+        var hitVec = event.getHitVec();
+        var hit = new RayTraceResult(hitVec != null ? hitVec : new Vec3d(event.getPos()),
+                event.getFace() != null ? event.getFace() : EnumFacing.UP, event.getPos());
+        var result = onPlayerUseBlock(event.getEntityPlayer(), event.getWorld(), event.getHand(), hit);
         if (result != EnumActionResult.PASS) {
             event.setCanceled(true);
             event.setCancellationResult(result);
@@ -59,11 +69,11 @@ public final class WrenchHook {
         var itemStack = player.getHeldItem(hand);
 
         if (InteractionUtil.isInAlternateUseMode(player) && InteractionUtil.canWrenchDisassemble(itemStack)) {
-            var be = level.getTileEntity(hitResult.getPos());
+            var be = level.getTileEntity(hitResult.getBlockPos());
             if (be instanceof AEBaseBlockEntity baseBlockEntity) {
                 IS_DISASSEMBLING.set(true);
                 try {
-                    if (!Platform.hasPermissions(new DimensionalBlockPos(level, hitResult.getPos()), player)) {
+                    if (!Platform.hasPermissions(new DimensionalBlockPos(level, hitResult.getBlockPos()), player)) {
                         return EnumActionResult.FAIL;
                     }
 
@@ -72,9 +82,9 @@ public final class WrenchHook {
                             level,
                             hitResult,
                             itemStack);
-                    if (result.consumesAction()) {
-                        SoundEvent soundType = SoundEvents.ITEM_FRAME_REMOVE_ITEM;
-                        level.playSound(player, hitResult.getPos(), soundType, SoundCategory.BLOCKS, 0.7F, 1.0F);
+                    if (result == EnumActionResult.SUCCESS) {
+                        SoundEvent soundType = SoundEvents.ENTITY_ITEMFRAME_REMOVE_ITEM;
+                        level.playSound(player, hitResult.getBlockPos(), soundType, SoundCategory.BLOCKS, 0.7F, 1.0F);
                     }
                     return result;
                 } finally {
@@ -82,8 +92,8 @@ public final class WrenchHook {
                 }
             }
         } else if (!InteractionUtil.isInAlternateUseMode(player) && InteractionUtil.canWrenchRotate(itemStack)) {
-            var pos = hitResult.getPos();
-            var state = level.getBlockState(pos);
+            var pos = hitResult.getBlockPos();
+            var state = level.getBlockState(pos).getActualState(level, pos);
             var strategy = IOrientationStrategy.get(state);
             if (strategy.allowsPlayerRotation()) {
                 var clickedFace = hitResult.sideHit;
@@ -92,12 +102,19 @@ public final class WrenchHook {
                 var newState = strategy.setOrientation(state, orientation.getSide(RelativeSide.FRONT),
                         orientation.getSpin());
 
-                if (newState != state && newState.canSurvive(level, pos)) {
-                    if (!Platform.hasPermissions(new DimensionalBlockPos(level, hitResult.getPos()), player)) {
+                if (newState != state && (!(newState.getBlock() instanceof AEBaseBlock aeBlock)
+                        || aeBlock.canSurvive(newState, level, pos))) {
+                    if (!Platform.hasPermissions(new DimensionalBlockPos(level, pos), player)) {
                         return EnumActionResult.FAIL;
                     }
 
-                    level.setBlockState(pos, newState);
+                    // Blocks with a block entity keep their orientation in it
+                    if (level.getTileEntity(pos) instanceof IOrientationHolder holder
+                            && newState.getBlock() instanceof AEBaseEntityBlock<?>) {
+                        holder.setOrientation(BlockOrientation.get(strategy, newState));
+                    } else {
+                        level.setBlockState(pos, newState);
+                    }
                     return EnumActionResult.SUCCESS;
                 }
             }

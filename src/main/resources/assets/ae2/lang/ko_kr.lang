@@ -856,3 +856,6 @@ waila.ae2.Stored=저장됨: %s / %s
 waila.ae2.Unlocked=잠겨있지 않음
 item.ae2.copper_ingot=구리 주괴
 block.ae2.copper_ore=구리 광석
+ae2.jei.stonecutting=석재 절단기
+item.minecraft.smithing_template.applies_to=적용 대상:
+item.minecraft.smithing_template.ingredients=재료:

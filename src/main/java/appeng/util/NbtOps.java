@@ -334,7 +334,7 @@ public final class NbtOps implements DynamicOps<NBTBase> {
 
     @Override
     public NBTBase createByteList(ByteBuffer input) {
-        ByteBuffer buf = input.duplicate().clear();
+        ByteBuffer buf = (ByteBuffer) input.duplicate().clear();
         byte[] bytes = new byte[input.capacity()];
         buf.get(bytes, 0, bytes.length);
         return new NBTTagByteArray(bytes);

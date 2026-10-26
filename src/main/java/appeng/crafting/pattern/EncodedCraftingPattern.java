@@ -91,15 +91,15 @@ public final class EncodedCraftingPattern {
         EncodedCraftingPattern that = (EncodedCraftingPattern) object;
         return canSubstitute == that.canSubstitute
                 && canSubstituteFluids == that.canSubstituteFluids
-                && ItemStack.matches(result, that.result)
-                && ItemStack.listMatches(inputs, that.inputs)
+                && ItemStack.areItemStacksEqual(result, that.result)
+                && PatternStacks.matches(inputs, that.inputs)
                 && recipeId.equals(that.recipeId);
     }
 
     @Override
     public int hashCode() {
-        int result1 = ItemStack.hashStackList(inputs);
-        result1 = 31 * result1 + ItemStack.hashItemAndComponents(result);
+        int result1 = PatternStacks.hash(inputs);
+        result1 = 31 * result1 + PatternStacks.hash(result);
         result1 = 31 * result1 + recipeId.hashCode();
         result1 = 31 * result1 + Boolean.hashCode(canSubstitute);
         result1 = 31 * result1 + Boolean.hashCode(canSubstituteFluids);

@@ -23,6 +23,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -34,7 +35,8 @@ import appeng.items.storage.StorageCellTooltipComponent;
 /**
  * Tooltip images (1.21 TooltipComponent + ClientTooltipComponent) on top of the 1.12.2 tooltip renderer: the space
  * for the image is reserved with placeholder lines, and the image is drawn in {@link RenderTooltipEvent.PostText} at
- * the position of the first placeholder.
+ * the position of the first placeholder. Tooltips of other screens get the placeholders in {@link ItemTooltipEvent}
+ * (the lines of RenderTooltipEvent can't be changed).
  * <p/>
  * Use {@link #addPlaceholders} before handing the lines to the tooltip renderer (GuiUtils.drawHoveringText), with the
  * image returned from {@link #create}.
@@ -42,7 +44,7 @@ import appeng.items.storage.StorageCellTooltipComponent;
 @SideOnly(Side.CLIENT)
 public final class TooltipImages {
 
-    // A line that renders nothing, marks where the image goes
+    // A line that renders nothing, marks where the image goes (screens may prefix the lines with a color code)
     private static final String MARKER = "§r§r§r";
 
     private static final Map<Class<?>, Function<Object, ClientTooltipImage>> FACTORIES = new HashMap<>();
@@ -86,8 +88,27 @@ public final class TooltipImages {
         if (image == null || image.getHeight() <= 0) {
             return lines;
         }
-        var font = Minecraft.getMinecraft().fontRenderer;
+        pending = image;
+        if (hasPlaceholder(lines)) {
+            return lines; // Added by ItemTooltipEvent already
+        }
         var result = new ArrayList<>(lines);
+        result.addAll(placeholderLines(image));
+        return result;
+    }
+
+    private static boolean hasPlaceholder(List<String> lines) {
+        for (var line : lines) {
+            if (line.contains(MARKER)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static List<String> placeholderLines(ClientTooltipImage image) {
+        var font = Minecraft.getMinecraft().fontRenderer;
+        var result = new ArrayList<String>();
         int lineCount = Math.max(1, (image.getHeight() + 9) / 10);
         // The first placeholder is padded with spaces to reserve the width of the image
         var widthPadding = new StringBuilder(MARKER);
@@ -98,7 +119,6 @@ public final class TooltipImages {
         for (int i = 1; i < lineCount; i++) {
             result.add(MARKER);
         }
-        pending = image;
         return result;
     }
 
@@ -113,31 +133,29 @@ public final class TooltipImages {
     }
 
     /**
-     * Item tooltips rendered by the game itself (inventory screens, other mods) also get the image of the item.
+     * Item tooltips of the game itself (inventory screens, other mods) also get the image of the item: the lines are
+     * built here, the image is picked up when the tooltip is rendered.
      */
     @SubscribeEvent
+    public static void onItemTooltip(ItemTooltipEvent event) {
+        var image = create(getTooltipImage(event.getItemStack()).orElse(null));
+        if (image == null || image.getHeight() <= 0 || hasPlaceholder(event.getToolTip())) {
+            return;
+        }
+        event.getToolTip().addAll(placeholderLines(image));
+    }
+
+    @SubscribeEvent
     public static void onTooltipPre(RenderTooltipEvent.Pre event) {
-        if (pending != null) {
-            // Prepared by GuiGraphics#renderTooltip
-            return;
-        }
-        var image = create(getTooltipImage(event.getStack()).orElse(null));
-        if (image == null) {
-            return;
-        }
-        var lines = event.getLines();
-        for (var line : lines) {
-            if (line.startsWith(MARKER)) {
-                return;
-            }
-        }
-        var withImage = addPlaceholders(lines, image);
-        try {
-            lines.clear();
-            lines.addAll(withImage);
-        } catch (UnsupportedOperationException e) {
-            // A caller passed fixed lines, show the tooltip without the image
+        if (!hasPlaceholder(event.getLines())) {
+            // Nothing to draw; also drops an image left over from a tooltip that another mod cancelled
             pending = null;
+            return;
+        }
+        // The image of the item that is rendered now (GuiGraphics#renderTooltip may have prepared one already)
+        var image = create(getTooltipImage(event.getStack()).orElse(null));
+        if (image != null) {
+            pending = image;
         }
     }
 
@@ -152,7 +170,7 @@ public final class TooltipImages {
         var lines = event.getLines();
         int index = -1;
         for (int i = 0; i < lines.size(); i++) {
-            if (lines.get(i).startsWith(MARKER)) {
+            if (lines.get(i).contains(MARKER)) {
                 index = i;
                 break;
             }

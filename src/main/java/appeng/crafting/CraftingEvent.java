@@ -18,13 +18,12 @@
 
 package appeng.crafting;
 
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import appeng.api.crafting.IPatternDetails;
 import appeng.util.Platform;
@@ -38,7 +37,7 @@ public class CraftingEvent {
             IInventory container) {
         var serverLevel = (WorldServer) level;
         var fakePlayer = Platform.getFakePlayer(serverLevel, null);
-        MinecraftForge.EVENT_BUS.post(new PlayerEvent.ItemCraftedEvent(fakePlayer, craftedItem, container));
+        FMLCommonHandler.instance().firePlayerCraftingEvent(fakePlayer, craftedItem, container);
     }
 
 }

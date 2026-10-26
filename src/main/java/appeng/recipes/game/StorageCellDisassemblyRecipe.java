@@ -10,11 +10,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
 
 import appeng.core.network.RegistryFriendlyByteBuf;
 import appeng.core.network.codec.ByteBufCodecs;
@@ -22,11 +17,16 @@ import appeng.core.network.codec.StreamCodec;
 import appeng.recipes.AERecipeTypes;
 import appeng.util.AECodecs;
 import appeng.util.BuiltInRegistries;
+import appeng.recipes.RecipeSerializer;
+import appeng.recipes.RecipeType;
+import appeng.recipes.RecipeManager;
+import appeng.recipes.AERecipe;
+import appeng.recipes.RecipeInput;
 
 /**
  * Used to handle disassembly of the (Portable) Storage Cells.
  */
-public class StorageCellDisassemblyRecipe extends CustomRecipe {
+public class StorageCellDisassemblyRecipe implements AERecipe<RecipeInput> {
     public static final MapCodec<StorageCellDisassemblyRecipe> CODEC = RecordCodecBuilder.mapCodec((builder) -> builder
             .group(
                     AECodecs.ITEM.fieldOf("cell")
@@ -37,7 +37,7 @@ public class StorageCellDisassemblyRecipe extends CustomRecipe {
 
     public static final StreamCodec<RegistryFriendlyByteBuf, StorageCellDisassemblyRecipe> STREAM_CODEC = StreamCodec
             .composite(
-                    ByteBufCodecs.registry(BuiltInRegistries.ITEM.key()),
+                    ByteBufCodecs.ITEM,
                     StorageCellDisassemblyRecipe::getStorageCell,
                     ByteBufCodecs.ITEM_STACK.apply(ByteBufCodecs.list()),
                     StorageCellDisassemblyRecipe::getCellDisassemblyItems,
@@ -47,7 +47,6 @@ public class StorageCellDisassemblyRecipe extends CustomRecipe {
     private final Item storageCell;
 
     public StorageCellDisassemblyRecipe(Item storageCell, List<ItemStack> disassemblyItems) {
-        super(CraftingBookCategory.MISC);
         this.storageCell = storageCell;
         this.disassemblyItems = disassemblyItems;
     }
@@ -75,7 +74,7 @@ public class StorageCellDisassemblyRecipe extends CustomRecipe {
      *         the caller.
      */
     public static List<ItemStack> getDisassemblyResult(World level, Item cell) {
-        var recipeManager = level.getRecipeManager();
+        var recipeManager = RecipeManager.of(level);
 
         for (var holder : recipeManager.byType(AERecipeTypes.CELL_DISASSEMBLY)) {
             if (holder.value().storageCell == cell) {
@@ -87,12 +86,12 @@ public class StorageCellDisassemblyRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean matches(CraftingInput input, World level) {
+    public boolean matches(RecipeInput input, World level) {
         return false;
     }
 
     @Override
-    public ItemStack assemble(CraftingInput input) {
+    public ItemStack assemble(RecipeInput input) {
         return ItemStack.EMPTY;
     }
 

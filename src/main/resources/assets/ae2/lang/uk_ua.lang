@@ -1021,3 +1021,6 @@ waila.ae2.Suppressed=Без голосу
 waila.ae2.Unlocked=Розблоковано
 item.ae2.copper_ingot=Мідний злиток
 block.ae2.copper_ore=Мідна руда
+ae2.jei.stonecutting=Каменеріз
+item.minecraft.smithing_template.applies_to=Застосовується до:
+item.minecraft.smithing_template.ingredients=Інгредієнти:

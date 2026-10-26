@@ -2,11 +2,10 @@ package appeng.init;
 
 import java.util.function.Function;
 
-import net.neoforged.fml.ModLoader;
-
-import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.MinecraftForge;
 
 import appeng.api.AECapabilities;
 import appeng.api.behaviors.GenericInternalInventory;
@@ -25,6 +24,7 @@ import appeng.blockentity.powersink.AEBasePoweredBlockEntity;
 import appeng.blockentity.storage.MEChestBlockEntity;
 import appeng.core.definitions.AEBlockEntities;
 import appeng.core.definitions.AEItems;
+import appeng.core.definitions.BlockEntityType;
 import appeng.core.definitions.ItemDefinition;
 import appeng.helpers.externalstorage.GenericStackFluidStorage;
 import appeng.helpers.externalstorage.GenericStackItemStorage;
@@ -36,7 +36,6 @@ import appeng.parts.networking.EnergyAcceptorPart;
 import appeng.parts.p2p.FEP2PTunnelPart;
 import appeng.parts.p2p.FluidP2PTunnelPart;
 import appeng.parts.p2p.ItemP2PTunnelPart;
-import appeng.util.BuiltInRegistries;
 
 public final class InitCapabilityProviders {
 
@@ -64,7 +63,7 @@ public final class InitCapabilityProviders {
         var partEvent = new RegisterPartCapabilitiesEvent();
         partEvent.addHostType(AEBlockEntities.CABLE_BUS.get());
         registerPartCapabilities(partEvent);
-        ModLoader.postEvent(partEvent);
+        MinecraftForge.EVENT_BUS.post(partEvent);
         RegisterPartCapabilitiesEventInternal.register(partEvent, event);
 
         initInterface(event);
@@ -90,34 +89,42 @@ public final class InitCapabilityProviders {
     }
 
     /**
-     * This registration is called with the lowest possible priority to register adapters.
+     * This registration is called last to register adapters: block entities with a generic inventory also expose it as
+     * item and fluid handler. Capabilities only come from block entities in this version, so the adapters are
+     * registered per block entity type (after the own providers of the type, which win).
      */
     public static void registerGenericAdapters(RegisterCapabilitiesEvent event) {
 
-        for (var block : BuiltInRegistries.BLOCK) {
-            if (event.isBlockRegistered(AECapabilities.GENERIC_INTERNAL_INV, block)) {
-                registerGenericInvAdapter(event, block, Capabilities.ItemHandler.BLOCK, GenericStackItemStorage::new);
-                registerGenericInvAdapter(event, block, Capabilities.FluidHandler.BLOCK, GenericStackFluidStorage::new);
+        for (var type : AEBlockEntities.getSubclassesOf(TileEntity.class)) {
+            boolean hasGenericInv = false;
+            for (var block : type.getValidBlocks()) {
+                if (event.isBlockRegistered(AECapabilities.GENERIC_INTERNAL_INV, block)) {
+                    hasGenericInv = true;
+                    break;
+                }
+            }
+            if (hasGenericInv) {
+                registerGenericInvAdapter(event, type, Capabilities.ItemHandler.BLOCK, GenericStackItemStorage::new);
+                registerGenericInvAdapter(event, type, Capabilities.FluidHandler.BLOCK, GenericStackFluidStorage::new);
             }
         }
 
     }
 
-    private static <T> void registerGenericInvAdapter(RegisterCapabilitiesEvent event,
-            Block block,
+    private static <T, BE extends TileEntity> void registerGenericInvAdapter(RegisterCapabilitiesEvent event,
+            BlockEntityType<BE> type,
             BlockCapability<T, EnumFacing> capability,
             Function<GenericInternalInventory, T> adapter) {
-        event.registerBlock(
+        event.registerBlockEntity(
                 capability,
-                (level, pos, state, blockEntity, context) -> {
-                    var genericInv = AECapabilities.GENERIC_INTERNAL_INV.getCapability(level,  pos, state,
-                            blockEntity, context);
+                type,
+                (blockEntity, context) -> {
+                    var genericInv = AECapabilities.GENERIC_INTERNAL_INV.getCapability(blockEntity, context);
                     if (genericInv != null) {
                         return adapter.apply(genericInv);
                     }
                     return null;
-                },
-                block);
+                });
     }
 
     private static void initInterface(RegisterCapabilitiesEvent event) {

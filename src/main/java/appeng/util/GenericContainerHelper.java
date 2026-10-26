@@ -1,6 +1,6 @@
 package appeng.util;
 
-import net.neoforged.neoforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.FluidUtil;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.item.ItemStack;
@@ -20,7 +20,7 @@ public final class GenericContainerHelper {
             return null;
         }
 
-        var content = FluidUtil.getFluidContained(stack).orElse(null);
+        var content = FluidUtil.getFluidContained(stack);
         if (content != null) {
             return GenericStack.fromFluidStack(content);
         } else {

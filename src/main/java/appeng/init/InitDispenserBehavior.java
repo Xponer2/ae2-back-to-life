@@ -18,7 +18,7 @@
 
 package appeng.init;
 
-import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.block.BlockDispenser;
 
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
@@ -26,19 +26,20 @@ import appeng.hooks.BlockToolDispenseItemBehavior;
 import appeng.hooks.MatterCannonDispenseItemBehavior;
 import appeng.hooks.TinyTNTDispenseItemBehavior;
 
-/**
- * Registers custom {@link DispenserBlock} behaviors for our items.
- */
 public final class InitDispenserBehavior {
 
     private InitDispenserBehavior() {
     }
 
     public static void init() {
-        DispenserBlock.registerBehavior(AEBlocks.TINY_TNT, new TinyTNTDispenseItemBehavior());
-        DispenserBlock.registerBehavior(AEItems.ENTROPY_MANIPULATOR, new BlockToolDispenseItemBehavior());
-        DispenserBlock.registerBehavior(AEItems.MATTER_CANNON, new MatterCannonDispenseItemBehavior());
-        DispenserBlock.registerBehavior(AEItems.COLOR_APPLICATOR, new BlockToolDispenseItemBehavior());
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(AEBlocks.TINY_TNT.asItem(),
+                new TinyTNTDispenseItemBehavior());
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(AEItems.ENTROPY_MANIPULATOR.asItem(),
+                new BlockToolDispenseItemBehavior());
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(AEItems.MATTER_CANNON.asItem(),
+                new MatterCannonDispenseItemBehavior());
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(AEItems.COLOR_APPLICATOR.asItem(),
+                new BlockToolDispenseItemBehavior());
     }
 
 }

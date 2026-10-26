@@ -56,6 +56,7 @@ public class AESlabBlock extends AEBaseBlock {
         super(props);
         setDefaultState(this.blockState.getBaseState().withProperty(TYPE, SlabType.BOTTOM));
         this.useNeighborBrightness = true;
+        setLightOpacity(255); // like the vanilla BlockSlab
     }
 
     @Override

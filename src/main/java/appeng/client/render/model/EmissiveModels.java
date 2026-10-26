@@ -69,6 +69,9 @@ public final class EmissiveModels {
                 "block/controller_lights", "block/controller_column_conflict", "block/controller_column_lights"));
         BLOCK_MODELS.put(AppEng.makeId("mysterious_cube"), sprites("block/mysterious_cube_bottom",
                 "block/mysterious_cube_side", "block/mysterious_cube_top"));
+        // Uses the mysterious cube model
+        BLOCK_MODELS.put(AppEng.makeId("not_so_mysterious_cube"), sprites("block/mysterious_cube_bottom",
+                "block/mysterious_cube_side", "block/mysterious_cube_top"));
         BLOCK_MODELS.put(AppEng.makeId("molecular_assembler"), sprites("block/molecular_assembler_lights"));
     }
 

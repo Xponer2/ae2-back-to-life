@@ -23,61 +23,59 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.block.state.StateHolder;
-import net.minecraft.world.level.material.FluidState;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-import appeng.api.util.Registries;
 import appeng.core.AppEng;
 import appeng.core.network.RegistryFriendlyByteBuf;
-import appeng.core.network.codec.ByteBufCodecs;
 import appeng.core.network.codec.StreamCodec;
-import appeng.items.tools.powered.EntropyManipulatorItem;
+import appeng.core.tags.Flattening;
+import appeng.recipes.AERecipe;
 import appeng.recipes.AERecipeTypes;
+import appeng.recipes.RecipeCodecs;
+import appeng.recipes.RecipeInput;
+import appeng.recipes.RecipeSerializer;
+import appeng.recipes.RecipeType;
 import appeng.util.AECodecs;
-import appeng.util.BuiltInRegistries;
 
 /**
- * A special recipe used for the {@link EntropyManipulatorItem}.
+ * A recipe of the entropy manipulator: heating or cooling a block or fluid in the world.
+ * <p/>
+ * Fluids are blocks in this version: a fluid input matches the blocks of that fluid, {@code minecraft:water} its
+ * source blocks and {@code minecraft:flowing_water} the flowing ones (like the fluid ids of newer versions). Modern
+ * vanilla block ids are translated with {@link Flattening}, including their metadata (stone bricks are a variant of
+ * {@code minecraft:stonebrick}).
  */
-public class EntropyRecipe implements IRecipe<RecipeInput> {
+public class EntropyRecipe implements AERecipe<RecipeInput> {
 
     public static final MapCodec<EntropyRecipe> CODEC = RecordCodecBuilder.mapCodec(builder -> builder.group(
             EntropyMode.CODEC.fieldOf("mode").forGetter(EntropyRecipe::getMode),
             Input.CODEC.fieldOf("input").forGetter(EntropyRecipe::getInput),
             Output.CODEC.fieldOf("output").forGetter(EntropyRecipe::getOutput)).apply(builder, EntropyRecipe::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, EntropyRecipe> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.enumCodec(EntropyMode.class),
-            EntropyRecipe::getMode,
-            Input.STREAM_CODEC,
-            EntropyRecipe::getInput,
-            Output.STREAM_CODEC,
-            EntropyRecipe::getOutput,
-            EntropyRecipe::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, EntropyRecipe> STREAM_CODEC = RecipeCodecs
+            .viaJson(CODEC.codec());
 
-    @Deprecated(forRemoval = true, since = "1.21.1")
+    @Deprecated
     public static final ResourceLocation TYPE_ID = AppEng.makeId("entropy");
 
-    @Deprecated(forRemoval = true, since = "1.21.1")
+    @Deprecated
     public static final RecipeType<EntropyRecipe> TYPE = AERecipeTypes.ENTROPY;
 
     private final EntropyMode mode;
@@ -120,47 +118,36 @@ public class EntropyRecipe implements IRecipe<RecipeInput> {
         return TYPE;
     }
 
-    @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.create();
-    }
-
     public EntropyMode getMode() {
         return this.mode;
     }
 
+    /**
+     * @return The block that replaces the given one, or null if the recipe outputs a fluid or nothing.
+     */
     @Nullable
     public IBlockState getOutputBlockState(IBlockState originalBlockState) {
         return output.block().map(blockOutput -> blockOutput.apply(originalBlockState)).orElse(null);
     }
 
+    /**
+     * @return The fluid block that replaces the original block, or null if the recipe outputs no fluid.
+     */
     @Nullable
-    public FluidState getOutputFluidState(FluidState originalFluidState) {
-        return output.fluid().map(fluidOutput -> fluidOutput.apply(originalFluidState)).orElse(null);
+    public IBlockState getOutputFluidState() {
+        return output.fluid().map(FluidOutput::toBlockState).orElse(null);
     }
 
     public List<ItemStack> getDrops() {
         return this.output.drops();
     }
 
-    public boolean matches(EntropyMode mode, IBlockState blockState, FluidState fluidState) {
+    public boolean matches(EntropyMode mode, IBlockState blockState) {
         if (this.getMode() != mode) {
             return false;
         }
 
-        return input.matches(blockState, fluidState);
-    }
-
-    /**
-     * Copies a property from one stateholder to another (if that stateholder also has that property).
-     */
-    private static <T extends Comparable<T>, SH extends StateHolder<?, SH>> SH copyProperty(SH from, SH to,
-            IProperty<T> property) {
-        if (to.hasProperty(property)) {
-            return to.setValue(property, from.getValue(property));
-        } else {
-            return to;
-        }
+        return input.matches(blockState);
     }
 
     public Input getInput() {
@@ -169,6 +156,128 @@ public class EntropyRecipe implements IRecipe<RecipeInput> {
 
     public Output getOutput() {
         return output;
+    }
+
+    /**
+     * @return True for source blocks of fluids (and for blocks that aren't fluids).
+     */
+    static boolean isSource(IBlockState state) {
+        var block = state.getBlock();
+        if (block instanceof BlockLiquid) {
+            return state.getValue(BlockLiquid.LEVEL) == 0;
+        }
+        if (block instanceof BlockFluidBase) {
+            return state.getValue(BlockFluidBase.LEVEL) == 0;
+        }
+        return true;
+    }
+
+    /**
+     * Copies a property from one state to another (if that state also has that property).
+     */
+    private static <T extends Comparable<T>> IBlockState copyProperty(IBlockState from, IBlockState to,
+            IProperty<T> property) {
+        if (to.getPropertyKeys().contains(property)) {
+            return to.withProperty(property, from.getValue(property));
+        } else {
+            return to;
+        }
+    }
+
+    /**
+     * A block id of a recipe file: the block and the metadata of translated vanilla ids (-1 = any).
+     */
+    public static final class BlockRef {
+        static final Codec<BlockRef> CODEC = AECodecs.RESOURCE_LOCATION.comapFlatMap(id -> {
+            var flat = Flattening.lookup(id);
+            if (flat != null && ForgeRegistries.BLOCKS.containsKey(flat.id())) {
+                return DataResult.success(new BlockRef(ForgeRegistries.BLOCKS.getValue(flat.id()), flat.meta()));
+            }
+            if (ForgeRegistries.BLOCKS.containsKey(id)) {
+                return DataResult.success(new BlockRef(ForgeRegistries.BLOCKS.getValue(id), -1));
+            }
+            return DataResult.error("Unknown block: " + id);
+        }, ref -> ref.block.getRegistryName());
+
+        private final Block block;
+        private final int meta;
+
+        BlockRef(Block block, int meta) {
+            this.block = block;
+            this.meta = meta;
+        }
+
+        public Block block() {
+            return block;
+        }
+
+        boolean matches(IBlockState state) {
+            return state.getBlock() == block && (meta < 0 || block.getMetaFromState(state) == meta);
+        }
+
+        @SuppressWarnings("deprecation")
+        IBlockState defaultState() {
+            return meta >= 0 ? block.getStateFromMeta(meta) : block.getDefaultState();
+        }
+    }
+
+    /**
+     * A fluid id of a recipe file; {@code flowing_*} means the flowing blocks of the fluid.
+     */
+    public static final class FluidRef {
+        static final Codec<FluidRef> CODEC = AECodecs.RESOURCE_LOCATION.comapFlatMap(id -> {
+            var name = id.getPath();
+            var flowing = name.startsWith("flowing_");
+            if (flowing) {
+                name = name.substring("flowing_".length());
+            }
+            var fluid = FluidRegistry.getFluid(name);
+            if (fluid == null) {
+                return DataResult.error("Unknown fluid: " + id);
+            }
+            return DataResult.success(new FluidRef(fluid, flowing));
+        }, ref -> new ResourceLocation((ref.flowing ? "flowing_" : "") + ref.fluid.getName()));
+
+        private final Fluid fluid;
+        private final boolean flowing;
+
+        FluidRef(Fluid fluid, boolean flowing) {
+            this.fluid = fluid;
+            this.flowing = flowing;
+        }
+
+        public Fluid fluid() {
+            return fluid;
+        }
+
+        public boolean flowing() {
+            return flowing;
+        }
+
+        boolean matches(IBlockState state) {
+            var stateFluid = FluidRegistry.lookupFluidForBlock(state.getBlock());
+            return stateFluid != null && stateFluid.getName().equals(fluid.getName()) && isSource(state) != flowing;
+        }
+
+        @Nullable
+        IBlockState toBlockState() {
+            var block = fluid.getBlock();
+            if (block == null) {
+                return null;
+            }
+            if (!flowing) {
+                return block.getDefaultState();
+            }
+            // A nearly full flowing block
+            if (block instanceof BlockLiquid) {
+                return BlockLiquid.getFlowingBlock(block.getDefaultState().getMaterial()).getDefaultState()
+                        .withProperty(BlockLiquid.LEVEL, 1);
+            }
+            if (block instanceof BlockFluidBase) {
+                return block.getDefaultState().withProperty(BlockFluidBase.LEVEL, 1);
+            }
+            return block.getDefaultState();
+        }
     }
 
     public final static class Input {
@@ -188,164 +297,87 @@ public class EntropyRecipe implements IRecipe<RecipeInput> {
             return fluid;
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof Input)) return false;
-            Input that = (Input) o;
-            return java.util.Objects.equals(block, that.block)
-                    && java.util.Objects.equals(fluid, that.fluid);
-        }
-
-        @Override
-        public int hashCode() {
-            return java.util.Objects.hash(block, fluid);
-        }
-
-        @Override
-        public String toString() {
-            return "Input[" + "block=" + block + ", " + "fluid=" + fluid + "]";
-        }
-
         public static Codec<Input> CODEC = RecordCodecBuilder.create(builder -> builder.group(
                 BlockInput.CODEC.optionalFieldOf("block").forGetter(Input::block),
                 FluidInput.CODEC.optionalFieldOf("fluid").forGetter(Input::fluid)).apply(builder, Input::new));
 
-        public static StreamCodec<RegistryFriendlyByteBuf, Input> STREAM_CODEC = StreamCodec.composite(
-                BlockInput.STREAM_CODEC.apply(ByteBufCodecs::optional),
-                Input::block,
-                FluidInput.STREAM_CODEC.apply(ByteBufCodecs::optional),
-                Input::fluid,
-                Input::new);
-
-        public boolean matches(IBlockState blockState, FluidState fluidState) {
+        public boolean matches(IBlockState blockState) {
             if (block.isPresent()) {
-                var inputBlock = block.get().block();
-
-                if (blockState.getBlock() != inputBlock) {
+                var input = block.get();
+                if (!input.ref().matches(blockState)) {
                     return false;
                 }
-                var stateDefinition = inputBlock.getBlockState();
-                if (!PropertyUtils.doPropertiesMatch(stateDefinition, blockState, block.get().properties())) {
-                    return false;
-                }
-            }
-
-            if (fluid.isPresent()) {
-                var inputFluid = fluid.get().fluid();
-                if (fluidState.getType() != inputFluid) {
-                    return false;
-                }
-                var stateDefinition = inputFluid.getBlockState();
-                if (!PropertyUtils.doPropertiesMatch(stateDefinition, fluidState, fluid.get().properties())) {
+                var stateDefinition = input.ref().block().getBlockState();
+                if (!PropertyUtils.doPropertiesMatch(stateDefinition, blockState, input.properties())) {
                     return false;
                 }
             }
 
-            return true;
+            if (fluid.isPresent() && !fluid.get().ref().matches(blockState)) {
+                return false;
+            }
+
+            return block.isPresent() || fluid.isPresent();
         }
     }
 
     public final static class BlockInput {
-        private final Block block;
+        private final BlockRef ref;
         private final Map<String, PropertyValueMatcher> properties;
 
-        public BlockInput(Block block, Map<String, PropertyValueMatcher> properties) {
-            this.block = block;
+        public BlockInput(BlockRef ref, Map<String, PropertyValueMatcher> properties) {
+            this.ref = ref;
             this.properties = properties;
+        }
+
+        public BlockRef ref() {
+            return ref;
         }
 
         public Block block() {
-            return block;
+            return ref.block();
         }
 
         public Map<String, PropertyValueMatcher> properties() {
             return properties;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof BlockInput)) return false;
-            BlockInput that = (BlockInput) o;
-            return java.util.Objects.equals(block, that.block)
-                    && java.util.Objects.equals(properties, that.properties);
-        }
-
-        @Override
-        public int hashCode() {
-            return java.util.Objects.hash(block, properties);
-        }
-
-        @Override
-        public String toString() {
-            return "BlockInput[" + "block=" + block + ", " + "properties=" + properties + "]";
         }
 
         public static Codec<BlockInput> CODEC = RecordCodecBuilder.create(builder -> builder.group(
-                AECodecs.BLOCK.fieldOf("id").forGetter(BlockInput::block),
+                BlockRef.CODEC.fieldOf("id").forGetter(BlockInput::ref),
                 PropertyValueMatcher.MAP_CODEC.optionalFieldOf("properties", Collections.emptyMap())
                         .forGetter(BlockInput::properties))
                 .apply(builder, BlockInput::new));
-
-        public static StreamCodec<RegistryFriendlyByteBuf, BlockInput> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.BLOCK,
-                BlockInput::block,
-                ByteBufCodecs.map(Maps::newHashMapWithExpectedSize, ByteBufCodecs.STRING_UTF8,
-                        PropertyValueMatcher.STREAM_CODEC),
-                BlockInput::properties,
-                BlockInput::new);
     }
 
+    /**
+     * Fluids have no properties in this version, properties given in the recipe file are ignored.
+     */
     public final static class FluidInput {
-        private final Fluid fluid;
+        private final FluidRef ref;
         private final Map<String, PropertyValueMatcher> properties;
 
-        public FluidInput(Fluid fluid, Map<String, PropertyValueMatcher> properties) {
-            this.fluid = fluid;
+        public FluidInput(FluidRef ref, Map<String, PropertyValueMatcher> properties) {
+            this.ref = ref;
             this.properties = properties;
         }
 
+        public FluidRef ref() {
+            return ref;
+        }
+
         public Fluid fluid() {
-            return fluid;
+            return ref.fluid();
         }
 
         public Map<String, PropertyValueMatcher> properties() {
             return properties;
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof FluidInput)) return false;
-            FluidInput that = (FluidInput) o;
-            return java.util.Objects.equals(fluid, that.fluid)
-                    && java.util.Objects.equals(properties, that.properties);
-        }
-
-        @Override
-        public int hashCode() {
-            return java.util.Objects.hash(fluid, properties);
-        }
-
-        @Override
-        public String toString() {
-            return "FluidInput[" + "fluid=" + fluid + ", " + "properties=" + properties + "]";
-        }
-
         public static Codec<FluidInput> CODEC = RecordCodecBuilder.create(builder -> builder.group(
-                AECodecs.FLUID.fieldOf("id").forGetter(FluidInput::fluid),
+                FluidRef.CODEC.fieldOf("id").forGetter(FluidInput::ref),
                 PropertyValueMatcher.MAP_CODEC.optionalFieldOf("properties", Collections.emptyMap())
                         .forGetter(FluidInput::properties))
                 .apply(builder, FluidInput::new));
-
-        public static StreamCodec<RegistryFriendlyByteBuf, FluidInput> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.FLUID,
-                FluidInput::fluid,
-                ByteBufCodecs.map(Maps::newHashMapWithExpectedSize, ByteBufCodecs.STRING_UTF8,
-                        PropertyValueMatcher.STREAM_CODEC),
-                FluidInput::properties,
-                FluidInput::new);
     }
 
     public final static class Output {
@@ -371,55 +403,30 @@ public class EntropyRecipe implements IRecipe<RecipeInput> {
             return drops;
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof Output)) return false;
-            Output that = (Output) o;
-            return java.util.Objects.equals(block, that.block)
-                    && java.util.Objects.equals(fluid, that.fluid)
-                    && java.util.Objects.equals(drops, that.drops);
-        }
-
-        @Override
-        public int hashCode() {
-            return java.util.Objects.hash(block, fluid, drops);
-        }
-
-        @Override
-        public String toString() {
-            return "Output[" + "block=" + block + ", " + "fluid=" + fluid + ", " + "drops=" + drops + "]";
-        }
-
         public static Codec<Output> CODEC = RecordCodecBuilder.create(builder -> builder.group(
                 BlockOutput.CODEC.optionalFieldOf("block").forGetter(Output::block),
                 FluidOutput.CODEC.optionalFieldOf("fluid").forGetter(Output::fluid),
                 AECodecs.ITEM_STACK.listOf().optionalFieldOf("drops", Collections.emptyList()).forGetter(Output::drops))
                 .apply(builder, Output::new));
-
-        public static StreamCodec<RegistryFriendlyByteBuf, Output> STREAM_CODEC = StreamCodec.composite(
-                BlockOutput.STREAM_CODEC.apply(ByteBufCodecs::optional),
-                Output::block,
-                FluidOutput.STREAM_CODEC.apply(ByteBufCodecs::optional),
-                Output::fluid,
-                ByteBufCodecs.ITEM_STACK_LIST,
-                Output::drops,
-                Output::new);
     }
 
     public final static class BlockOutput {
-        private final Block block;
+        private final BlockRef ref;
         private final boolean keepProperties;
         private final Map<String, String> properties;
 
-        public BlockOutput(Block block, boolean keepProperties, Map<String, String> properties) {
-            this.block = block;
+        public BlockOutput(BlockRef ref, boolean keepProperties, Map<String, String> properties) {
+            this.ref = ref;
             this.keepProperties = keepProperties;
             this.properties = properties;
         }
 
+        public BlockRef ref() {
+            return ref;
+        }
+
         public Block block() {
-            return block;
+            return ref.block();
         }
 
         public boolean keepProperties() {
@@ -430,72 +437,46 @@ public class EntropyRecipe implements IRecipe<RecipeInput> {
             return properties;
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof BlockOutput)) return false;
-            BlockOutput that = (BlockOutput) o;
-            return java.util.Objects.equals(block, that.block)
-                    && keepProperties == that.keepProperties
-                    && java.util.Objects.equals(properties, that.properties);
-        }
-
-        @Override
-        public int hashCode() {
-            return java.util.Objects.hash(block, keepProperties, properties);
-        }
-
-        @Override
-        public String toString() {
-            return "BlockOutput[" + "block=" + block + ", " + "keepProperties=" + keepProperties + ", " + "properties=" + properties + "]";
-        }
-
         public static Codec<BlockOutput> CODEC = RecordCodecBuilder.create(builder -> builder.group(
-                AECodecs.BLOCK.fieldOf("id").forGetter(BlockOutput::block),
-                Codec.BOOL.optionalFieldOf("", false).forGetter(BlockOutput::keepProperties),
+                BlockRef.CODEC.fieldOf("id").forGetter(BlockOutput::ref),
+                Codec.BOOL.optionalFieldOf("keepProperties", false).forGetter(BlockOutput::keepProperties),
                 Codec.unboundedMap(Codec.STRING, Codec.STRING).optionalFieldOf("properties", Collections.emptyMap())
                         .forGetter(BlockOutput::properties))
                 .apply(builder, BlockOutput::new));
 
-        public static StreamCodec<RegistryFriendlyByteBuf, BlockOutput> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.BLOCK,
-                BlockOutput::block,
-                ByteBufCodecs.BOOL,
-                BlockOutput::keepProperties,
-                ByteBufCodecs.map(Maps::newHashMapWithExpectedSize, ByteBufCodecs.STRING_UTF8,
-                        ByteBufCodecs.STRING_UTF8),
-                BlockOutput::properties,
-                BlockOutput::new);
-
         public IBlockState apply(IBlockState originalBlockState) {
-            IBlockState state = block.getDefaultState();
+            IBlockState state = ref.defaultState();
 
             if (keepProperties) {
-                for (IProperty<?> property : originalBlockState.getProperties()) {
+                for (IProperty<?> property : originalBlockState.getPropertyKeys()) {
                     state = copyProperty(originalBlockState, state, property);
                 }
             }
 
-            var stateDefinition = originalBlockState.getBlock().getBlockState();
-            state = PropertyUtils.applyProperties(stateDefinition, state, properties);
-
-            return state;
+            return PropertyUtils.applyProperties(state.getBlock().getBlockState(), state, properties);
         }
     }
 
+    /**
+     * Fluids have no properties in this version, the source block (or a flowing block) of the fluid is placed.
+     */
     public final static class FluidOutput {
-        private final Fluid fluid;
+        private final FluidRef ref;
         private final boolean keepProperties;
         private final Map<String, String> properties;
 
-        public FluidOutput(Fluid fluid, boolean keepProperties, Map<String, String> properties) {
-            this.fluid = fluid;
+        public FluidOutput(FluidRef ref, boolean keepProperties, Map<String, String> properties) {
+            this.ref = ref;
             this.keepProperties = keepProperties;
             this.properties = properties;
         }
 
+        public FluidRef ref() {
+            return ref;
+        }
+
         public Fluid fluid() {
-            return fluid;
+            return ref.fluid();
         }
 
         public boolean keepProperties() {
@@ -506,70 +487,16 @@ public class EntropyRecipe implements IRecipe<RecipeInput> {
             return properties;
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof FluidOutput)) return false;
-            FluidOutput that = (FluidOutput) o;
-            return java.util.Objects.equals(fluid, that.fluid)
-                    && keepProperties == that.keepProperties
-                    && java.util.Objects.equals(properties, that.properties);
-        }
-
-        @Override
-        public int hashCode() {
-            return java.util.Objects.hash(fluid, keepProperties, properties);
-        }
-
-        @Override
-        public String toString() {
-            return "FluidOutput[" + "fluid=" + fluid + ", " + "keepProperties=" + keepProperties + ", " + "properties=" + properties + "]";
-        }
-
         public static Codec<FluidOutput> CODEC = RecordCodecBuilder.create(builder -> builder.group(
-                AECodecs.FLUID.fieldOf("id").forGetter(FluidOutput::fluid),
-                Codec.BOOL.optionalFieldOf("", false).forGetter(FluidOutput::keepProperties),
+                FluidRef.CODEC.fieldOf("id").forGetter(FluidOutput::ref),
+                Codec.BOOL.optionalFieldOf("keepProperties", false).forGetter(FluidOutput::keepProperties),
                 Codec.unboundedMap(Codec.STRING, Codec.STRING).optionalFieldOf("properties", Collections.emptyMap())
                         .forGetter(FluidOutput::properties))
                 .apply(builder, FluidOutput::new));
 
-        public static StreamCodec<RegistryFriendlyByteBuf, FluidOutput> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.FLUID,
-                FluidOutput::fluid,
-                ByteBufCodecs.BOOL,
-                FluidOutput::keepProperties,
-                ByteBufCodecs.map(Maps::newHashMapWithExpectedSize, ByteBufCodecs.STRING_UTF8,
-                        ByteBufCodecs.STRING_UTF8),
-                FluidOutput::properties,
-                FluidOutput::new);
-
-        public FluidState apply(FluidState originalFluidState) {
-            FluidState state = fluid.defaultFluidState();
-
-            if (keepProperties) {
-                for (IProperty<?> property : originalFluidState.getProperties()) {
-                    state = copyProperty(originalFluidState, state, property);
-                }
-            }
-
-            var stateDefinition = state.getType().getBlockState();
-            state = PropertyUtils.applyProperties(stateDefinition, state, properties);
-
-            return state;
-        }
-
-        public static void toNetwork(RegistryFriendlyByteBuf buffer, FluidOutput output) {
-            buffer.writeById(BuiltInRegistries.FLUID::getId, output.fluid);
-            buffer.writeBoolean(output.keepProperties);
-            buffer.writeMap(output.properties, RegistryFriendlyByteBuf::writeUtf, (fbb, value) -> fbb.writeUtf(value));
-        }
-
-        public static FluidOutput fromNetwork(RegistryFriendlyByteBuf buffer) {
-            var fluid = buffer.readById(BuiltInRegistries.FLUID::byId);
-            var keepProperties = buffer.readBoolean();
-            var properties = buffer.readMap(RegistryFriendlyByteBuf::readUtf, fbb -> fbb.readUtf());
-            return new FluidOutput(fluid, keepProperties, properties);
+        @Nullable
+        public IBlockState toBlockState() {
+            return ref.toBlockState();
         }
     }
-
 }

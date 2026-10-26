@@ -96,7 +96,7 @@ public class ControllerBlockEntity extends AENetworkedPoweredBlockEntity {
                 && getBlockState().getValue(ControllerBlock.CONTROLLER_STATE) != metaState) {
             // We don't want to be sending neighbor updates when a controller is being moved by spatial IO.
             // So we never send one, and only notify the clients.
-            setBlockStateProperty(ControllerBlock.CONTROLLER_STATE, metaState);
+            setBlockStateProperty(ControllerBlock.CONTROLLER_STATE, metaState, false);
         }
 
     }

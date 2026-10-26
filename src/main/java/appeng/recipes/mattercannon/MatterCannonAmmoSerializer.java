@@ -20,10 +20,10 @@ package appeng.recipes.mattercannon;
 
 import com.mojang.serialization.MapCodec;
 
-import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import appeng.core.network.RegistryFriendlyByteBuf;
 import appeng.core.network.codec.StreamCodec;
+import appeng.recipes.RecipeSerializer;
 
 public class MatterCannonAmmoSerializer implements RecipeSerializer<MatterCannonAmmo> {
     public static final MatterCannonAmmoSerializer INSTANCE = new MatterCannonAmmoSerializer();

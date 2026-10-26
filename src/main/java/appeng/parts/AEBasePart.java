@@ -18,19 +18,43 @@
 
 package appeng.parts;
 
+import appeng.api.components.DataComponentMap;
+import appeng.api.ids.AEComponents;
+import appeng.api.implementations.IPowerChannelState;
+import appeng.api.implementations.items.IMemoryCard;
+import appeng.api.implementations.items.MemoryCardMessages;
+import appeng.api.inventories.ISegmentedInventory;
+import appeng.api.inventories.InternalInventory;
+import appeng.api.networking.GridHelper;
+import appeng.api.networking.IGridNode;
+import appeng.api.networking.IGridNodeListener.State;
+import appeng.api.networking.IGridNodeListener;
+import appeng.api.networking.IManagedGridNode;
+import appeng.api.networking.security.IActionHost;
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartHost;
+import appeng.api.parts.IPartItem;
+import appeng.api.stacks.AEItemKey;
+import appeng.api.util.AECableType;
+import appeng.api.util.AEColor;
+import appeng.core.AppEng;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEParts;
+import appeng.core.network.RegistryFriendlyByteBuf;
+import appeng.items.tools.MemoryCardItem;
+import appeng.util.BuiltInRegistries;
+import appeng.util.IDebugExportable;
+import appeng.util.InteractionUtil;
+import appeng.util.JsonStreamUtil;
 import appeng.util.Platform;
-
+import appeng.util.SettingsFrom;
+import com.google.common.collect.ImmutableMap;
+import com.google.gson.stream.JsonWriter;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Objects;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.gson.stream.JsonWriter;
-import it.unimi.dsi.fastutil.objects.Reference2IntMap;
-import org.jetbrains.annotations.MustBeInvokedByOverriders;
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -47,35 +71,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IWorldNameable;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-
-import appeng.api.components.DataComponentMap;
-import appeng.api.ids.AEComponents;
-import appeng.api.implementations.IPowerChannelState;
-import appeng.api.implementations.items.IMemoryCard;
-import appeng.api.implementations.items.MemoryCardMessages;
-import appeng.api.inventories.ISegmentedInventory;
-import appeng.api.inventories.InternalInventory;
-import appeng.api.networking.GridHelper;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.IGridNodeListener;
-import appeng.api.networking.IGridNodeListener.State;
-import appeng.api.networking.IManagedGridNode;
-import appeng.api.networking.security.IActionHost;
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartHost;
-import appeng.api.parts.IPartItem;
-import appeng.api.stacks.AEItemKey;
-import appeng.api.util.AECableType;
-import appeng.api.util.AEColor;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEParts;
-import appeng.core.network.RegistryFriendlyByteBuf;
-import appeng.items.tools.MemoryCardItem;
-import appeng.util.BuiltInRegistries;
-import appeng.util.IDebugExportable;
-import appeng.util.InteractionUtil;
-import appeng.util.JsonStreamUtil;
-import appeng.util.SettingsFrom;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class AEBasePart
         implements IPart, IActionHost, ISegmentedInventory, IPowerChannelState, IWorldNameable, IDebugExportable {
@@ -180,7 +177,13 @@ public abstract class AEBasePart
      * Same as modern {@code Item.getDescription()}: the translatable name of the item.
      */
     protected static ITextComponent getItemDescription(Item item) {
-        return new TextComponentTranslation(item.getTranslationKey(new ItemStack(item)) + ".name");
+        var key = item.getTranslationKey(new ItemStack(item));
+        // The lang files of AE2 use the modern keys (no ".name" suffix), the ones of 1.12.2 end with ".name"
+        var id = item.getRegistryName();
+        if (id == null || !AppEng.MOD_ID.equals(id.getNamespace())) {
+            key += ".name";
+        }
+        return new TextComponentTranslation(key);
     }
 
     @Override

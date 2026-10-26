@@ -78,15 +78,15 @@ public final class EncodedStonecuttingPattern {
 
         EncodedStonecuttingPattern that = (EncodedStonecuttingPattern) object;
         return canSubstitute == that.canSubstitute
-                && ItemStack.matches(input, that.input)
-                && ItemStack.matches(output, that.output)
+                && ItemStack.areItemStacksEqual(input, that.input)
+                && ItemStack.areItemStacksEqual(output, that.output)
                 && recipeId.equals(that.recipeId);
     }
 
     @Override
     public int hashCode() {
-        int result = ItemStack.hashItemAndComponents(input);
-        result = 31 * result + ItemStack.hashItemAndComponents(output);
+        int result = PatternStacks.hash(input);
+        result = 31 * result + PatternStacks.hash(output);
         result = 31 * result + Boolean.hashCode(canSubstitute);
         result = 31 * result + recipeId.hashCode();
         return result;

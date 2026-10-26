@@ -20,10 +20,10 @@ package appeng.recipes.entropy;
 
 import com.mojang.serialization.MapCodec;
 
-import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import appeng.core.network.RegistryFriendlyByteBuf;
 import appeng.core.network.codec.StreamCodec;
+import appeng.recipes.RecipeSerializer;
 
 public class EntropyRecipeSerializer implements RecipeSerializer<EntropyRecipe> {
 

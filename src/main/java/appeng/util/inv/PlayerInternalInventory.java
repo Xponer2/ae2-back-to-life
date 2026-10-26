@@ -35,7 +35,7 @@ public class PlayerInternalInventory implements InternalInventory {
 
     @Override
     public int size() {
-        return InventoryPlayer.INVENTORY_SIZE;
+        return inventory.mainInventory.size();
     }
 
     @Override
@@ -47,7 +47,7 @@ public class PlayerInternalInventory implements InternalInventory {
     public void setItemDirect(int slotIndex, ItemStack stack) {
         inventory.setInventorySlotContents(slotIndex, stack);
         if (!stack.isEmpty()) {
-            inventory.getStackInSlot(slotIndex).setPopTime(5);
+            inventory.getStackInSlot(slotIndex).setAnimationsToGo(5);
         }
     }
 }

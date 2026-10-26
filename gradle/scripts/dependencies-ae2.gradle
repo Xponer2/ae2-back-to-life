@@ -7,3 +7,14 @@ dependencies {
     // Hwyla 1.8.26-B41
     compileOnly 'curse.maven:hwyla-253449:2568751'
 }
+
+// Development only: `./gradlew runClient -Pdev_integrations` also loads the optional mods, to check the
+// integrations in game. Normal builds and the released jar don't depend on them.
+if (project.hasProperty('dev_integrations')) {
+    dependencies {
+        runtimeOnly rfg.deobf('mezz.jei:jei_1.12.2:4.16.1.1013')
+        runtimeOnly rfg.deobf('curse.maven:the-one-probe-245211:2667280')
+        runtimeOnly rfg.deobf('curse.maven:hwyla-253449:2568751')
+        runtimeOnly rfg.deobf('vazkii.patchouli:Patchouli:1.0-23.6')
+    }
+}

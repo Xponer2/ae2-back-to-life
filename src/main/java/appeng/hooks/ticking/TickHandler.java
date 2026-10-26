@@ -35,20 +35,20 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
-import net.neoforged.neoforge.event.level.ChunkEvent;
-import net.neoforged.neoforge.event.level.LevelEvent;
-import net.neoforged.neoforge.event.tick.LevelTickEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
-import net.minecraft.CrashReport;
-import net.minecraft.ReportedException;
+import net.minecraft.crash.CrashReport;
+import net.minecraft.util.ReportedException;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.ChunkEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.core.AEConfig;
@@ -93,13 +93,27 @@ public class TickHandler {
     }
 
     public void init() {
-        MinecraftForge.EVENT_BUS.addListener(this::onServerTickStart);
-        MinecraftForge.EVENT_BUS.addListener(this::onServerTickEnd);
-        MinecraftForge.EVENT_BUS.addListener(this::onServerLevelTickStart);
-        MinecraftForge.EVENT_BUS.addListener(this::onServerLevelTickEnd);
-        MinecraftForge.EVENT_BUS.addListener(this::onUnloadChunk);
-        // Try to go last for level unloads since we use it to clean-up state
-        MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::onUnloadLevel);
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    @SubscribeEvent
+    public void onServerTick(TickEvent.ServerTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) {
+            onServerTickStart();
+        } else {
+            onServerTickEnd();
+        }
+    }
+
+    @SubscribeEvent
+    public void onWorldTick(TickEvent.WorldTickEvent event) {
+        if (event.side.isServer() && event.world instanceof WorldServer level) {
+            if (event.phase == TickEvent.Phase.START) {
+                onServerLevelTickStart(level);
+            } else {
+                onServerLevelTickEnd(level);
+            }
+        }
     }
 
     public void addCallable(World level, Runnable c) {
@@ -143,7 +157,7 @@ public class TickHandler {
         Objects.requireNonNull(blockEntity);
 
         // for no there is no reason to care about this on the client...
-        if (!blockEntity.getLevel().isRemote) {
+        if (!blockEntity.getWorld().isRemote) {
             this.blockEntities.addBlockEntity(blockEntity, initFunction);
         }
     }
@@ -190,20 +204,23 @@ public class TickHandler {
      * <p>
      * Removes any pending initialization callbacks for block entities in that chunk.
      */
+    @SubscribeEvent
     public void onUnloadChunk(final ChunkEvent.Unload ev) {
-        var level = ev.getLevel();
+        var level = ev.getWorld();
         var chunk = ev.getChunk();
 
         if (!level.isRemote) {
-            this.blockEntities.removeChunk(level, chunk.getPos().toLong());
+            this.blockEntities.removeChunk(level, ChunkPos.asLong(chunk.x, chunk.z));
         }
     }
 
     /**
      * Handle a level unload and tear down related data structures.
      */
-    public void onUnloadLevel(final LevelEvent.Unload ev) {
-        var level = ev.getLevel();
+    // Try to go last for level unloads since we use it to clean-up state
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onUnloadLevel(final WorldEvent.Unload ev) {
+        var level = ev.getWorld();
 
         if (level.isRemote) {
             return; // for no there is no reason to care about this on the client...
@@ -228,10 +245,7 @@ public class TickHandler {
         this.callQueue.remove(level);
     }
 
-    private void onServerLevelTickStart(LevelTickEvent.Pre event) {
-        if (!(event.getLevel() instanceof WorldServer level)) {
-            return;
-        }
+    private void onServerLevelTickStart(WorldServer level) {
         var queue = this.callQueue.remove(level);
         processQueueElementsRemaining += this.processQueue(queue, level);
         var newQueue = this.callQueue.put(level, queue);
@@ -246,18 +260,15 @@ public class TickHandler {
             try {
                 g.onLevelStartTick(level);
             } catch (Throwable t) {
-                CrashReport crashReport = CrashReport.forThrowable(t, "Ticking grid on start of level tick");
-                g.fillCrashReportCategory(crashReport.addCategory("Grid being ticked"));
-                level.fillReportDetails(crashReport);
+                CrashReport crashReport = CrashReport.makeCrashReport(t, "Ticking grid on start of level tick");
+                g.fillCrashReportCategory(crashReport.makeCategory("Grid being ticked"));
+                level.addWorldInfoToCrashReport(crashReport);
                 throw new ReportedException(crashReport);
             }
         }
     }
 
-    private void onServerLevelTickEnd(LevelTickEvent.Post event) {
-        if (!(event.getLevel() instanceof WorldServer level)) {
-            return;
-        }
+    private void onServerLevelTickEnd(WorldServer level) {
         this.simulateCraftingJobs(level);
         this.readyBlockEntities(level);
 
@@ -266,15 +277,15 @@ public class TickHandler {
             try {
                 g.onLevelEndTick(level);
             } catch (Throwable t) {
-                CrashReport crashReport = CrashReport.forThrowable(t, "Ticking grid on end of level tick");
-                g.fillCrashReportCategory(crashReport.addCategory("Grid being ticked"));
-                level.fillReportDetails(crashReport);
+                CrashReport crashReport = CrashReport.makeCrashReport(t, "Ticking grid on end of level tick");
+                g.fillCrashReportCategory(crashReport.makeCategory("Grid being ticked"));
+                level.addWorldInfoToCrashReport(crashReport);
                 throw new ReportedException(crashReport);
             }
         }
     }
 
-    private void onServerTickStart(ServerTickEvent.Pre event) {
+    private void onServerTickStart() {
         // Reset the stop watch on the start of each server tick.
         this.processQueueElementsProcessed = 0;
         this.processQueueElementsRemaining = 0;
@@ -285,21 +296,21 @@ public class TickHandler {
             try {
                 g.onServerStartTick();
             } catch (Throwable t) {
-                CrashReport crashReport = CrashReport.forThrowable(t, "Ticking grid on start of server tick");
-                g.fillCrashReportCategory(crashReport.addCategory("Grid being ticked"));
+                CrashReport crashReport = CrashReport.makeCrashReport(t, "Ticking grid on start of server tick");
+                g.fillCrashReportCategory(crashReport.makeCategory("Grid being ticked"));
                 throw new ReportedException(crashReport);
             }
         }
     }
 
-    private void onServerTickEnd(ServerTickEvent.Post event) {
+    private void onServerTickEnd() {
         // tick networks
         for (var g : this.grids.getNetworks()) {
             try {
                 g.onServerEndTick();
             } catch (Throwable t) {
-                CrashReport crashReport = CrashReport.forThrowable(t, "Ticking grid on end of server tick");
-                g.fillCrashReportCategory(crashReport.addCategory("Grid being ticked"));
+                CrashReport crashReport = CrashReport.makeCrashReport(t, "Ticking grid on end of server tick");
+                g.fillCrashReportCategory(crashReport.makeCategory("Grid being ticked"));
                 throw new ReportedException(crashReport);
             }
         }
@@ -370,7 +381,7 @@ public class TickHandler {
                 var chunkQueue = levelQueue.remove(packedChunkPos);
                 if (chunkQueue == null) {
                     AELog.warn("Chunk %s was unloaded while we were readying block entities",
-                            new ChunkPos(packedChunkPos));
+                            new ChunkPos((int) packedChunkPos, (int) (packedChunkPos >>> 32)));
                     continue; // This should never happen, chunk unloaded under our noses
                 }
 
@@ -381,11 +392,11 @@ public class TickHandler {
                             // This could load more chunks, but the earliest time to be initialized is the next tick.
                             info.callInit();
                         } catch (Throwable t) {
-                            CrashReport crashReport = CrashReport.forThrowable(t, "Readying AE2 block entity");
+                            CrashReport crashReport = CrashReport.makeCrashReport(t, "Readying AE2 block entity");
 
-                            var category = crashReport.addCategory("Block entity being readied");
-                            category.setDetail("World", () -> level.dimension().location().toString());
-                            info.blockEntity().fillCrashReportCategory(category);
+                            var category = crashReport.makeCategory("Block entity being readied");
+                            category.addDetail("World", () -> String.valueOf(level.provider.getDimension()));
+                            info.blockEntity().addInfoToCrashReport(category);
 
                             throw new ReportedException(crashReport);
                         }

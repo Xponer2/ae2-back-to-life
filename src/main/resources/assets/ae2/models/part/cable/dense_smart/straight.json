@@ -1,8 +1,4 @@
 {
-  "textures": {
-    "base": "ae2:part/cable/dense_smart/_color_",
-    "channels": "ae2:part/cable/dense_smart/_channels_"
-  },
   "elements": [
     {
       "name": "Base",

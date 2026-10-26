@@ -118,6 +118,8 @@ public class AEBaseBlockEntity extends TileEntity
      */
     private byte readyInvoked = 0;
     private boolean removed = true;
+    // Set when invalidate() removed this block entity, see validate()
+    private boolean removedByInvalidate;
 
     public AEBaseBlockEntity() {
         super();
@@ -178,15 +180,31 @@ public class AEBaseBlockEntity extends TileEntity
      * synchronized with the block entity and applied by {@link AEBaseEntityBlock#getActualState}.
      */
     private final Map<String, String> stateProperties = new HashMap<>();
+    // The last state of the block of this block entity, see getBlockState()
+    @Nullable
+    private IBlockState lastKnownState;
 
     /**
-     * 1.21 {@code level.setBlock(pos, state.setValue(property, value))}.
+     * 1.21 {@code level.setBlockAndUpdate(pos, state.setValue(property, value))}: the clients and the neighbors are
+     * notified.
      */
     public <T extends Comparable<T>> void setBlockStateProperty(IProperty<T> property, T value) {
+        setBlockStateProperty(property, value, true);
+    }
+
+    /**
+     * @param notifyNeighbors false for 1.21 {@code Block.UPDATE_CLIENTS} (multiblocks and controllers, which would
+     *                        otherwise update each other in loops)
+     */
+    public <T extends Comparable<T>> void setBlockStateProperty(IProperty<T> property, T value,
+            boolean notifyNeighbors) {
         var name = property.getName(value);
         if (!name.equals(stateProperties.put(property.getName(), name))) {
             saveChanges();
             markForUpdate();
+            if (notifyNeighbors && world != null && !world.isRemote && !notLoaded()) {
+                world.notifyNeighborsOfStateChange(pos, getBlockType(), false);
+            }
             // vanilla 1.21 tells the block entity about its new block state
             if (world != null) {
                 setBlockState(getBlockState());
@@ -245,11 +263,25 @@ public class AEBaseBlockEntity extends TileEntity
     public IBlockState getBlockState() {
         if (world == null) {
             var block = getBlockType();
+            if (block == null) {
+                // Not in a world yet (constructor, loading from NBT): the default state of the block of this type, like
+                // the state that newer versions pass to the constructor
+                var type = getType();
+                if (type != null && !type.getValidBlocks().isEmpty()) {
+                    block = type.getValidBlocks().iterator().next();
+                }
+            }
             return block != null ? block.getDefaultState() : Blocks.AIR.getDefaultState();
         }
         var state = world.getBlockState(pos);
         if (state.getBlock() instanceof AEBaseEntityBlock<?>) {
-            return state.getActualState(world, pos);
+            lastKnownState = state.getActualState(world, pos);
+            return lastKnownState;
+        }
+        // The block is already gone while the block entity is being removed: newer versions keep the state of a block
+        // entity until it is removed (energy cells read their priority from it then)
+        if (lastKnownState != null) {
+            return lastKnownState;
         }
         return state;
     }
@@ -264,6 +296,7 @@ public class AEBaseBlockEntity extends TileEntity
     @MustBeInvokedByOverriders
     public void clearRemoved() {
         removed = false;
+        removedByInvalidate = false;
     }
 
     /**
@@ -291,12 +324,34 @@ public class AEBaseBlockEntity extends TileEntity
         super.invalidate();
         if (!removed) {
             setRemoved();
+            removedByInvalidate = true;
         }
     }
 
+    /**
+     * Block entities of a chunk that is loaded while the level ticks its block entities (a neighbor reading into the
+     * chunk, for example) are added later in the same tick: {@code World#updateEntities} calls onLoad and then puts
+     * the same block entity into the chunk again, which calls invalidate() and validate() on it. It stays in the level,
+     * so the removal is undone, otherwise it would never send updates to the clients again (markForUpdate skips
+     * removed block entities). The initialization queued by onLoad hasn't run at that point and still creates the grid
+     * node, so it is not queued again (a node can only be created once). Block entities without a deferred
+     * initialization simply become loaded again.
+     */
     @Override
     public void validate() {
         super.validate();
+        if (removedByInvalidate) {
+            removedByInvalidate = false;
+            if (queuedForReady > readyInvoked) {
+                removed = false;
+            } else if (queuedForReady == 0) {
+                clearRemoved(); // no deferred initialization
+            } else {
+                // Not a path of the game itself: the grid node was destroyed and can't be created again
+                AELog.warn("Block entity %s at %s was invalidated and validated again after its initialization",
+                        getClass().getSimpleName(), pos);
+            }
+        }
     }
 
     @Override
@@ -563,11 +618,11 @@ public class AEBaseBlockEntity extends TileEntity
         this.requestModelDataUpdate();
 
         if (this.world != null && !this.isRemoved() && !notLoaded()) {
-            // On 1.12.2 the derived block state is computed from this block entity, so sending the update and
-            // notifying neighbors (for redstone/comparators) is all that's needed.
+            // On 1.12.2 the derived block state is computed from this block entity, so sending the update is all
+            // that's needed. Like 1.21, the neighbors are only notified when a block state property changes
+            // (setBlockStateProperty).
             var state = this.world.getBlockState(this.pos);
             this.world.notifyBlockUpdate(this.pos, state, state, 3);
-            this.world.notifyNeighborsOfStateChange(this.pos, state.getBlock(), false);
         }
     }
 

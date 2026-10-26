@@ -263,6 +263,13 @@ public final class AEComponents {
                     .networkSynchronized(ByteBufCodecs.ITEM));
 
     /**
+     * Metadata of the item of a facade, if not 0. Block variants (wool colors, stone and plank types) are metadata of
+     * one item in 1.12.2.
+     */
+    public static final DataComponentType<Integer> FACADE_ITEM_META = register("facade_item_meta",
+            builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+
+    /**
      * Which property of a facade blockstate the wrench is currently cycling through.
      */
     public static final DataComponentType<String> FACADE_CYCLE_PROPERTY = register("facade_cycle_property",

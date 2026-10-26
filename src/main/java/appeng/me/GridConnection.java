@@ -207,7 +207,7 @@ public class GridConnection implements IGridConnection, IPathItem {
         var b = (GridNode) bNode;
 
         if (a.hasConnection(b) || b.hasConnection(a)) {
-            throw new IllegalStateException("Connection between node [%s] and [%s] on [%s] already exists.".formatted(
+            throw new IllegalStateException(String.format("Connection between node [%s] and [%s] on [%s] already exists.", 
                     a, b, fromAtoB));
         }
 

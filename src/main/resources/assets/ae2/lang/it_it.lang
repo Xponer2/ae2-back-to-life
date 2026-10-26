@@ -1021,3 +1021,6 @@ waila.ae2.Suppressed=Soppresso
 waila.ae2.Unlocked=Sbloccato
 item.ae2.copper_ingot=Lingotto di rame
 block.ae2.copper_ore=Minerale di rame
+ae2.jei.stonecutting=Tagliapietre
+item.minecraft.smithing_template.applies_to=Si applica a:
+item.minecraft.smithing_template.ingredients=Ingredienti:

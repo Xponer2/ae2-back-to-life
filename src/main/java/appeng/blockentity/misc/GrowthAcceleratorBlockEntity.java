@@ -91,7 +91,8 @@ public class GrowthAcceleratorBlockEntity extends AENetworkedPoweredBlockEntity 
     private void onTick(int ticksSinceLastCall) {
         var powered = isPowered();
         if (powered != getBlockState().getValue(GrowthAcceleratorBlock.POWERED)) {
-            markForUpdate();
+            // The powered state is a synced block state property (the client reads it from the block state)
+            setBlockStateProperty(GrowthAcceleratorBlock.POWERED, powered);
         }
 
         if (!powered) {
@@ -116,7 +117,7 @@ public class GrowthAcceleratorBlockEntity extends AENetworkedPoweredBlockEntity 
     @Override
     public void onMainNodeStateChanged(IGridNodeListener.State reason) {
         if (reason == IGridNodeListener.State.POWER) {
-            this.markForUpdate();
+            setBlockStateProperty(GrowthAcceleratorBlock.POWERED, isPowered());
         }
     }
 

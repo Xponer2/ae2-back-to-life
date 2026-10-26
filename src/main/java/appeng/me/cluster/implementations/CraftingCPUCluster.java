@@ -290,7 +290,7 @@ public final class CraftingCPUCluster implements IAECluster, ICraftingCPU {
                 if (this.myName != null) {
                     this.myName.createCopy().appendText(" ").appendSibling(te.getCustomName());
                 } else {
-                    this.myName = te.getCustomName().copy();
+                    this.myName = te.getCustomName().createCopy();
                 }
             }
         }
@@ -323,7 +323,7 @@ public final class CraftingCPUCluster implements IAECluster, ICraftingCPU {
         return switch (getSelectionMode()) {
             case ANY -> true;
             case PLAYER_ONLY -> source.player().isPresent();
-            case MACHINE_ONLY -> source.player().isEmpty();
+            case MACHINE_ONLY -> !source.player().isPresent();
         };
     }
 
@@ -334,7 +334,7 @@ public final class CraftingCPUCluster implements IAECluster, ICraftingCPU {
         return switch (getSelectionMode()) {
             case ANY -> false;
             case PLAYER_ONLY -> source.player().isPresent();
-            case MACHINE_ONLY -> source.player().isEmpty();
+            case MACHINE_ONLY -> !source.player().isPresent();
         };
     }
 }

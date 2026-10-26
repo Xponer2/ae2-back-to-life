@@ -990,3 +990,6 @@ waila.ae2.Stored=Uloženo: %s / %s
 waila.ae2.Unlocked=Odemčeno
 item.ae2.copper_ingot=Měděný ingot
 block.ae2.copper_ore=Měděná ruda
+ae2.jei.stonecutting=Řezačka kamene
+item.minecraft.smithing_template.applies_to=Použitelné na:
+item.minecraft.smithing_template.ingredients=Suroviny:

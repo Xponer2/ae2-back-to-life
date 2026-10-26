@@ -33,6 +33,7 @@ import appeng.api.components.DataComponentType;
 import appeng.api.util.Registries;
 import appeng.api.util.TagKey;
 import appeng.core.AppEng;
+import appeng.util.ResourceLocations;
 
 /**
  * Contains various tags:
@@ -175,11 +176,11 @@ public final class ConventionTags {
     }
 
     private static TagKey<Item> tag(String name) {
-        return TagKey.create(Registries.ITEM, new ResourceLocation(name));
+        return TagKey.create(Registries.ITEM, ResourceLocations.parse(name));
     }
 
     private static TagKey<Block> blockTag(String name) {
-        return TagKey.create(Registries.BLOCK, new ResourceLocation(name));
+        return TagKey.create(Registries.BLOCK, ResourceLocations.parse(name));
     }
 
 }

@@ -18,6 +18,7 @@
 
 package appeng.helpers;
 
+import appeng.blockentity.AEBaseBlockEntity;
 import appeng.api.util.ItemLike;
 
 import appeng.util.Platform;
@@ -224,7 +225,10 @@ public class InterfaceLogic implements ICraftingRequester, IUpgradeableObject, I
             });
         }
 
-        this.host.getTileEntity().invalidateCapabilities();
+        // 1.21 invalidates the capability cache here, the upgrades can change the exposed capabilities
+        if (this.host.getTileEntity() instanceof AEBaseBlockEntity blockEntity) {
+            blockEntity.invalidateCapabilities();
+        }
     }
 
     public void gridChanged() {

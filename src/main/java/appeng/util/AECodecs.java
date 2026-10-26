@@ -45,7 +45,7 @@ public final class AECodecs {
 
     public static final Codec<ResourceLocation> RESOURCE_LOCATION = Codec.STRING.comapFlatMap(s -> {
         try {
-            return DataResult.success(new ResourceLocation(s));
+            return DataResult.success(ResourceLocations.parse(s));
         } catch (Exception e) {
             return DataResult.error("Not a valid resource location: " + s);
         }

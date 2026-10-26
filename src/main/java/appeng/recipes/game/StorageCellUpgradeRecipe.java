@@ -9,10 +9,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraftforge.common.ForgeHooks;
 
 import appeng.api.util.Registries;
 import appeng.core.AppEng;
@@ -21,6 +18,8 @@ import appeng.core.network.codec.ByteBufCodecs;
 import appeng.core.network.codec.StreamCodec;
 import appeng.util.AECodecs;
 import appeng.util.BuiltInRegistries;
+import appeng.recipes.RecipeSerializer;
+import appeng.util.CraftingInput;
 
 /**
  * Allows swapping out the storage component of a cell without having to empty it first.
@@ -34,7 +33,6 @@ public class StorageCellUpgradeRecipe extends CustomRecipe {
     private final Item resultComponent;
 
     public StorageCellUpgradeRecipe(Item inputCell, Item inputComponent, Item resultCell, Item resultComponent) {
-        super(CraftingBookCategory.MISC);
         this.inputCell = inputCell;
         this.inputComponent = inputComponent;
         this.resultCell = resultCell;
@@ -78,7 +76,7 @@ public class StorageCellUpgradeRecipe extends CustomRecipe {
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.of(Ingredient.EMPTY, Ingredient.of(inputCell), Ingredient.of(inputComponent));
+        return NonNullList.from(Ingredient.EMPTY, Ingredient.fromItem(inputCell), Ingredient.fromItem(inputComponent));
     }
 
     @Override
@@ -89,10 +87,10 @@ public class StorageCellUpgradeRecipe extends CustomRecipe {
         for (int i = 0; i < container.size(); i++) {
             var stack = container.getItem(i);
             if (!stack.isEmpty()) {
-                if (stack.is(inputCell)) {
+                if (stack.getItem() == inputCell) {
                     // Also bail out if somehow someone managed to stack cells (since we replace it with a component)
                     cellsFound += stack.getCount();
-                } else if (stack.is(inputComponent)) {
+                } else if (stack.getItem() == inputComponent) {
                     componentsFound++;
                 } else {
                     return false;
@@ -120,12 +118,12 @@ public class StorageCellUpgradeRecipe extends CustomRecipe {
         for (int i = 0; i < container.size(); i++) {
             var stack = container.getItem(i);
             if (!stack.isEmpty()) {
-                if (stack.is(inputCell)) {
+                if (stack.getItem() == inputCell) {
                     if (stack.getCount() > 1 || !foundCell.isEmpty()) {
                         return ItemStack.EMPTY; // More than one cell found
                     }
                     foundCell = stack;
-                } else if (stack.is(inputComponent)) {
+                } else if (stack.getItem() == inputComponent) {
                     if (++componentsFound > 1) {
                         return ItemStack.EMPTY; // More than one component found
                     }
@@ -138,7 +136,12 @@ public class StorageCellUpgradeRecipe extends CustomRecipe {
         if (foundCell.isEmpty() || componentsFound == 0) {
             return ItemStack.EMPTY;
         } else {
-            return foundCell.transmuteCopy(resultCell, 1);
+            // The new cell keeps the data of the old one (content, upgrades, ...)
+            var result = new ItemStack(resultCell, 1);
+            if (foundCell.hasTagCompound()) {
+                result.setTagCompound(foundCell.getTagCompound().copy());
+            }
+            return result;
         }
     }
 
@@ -148,11 +151,11 @@ public class StorageCellUpgradeRecipe extends CustomRecipe {
 
         for (int i = 0; i < remainder.size(); ++i) {
             var stack = input.getItem(i);
-            if (stack.is(inputCell)) {
+            if (stack.getItem() == inputCell) {
                 // We replace the cell with the component since it is unstackable and forced to be in match
                 remainder.set(i, new ItemStack(resultComponent));
             } else {
-                remainder.set(i, stack.getCraftingRemainingItem());
+                remainder.set(i, ForgeHooks.getContainerItem(stack));
             }
         }
 

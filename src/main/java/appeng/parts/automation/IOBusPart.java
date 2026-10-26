@@ -323,6 +323,6 @@ public abstract class IOBusPart extends UpgradeablePart implements IGridTickable
 
     @Override
     public ItemStack getMainMenuIcon() {
-        return getPartItem().asItem().getDefaultInstance();
+        return new ItemStack(getPartItem().asItem()); // getDefaultInstance() is client-only in 1.12.2
     }
 }

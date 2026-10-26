@@ -109,7 +109,7 @@ public class ItemGenBlockEntity extends AEBaseBlockEntity implements InternalInv
             return;
         }
 
-        ItemStack sampleStack = item.getDefaultInstance();
+        ItemStack sampleStack = new ItemStack(item); // getDefaultInstance() is client-only in 1.12.2
         if (sampleStack.isItemStackDamageable()) {
             int maxDamage = sampleStack.getMaxDamage();
             for (int dmg = 0; dmg < maxDamage; dmg++) {
@@ -118,7 +118,7 @@ public class ItemGenBlockEntity extends AEBaseBlockEntity implements InternalInv
                 queue.add(is);
             }
         } else {
-            queue.add(item.getDefaultInstance());
+            queue.add(new ItemStack(item));
         }
     }
 

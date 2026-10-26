@@ -20,7 +20,6 @@ package appeng.blockentity.misc;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.ITextComponent;
@@ -33,6 +32,7 @@ import appeng.recipes.AERecipeTypes;
 import appeng.recipes.handlers.InscriberProcessType;
 import appeng.recipes.handlers.InscriberRecipe;
 import appeng.util.Platform;
+import appeng.recipes.RecipeManager;
 
 /**
  * This class indexes all inscriber recipes to find valid inputs for the top and bottom optional slots. This speeds up
@@ -47,7 +47,7 @@ public final class InscriberRecipes {
      * Returns an unmodifiable view of all registered inscriber recipes.
      */
     public static Iterable<RecipeHolder<InscriberRecipe>> getRecipes(World level) {
-        return level.getRecipeManager().byType(AERecipeTypes.INSCRIBER);
+        return RecipeManager.of(level).byType(AERecipeTypes.INSCRIBER);
     }
 
     @Nullable
@@ -99,20 +99,20 @@ public final class InscriberRecipes {
             }
         }
 
-        var startingItem = Ingredient.of(input.copy());
+        var startingItem = Ingredient.fromStacks(input.copy());
         var renamedItem = Platform.copyWithCount(input, 1);
 
         if (name != null) {
-            renamedItem.set(AEComponents.CUSTOM_NAME, name);
+            AEComponents.CUSTOM_NAME.set(renamedItem, name);
         } else {
-            renamedItem.remove(AEComponents.CUSTOM_NAME);
+            AEComponents.CUSTOM_NAME.remove(renamedItem);
         }
 
         final InscriberProcessType type = InscriberProcessType.INSCRIBE;
 
         return new InscriberRecipe(startingItem, renamedItem,
-                plateA.isEmpty() ? Ingredient.EMPTY : Ingredient.of(plateA),
-                plateB.isEmpty() ? Ingredient.EMPTY : Ingredient.of(plateB), type);
+                plateA.isEmpty() ? Ingredient.EMPTY : Ingredient.fromStacks(plateA),
+                plateB.isEmpty() ? Ingredient.EMPTY : Ingredient.fromStacks(plateB), type);
     }
 
     /**

@@ -269,7 +269,7 @@ public class GenericStackInv implements MEStorage, GenericInternalInventory {
 
         // Strip out trailing nulls
         for (int i = tag.tagCount() - 1; i >= 0; i--) {
-            if (tag.getCompoundTag(i).isEmpty()) {
+            if (tag.getCompoundTagAt(i).isEmpty()) {
                 tag.removeTag(i);
             } else {
                 break;
@@ -298,7 +298,7 @@ public class GenericStackInv implements MEStorage, GenericInternalInventory {
     public void readFromTag(NBTTagList tag) {
         boolean changed = false;
         for (int i = 0; i < Math.min(size(), tag.tagCount()); ++i) {
-            var stack = GenericStack.readTag(tag.getCompoundTag(i));
+            var stack = GenericStack.readTag(tag.getCompoundTagAt(i));
             if (!Objects.equals(stack, stacks[i])) {
                 stacks[i] = stack;
                 changed = true;

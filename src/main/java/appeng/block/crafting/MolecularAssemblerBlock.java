@@ -25,10 +25,13 @@ import net.minecraft.block.state.BlockStateContainer.Builder;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.block.AEBaseEntityBlock;
 import appeng.blockentity.crafting.MolecularAssemblerBlockEntity;
@@ -71,4 +74,9 @@ public class MolecularAssemblerBlock extends AEBaseEntityBlock<MolecularAssemble
         return EnumActionResult.PASS;
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
 }

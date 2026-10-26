@@ -162,7 +162,7 @@ public class CraftingCalculation {
         var plan = CraftingSimulationState.buildCraftingPlan(craftingInventory, this, amount);
         if (AELog.isCraftingLogEnabled()) {
             String type = simulate ? "simulated" : "succeeded";
-            this.attempts.add(new CraftAttempt("%d %s (%d bytes)".formatted(amount, type, plan.bytes()), timer));
+            this.attempts.add(new CraftAttempt(String.format("%d %s (%d bytes)", amount, type, plan.bytes()), timer));
         }
         return plan;
     }
@@ -273,13 +273,13 @@ public class CraftingCalculation {
             }
 
             StringBuilder message = new StringBuilder();
-            message.append("CraftingCalculation issued by %s requesting [%dx%s] breakdown:\n".formatted(
+            message.append(String.format("CraftingCalculation issued by %s requesting [%dx%s] breakdown:\n",
                     actionSourceName, this.requestedAmount, this.output));
             for (var attempt : this.attempts) {
-                message.append(" - %s in %d ms\n".formatted(
+                message.append(String.format(" - %s in %d ms\n",
                         attempt.description, attempt.stopwatch.elapsed(TimeUnit.MILLISECONDS)));
             }
-            message.append(" - final plan: %d (%d bytes)".formatted(plan.finalOutput().amount(), plan.bytes()));
+            message.append(String.format(" - final plan: %d (%d bytes)", plan.finalOutput().amount(), plan.bytes()));
 
             AELog.crafting(message.toString());
         }

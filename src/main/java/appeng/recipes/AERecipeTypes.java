@@ -1,11 +1,5 @@
 package appeng.recipes;
 
-import net.neoforged.neoforge.registries.DeferredRegister;
-
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.world.item.crafting.RecipeType;
-
-import appeng.api.util.Registries;
 import appeng.core.AppEng;
 import appeng.recipes.entropy.EntropyRecipe;
 import appeng.recipes.game.CraftingUnitTransformRecipe;
@@ -20,9 +14,6 @@ public final class AERecipeTypes {
     private AERecipeTypes() {
     }
 
-    public static final DeferredRegister<RecipeType<?>> DR = DeferredRegister
-            .create(Registries.RECIPE_TYPE, AppEng.MOD_ID);
-
     public static final RecipeType<TransformRecipe> TRANSFORM = register("transform");
     public static final RecipeType<EntropyRecipe> ENTROPY = register("entropy");
     public static final RecipeType<InscriberRecipe> INSCRIBER = register("inscriber");
@@ -34,9 +25,8 @@ public final class AERecipeTypes {
     public static final RecipeType<StorageCellDisassemblyRecipe> CELL_DISASSEMBLY = register(
             "storage_cell_disassembly");
 
-    private static <T extends IRecipe<?>> RecipeType<T> register(String id) {
-        RecipeType<T> type = RecipeType.simple(AppEng.makeId(id));
-        DR.register(id, () -> type);
-        return type;
+    // The recipes of a type are kept by RecipeManager, the types themselves aren't registered anywhere
+    private static <T> RecipeType<T> register(String id) {
+        return RecipeType.simple(AppEng.makeId(id));
     }
 }

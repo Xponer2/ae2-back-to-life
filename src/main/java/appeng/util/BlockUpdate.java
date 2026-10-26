@@ -32,7 +32,7 @@ public class BlockUpdate implements ILevelRunnable {
     @Override
     public void call(World level) throws Exception {
         if (level.isBlockLoaded(this.pos)) {
-            level.notifyNeighborsOfStateChange(this.pos, Blocks.AIR);
+            level.notifyNeighborsOfStateChange(this.pos, Blocks.AIR, true);
         }
     }
 }

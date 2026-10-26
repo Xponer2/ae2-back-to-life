@@ -50,6 +50,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.OreDictionary;
 
 import appeng.core.AELog;
+import appeng.util.ResourceLocations;
 
 /**
  * Minimal implementation of Minecraft's data driven tags for 1.12.2.
@@ -70,6 +71,8 @@ public final class TagManager {
     private static final Map<String, Map<ResourceLocation, List<String>>> RAW = new HashMap<>();
     private static final Map<String, Map<ResourceLocation, Resolved>> RESOLVED = new HashMap<>();
     private static boolean loaded;
+    // Changes whenever the contents of tags may have changed (for caches of tag contents)
+    private static int generation;
 
     private TagManager() {
     }
@@ -97,9 +100,11 @@ public final class TagManager {
             RAW.put(type, new HashMap<>());
             RESOLVED.put(type, new HashMap<>());
         }
+        // Several containers share one source (minecraft, forge, ...)
+        var scanned = new HashSet<File>();
         for (ModContainer mod : Loader.instance().getActiveModList()) {
             File source = mod.getSource();
-            if (source == null || !source.exists()) {
+            if (source == null || !source.exists() || !scanned.add(source)) {
                 continue;
             }
             try {
@@ -117,6 +122,7 @@ public final class TagManager {
             }
         }
         loaded = true;
+        generation++;
     }
 
     private static void scanSource(Path source) throws IOException {
@@ -126,12 +132,13 @@ public final class TagManager {
             if (Files.isDirectory(data)) {
                 scanDataDir(data);
             }
-            // RFG puts resources next to classes: build/resources/main
-            var res = source.getParent() != null ? source.getParent().getParent() : null;
-            if (res != null) {
-                var resData = res.resolve("resources").resolve("main").resolve("data");
+            // RFG puts resources next to classes: build/classes/java/main and build/resources/main
+            var dir = source.getParent();
+            for (int i = 0; i < 3 && dir != null; i++, dir = dir.getParent()) {
+                var resData = dir.resolve("resources").resolve("main").resolve("data");
                 if (Files.isDirectory(resData)) {
                     scanDataDir(resData);
+                    break;
                 }
             }
         } else if (source.toString().endsWith(".jar") || source.toString().endsWith(".zip")) {
@@ -238,7 +245,7 @@ public final class TagManager {
         }
         for (String entry : raw) {
             if (entry.startsWith("#")) {
-                resolveInto(type, new ResourceLocation(entry.substring(1)), result, visited);
+                resolveInto(type, ResourceLocations.parse(entry.substring(1)), result, visited);
             } else if (entry.startsWith("ore:")) {
                 if (!type.equals("fluid")) {
                     for (ItemStack ore : OreDictionary.getOres(entry.substring(4), false)) {
@@ -277,7 +284,7 @@ public final class TagManager {
             meta = Integer.parseInt(entry.substring(at + 1));
             entry = entry.substring(0, at);
         }
-        var rl = new ResourceLocation(entry);
+        var rl = ResourceLocations.parse(entry);
         if (meta < 0) {
             var flattened = Flattening.lookup(rl);
             if (flattened != null) {
@@ -405,9 +412,9 @@ public final class TagManager {
         }
         for (var entry : entries) {
             if (entry.startsWith("#")) {
-                collectIds(type, new ResourceLocation(entry.substring(1)), out, visited);
+                collectIds(type, ResourceLocations.parse(entry.substring(1)), out, visited);
             } else {
-                out.add(new ResourceLocation(entry));
+                out.add(ResourceLocations.parse(entry));
             }
         }
     }
@@ -419,5 +426,13 @@ public final class TagManager {
         for (var map : RESOLVED.values()) {
             map.clear();
         }
+        generation++;
+    }
+
+    /**
+     * Changes whenever the contents of tags may have changed.
+     */
+    public static int getGeneration() {
+        return generation;
     }
 }

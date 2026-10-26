@@ -31,3 +31,6 @@ item.ae2.light_gray_smart_cable=Light Grey ME Smart Cable
 item.ae2.light_gray_smart_dense_cable=Light Grey ME Dense Smart Cable
 item.ae2.copper_ingot=Copper Ingot
 block.ae2.copper_ore=Copper Ore
+ae2.jei.stonecutting=Stonecutting
+item.minecraft.smithing_template.applies_to=Applies to:
+item.minecraft.smithing_template.ingredients=Ingredients:

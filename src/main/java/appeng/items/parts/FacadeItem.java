@@ -153,12 +153,12 @@ public class FacadeItem extends AEBaseItem implements IFacadeItem {
             return ItemStack.EMPTY;
         }
 
-        IBlockState blockState = block.getDefaultState();
+        IBlockState blockState = getBlockState(block, blockItem, itemStack.getMetadata());
 
         final boolean isWhiteListed = AETags.FACADE_BLOCK_WHITELIST.contains(block);
         final boolean isModel = blockState.getRenderType() == EnumBlockRenderType.MODEL;
 
-        final IBlockState defaultState = block.getDefaultState();
+        final IBlockState defaultState = blockState;
         final boolean isBlockEntity = block.hasTileEntity(defaultState);
         final boolean isFullCube = defaultState.isFullCube();
 
@@ -178,6 +178,9 @@ public class FacadeItem extends AEBaseItem implements IFacadeItem {
     public ItemStack createFacadeForItemUnchecked(ItemStack itemStack) {
         var is = new ItemStack(this);
         AEComponents.FACADE_ITEM.set(is, itemStack.getItem());
+        if (itemStack.getMetadata() != 0) {
+            AEComponents.FACADE_ITEM_META.set(is, itemStack.getMetadata());
+        }
         return is;
     }
 
@@ -198,7 +201,8 @@ public class FacadeItem extends AEBaseItem implements IFacadeItem {
             return ItemStack.EMPTY;
         }
 
-        return new ItemStack(baseItem, 1);
+        var meta = AEComponents.FACADE_ITEM_META.get(is);
+        return new ItemStack(baseItem, 1, meta != null ? meta : 0);
     }
 
     @Override
@@ -212,10 +216,22 @@ public class FacadeItem extends AEBaseItem implements IFacadeItem {
 
         Block block = Block.getBlockFromItem(baseItemStack.getItem());
 
-        if (block == Blocks.AIR) {
+        if (block == Blocks.AIR || !(baseItemStack.getItem() instanceof ItemBlock blockItem)) {
             return Blocks.GLASS.getDefaultState();
         }
 
-        return block.getDefaultState();
+        return getBlockState(block, blockItem, baseItemStack.getMetadata());
+    }
+
+    /**
+     * The block state that the item places (the variant given by the metadata).
+     */
+    @SuppressWarnings("deprecation")
+    private static IBlockState getBlockState(Block block, ItemBlock blockItem, int itemMeta) {
+        try {
+            return block.getStateFromMeta(blockItem.getMetadata(itemMeta));
+        } catch (RuntimeException e) {
+            return block.getDefaultState();
+        }
     }
 }

@@ -1020,3 +1020,6 @@ waila.ae2.Suppressed=Suprimido
 waila.ae2.Unlocked=Desbloqueado
 item.ae2.copper_ingot=Lingote de cobre
 block.ae2.copper_ore=Mena de cobre
+ae2.jei.stonecutting=Cortapiedras
+item.minecraft.smithing_template.applies_to=Se aplica a:
+item.minecraft.smithing_template.ingredients=Ingredientes:

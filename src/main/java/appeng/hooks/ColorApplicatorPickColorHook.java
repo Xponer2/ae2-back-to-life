@@ -21,7 +21,7 @@ public final class ColorApplicatorPickColorHook {
         }
 
         // Figure out which color...
-        var be = player.world.getTileEntity(hitResult.getPos());
+        var be = player.world.getTileEntity(hitResult.getBlockPos());
         if (be instanceof IColorableBlockEntity colorableBlockEntity) {
             ServerboundPacket message = new ColorApplicatorSelectColorPacket(colorableBlockEntity.getColor());
             PacketDistributor.sendToServer(message);

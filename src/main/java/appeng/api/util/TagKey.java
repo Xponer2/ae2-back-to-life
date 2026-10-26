@@ -36,6 +36,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 
 import appeng.core.tags.TagManager;
+import appeng.util.ResourceLocations;
 
 /**
  * Backport of Minecraft's tag keys. Minecraft 1.12.2 has no tags, AE2 ships its own minimal tag system which reads the
@@ -55,12 +56,12 @@ public final class TagKey<T> {
     }
 
     public static <T> Codec<TagKey<T>> codec(Registries.RegistryKey<T> registry) {
-        return Codec.STRING.xmap(s -> create(registry, new ResourceLocation(s.startsWith("#") ? s.substring(1) : s)),
+        return Codec.STRING.xmap(s -> create(registry, ResourceLocations.parse(s.startsWith("#") ? s.substring(1) : s)),
                 t -> t.location.toString());
     }
 
     public static <T> Codec<TagKey<T>> hashedCodec(Registries.RegistryKey<T> registry) {
-        return Codec.STRING.xmap(s -> create(registry, new ResourceLocation(s.substring(1))),
+        return Codec.STRING.xmap(s -> create(registry, ResourceLocations.parse(s.substring(1))),
                 t -> "#" + t.location);
     }
 

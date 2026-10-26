@@ -96,7 +96,7 @@ class ServerBlockEntityRepo {
      * Add a new block entity to be initializes in a later tick.
      */
     synchronized <T extends TileEntity> void addBlockEntity(T blockEntity, Consumer<? super T> initFunction) {
-        final World level = blockEntity.getLevel();
+        final World level = blockEntity.getWorld();
         final int x = blockEntity.getPos().getX() >> 4;
         final int z = blockEntity.getPos().getZ() >> 4;
         final long chunkPos = ChunkPos.asLong(x, z);
@@ -148,14 +148,14 @@ class ServerBlockEntityRepo {
             var level = levelEntry.getKey();
             String levelName = level.toString();
             if (level instanceof WorldServer serverLevel) {
-                levelName = serverLevel.dimension().location().toString();
+                levelName = serverLevel.provider.getDimensionType().getName() + " (" + serverLevel.provider.getDimension() + ")";
             }
 
             result.add(TextUtil.withStyle(new TextComponentString(levelName), TextFormatting.BOLD));
             for (var chunkEntry : levelEntry.getValue().long2ObjectEntrySet()) {
-                var chunkPos = new ChunkPos(chunkEntry.getLongKey());
+                var chunkPos = new ChunkPos((int) chunkEntry.getLongKey(), (int) (chunkEntry.getLongKey() >>> 32));
                 var line = TextUtil.withStyle(new TextComponentString(chunkPos.x + "," + chunkPos.z + ": "), TextFormatting.BOLD)
-                        .appendSibling(Integer.toString(chunkEntry.getValue().size()));
+                        .appendText(Integer.toString(chunkEntry.getValue().size()));
                 result.add(line);
             }
         }

@@ -82,7 +82,9 @@ public class MolecularAssemblerRenderer extends AEBlockEntityRenderer<MolecularA
 
         // 1.21 uses the tripwire layer for its shader properties: alpha testing and translucency.
         // The light strip is emissive, so it is drawn full-bright.
-        GlStateManager.pushAttrib();
+        // Restored explicitly, popAttrib would not update the GlStateManager cache
+        boolean lighting = GL11.glIsEnabled(GL11.GL_LIGHTING);
+        boolean blend = GL11.glIsEnabled(GL11.GL_BLEND);
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.enableAlpha();
@@ -91,7 +93,12 @@ public class MolecularAssemblerRenderer extends AEBlockEntityRenderer<MolecularA
         BlockEntityRenderHelper.setLightmap(BlockEntityRenderHelper.FULL_BRIGHT);
         minecraft.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(lightsModel, 1, 1,
                 1, 1);
-        GlStateManager.popAttrib();
+        if (lighting) {
+            GlStateManager.enableLighting();
+        }
+        if (!blend) {
+            GlStateManager.disableBlend();
+        }
     }
 
     private void renderStatus(MolecularAssemblerBlockEntity molecularAssembler, PoseStack ms,

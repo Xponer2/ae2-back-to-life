@@ -1,7 +1,9 @@
 package appeng.helpers.externalstorage;
 
+import net.minecraftforge.fluids.capability.FluidTankProperties;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import javax.annotation.Nullable;
 import com.google.common.primitives.Ints;
-import org.jetbrains.annotations.NotNull;
 
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -22,36 +24,21 @@ public class GenericStackFluidStorage implements IFluidHandler {
     }
 
     @Override
-    public int getTanks() {
-        return inv.size();
-    }
-
-    @NotNull
-    @Override
-    public FluidStack getFluidInTank(int tank) {
-        if (inv.getKey(tank) instanceof AEFluidKey what) {
-            var amount = Ints.saturatedCast(inv.getAmount(tank));
-            return what.toStack(amount);
+    public IFluidTankProperties[] getTankProperties() {
+        var capacity = Ints.saturatedCast(inv.getCapacity(AEKeyType.fluids()));
+        var result = new IFluidTankProperties[inv.size()];
+        for (int tank = 0; tank < result.length; tank++) {
+            FluidStack contents = null;
+            if (inv.getKey(tank) instanceof AEFluidKey what) {
+                contents = what.toStack(Ints.saturatedCast(inv.getAmount(tank)));
+            }
+            result[tank] = new FluidTankProperties(contents, capacity);
         }
-        return FluidStack.EMPTY;
+        return result;
     }
 
     @Override
-    public int getTankCapacity(int tank) {
-        return Ints.saturatedCast(inv.getCapacity(AEKeyType.fluids()));
-    }
-
-    @Override
-    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
-        if (stack.isEmpty()) {
-            return true;
-        }
-        var what = AEFluidKey.of(stack);
-        return what != null && inv.isAllowedIn(tank, what);
-    }
-
-    @Override
-    public int fill(FluidStack resource, FluidAction action) {
+    public int fill(FluidStack resource, boolean doFill) {
         var what = AEFluidKey.of(resource);
         if (what == null) {
             return 0;
@@ -59,44 +46,44 @@ public class GenericStackFluidStorage implements IFluidHandler {
 
         int inserted = 0;
         for (int i = 0; i < inv.size() && inserted < resource.amount; ++i) {
-            inserted += (int) inv.insert(i, what, resource.amount - inserted, Actionable.of(action));
+            inserted += (int) inv.insert(i, what, resource.amount - inserted, Actionable.of(doFill));
         }
         return inserted;
     }
 
-    @NotNull
+    @Nullable
     @Override
-    public FluidStack drain(FluidStack resource, FluidAction action) {
+    public FluidStack drain(FluidStack resource, boolean doDrain) {
         var what = AEFluidKey.of(resource);
         if (what == null) {
-            return FluidStack.EMPTY;
+            return null;
         }
 
-        return extract(what, resource.amount, action);
+        return extract(what, resource.amount, doDrain);
     }
 
-    @NotNull
+    @Nullable
     @Override
-    public FluidStack drain(int maxDrain, FluidAction action) {
+    public FluidStack drain(int maxDrain, boolean doDrain) {
         // Find first fluid in tanks
         for (int i = 0; i < inv.size(); i++) {
-            var what = inv.getKey(i);
             if (inv.getKey(i) instanceof AEFluidKey fluidKey) {
-                return extract(fluidKey, maxDrain, action);
+                return extract(fluidKey, maxDrain, doDrain);
             }
         }
-        return FluidStack.EMPTY;
+        return null;
     }
 
-    private FluidStack extract(AEFluidKey what, int amount, FluidAction action) {
+    @Nullable
+    private FluidStack extract(AEFluidKey what, int amount, boolean doDrain) {
         int extracted = 0;
         for (int i = 0; i < inv.size() && extracted < amount; ++i) {
-            extracted += (int) inv.extract(i, what, amount - extracted, Actionable.of(action));
+            extracted += (int) inv.extract(i, what, amount - extracted, Actionable.of(doDrain));
         }
 
         if (extracted > 0) {
             return what.toStack(extracted);
         }
-        return FluidStack.EMPTY;
+        return null;
     }
 }

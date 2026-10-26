@@ -3,7 +3,7 @@ package appeng.recipes.transform;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeInput;
+import appeng.recipes.RecipeInput;
 
 public final class TransformRecipeInput implements RecipeInput {
     private final List<ItemStack> items;

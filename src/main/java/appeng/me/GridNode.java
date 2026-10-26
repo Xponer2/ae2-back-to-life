@@ -594,7 +594,7 @@ public class GridNode implements IGridNode, IPathItem, IDebugExportable {
     public IPathItem getControllerRoute() {
         if (this.connections.isEmpty()) {
             throw new IllegalStateException(
-                    "Node %s has no connections, cannot have a controller route!".formatted(this));
+                    String.format("Node %s has no connections, cannot have a controller route!", this));
         }
 
         return this.connections.get(0);
@@ -745,7 +745,7 @@ public class GridNode implements IGridNode, IPathItem, IDebugExportable {
     @Override
     public String toString() {
         if (getOwner() instanceof TileEntity blockEntity) {
-            var beType = BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(blockEntity.getType());
+            var beType = TileEntity.getKey(blockEntity.getClass());
             return "node@" + Integer.toHexString(hashCode()) + " hosted by " + beType;
         } else {
             return "node@" + Integer.toHexString(hashCode()) + " hosted by " + getOwner().getClass().getName();
@@ -754,14 +754,14 @@ public class GridNode implements IGridNode, IPathItem, IDebugExportable {
 
     @Override
     public void fillCrashReportCategory(CrashReportCategory category) {
-        category.setDetail("Node", toString());
+        category.addCrashSection("Node", toString());
         if (getOwner() instanceof IPart part) {
             part.addEntityCrashInfo(category);
         } else if (getOwner() instanceof TileEntity blockEntity) {
-            blockEntity.fillCrashReportCategory(category);
+            blockEntity.addInfoToCrashReport(category);
             World level = blockEntity.getWorld();
             if (level != null) {
-                category.setDetail("World", level.dimension());
+                category.addCrashSection("World", level.provider.getDimension());
             }
         }
     }
@@ -784,6 +784,6 @@ public class GridNode implements IGridNode, IPathItem, IDebugExportable {
                 "id", id, "owner", machineId), writer);
 
         writer.name("level");
-        writer.value(level.dimension().location().toString());
+        writer.value(String.valueOf(level.provider.getDimension()));
     }
 }

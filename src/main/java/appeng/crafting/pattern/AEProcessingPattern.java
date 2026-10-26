@@ -24,7 +24,6 @@ import java.util.Objects;
 import com.google.common.base.Preconditions;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
@@ -136,8 +135,9 @@ public class AEProcessingPattern implements IPatternDetails {
             long available = allInputs.get(key);
 
             if (available < amount) {
-                throw new RuntimeException("Expected at least %d of %s when pushing pattern, but only %d available"
-                        .formatted(amount, key, available));
+                throw new RuntimeException(String.format(
+                        "Expected at least %d of %s when pushing pattern, but only %d available",
+                        amount, key, available));
             }
 
             inputSink.pushInput(key, amount);
@@ -146,7 +146,7 @@ public class AEProcessingPattern implements IPatternDetails {
     }
 
     public static PatternDetailsTooltip getInvalidPatternTooltip(ItemStack stack, World level,
-            @Nullable Exception cause, ITooltipFlag flags) {
+            @Nullable Exception cause, boolean advancedTooltips) {
         var tooltip = new PatternDetailsTooltip(PatternDetailsTooltip.OUTPUT_TEXT_PRODUCES);
 
         var encodedPattern = AEComponents.ENCODED_PROCESSING_PATTERN.get(stack);

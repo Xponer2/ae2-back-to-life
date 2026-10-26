@@ -1020,3 +1020,6 @@ waila.ae2.Suppressed=已停止
 waila.ae2.Unlocked=未锁定  
 item.ae2.copper_ingot=铜锭
 block.ae2.copper_ore=铜矿石
+ae2.jei.stonecutting=切石机
+item.minecraft.smithing_template.applies_to=可应用于：
+item.minecraft.smithing_template.ingredients=材料：

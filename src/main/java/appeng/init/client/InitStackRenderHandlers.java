@@ -82,11 +82,13 @@ public class InitStackRenderHandlers {
             poseStack.scale(scale, scale, 0.001f);
 
             // Keep the normals unit length despite the flattening (1.21 doesn't scale the normal matrix)
-            GlStateManager.pushAttrib();
+            boolean normalize = GL11.glIsEnabled(GL11.GL_NORMALIZE);
             GlStateManager.enableNormalize();
             BlockEntityRenderHelper.renderItem(what.getReadOnlyStack(), ItemCameraTransforms.TransformType.GUI,
                     combinedLight);
-            GlStateManager.popAttrib();
+            if (!normalize) {
+                GlStateManager.disableNormalize(); // not popAttrib: it would not update the GlStateManager cache
+            }
 
             poseStack.popPose();
         }

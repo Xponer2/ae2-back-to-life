@@ -247,7 +247,7 @@ public abstract class ExternalStorageFacade implements MEStorage {
             for (int i = 0; i < handler.getSlots(); i++) {
                 // Skip resources that cannot be extracted if that filter was enabled
                 var stack = handler.getStackInSlot(i);
-                if (stack.isEmpty()) {
+                if (stack == null || stack.isEmpty()) {
                     continue;
                 }
 
@@ -273,13 +273,13 @@ public abstract class ExternalStorageFacade implements MEStorage {
 
         @Override
         public int getSlots() {
-            return handler.getTanks();
+            return handler.getTankProperties().length;
         }
 
         @Nullable
         @Override
         public GenericStack getStackInSlot(int slot) {
-            return GenericStack.fromFluidStack(handler.getFluidInTank(slot));
+            return GenericStack.fromFluidStack(handler.getTankProperties()[slot].getContents());
         }
 
         @Override
@@ -306,7 +306,7 @@ public abstract class ExternalStorageFacade implements MEStorage {
 
             // Drain the fluid from the tank
             FluidStack gathered = handler.drain(fluidStack, mode.getFluidAction());
-            if (gathered.isEmpty()) {
+            if (gathered == null || gathered.amount <= 0) {
                 // If nothing was pulled from the tank, return null
                 return 0;
             }
@@ -316,8 +316,8 @@ public abstract class ExternalStorageFacade implements MEStorage {
 
         @Override
         public boolean containsAnyFuzzy(Set<AEKey> keys) {
-            for (int i = 0; i < handler.getTanks(); i++) {
-                var what = AEFluidKey.of(handler.getFluidInTank(i));
+            for (int i = 0; i < handler.getTankProperties().length; i++) {
+                var what = AEFluidKey.of(handler.getTankProperties()[i].getContents());
                 if (what != null) {
                     if (keys.contains(what.dropSecondary())) {
                         return true;
@@ -329,20 +329,21 @@ public abstract class ExternalStorageFacade implements MEStorage {
 
         @Override
         public void getAvailableStacks(KeyCounter out) {
-            for (int i = 0; i < handler.getTanks(); i++) {
+            for (int i = 0; i < handler.getTankProperties().length; i++) {
                 // Skip resources that cannot be extracted if that filter was enabled
-                var stack = handler.getFluidInTank(i);
-                if (stack.isEmpty()) {
+                var stack = handler.getTankProperties()[i].getContents();
+                if (stack == null || stack.amount <= 0) {
                     continue;
                 }
 
                 if (extractableOnly) {
-                    if (handler.drain(stack, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
+                    var drained = handler.drain(stack, false);
+                    if (drained == null || drained.amount <= 0) {
                         continue;
                     }
                 }
 
-                out.add(AEFluidKey.of(stack), stack.getAmount());
+                out.add(AEFluidKey.of(stack), stack.amount);
             }
         }
     }

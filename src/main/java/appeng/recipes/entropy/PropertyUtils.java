@@ -26,7 +26,7 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.world.level.block.state.StateHolder;
+import net.minecraft.block.state.IBlockState;
 
 final class PropertyUtils {
     private static final Logger LOG = LogManager.getLogger(PropertyUtils.class);
@@ -34,12 +34,12 @@ final class PropertyUtils {
     private PropertyUtils() {
     }
 
-    static IProperty<?> getRequiredProperty(BlockStateContainer<?, ?> stateDefinition, String name) {
+    static IProperty<?> getRequiredProperty(BlockStateContainer stateDefinition, String name) {
         Objects.requireNonNull(stateDefinition, "stateDefinition must not be null");
 
         IProperty<?> property = stateDefinition.getProperty(name);
         if (property == null) {
-            throw new IllegalArgumentException("Unknown property: " + name + " on " + stateDefinition.getOwner());
+            throw new IllegalArgumentException("Unknown property: " + name + " on " + stateDefinition.getBlock());
         }
         return property;
     }
@@ -47,12 +47,14 @@ final class PropertyUtils {
     static <T extends Comparable<T>> T getRequiredPropertyValue(IProperty<T> property, String name) {
         Objects.requireNonNull(property, "property must be not null");
 
-        return property.getValue(name)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid value '" + name + "' for property "
-                        + property.getName()));
+        var value = property.parseValue(name);
+        if (!value.isPresent()) {
+            throw new IllegalArgumentException("Invalid value '" + name + "' for property " + property.getName());
+        }
+        return value.get();
     }
 
-    static void validatePropertyMatchers(BlockStateContainer<?, ?> stateDefinition,
+    static void validatePropertyMatchers(BlockStateContainer stateDefinition,
             Map<String, PropertyValueMatcher> properties) {
         for (var entry : properties.entrySet()) {
             var property = stateDefinition.getProperty(entry.getKey());
@@ -66,8 +68,8 @@ final class PropertyUtils {
         }
     }
 
-    public static <SH extends StateHolder<?, SH>> boolean doPropertiesMatch(BlockStateContainer<?, SH> stateDefinition,
-            SH state, Map<String, PropertyValueMatcher> properties) {
+    public static boolean doPropertiesMatch(BlockStateContainer stateDefinition,
+            IBlockState state, Map<String, PropertyValueMatcher> properties) {
         for (var entry : properties.entrySet()) {
             var property = stateDefinition.getProperty(entry.getKey());
             if (property == null) {
@@ -82,7 +84,7 @@ final class PropertyUtils {
         return true;
     }
 
-    static <SH extends StateHolder<?, SH>> SH applyProperties(BlockStateContainer<?, SH> stateDefinition, SH state,
+    static IBlockState applyProperties(BlockStateContainer stateDefinition, IBlockState state,
             Map<String, String> properties) {
         for (var entry : properties.entrySet()) {
             // Get property
@@ -97,9 +99,9 @@ final class PropertyUtils {
         return state;
     }
 
-    static <T extends Comparable<T>, SH extends StateHolder<?, SH>> SH applyProperty(SH state, IProperty<T> property,
+    static <T extends Comparable<T>> IBlockState applyProperty(IBlockState state, IProperty<T> property,
             String value) {
-        var parsedValue = property.getValue(value);
-        return parsedValue.map(t -> state.trySetValue(property, t)).orElse(state);
+        var parsedValue = property.parseValue(value);
+        return parsedValue.isPresent() ? state.withProperty(property, parsedValue.get()) : state;
     }
 }

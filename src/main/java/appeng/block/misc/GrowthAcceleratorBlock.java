@@ -51,12 +51,6 @@ public class GrowthAcceleratorBlock extends AEBaseEntityBlock<GrowthAcceleratorB
     }
 
     @Override
-    protected IBlockState updateBlockStateFromBlockEntity(IBlockState currentState,
-            GrowthAcceleratorBlockEntity be) {
-        return currentState.withProperty(POWERED, be.isPowered());
-    }
-
-    @Override
     protected void createBlockStateDefinition(BlockStateContainer.Builder builder) {
         super.createBlockStateDefinition(builder);
         builder.add(POWERED);

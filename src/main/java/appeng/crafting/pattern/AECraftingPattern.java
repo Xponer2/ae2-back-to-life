@@ -33,18 +33,17 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemBucket;
+import net.minecraft.item.ItemBucketMilk;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.MilkBucketItem;
-import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraftforge.common.crafting.IShapedRecipe;
+import appeng.util.CraftingInput;
 import appeng.util.RecipeHolder;
 
 import appeng.api.behaviors.ContainerItemStrategies;
@@ -59,6 +58,7 @@ import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
 import appeng.blockentity.crafting.IMolecularAssemblerSupportedPattern;
 import appeng.core.localization.GuiText;
+import appeng.recipes.RecipeManager;
 
 public class AECraftingPattern implements IPatternDetails, IMolecularAssemblerSupportedPattern {
     public static final int CRAFTING_GRID_DIMENSION = 3;
@@ -79,7 +79,8 @@ public class AECraftingPattern implements IPatternDetails, IMolecularAssemblerSu
      * We cache results of isValid(...) calls for stacks that don't have NBT.
      */
     @SuppressWarnings("unchecked")
-    private final Map<Item, Boolean>[] isValidCache = new Map[9];
+    // Keyed by the primary key: in 1.12.2 variants of an item (wool colors, planks) differ by metadata
+    private final Map<Object, Boolean>[] isValidCache = new Map[9];
 
     public AECraftingPattern(AEItemKey definition, World level) {
         this.definition = definition;
@@ -95,7 +96,7 @@ public class AECraftingPattern implements IPatternDetails, IMolecularAssemblerSu
         this.sparseInputs = getCraftingInputs(encodedPattern.inputs());
 
         // Find recipe
-        this.recipeHolder = level.getRecipeManager().byKey(encodedPattern.recipeId()).orElse(null);
+        this.recipeHolder = RecipeManager.of(level).byKey(encodedPattern.recipeId()).orElse(null);
         if (recipeHolder == null || !(recipeHolder.value() instanceof IRecipe)) {
             throw new IllegalArgumentException("Pattern references unknown recipe " + encodedPattern.recipeId());
         }
@@ -103,11 +104,11 @@ public class AECraftingPattern implements IPatternDetails, IMolecularAssemblerSu
 
         // Build frame and find output
         this.positionedPattern = makeCraftingInput();
-        if (!this.recipe.matches(positionedPattern.input(), level)) {
+        if (!this.positionedPattern.input().matches(recipe, level)) {
             throw new IllegalStateException("The recipe " + recipe + " no longer matches the encoded input.");
         }
 
-        this.output = this.recipe.assemble(positionedPattern.input());
+        this.output = this.positionedPattern.input().assemble(recipe);
         if (this.output.isEmpty()) {
             throw new IllegalStateException(
                     "The recipe " + encodedPattern.recipeId() + " produced an empty item stack result.");
@@ -168,9 +169,10 @@ public class AECraftingPattern implements IPatternDetails, IMolecularAssemblerSu
      */
     private Ingredient getRecipeIngredient(int slot) {
 
-        if (recipe instanceof ShapedRecipes shapedRecipe) {
+        // ShapedRecipes is only the vanilla class, the recipe loader creates ShapedOreRecipe
+        if (recipe instanceof IShapedRecipe shapedRecipe) {
 
-            return getShapedRecipeIngredient(slot, shapedRecipe.getWidth());
+            return getShapedRecipeIngredient(slot, shapedRecipe.getRecipeWidth());
         } else {
             return getShapelessRecipeIngredient(slot);
         }
@@ -266,8 +268,8 @@ public class AECraftingPattern implements IPatternDetails, IMolecularAssemblerSu
         // Fill frame and check result
         var testCraftingInput = makeCraftingInputWithReplacedSlot(slot, key);
 
-        var newResult = recipe.matches(testCraftingInput.input(), level)
-                && ItemStack.matches(output, recipe.assemble(testCraftingInput.input()));
+        var newResult = testCraftingInput.input().matches(recipe, level)
+                && ItemStack.areItemStacksEqual(output, testCraftingInput.input().assemble(recipe));
 
         setTestResult(slot, key, newResult);
 
@@ -286,7 +288,7 @@ public class AECraftingPattern implements IPatternDetails, IMolecularAssemblerSu
         // Fill frame
         var positioned = makeCraftingInputWithReplacedSlot(slot, key);
         // Get remainder
-        var remainingItems = recipe.getRemainingItems(positioned.input());
+        var remainingItems = positioned.input().getRemainingItems(recipe);
 
         var x = (slot % CRAFTING_GRID_DIMENSION - positioned.left());
         var y = slot / CRAFTING_GRID_DIMENSION - positioned.top();
@@ -312,7 +314,7 @@ public class AECraftingPattern implements IPatternDetails, IMolecularAssemblerSu
         if (cache == null) {
             return null;
         } else {
-            return cache.get(what.getItem());
+            return cache.get(what.getPrimaryKey());
         }
     }
 
@@ -322,7 +324,7 @@ public class AECraftingPattern implements IPatternDetails, IMolecularAssemblerSu
             if (cache == null) {
                 cache = isValidCache[slot] = new IdentityHashMap<>();
             }
-            cache.put(what.getItem(), result);
+            cache.put(what.getPrimaryKey(), result);
         }
     }
 
@@ -386,7 +388,7 @@ public class AECraftingPattern implements IPatternDetails, IMolecularAssemblerSu
             return ItemStack.EMPTY;
         }
 
-        if (canSubstitute && recipe.isSpecial()) {
+        if (canSubstitute && recipe.isDynamic()) {
             // For special recipes, we need to test the recipe with assemble, unfortunately, since the output might
             // depend on the inputs in a way that can't be detected by changing one input at the time.
             var items = NonNullList.withSize(CRAFTING_GRID_DIMENSION * CRAFTING_GRID_DIMENSION, ItemStack.EMPTY);
@@ -407,7 +409,7 @@ public class AECraftingPattern implements IPatternDetails, IMolecularAssemblerSu
             }
 
             var testInput = CraftingInput.of(CRAFTING_GRID_DIMENSION, CRAFTING_GRID_DIMENSION, items);
-            return recipe.assemble(testInput);
+            return testInput.assemble(recipe);
         }
 
         for (int i = 0; i < sparseInputs.size(); i++) {
@@ -465,7 +467,7 @@ public class AECraftingPattern implements IPatternDetails, IMolecularAssemblerSu
                 throw new IllegalStateException("After fluid substitution, the container size changed: "
                         + adjustedInput.size() + " != " + container.size());
             }
-            var result = this.recipe.getRemainingItems(adjustedInput);
+            var result = adjustedInput.getRemainingItems(this.recipe);
 
             // Now ensure the empty buckets are cleared since we didn't really use any buckets to begin with
             for (int i = 0; i < slotsToClear.length; i++) {
@@ -477,7 +479,7 @@ public class AECraftingPattern implements IPatternDetails, IMolecularAssemblerSu
             return result;
         } else {
             // If no fluid substitution occurred, just call it as-is
-            return this.recipe.getRemainingItems(container);
+            return container.getRemainingItems(this.recipe);
         }
     }
 
@@ -488,7 +490,7 @@ public class AECraftingPattern implements IPatternDetails, IMolecularAssemblerSu
 
         var containedFluid = ContainerItemStrategies.getContainedStack(itemKey.toStack(), AEKeyType.fluids());
         // Milk is not natively a fluid container, but it might be made one by other mods
-        var isBucket = itemKey.getItem() instanceof BucketItem || itemKey.getItem() instanceof MilkBucketItem;
+        var isBucket = itemKey.getItem() instanceof ItemBucket || itemKey.getItem() instanceof ItemBucketMilk;
 
         if (canSubstituteFluids && containedFluid != null && isBucket) {
             // We only support buckets since we can't predict the behavior of other kinds of containers (ender tanks...)
@@ -499,13 +501,13 @@ public class AECraftingPattern implements IPatternDetails, IMolecularAssemblerSu
             // code path to buckets.
             var positioned = makeCraftingInput();
 
-            var remainingItems = recipe.getRemainingItems(positioned.input());
+            var remainingItems = positioned.input().getRemainingItems(recipe);
             var x = (slot % 3 - positioned.left());
             var y = slot / 3 - positioned.top();
             var remainderIdx = y * positioned.input().width() + x;
             if (remainderIdx >= 0 && remainderIdx < remainingItems.size()) {
                 var slotRemainder = remainingItems.get(remainderIdx);
-                if (slotRemainder.getCount() == 1 && slotRemainder.is(Items.BUCKET)) {
+                if (slotRemainder.getCount() == 1 && slotRemainder.getItem() == Items.BUCKET) {
                     return new GenericStack(containedFluid.what(), containedFluid.amount());
                 }
             }
@@ -549,7 +551,7 @@ public class AECraftingPattern implements IPatternDetails, IMolecularAssemblerSu
     }
 
     public static PatternDetailsTooltip getInvalidPatternTooltip(ItemStack stack, World level,
-            @Nullable Exception cause, ITooltipFlag flags) {
+            @Nullable Exception cause, boolean advancedTooltips) {
         var tooltip = new PatternDetailsTooltip(PatternDetailsTooltip.OUTPUT_TEXT_CRAFTS);
 
         var encodedPattern = AEComponents.ENCODED_CRAFTING_PATTERN.get(stack);
@@ -569,7 +571,7 @@ public class AECraftingPattern implements IPatternDetails, IMolecularAssemblerSu
                 tooltip.addProperty(GuiText.PatternTooltipFluidSubstitutions.text());
             }
 
-            if (flags.isAdvanced()) {
+            if (advancedTooltips) {
                 tooltip.addProperty(new TextComponentString("Recipe"),
                         new TextComponentString(encodedPattern.recipeId().toString()));
             }
@@ -592,7 +594,7 @@ public class AECraftingPattern implements IPatternDetails, IMolecularAssemblerSu
             if (!canSubstitute) {
                 this.possibleInputs = new GenericStack[] { itemOrFluidInput };
             } else {
-                ItemStack[] matchingStacks = getRecipeIngredient(slot).getItems();
+                ItemStack[] matchingStacks = getRecipeIngredient(slot).getMatchingStacks();
                 this.possibleInputs = new GenericStack[matchingStacks.length + 1];
                 // Ensure that the stack chosen by the user gets precedence.
                 this.possibleInputs[0] = itemOrFluidInput;

@@ -111,7 +111,7 @@ public class ExecutingCraftingJob {
 
         NBTTagList tasksTag = data.getTagList(NBT_TASKS, Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < tasksTag.tagCount(); ++i) {
-            final NBTTagCompound item = tasksTag.getCompoundTag(i);
+            final NBTTagCompound item = tasksTag.getCompoundTagAt(i);
             var pattern = AEItemKey.fromTag(item);
             var details = PatternDetailsHelper.decodePattern(pattern, cpu.cluster.getLevel());
             if (details != null) {

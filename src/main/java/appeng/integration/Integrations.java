@@ -18,12 +18,15 @@
 
 package appeng.integration;
 
+import appeng.integration.modules.theoneprobe.TOP;
+
 public class Integrations {
 
     /**
-     * Registers the optional mod integrations. Runs during init, so that inter-mod messages are sent in time (The One
-     * Probe and Hwyla providers are added here once they are ported; JEI finds its plugin by itself).
+     * Registers the optional mod integrations. Runs during init, so that inter-mod messages are sent in time. Hwyla
+     * ({@code modules.waila.WailaModule}) and JEI find their plugins by their annotations.
      */
     public static void init() {
+        TOP.enqueueIMC();
     }
 }

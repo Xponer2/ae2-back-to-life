@@ -32,7 +32,7 @@ public final class JsonStreamUtil {
     }
 
     public static JsonElement toJson(ChunkPos pos) {
-        var jsonPos = new JsonArray(2);
+        var jsonPos = new JsonArray();
         jsonPos.add(pos.x);
         jsonPos.add(pos.z);
         return jsonPos;

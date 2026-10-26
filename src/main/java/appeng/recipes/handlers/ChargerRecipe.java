@@ -4,14 +4,10 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
 
 import appeng.core.AppEng;
 import appeng.core.network.RegistryFriendlyByteBuf;
@@ -19,11 +15,16 @@ import appeng.core.network.codec.ByteBufCodecs;
 import appeng.core.network.codec.StreamCodec;
 import appeng.recipes.AERecipeTypes;
 import appeng.util.AECodecs;
+import appeng.recipes.RecipeInput;
+import appeng.recipes.RecipeSerializer;
+import appeng.recipes.RecipeType;
+import appeng.recipes.AERecipe;
+import appeng.recipes.ingredient.IngredientCodecs;
 
-public class ChargerRecipe implements IRecipe<RecipeInput> {
-    @Deprecated(forRemoval = true, since = "1.21.1")
+public class ChargerRecipe implements AERecipe<RecipeInput> {
+    @Deprecated
     public static final ResourceLocation TYPE_ID = AppEng.makeId("charger");
-    @Deprecated(forRemoval = true, since = "1.21.1")
+    @Deprecated
     public static final RecipeType<ChargerRecipe> TYPE = AERecipeTypes.CHARGER;
 
     public final Ingredient ingredient;
@@ -33,12 +34,12 @@ public class ChargerRecipe implements IRecipe<RecipeInput> {
     public static final MapCodec<ChargerRecipe> CODEC = RecordCodecBuilder.mapCodec(
             builder -> builder
                     .group(
-                            Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(ChargerRecipe::getIngredient),
+                            IngredientCodecs.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(ChargerRecipe::getIngredient),
                             AECodecs.ITEM_STACK.fieldOf("result").forGetter(cr -> cr.result))
                     .apply(builder, ChargerRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ChargerRecipe> STREAM_CODEC = StreamCodec.composite(
-            Ingredient.CONTENTS_STREAM_CODEC,
+            IngredientCodecs.STREAM_CODEC,
             ChargerRecipe::getIngredient,
             ByteBufCodecs.ITEM_STACK,
             ChargerRecipe::getResultItem,
@@ -47,7 +48,7 @@ public class ChargerRecipe implements IRecipe<RecipeInput> {
     public ChargerRecipe(Ingredient ingredient, ItemStack result) {
         this.ingredient = ingredient;
         this.result = result;
-        this.ingredients = NonNullList.of(Ingredient.EMPTY, ingredient);
+        this.ingredients = NonNullList.from(Ingredient.EMPTY, ingredient);
     }
 
     @Override
@@ -66,10 +67,6 @@ public class ChargerRecipe implements IRecipe<RecipeInput> {
     }
 
     @Override
-    public ItemStack getResultItem() {
-        return getResultItem();
-    }
-
     public ItemStack getResultItem() {
         return result;
     }

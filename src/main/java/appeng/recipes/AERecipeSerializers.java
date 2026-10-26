@@ -1,10 +1,12 @@
 package appeng.recipes;
 
-import net.neoforged.neoforge.registries.DeferredRegister;
+import java.util.HashMap;
+import java.util.Map;
 
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import javax.annotation.Nullable;
 
-import appeng.api.util.Registries;
+import net.minecraft.util.ResourceLocation;
+
 import appeng.core.AppEng;
 import appeng.recipes.entropy.EntropyRecipeSerializer;
 import appeng.recipes.game.AddItemUpgradeRecipeSerializer;
@@ -23,8 +25,8 @@ public final class AERecipeSerializers {
     private AERecipeSerializers() {
     }
 
-    public static final DeferredRegister<RecipeSerializer<?>> DR = DeferredRegister
-            .create(Registries.RECIPE_SERIALIZER, AppEng.MOD_ID);
+    // Recipe type ids in the recipe files ("type": "ae2:inscriber") -> serializer
+    private static final Map<ResourceLocation, RecipeSerializer<?>> SERIALIZERS = new HashMap<>();
 
     static {
         register("inscriber", InscriberRecipeSerializer.INSTANCE);
@@ -42,6 +44,14 @@ public final class AERecipeSerializers {
     }
 
     private static void register(String id, RecipeSerializer<?> serializer) {
-        DR.register(id, () -> serializer);
+        SERIALIZERS.put(AppEng.makeId(id), serializer);
+    }
+
+    /**
+     * @return The serializer for the recipe type of a recipe file, or null if it isn't an AE2 type.
+     */
+    @Nullable
+    public static RecipeSerializer<?> get(ResourceLocation typeId) {
+        return SERIALIZERS.get(typeId);
     }
 }

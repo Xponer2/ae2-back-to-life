@@ -87,7 +87,12 @@ public class PatternProviderBlock extends AEBaseEntityBlock<PatternProviderBlock
     }
 
     public void setSide(World level, BlockPos pos, EnumFacing facing) {
-        var currentState = level.getBlockState(pos);
+        // The push direction is kept by the block entity (not in the metadata), see AEBaseEntityBlock
+        var be = this.getTileEntity(level, pos);
+        if (be == null) {
+            return;
+        }
+        var currentState = level.getBlockState(pos).getActualState(level, pos);
         var pushSide = currentState.getValue(PUSH_DIRECTION).getDirection();
 
         PushDirection newPushDirection;
@@ -101,6 +106,6 @@ public class PatternProviderBlock extends AEBaseEntityBlock<PatternProviderBlock
             newPushDirection = PushDirection.fromDirection(Platform.rotateAround(pushSide, facing));
         }
 
-        level.setBlockState(pos, currentState.withProperty(PUSH_DIRECTION, newPushDirection));
+        be.setBlockStateProperty(PUSH_DIRECTION, newPushDirection);
     }
 }

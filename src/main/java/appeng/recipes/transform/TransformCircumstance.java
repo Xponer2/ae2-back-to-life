@@ -1,9 +1,9 @@
 package appeng.recipes.transform;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -12,20 +12,25 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.handler.codec.DecoderException;
 
-import net.minecraft.core.Holder;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import appeng.api.util.Registries;
 import appeng.api.util.TagKey;
 import appeng.core.network.RegistryFriendlyByteBuf;
 import appeng.core.network.codec.StreamCodec;
-import appeng.util.BuiltInRegistries;
+import appeng.util.ResourceLocations;
 
 public class TransformCircumstance {
 
     public static final TransformCircumstance EXPLOSION = new TransformCircumstance("explosion");
+
+    /**
+     * The fluid tag {@code minecraft:water} (the default circumstance).
+     */
+    public static final TagKey<Fluid> WATER_TAG = TagKey.create(Registries.FLUID,
+            new ResourceLocation("minecraft", "water"));
 
     private static final MapCodec<TransformCircumstance> EXPLOSION_CODEC = MapCodec.unit(EXPLOSION);
 
@@ -33,11 +38,12 @@ public class TransformCircumstance {
             TagKey.codec(Registries.FLUID).fieldOf("tag").forGetter(FluidType::getFluidTag))
             .apply(builder, FluidType::new));
 
-    public static final Codec<TransformCircumstance> CODEC = Codec.STRING.dispatch(t -> t.type, type -> switch (type) {
-        case "explosion" -> EXPLOSION_CODEC;
-        case "fluid" -> FLUID_CODEC;
-        default -> throw new IllegalStateException("Invalid type: " + type);
-    });
+    public static final Codec<TransformCircumstance> CODEC = Codec.STRING.<TransformCircumstance>dispatch(
+            t -> t.type, type -> switch (type) {
+                case "explosion" -> EXPLOSION_CODEC.codec();
+                case "fluid" -> FLUID_CODEC.codec();
+                default -> throw new IllegalStateException("Invalid type: " + type);
+            });
 
     public static final StreamCodec<RegistryFriendlyByteBuf, TransformCircumstance> STREAM_CODEC = StreamCodec.ofMember(
             TransformCircumstance::toNetwork,
@@ -54,7 +60,7 @@ public class TransformCircumstance {
         if (type.equals("explosion"))
             return explosion();
         else if (type.equals("fluid")) {
-            return fluid(TagKey.create(Registries.FLUID, new ResourceLocation(obj.get("tag").getAsString())));
+            return fluid(TagKey.create(Registries.FLUID, ResourceLocations.parse(obj.get("tag").getAsString())));
         } else
             throw new JsonParseException("Invalid transform recipe type " + type);
     }
@@ -109,10 +115,6 @@ public class TransformCircumstance {
         return false;
     }
 
-    public boolean isFluid(FluidState state) {
-        return false;
-    }
-
     public boolean isFluid(Fluid fluid) {
         return false;
     }
@@ -163,7 +165,7 @@ public class TransformCircumstance {
 
         @Override
         public boolean isFluid(Fluid fluid) {
-            return fluid.is(fluidTag);
+            return fluidTag.contains(fluid);
         }
 
         @Override
@@ -172,14 +174,14 @@ public class TransformCircumstance {
         }
 
         @Override
-        public boolean isFluid(FluidState state) {
-            return state.is(fluidTag);
-        }
-
-        @Override
         public List<Fluid> getFluidsForRendering() {
-            return BuiltInRegistries.FLUID.getTag(fluidTag).map(t -> t.stream().map(Holder::value).collect(Collectors.toList()))
-                    .orElse(Collections.emptyList());
+            var result = new ArrayList<Fluid>();
+            for (var fluid : FluidRegistry.getRegisteredFluids().values()) {
+                if (fluidTag.contains(fluid)) {
+                    result.add(fluid);
+                }
+            }
+            return result;
         }
     }
 }

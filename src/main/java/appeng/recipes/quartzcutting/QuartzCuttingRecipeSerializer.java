@@ -2,10 +2,10 @@ package appeng.recipes.quartzcutting;
 
 import com.mojang.serialization.MapCodec;
 
-import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import appeng.core.network.RegistryFriendlyByteBuf;
 import appeng.core.network.codec.StreamCodec;
+import appeng.recipes.RecipeSerializer;
 
 public class QuartzCuttingRecipeSerializer implements RecipeSerializer<QuartzCuttingRecipe> {
 

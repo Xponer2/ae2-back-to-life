@@ -93,27 +93,27 @@ public abstract class MBCalculator<TBlockEntity extends IAEMultiBlock<TCluster>,
         }
 
         try {
-            final MutableBlockPos min = loc.mutable();
-            final MutableBlockPos max = loc.mutable();
+            final MutableBlockPos min = new MutableBlockPos(loc);
+            final MutableBlockPos max = new MutableBlockPos(loc);
 
             // find size of MB structure...
             while (this.isValidBlockEntityAt(level, min.getX() - 1, min.getY(), min.getZ())) {
-                min.setX(min.getX() - 1);
+                min.setPos(min.getX() - 1, min.getY(), min.getZ());
             }
             while (this.isValidBlockEntityAt(level, min.getX(), min.getY() - 1, min.getZ())) {
-                min.setY(min.getY() - 1);
+                min.setPos(min.getX(), min.getY() - 1, min.getZ());
             }
             while (this.isValidBlockEntityAt(level, min.getX(), min.getY(), min.getZ() - 1)) {
-                min.setZ(min.getZ() - 1);
+                min.setPos(min.getX(), min.getY(), min.getZ() - 1);
             }
             while (this.isValidBlockEntityAt(level, max.getX() + 1, max.getY(), max.getZ())) {
-                max.setX(max.getX() + 1);
+                max.setPos(max.getX() + 1, max.getY(), max.getZ());
             }
             while (this.isValidBlockEntityAt(level, max.getX(), max.getY() + 1, max.getZ())) {
-                max.setY(max.getY() + 1);
+                max.setPos(max.getX(), max.getY() + 1, max.getZ());
             }
             while (this.isValidBlockEntityAt(level, max.getX(), max.getY(), max.getZ() + 1)) {
-                max.setZ(max.getZ() + 1);
+                max.setPos(max.getX(), max.getY(), max.getZ() + 1);
             }
 
             if (this.checkMultiblockScale(min, max) && this.verifyUnownedRegion(level, min, max)) {

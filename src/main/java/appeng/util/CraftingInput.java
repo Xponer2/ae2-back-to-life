@@ -123,6 +123,19 @@ public final class CraftingInput {
         return items.get(index);
     }
 
+    /**
+     * @return The number of non-empty stacks (1.21 {@code ingredientCount()}).
+     */
+    public int ingredientCount() {
+        int count = 0;
+        for (var item : items) {
+            if (!item.isEmpty()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public ItemStack getItem(int x, int y) {
         return items.get(x + y * width);
     }

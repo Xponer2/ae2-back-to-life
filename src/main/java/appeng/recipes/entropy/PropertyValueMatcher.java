@@ -10,39 +10,38 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.world.level.block.state.StateHolder;
+import net.minecraft.block.state.IBlockState;
 
 import appeng.core.network.RegistryFriendlyByteBuf;
 import appeng.core.network.codec.StreamCodec;
 
 public interface PropertyValueMatcher {
-    Codec<PropertyValueMatcher> CODEC = new Codec<>() {
+    Codec<PropertyValueMatcher> CODEC = new Codec<PropertyValueMatcher>() {
         @Override
         public <T> DataResult<Pair<PropertyValueMatcher, T>> decode(DynamicOps<T> ops, T input) {
             // Try single string value first
             var singleValueResult = Codec.STRING.decode(ops, input)
                     .map(pair -> pair.mapFirst(value -> (PropertyValueMatcher) new SingleValue(value)));
-            if (singleValueResult.error().isEmpty()) {
+            if (singleValueResult.error().isPresent() == false) {
                 return singleValueResult;
             }
 
             // Then try list value
             var listValueResult = Codec.STRING.listOf().decode(ops, input)
                     .map(pair -> pair.mapFirst(value -> (PropertyValueMatcher) new MultiValue(value)));
-            if (listValueResult.error().isEmpty()) {
+            if (listValueResult.error().isPresent() == false) {
                 return listValueResult;
             }
 
             // Then try min/max object
             var rangeValueResult = Range.CODEC.decode(ops, input)
                     .map(pair -> pair.mapFirst(value -> (PropertyValueMatcher) value));
-            if (rangeValueResult.error().isEmpty()) {
+            if (rangeValueResult.error().isPresent() == false) {
                 return rangeValueResult;
             }
 
             // If all three fail, combine the errors
-            return DataResult.error(
-                    () -> "IProperty values need to be strings, list of strings, or objects with min/max properties");
+            return DataResult.error("IProperty values need to be strings, list of strings, or objects with min/max properties");
         }
 
         @Override
@@ -59,7 +58,7 @@ public interface PropertyValueMatcher {
         }
     };
 
-    StreamCodec<RegistryFriendlyByteBuf, PropertyValueMatcher> STREAM_CODEC = new StreamCodec<>() {
+    StreamCodec<RegistryFriendlyByteBuf, PropertyValueMatcher> STREAM_CODEC = new StreamCodec<RegistryFriendlyByteBuf, PropertyValueMatcher>() {
         @Override
         public PropertyValueMatcher decode(RegistryFriendlyByteBuf buffer) {
             var type = buffer.readByte();
@@ -83,7 +82,7 @@ public interface PropertyValueMatcher {
 
     void validate(IProperty<? extends Comparable<?>> property);
 
-    <T extends Comparable<T>> boolean matches(IProperty<T> property, StateHolder<?, ?> state);
+    <T extends Comparable<T>> boolean matches(IProperty<T> property, IBlockState state);
 
     final static class SingleValue implements PropertyValueMatcher {
         private final String value;
@@ -122,14 +121,14 @@ public interface PropertyValueMatcher {
 
         @Override
         public void validate(IProperty<? extends Comparable<?>> property) {
-            if (property.getValue(value).isEmpty()) {
+            if (!property.parseValue(value).isPresent()) {
                 throw new IllegalStateException(
                         "IProperty " + property.getName() + " does not have value '" + value + "'");
             }
         }
 
         @Override
-        public <T extends Comparable<T>> boolean matches(IProperty<T> property, StateHolder<?, ?> state) {
+        public <T extends Comparable<T>> boolean matches(IProperty<T> property, IBlockState state) {
             var currentValue = property.getName(state.getValue(property));
             return value.equals(currentValue);
         }
@@ -173,7 +172,7 @@ public interface PropertyValueMatcher {
         @Override
         public void validate(IProperty<? extends Comparable<?>> property) {
             for (String value : values) {
-                if (property.getValue(value).isEmpty()) {
+                if (!property.parseValue(value).isPresent()) {
                     throw new IllegalStateException(
                             "IProperty " + property.getName() + " does not have value '" + value + "'");
                 }
@@ -181,7 +180,7 @@ public interface PropertyValueMatcher {
         }
 
         @Override
-        public <T extends Comparable<T>> boolean matches(IProperty<T> property, StateHolder<?, ?> state) {
+        public <T extends Comparable<T>> boolean matches(IProperty<T> property, IBlockState state) {
             var currentValue = property.getName(state.getValue(property));
             for (var value : values) {
                 return value.equals(currentValue);
@@ -239,20 +238,20 @@ public interface PropertyValueMatcher {
 
         @Override
         public void validate(IProperty<? extends Comparable<?>> property) {
-            if (property.getValue(min).isEmpty()) {
+            if (!property.parseValue(min).isPresent()) {
                 throw new IllegalStateException(
                         "IProperty " + property.getName() + " does not have value '" + min + "'");
             }
-            if (property.getValue(max).isEmpty()) {
+            if (!property.parseValue(max).isPresent()) {
                 throw new IllegalStateException(
                         "IProperty " + property.getName() + " does not have value '" + max + "'");
             }
         }
 
         @Override
-        public <T extends Comparable<T>> boolean matches(IProperty<T> property, StateHolder<?, ?> state) {
-            var minValue = property.getValue(min).orElseThrow();
-            var maxValue = property.getValue(max).orElseThrow();
+        public <T extends Comparable<T>> boolean matches(IProperty<T> property, IBlockState state) {
+            var minValue = property.parseValue(min).get();
+            var maxValue = property.parseValue(max).get();
             var value = state.getValue(property);
             return value.compareTo(minValue) >= 0 && value.compareTo(maxValue) <= 0;
         }

@@ -66,7 +66,7 @@ public class AEWallBlock extends AEBaseBlock {
     private static final VoxelShape POST_COLLISION = Shapes.box16(4, 0, 4, 12, 24, 12);
 
     public AEWallBlock(BlockProperties props) {
-        super(props.noOcclusion());
+        super(props.copy().noOcclusion()); // the properties are shared with other blocks of the family
         setDefaultState(this.blockState.getBaseState().withProperty(UP, true).withProperty(NORTH, WallSide.NONE)
                 .withProperty(EAST, WallSide.NONE).withProperty(SOUTH, WallSide.NONE)
                 .withProperty(WEST, WallSide.NONE));

@@ -1,13 +1,12 @@
 package appeng.util;
 
+import appeng.recipes.vanilla.SmithingRecipe;
+import net.minecraftforge.common.crafting.IShapedRecipe;
 import com.google.common.base.Preconditions;
 
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.util.NonNullList;
-import net.minecraft.world.item.crafting.SmithingTransformRecipe;
-import net.minecraft.world.item.crafting.SmithingTrimRecipe;
 
 public final class CraftingRecipeUtil {
     private CraftingRecipeUtil() {
@@ -19,7 +18,7 @@ public final class CraftingRecipeUtil {
      * Will throw an {@link IllegalArgumentException} in case it has more than 9 or a shaped recipe is either wider or
      * higher than 3. ingredients.
      */
-    public static NonNullList<Ingredient> ensure3by3CraftingMatrix(IRecipe<?> recipe) {
+    public static NonNullList<Ingredient> ensure3by3CraftingMatrix(IRecipe recipe) {
         var ingredients = getIngredients(recipe);
         var expandedIngredients = NonNullList.withSize(9, Ingredient.EMPTY);
 
@@ -27,9 +26,9 @@ public final class CraftingRecipeUtil {
 
         // shaped recipes can be smaller than 3x3, expand to 3x3 to match the crafting
         // matrix
-        if (recipe instanceof ShapedRecipes shapedRecipe) {
-            var width = shapedRecipe.getWidth();
-            var height = shapedRecipe.getHeight();
+        if (recipe instanceof IShapedRecipe shapedRecipe) {
+            var width = shapedRecipe.getRecipeWidth();
+            var height = shapedRecipe.getRecipeHeight();
             Preconditions.checkArgument(width <= 3 && height <= 3);
 
             for (var h = 0; h < height; h++) {
@@ -51,24 +50,18 @@ public final class CraftingRecipeUtil {
         return expandedIngredients;
     }
 
-    public static NonNullList<Ingredient> getIngredients(IRecipe<?> recipe) {
-        // Special handling for upgrade recipes since those do not override getIngredients
-        if (recipe instanceof SmithingTrimRecipe trimRecipe) {
-            var ingredients = NonNullList.withSize(3, Ingredient.EMPTY);
-            ingredients.set(0, trimRecipe.template);
-            ingredients.set(1, trimRecipe.base);
-            ingredients.set(2, trimRecipe.addition);
-            return ingredients;
-        }
-
-        if (recipe instanceof SmithingTransformRecipe transformRecipe) {
-            var ingredients = NonNullList.withSize(3, Ingredient.EMPTY);
-            ingredients.set(0, transformRecipe.template);
-            ingredients.set(1, transformRecipe.base);
-            ingredients.set(2, transformRecipe.addition);
-            return ingredients;
-        }
-
+    public static NonNullList<Ingredient> getIngredients(IRecipe recipe) {
         return recipe.getIngredients();
+    }
+
+    /**
+     * 1.12.2 has no smithing table: smithing recipes are AE2's own {@link SmithingRecipe}.
+     */
+    public static NonNullList<Ingredient> getIngredients(SmithingRecipe recipe) {
+        var ingredients = NonNullList.withSize(3, Ingredient.EMPTY);
+        ingredients.set(0, recipe.getTemplate());
+        ingredients.set(1, recipe.getBase());
+        ingredients.set(2, recipe.getAddition());
+        return ingredients;
     }
 }

@@ -75,7 +75,8 @@ public class FacadePart implements IFacadePart {
 
     @Override
     public ItemStack getTextureItem() {
-        return new ItemStack(getItem());
+        // The variant (wool color, plank type) is the metadata of the item
+        return new ItemStack(getItem(), 1, facade.getBlock().damageDropped(facade));
     }
 
     @Override

@@ -33,7 +33,8 @@ import appeng.core.worlddata.AESavedData;
 /**
  * A compass region stores information about the occurrence of skystone blocks in a region of 1024x1024 chunks.
  */
-final class CompassRegion extends AESavedData {
+// Public: MapStorage creates saved data by reflection
+public final class CompassRegion extends AESavedData {
 
     /**
      * The number of chunks that get saved in a region on each axis.

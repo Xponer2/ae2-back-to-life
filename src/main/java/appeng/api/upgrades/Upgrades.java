@@ -252,15 +252,16 @@ public final class Upgrades {
         associations.sort(Comparator.comparingInt(o -> o.maxCount));
         var supportedTooltipLines = new ArrayList<ITextComponent>(associations.size());
 
-        // Use a separate set because the final text will include numbers
-        Set<ITextComponent> namesAdded = new HashSet<>();
+        // Use a separate set because the final text will include numbers.
+        // Text components can't be hashed before their style exists, so the set holds their JSON.
+        Set<String> namesAdded = new HashSet<>();
 
         for (int i = 0; i < associations.size(); i++) {
             var association = associations.get(i);
             ITextComponent name = Platform.getItemDescription(association.upgradableItem());
 
             // If the group was already added by a previous item, skip this
-            if (association.tooltipGroup() != null && namesAdded.contains(association.tooltipGroup())) {
+            if (association.tooltipGroup() != null && namesAdded.contains(ITextComponent.Serializer.componentToJson(association.tooltipGroup()))) {
                 continue;
             }
 
@@ -276,7 +277,7 @@ public final class Upgrades {
                 }
             }
 
-            if (namesAdded.add(name)) {
+            if (namesAdded.add(ITextComponent.Serializer.componentToJson(name))) {
                 // append the supported count only if its > 1
                 ITextComponent base = (TextUtil.withStyle(name.createCopy(), Tooltips.NORMAL_TOOLTIP_TEXT));
                 ITextComponent main = base;

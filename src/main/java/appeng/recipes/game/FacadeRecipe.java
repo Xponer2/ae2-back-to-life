@@ -20,26 +20,36 @@ package appeng.recipes.game;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 
 import appeng.core.definitions.AEItems;
 import appeng.core.definitions.AEParts;
 import appeng.core.definitions.ItemDefinition;
 import appeng.items.parts.FacadeItem;
+import appeng.recipes.RecipeSerializer;
+import appeng.util.CraftingInput;
+import com.mojang.serialization.MapCodec;
+import appeng.core.network.RegistryFriendlyByteBuf;
+import appeng.core.network.codec.StreamCodec;
 
 public final class FacadeRecipe extends CustomRecipe {
-    public static RecipeSerializer<FacadeRecipe> SERIALIZER = new SimpleCraftingRecipeSerializer<>(
-            (category) -> new FacadeRecipe(category, AEItems.FACADE.get()));
+    // The recipe file has no data, the facade item is looked up when it's loaded (after item registration)
+    public static RecipeSerializer<FacadeRecipe> SERIALIZER = new RecipeSerializer<FacadeRecipe>() {
+        @Override
+        public MapCodec<FacadeRecipe> codec() {
+            return MapCodec.unit(() -> new FacadeRecipe(AEItems.FACADE.get()));
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, FacadeRecipe> streamCodec() {
+            return StreamCodec.of((buffer, recipe) -> {
+            }, buffer -> new FacadeRecipe(AEItems.FACADE.get()));
+        }
+    };
 
     private final ItemDefinition<?> anchor = AEParts.CABLE_ANCHOR;
     private final FacadeItem facade;
 
-    public FacadeRecipe(CraftingBookCategory category, FacadeItem facade) {
-        super(category);
+    public FacadeRecipe(FacadeItem facade) {
         this.facade = facade;
     }
 

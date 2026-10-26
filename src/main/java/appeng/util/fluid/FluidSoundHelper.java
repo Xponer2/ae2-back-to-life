@@ -18,7 +18,9 @@
 
 package appeng.util.fluid;
 
-import net.neoforged.neoforge.common.SoundActions;
+import net.minecraft.network.play.server.SPacketSoundEffect;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fluids.Fluid;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -42,7 +44,7 @@ public final class FluidSoundHelper {
             return;
         }
 
-        SoundEvent fillSound = fluid.getFluid().getFluidType().getSound(player, SoundActions.BUCKET_FILL);
+        SoundEvent fillSound = fluid.getFluid().getFillSound(fluid.toStack(Fluid.BUCKET_VOLUME));
         if (fillSound == null) {
             return;
         }
@@ -55,7 +57,7 @@ public final class FluidSoundHelper {
             return;
         }
 
-        SoundEvent fillSound = fluid.getFluid().getFluidType().getSound(player, SoundActions.BUCKET_EMPTY);
+        SoundEvent fillSound = fluid.getFluid().getEmptySound(fluid.toStack(Fluid.BUCKET_VOLUME));
         if (fillSound == null) {
             return;
         }
@@ -64,11 +66,16 @@ public final class FluidSoundHelper {
     }
 
     /**
-     * @see net.neoforged.neoforge.fluids.FluidUtil#tryFillContainer(ItemStack, IFluidHandler, int, EntityPlayer, boolean)
+     * @see net.minecraftforge.fluids.FluidUtil#tryFillContainer
      */
     private static void playSound(EntityPlayer player, SoundEvent fillSound) {
         // This should just play the sound for the player themselves
-        player.playNotifySound(fillSound, SoundCategory.PLAYERS, 1.0F, 1.0F);
+        if (player instanceof EntityPlayerMP serverPlayer) {
+            serverPlayer.connection.sendPacket(new SPacketSoundEffect(fillSound, SoundCategory.PLAYERS,
+                    player.posX, player.posY, player.posZ, 1.0F, 1.0F));
+        } else {
+            player.playSound(fillSound, 1.0F, 1.0F);
+        }
     }
 
 }

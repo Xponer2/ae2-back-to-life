@@ -10,6 +10,8 @@
 
 package appeng.client.render.tesr;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
@@ -23,7 +25,8 @@ import appeng.client.render.PoseStack;
  * stack starts at the block origin and the packed light of the block is passed in.
  * <p/>
  * When this is called, the block atlas is bound and the lightmap is set to the light at the block's position (like in
- * vanilla TESRs).
+ * vanilla TESRs). The atlas is bound here because vanilla leaves whatever texture the previous renderer used (the
+ * chest texture, for example), which changes with the order in which the block entities are drawn.
  */
 @SideOnly(Side.CLIENT)
 public abstract class AEBlockEntityRenderer<T extends TileEntity> extends TileEntitySpecialRenderer<T> {
@@ -34,6 +37,8 @@ public abstract class AEBlockEntityRenderer<T extends TileEntity> extends TileEn
         var level = blockEntity.getWorld();
         int combinedLight = level != null ? level.getCombinedLight(blockEntity.getPos(), 0)
                 : BlockEntityRenderHelper.FULL_BRIGHT;
+
+        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
         var poseStack = new PoseStack();
         poseStack.pushPose();

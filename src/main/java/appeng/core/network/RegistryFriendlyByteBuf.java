@@ -23,6 +23,7 @@ import java.util.function.IntFunction;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.handler.codec.DecoderException;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -30,11 +31,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
+
+import appeng.util.ResourceLocations;
 
 /**
  * {@link PacketBuffer} with the method names used by Minecraft 1.20.5+ so that packet code ports 1:1.
@@ -63,6 +67,15 @@ public class RegistryFriendlyByteBuf extends PacketBuffer {
     public RegistryFriendlyByteBuf writeUtf(String s) {
         writeString(s);
         return this;
+    }
+
+    /**
+     * The 1.12.2 version builds the id with {@code new ResourceLocation(String)}, which doesn't split off a namespace
+     * of one character ({@code c:...}).
+     */
+    @Override
+    public ResourceLocation readResourceLocation() {
+        return ResourceLocations.parse(readString(32767));
     }
 
     public <T extends Enum<T>> T readEnum(Class<T> enumClass) {
@@ -272,10 +285,23 @@ public class RegistryFriendlyByteBuf extends PacketBuffer {
         return readLongArray(null);
     }
 
-    public byte[] readByteArray(int length) {
-        byte[] bytes = new byte[length];
-        readBytes(bytes);
-        return bytes;
+    /**
+     * Same format as {@link PacketBuffer#writeLongArray}. The 1.12.2 version of this method only exists on the client.
+     */
+    @Override
+    public long[] readLongArray(@Nullable long[] array) {
+        int length = readVarInt();
+        if (array == null || array.length != length) {
+            if (length > readableBytes() / 8) {
+                throw new DecoderException("LongArray with size " + length + " is bigger than allowed "
+                        + readableBytes() / 8);
+            }
+            array = new long[length];
+        }
+        for (int i = 0; i < array.length; i++) {
+            array[i] = readLong();
+        }
+        return array;
     }
 
     public RegistryFriendlyByteBuf writeVec3(Vec3d vec) {

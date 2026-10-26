@@ -128,7 +128,7 @@ public final class PatternContainerGroup {
         if (itemHandler == null || itemHandler.getSlots() <= 0) {
             var fluidHandler = Capabilities.FluidHandler.BLOCK.getCapability(level,  pos, Platform.getBlockState(target), target,
                     side);
-            if (fluidHandler == null || fluidHandler.getTanks() == 0) {
+            if (fluidHandler == null || fluidHandler.getTankProperties().length == 0) {
                 return null;
             }
         }

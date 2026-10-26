@@ -86,7 +86,7 @@ public class ListCraftingInventory implements ICraftingInventory {
 
         if (data != null) {
             for (int i = 0; i < data.tagCount(); ++i) {
-                var compound = data.getCompoundTag(i);
+                var compound = data.getCompoundTagAt(i);
                 var key = AEKey.fromTagGeneric(compound);
                 if (key != null) {
                     var amount = compound.getLong("#");

@@ -6,7 +6,9 @@ import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -92,7 +94,7 @@ public class FluidPlacementStrategy implements PlacementStrategy {
                     level.destroyBlock(pos, true);
                 }
 
-                if (!level.setBlockState(pos, fluid.getBlock().getDefaultState(), 11)) {
+                if (!level.setBlockState(pos, getPlacedBlock(fluid).getDefaultState(), 11)) {
                     return 0;
                 } else {
                     playEmptySound(level, pos, fluidKey);
@@ -101,6 +103,20 @@ public class FluidPlacementStrategy implements PlacementStrategy {
         }
 
         return AEFluidKey.AMOUNT_BLOCK;
+    }
+
+    /**
+     * The block of vanilla water and lava is the still variant, which doesn't spread: like the vanilla bucket, the
+     * flowing block is placed.
+     */
+    private static Block getPlacedBlock(Fluid fluid) {
+        var block = fluid.getBlock();
+        if (block == Blocks.WATER) {
+            return Blocks.FLOWING_WATER;
+        } else if (block == Blocks.LAVA) {
+            return Blocks.FLOWING_LAVA;
+        }
+        return block;
     }
 
     private void playEmptySound(World level, BlockPos pos, AEFluidKey fluid) {

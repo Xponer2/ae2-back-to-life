@@ -1021,3 +1021,6 @@ waila.ae2.Suppressed=Supprimé
 waila.ae2.Unlocked=Déverrouillé
 item.ae2.copper_ingot=Lingot de cuivre
 block.ae2.copper_ore=Minerai de cuivre
+ae2.jei.stonecutting=Tailleur de pierre
+item.minecraft.smithing_template.applies_to=S'applique à :
+item.minecraft.smithing_template.ingredients=Ingrédients :

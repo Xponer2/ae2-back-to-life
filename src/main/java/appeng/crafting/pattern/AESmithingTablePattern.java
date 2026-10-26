@@ -32,12 +32,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraft.world.item.crafting.CraftingInput;
+import appeng.util.CraftingInput;
 import appeng.util.RecipeHolder;
 import appeng.recipes.vanilla.SmithingRecipe;
-import net.minecraft.world.item.crafting.SmithingRecipeInput;
-import net.minecraft.world.item.crafting.SmithingTransformRecipe;
-import net.minecraft.world.item.crafting.SmithingTrimRecipe;
+import appeng.recipes.vanilla.SmithingRecipeInput;
 
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.crafting.PatternDetailsTooltip;
@@ -48,6 +46,7 @@ import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
 import appeng.blockentity.crafting.IMolecularAssemblerSupportedPattern;
 import appeng.core.localization.GuiText;
+import appeng.recipes.RecipeManager;
 
 /**
  * Encodes patterns for the {@link net.minecraft.world.level.block.SmithingTableBlock}.
@@ -86,7 +85,7 @@ public class AESmithingTablePattern implements IPatternDetails, IMolecularAssemb
 
         // Find recipe
         this.recipeId = encodedPattern.recipeId();
-        this.recipe = level.getRecipeManager().byKey(recipeId).map(holder -> (SmithingRecipe) holder.value())
+        this.recipe = RecipeManager.of(level).byKey(recipeId).map(holder -> (SmithingRecipe) holder.value())
                 .orElse(null);
         if (recipe == null) {
             throw new IllegalStateException("Smithing pattern references unknown recipe " + recipeId);
@@ -108,19 +107,10 @@ public class AESmithingTablePattern implements IPatternDetails, IMolecularAssemb
         }
 
         // Find ingredients
-        Ingredient templateIngredient, baseIngredient, additionIngredient;
-        if (this.recipe instanceof SmithingTransformRecipe r) {
-            templateIngredient = r.template;
-            baseIngredient = r.base;
-            additionIngredient = r.addition;
-        } else if (this.recipe instanceof SmithingTrimRecipe r) {
-            templateIngredient = r.template;
-            baseIngredient = r.base;
-            additionIngredient = r.addition;
-        } else {
-            throw new IllegalStateException(
-                    "Don't know how to process non-vanilla smithing recipe: " + this.recipe.getClass());
-        }
+        // Only smithing transform recipes exist in this version (no armor trims)
+        Ingredient templateIngredient = this.recipe.getTemplate();
+        Ingredient baseIngredient = this.recipe.getBase();
+        Ingredient additionIngredient = this.recipe.getAddition();
 
         this.inputs = new IInput[] {
                 new Input(template, templateIngredient, TEMPLATE_CRAFTING_GRID_SLOT),
@@ -230,7 +220,7 @@ public class AESmithingTablePattern implements IPatternDetails, IMolecularAssemb
         }
 
         return recipe.matches(testInput, level)
-                && ItemStack.matches(output, recipe.assemble(testInput));
+                && ItemStack.areItemStacksEqual(output, recipe.assemble(testInput));
     }
 
     @Override
@@ -289,7 +279,7 @@ public class AESmithingTablePattern implements IPatternDetails, IMolecularAssemb
     }
 
     public static PatternDetailsTooltip getInvalidTooltip(ItemStack stack, World level, @Nullable Exception cause,
-            ITooltipFlag flags) {
+            boolean advancedTooltips) {
         var tooltip = new PatternDetailsTooltip(PatternDetailsTooltip.OUTPUT_TEXT_CRAFTS);
 
         var encodedPattern = AEComponents.ENCODED_SMITHING_TABLE_PATTERN.get(stack);
@@ -301,7 +291,7 @@ public class AESmithingTablePattern implements IPatternDetails, IMolecularAssemb
             if (encodedPattern.canSubstitute()) {
                 tooltip.addProperty(GuiText.PatternTooltipSubstitutions.text());
             }
-            if (flags.isAdvanced()) {
+            if (advancedTooltips) {
                 tooltip.addProperty(new TextComponentString("Recipe"),
                         new TextComponentString(encodedPattern.recipeId().toString()));
             }
@@ -319,7 +309,7 @@ public class AESmithingTablePattern implements IPatternDetails, IMolecularAssemb
             if (!canSubstitute) {
                 this.possibleInputs = new GenericStack[] { new GenericStack(what, 1) };
             } else {
-                ItemStack[] matchingStacks = recipeIngredient.getItems();
+                ItemStack[] matchingStacks = recipeIngredient.getMatchingStacks();
                 this.possibleInputs = new GenericStack[matchingStacks.length + 1];
                 // Ensure that the stack chosen by the user gets precedence.
                 this.possibleInputs[0] = new GenericStack(what, 1);

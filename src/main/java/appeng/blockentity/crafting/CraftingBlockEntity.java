@@ -137,8 +137,9 @@ public class CraftingBlockEntity extends AENetworkedBlockEntity
         // The block entity might try to update while being destroyed
         if (current.getBlock() instanceof AbstractCraftingUnitBlock) {
             // 1.12.2: the block entity keeps these properties (only re-renders, no block update)
-            setBlockStateProperty(AbstractCraftingUnitBlock.POWERED, power);
-            setBlockStateProperty(AbstractCraftingUnitBlock.FORMED, formed);
+            // 1.21 uses Block.UPDATE_CLIENTS here
+            setBlockStateProperty(AbstractCraftingUnitBlock.POWERED, power, false);
+            setBlockStateProperty(AbstractCraftingUnitBlock.FORMED, formed, false);
         }
 
         if (updateFormed) {

@@ -52,6 +52,8 @@ import appeng.core.CreativeTabOutput;
 import appeng.util.ItemProperties;
 import appeng.util.ItemTooltipContext;
 import appeng.util.UseOnContext;
+import net.minecraft.entity.item.EntityItem;
+import appeng.recipes.transform.TransformLogic;
 
 /**
  * Base class of AE2 items. Bridges the Minecraft 1.21 item API ({@link #use}, {@link #useOn},
@@ -72,6 +74,16 @@ public abstract class AEBaseItem extends Item implements ItemLike {
 
     public ItemProperties getProperties() {
         return properties;
+    }
+
+    /**
+     * Item entities of AE2 items can start in-world transformations (thrown into water); newer versions did this
+     * with a mixin into the item entity.
+     */
+    @Override
+    public boolean onEntityItemUpdate(EntityItem entityItem) {
+        TransformLogic.onItemEntityTick(entityItem);
+        return false;
     }
 
     public void addToMainCreativeTab(CreativeTabOutput.DisplayParameters parameters, CreativeTabOutput output) {

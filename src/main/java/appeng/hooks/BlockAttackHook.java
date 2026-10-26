@@ -1,6 +1,9 @@
 package appeng.hooks;
 
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.minecraft.client.multiplayer.PlayerControllerMP;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import appeng.core.network.PacketDistributor;
 
 import net.minecraft.client.Minecraft;
@@ -29,22 +32,23 @@ public final class BlockAttackHook {
     }
 
     public static void install() {
-        MinecraftForge.EVENT_BUS.addListener(BlockAttackHook::onBlockAttackedOnClientEvent);
+        MinecraftForge.EVENT_BUS.register(BlockAttackHook.class);
     }
 
     /**
      * We intercept when the player attacks a cable bus and send an interaction handling packet instead.
      */
-    private static void onBlockAttackedOnClientEvent(PlayerInteractEvent.LeftClickBlock event) {
+    @SubscribeEvent
+    public static void onBlockAttackedOnClientEvent(PlayerInteractEvent.LeftClickBlock event) {
 
-        var level = event.getLevel();
+        var level = event.getWorld();
 
         // Do not process this event on the server since we're handling the server-side ourselves
         if (!level.isRemote) {
             return;
         }
 
-        var result = onBlockAttackedOnClient(event.getEntity(), level);
+        var result = onBlockAttackedOnClient(event.getEntityPlayer(), level);
         if (result != EnumActionResult.PASS) {
             event.setCanceled(true);
         }
@@ -53,14 +57,17 @@ public final class BlockAttackHook {
     private static EnumActionResult onBlockAttackedOnClient(EntityPlayer player, World level) {
         // This shouldn't happen as the attack block logic should only be called if the player is pointing at a block
         // to begin with.
-        if (!(Minecraft.getMinecraft().objectMouseOver instanceof RayTraceResult hitResult)) {
+        var hitResult = Minecraft.getMinecraft().objectMouseOver;
+        if (hitResult == null || hitResult.typeOfHit != RayTraceResult.Type.BLOCK) {
             return EnumActionResult.PASS;
         }
 
         if (BlockAttackHook.onBlockAttackedOnClient(player, level, hitResult)) {
             // Prevent this from being called again immediately on the next tick
             // Vanilla also uses a 5 tick delay (-> 250ms)
-            Minecraft.getMinecraft().playerController.destroyDelay = 5;
+            // PlayerControllerMP.blockHitDelay is private
+            ObfuscationReflectionHelper.setPrivateValue(PlayerControllerMP.class,
+                    Minecraft.getMinecraft().playerController, 5, "field_78781_i");
 
             // Consume the action, but do not send a packet to the server,
             // since we're handling that ourselves.
@@ -70,7 +77,7 @@ public final class BlockAttackHook {
     }
 
     private static boolean onBlockAttackedOnClient(EntityPlayer player, World level, RayTraceResult hitResult) {
-        var pos = hitResult.getPos();
+        var pos = hitResult.getBlockPos();
 
         // Compute the hit location within the block's space. hitResult should never be null at this point,
         // since the event itself gets the blockPos from it.

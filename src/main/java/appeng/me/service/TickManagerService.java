@@ -29,8 +29,8 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.Iterators;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.CrashReport;
-import net.minecraft.ReportedException;
+import net.minecraft.crash.CrashReport;
+import net.minecraft.util.ReportedException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
@@ -362,9 +362,9 @@ public class TickManagerService implements ITickManager, IGridServiceProvider {
 
             return mod;
         } catch (Throwable t) {
-            var report = CrashReport.forThrowable(t, "Ticking GridNode");
+            var report = CrashReport.makeCrashReport(t, "Ticking GridNode");
             var category = report
-                    .addCategory(tt.getGridTickable().getClass().getSimpleName() + " being ticked.");
+                    .makeCategory(tt.getGridTickable().getClass().getSimpleName() + " being ticked.");
             tt.addEntityCrashInfo(category);
             throw new ReportedException(report);
         }

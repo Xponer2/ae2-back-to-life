@@ -25,6 +25,7 @@ import appeng.parts.networking.CablePart;
 import appeng.util.Platform;
 import appeng.util.SettingsFrom;
 import appeng.util.UseOnContext;
+import appeng.util.shape.CollisionContext;
 import appeng.util.shape.VoxelShape;
 
 public class PartPlacement {
@@ -95,7 +96,7 @@ public class PartPlacement {
         // Check collisions with entities and revert placement
         // Due to cables being able to react to parts being added to the host, we can't really
         // simulate this without really placing the part
-        var collisionShape = host.getCollisionShape(null);
+        var collisionShape = host.getCollisionShape(CollisionContext.empty());
         if (!collisionShape.isEmpty()
                 && !isUnobstructed(level, collisionShape.move(pos.getX(), pos.getY(), pos.getZ()))) {
             host.removePart(addedPart);

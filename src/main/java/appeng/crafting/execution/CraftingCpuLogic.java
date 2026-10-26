@@ -549,7 +549,7 @@ public class CraftingCpuLogic {
                     job.finalOutput.amount(),
                     job.remainingAmount,
                     status);
-            connectedPlayer.connection.send(message);
+            appeng.core.network.PacketDistributor.sendToPlayer(connectedPlayer, message);
         }
     }
 }

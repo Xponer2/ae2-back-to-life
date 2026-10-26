@@ -1,7 +1,4 @@
 {
-  "textures": {
-    "base": "ae2:part/cable/smart/_color_"
-  },
   "elements": [
     {
       "name": "Element",

@@ -26,8 +26,10 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -49,6 +51,13 @@ public final class InscriberTESR extends AEBlockEntityRenderer<InscriberBlockEnt
     private static final float ITEM_RENDER_SCALE = 1.0f / 1.2f;
 
     private static final String TEXTURE_INSIDE = AppEng.makeId("block/inscriber_inside").toString();
+
+    /**
+     * No model uses the inside texture, so it is put into the block atlas in {@code TextureStitchEvent.Pre}.
+     */
+    public static void registerSprites(TextureMap map) {
+        map.registerSprite(new ResourceLocation(TEXTURE_INSIDE));
+    }
 
     @Override
     public void render(InscriberBlockEntity blockEntity, float partialTicks, PoseStack ms, int combinedLight) {

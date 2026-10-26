@@ -140,7 +140,8 @@ public final class Flattening {
         put("end_stone_bricks", "end_bricks", 0);
         put("purpur_block", "purpur_block", 0);
         put("snow_block", "snow", 0);
-        put("snow", "snow_layer", 0);
+        // The metadata of snow layers is their height, not a variant
+        put("snow", "snow_layer", -1);
         put("sugar_cane", "reeds", 0);
         put("cobweb", "web", 0);
         put("lily_pad", "waterlily", 0);

@@ -99,19 +99,19 @@ public final class EncodedSmithingTablePattern {
 
         EncodedSmithingTablePattern that = (EncodedSmithingTablePattern) object;
         return canSubstitute == that.canSubstitute
-                && ItemStack.matches(base, that.base)
-                && ItemStack.matches(template, that.template)
-                && ItemStack.matches(addition, that.addition)
-                && ItemStack.matches(resultItem, that.resultItem)
+                && ItemStack.areItemStacksEqual(base, that.base)
+                && ItemStack.areItemStacksEqual(template, that.template)
+                && ItemStack.areItemStacksEqual(addition, that.addition)
+                && ItemStack.areItemStacksEqual(resultItem, that.resultItem)
                 && recipeId.equals(that.recipeId);
     }
 
     @Override
     public int hashCode() {
-        int result = ItemStack.hashItemAndComponents(template);
-        result = 31 * result + ItemStack.hashItemAndComponents(base);
-        result = 31 * result + ItemStack.hashItemAndComponents(addition);
-        result = 31 * result + ItemStack.hashItemAndComponents(resultItem);
+        int result = PatternStacks.hash(template);
+        result = 31 * result + PatternStacks.hash(base);
+        result = 31 * result + PatternStacks.hash(addition);
+        result = 31 * result + PatternStacks.hash(resultItem);
         result = 31 * result + Boolean.hashCode(canSubstitute);
         result = 31 * result + recipeId.hashCode();
         return result;

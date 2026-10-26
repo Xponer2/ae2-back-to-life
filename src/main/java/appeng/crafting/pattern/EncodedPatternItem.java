@@ -60,6 +60,7 @@ import appeng.items.misc.MissingContentItem;
 import appeng.items.misc.WrappedGenericStack;
 import appeng.util.InteractionUtil;
 import appeng.util.UseOnContext;
+import appeng.util.ItemTooltipContext;
 
 /**
  * Reusable item class for encoded patterns.
@@ -126,7 +127,7 @@ public class EncodedPatternItem<T extends IPatternDetails> extends AEBaseItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<ITextComponent> lines,
+    public void appendHoverText(ItemStack stack, ItemTooltipContext context, List<ITextComponent> lines,
             ITooltipFlag flags) {
         var what = AEItemKey.of(stack);
         if (what == null) {
@@ -147,18 +148,18 @@ public class EncodedPatternItem<T extends IPatternDetails> extends AEBaseItem {
         } catch (Exception e) {
             lines.add(TextUtil.withStyle(GuiText.InvalidPattern.text().createCopy(), TextFormatting.RED));
             if (invalidPatternTooltip != null) {
-                tooltip = invalidPatternTooltip.getTooltip(stack, clientLevel, e, flags);
+                tooltip = invalidPatternTooltip.getTooltip(stack, clientLevel, e, flags.isAdvanced());
             } else {
                 tooltip = null;
             }
         }
 
         if (tooltip != null) {
-            var label = new TextComponentString("").appendSibling(tooltip.getOutputMethod())
-                    .appendText(": ").withStyle(TextFormatting.GRAY);
-            var and = new TextComponentString(" ").appendSibling(GuiText.And.text())
-                    .appendText(" ").withStyle(TextFormatting.GRAY);
-            var with = GuiText.With.text().createCopy().appendText(": ").withStyle(TextFormatting.GRAY);
+            var label = TextUtil.withStyle(new TextComponentString("").appendSibling(tooltip.getOutputMethod())
+                    .appendText(": "), TextFormatting.GRAY);
+            var and = TextUtil.withStyle(new TextComponentString(" ").appendSibling(GuiText.And.text())
+                    .appendText(" "), TextFormatting.GRAY);
+            var with = TextUtil.withStyle(GuiText.With.text().createCopy().appendText(": "), TextFormatting.GRAY);
 
             boolean first = true;
             for (var output : tooltip.getOutputs()) {
@@ -175,10 +176,11 @@ public class EncodedPatternItem<T extends IPatternDetails> extends AEBaseItem {
             for (var property : tooltip.getProperties()) {
                 if (property.value() != null) {
                     lines.add(new TextComponentString("").appendSibling(property.name())
-                            .append(TextUtil.withStyle(new TextComponentString(": "), TextFormatting.GRAY))
-                            .append(property.value()));
+                            .appendSibling(TextUtil.withStyle(new TextComponentString(": "), TextFormatting.GRAY))
+                            .appendSibling(property.value()));
                 } else {
-                    lines.add(TextUtil.withStyle(new TextComponentString(""), TextFormatting.GRAY).append(property.name()));
+                    lines.add(TextUtil.withStyle(new TextComponentString(""), TextFormatting.GRAY)
+                            .appendSibling(property.name()));
                 }
             }
         }
@@ -201,7 +203,8 @@ public class EncodedPatternItem<T extends IPatternDetails> extends AEBaseItem {
         if (amount > 0) {
             var amountInfo = new TextComponentString(amountType != null ? amountType.formatAmount(amount, AmountFormat.FULL)
                     : String.valueOf(amount));
-            return amountInfo.append(TextUtil.withStyle(new TextComponentString(" x "), TextFormatting.GRAY)).append(displayName);
+            return amountInfo.appendSibling(TextUtil.withStyle(new TextComponentString(" x "), TextFormatting.GRAY))
+                    .appendSibling(displayName);
         } else {
             return displayName;
         }

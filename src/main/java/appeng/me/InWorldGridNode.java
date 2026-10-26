@@ -64,7 +64,7 @@ public class InWorldGridNode extends GridNode {
         // Find adjacent nodes in the level based on the sides of the host this node is exposed on
         var pos = new MutableBlockPos();
         sides: for (var direction : exposedOnSides) {
-            pos.setWithOffset(location, direction);
+            pos.setPos(location).move(direction);
             var adjacentNode = (GridNode) GridHelper.getExposedNode(getLevel(), pos, direction.getOpposite());
             if (adjacentNode == null) {
                 continue;

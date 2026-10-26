@@ -278,10 +278,10 @@ public class Grid implements IGrid {
     }
 
     public void fillCrashReportCategory(CrashReportCategory category) {
-        category.setDetail("Nodes", this.machines.size());
-        category.setDetail("Serial number", this.serialNumber);
+        category.addCrashSection("Nodes", this.machines.size());
+        category.addCrashSection("Serial number", this.serialNumber);
         if (AELog.isGridLogEnabled()) {
-            category.setDetail("All GridNodes",
+            category.addCrashSection("All GridNodes",
                     this.machines.values().stream().map(Object::toString).collect(Collectors.joining(";")));
         }
         if (this.pivot != null) {
@@ -316,7 +316,6 @@ public class Grid implements IGrid {
 
     @Override
     public void export(JsonWriter jsonWriter) throws IOException {
-        var registries = pivot != null ? pivot.getLevel().registryAccess() : HolderLookup.Provider.create(Stream.of());
 
         jsonWriter.beginObject();
         var properties = ImmutableMap.of(

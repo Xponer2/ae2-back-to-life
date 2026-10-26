@@ -242,7 +242,7 @@ public class BasicCellInventory implements StorageCell {
 
     @Override
     public void getAvailableStacks(KeyCounter out) {
-        for (var entry : Object2LongMaps.fastIterable(this.getCellItems())) {
+        for (var entry : this.getCellItems().object2LongEntrySet()) {
             out.add(entry.getKey(), entry.getLongValue());
         }
     }

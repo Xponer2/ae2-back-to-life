@@ -5,9 +5,6 @@
     "sides": "ae2:part/monitor_sides",
     "back": "ae2:part/monitor_back",
     "front_base": "ae2:part/monitor_front",
-    "front_bright": "_bright_",
-    "front_medium": "_medium_",
-    "front_dark": "_dark_",
     "front_medium_bright": "ae2:part/monitor_colored"
   },
   "elements": [

@@ -504,7 +504,9 @@ public class Platform {
         if (stack.isEmpty()) {
             return;
         }
-        if (!player.inventory.addItemStackToInventory(stack) && !stack.isEmpty()) {
+        // addItemStackToInventory also returns true if only a part fit, the rest stays in the stack
+        player.inventory.addItemStackToInventory(stack);
+        if (!stack.isEmpty()) {
             player.dropItem(stack, false);
         }
     }

@@ -33,6 +33,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import appeng.core.network.RegistryFriendlyByteBuf;
+import appeng.util.ResourceLocations;
 
 /**
  * Backport of the most commonly used Minecraft 1.20.5 ByteBufCodecs, plus replacements for codecs that 1.20.5 put
@@ -65,7 +66,7 @@ public final class ByteBufCodecs {
             (b, v) -> new PacketBuffer(b).writeCompoundTag(v),
             b -> RegistryFriendlyByteBuf.wrap(b).readNbt());
     public static final StreamCodec<ByteBuf, ResourceLocation> RESOURCE_LOCATION = STRING_UTF8
-            .map(ResourceLocation::new, ResourceLocation::toString);
+            .map(ResourceLocations::parse, ResourceLocation::toString);
     public static final StreamCodec<ByteBuf, BlockPos> BLOCK_POS = StreamCodec.of(
             (b, v) -> b.writeLong(v.toLong()), b -> BlockPos.fromLong(b.readLong()));
     public static final StreamCodec<ByteBuf, ChunkPos> CHUNK_POS = StreamCodec.of(

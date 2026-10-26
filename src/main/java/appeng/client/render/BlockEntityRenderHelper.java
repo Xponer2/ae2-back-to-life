@@ -44,6 +44,10 @@ import appeng.api.stacks.AmountFormat;
 
 /**
  * Helper methods for rendering block entities.
+ * <p/>
+ * The GL state is restored explicitly: {@link GlStateManager#popAttrib()} restores the GL flags but not the cache of
+ * {@link GlStateManager}, which then skips the next change of these flags by other code (lighting left on for the
+ * rest of the frame, depending on whether one of our block entities was drawn).
  */
 @SideOnly(Side.CLIENT)
 public final class BlockEntityRenderHelper {
@@ -120,14 +124,19 @@ public final class BlockEntityRenderHelper {
      */
     public static void drawString(String text, float x, float y, int color) {
         var fr = Minecraft.getMinecraft().fontRenderer;
-        GlStateManager.pushAttrib();
+        boolean lighting = GL11.glIsEnabled(GL11.GL_LIGHTING);
         GlStateManager.disableLighting();
         setLightmap(FULL_BRIGHT);
         GlStateManager.depthMask(false);
         GlStateManager.color(1, 1, 1, 1);
         fr.drawString(text, (int) x, (int) y, color);
         GlStateManager.depthMask(true);
-        GlStateManager.popAttrib();
+        // The font renderer leaves the text color and its font texture
+        GlStateManager.color(1, 1, 1, 1);
+        if (lighting) {
+            GlStateManager.enableLighting();
+        }
+        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
     }
 
     /**
@@ -138,13 +147,18 @@ public final class BlockEntityRenderHelper {
         if (stack.isEmpty()) {
             return;
         }
-        GlStateManager.pushAttrib();
+        boolean lighting = GL11.glIsEnabled(GL11.GL_LIGHTING);
+        // The light directions are set in the current (rotated) transform: keep them for the rest of the frame. The
+        // lighting flags are put back before the pop, so GL and the GlStateManager cache stay the same.
+        GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
         RenderHelper.enableStandardItemLighting();
         setLightmap(combinedLight);
         GlStateManager.color(1, 1, 1, 1);
         Minecraft.getMinecraft().getRenderItem().renderItem(stack, transformType);
-        RenderHelper.disableStandardItemLighting();
-        GlStateManager.popAttrib();
+        if (!lighting) {
+            RenderHelper.disableStandardItemLighting();
+        }
+        GL11.glPopAttrib();
         // The item renderer binds its own textures
         Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
     }
@@ -159,6 +173,8 @@ public final class BlockEntityRenderHelper {
         var buffer = tessellator.getBuffer();
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        boolean lighting = GL11.glIsEnabled(GL11.GL_LIGHTING);
+        GL11.glPushAttrib(GL11.GL_LIGHTING_BIT); // see renderItem
         RenderHelper.disableStandardItemLighting();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.enableBlend();
@@ -175,6 +191,10 @@ public final class BlockEntityRenderHelper {
 
         GlStateManager.enableCull();
         GlStateManager.disableBlend();
-        RenderHelper.enableStandardItemLighting();
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+        if (lighting) {
+            RenderHelper.enableStandardItemLighting();
+        }
+        GL11.glPopAttrib();
     }
 }

@@ -30,6 +30,7 @@ import net.minecraftforge.fluids.Fluid;
 
 import appeng.api.util.Registries;
 import appeng.api.util.TagKey;
+import appeng.util.ResourceLocations;
 
 /**
  * Tags that AE uses for functional purposes. For recipe tags that you may use in your recipe data generation, please
@@ -85,15 +86,15 @@ public final class AETags {
     public static final TagKey<Block> GROWTH_ACCELERATABLE = blockTag("ae2:growth_acceleratable");
 
     private static TagKey<Item> itemTag(String name) {
-        return TagKey.create(Registries.ITEM, new ResourceLocation(name));
+        return TagKey.create(Registries.ITEM, ResourceLocations.parse(name));
     }
 
     private static TagKey<Fluid> fluidTag(String name) {
-        return TagKey.create(Registries.FLUID, new ResourceLocation(name));
+        return TagKey.create(Registries.FLUID, ResourceLocations.parse(name));
     }
 
     private static TagKey<Block> blockTag(String name) {
-        return TagKey.create(Registries.BLOCK, new ResourceLocation(name));
+        return TagKey.create(Registries.BLOCK, ResourceLocations.parse(name));
     }
 
 }

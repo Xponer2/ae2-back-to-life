@@ -46,6 +46,7 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.tileentity.TileEntity;
 
 import appeng.api.behaviors.ContainerItemStrategies;
@@ -118,6 +119,12 @@ public abstract class AEBaseMenu extends Container {
     protected final ItemMenuHost<?> itemMenuHost;
     private final DataSynchronization dataSync = new DataSynchronization(this);
     private final InventoryPlayer playerInventory;
+    /**
+     * The carried stack as the client knows it. 1.21 menus send changes of the carried stack in broadcastChanges, this
+     * version only after vanilla slot clicks, so AE2's own actions (taking items from a terminal) would leave the client
+     * with an empty cursor.
+     */
+    private ItemStack remoteCarried = ItemStack.EMPTY;
     private final Set<Integer> lockedPlayerInventorySlots = new HashSet<>();
     private final Map<Slot, SlotSemantic> semanticBySlot = new HashMap<>();
     private final ArrayListMultimap<SlotSemantic, Slot> slotsBySemantic = ArrayListMultimap.create();
@@ -252,6 +259,10 @@ public abstract class AEBaseMenu extends Container {
     public final ItemStack slotClick(int slotId, int dragType, ClickType clickType, EntityPlayer player) {
         clickResult = ItemStack.EMPTY;
         clicked(slotId, dragType, clickType, player);
+        if (player instanceof EntityPlayerMP) {
+            // After a vanilla click the server sends the carried stack itself (updateHeldItem / sendAllContents)
+            remoteCarried = getCarried().copy();
+        }
         return clickResult;
     }
 
@@ -396,6 +407,15 @@ public abstract class AEBaseMenu extends Container {
         }
 
         super.detectAndSendChanges();
+
+        if (playerInventory.player instanceof EntityPlayerMP serverPlayer) {
+            var carried = getCarried();
+            if (!ItemStack.areItemStacksEqual(carried, remoteCarried)) {
+                remoteCarried = carried.copy();
+                // Window -1 / slot -1 is the carried stack (what EntityPlayerMP.updateHeldItem sends)
+                serverPlayer.connection.sendPacket(new SPacketSetSlot(-1, -1, carried));
+            }
+        }
     }
 
     /**
@@ -549,7 +569,7 @@ public abstract class AEBaseMenu extends Container {
             return stack;
         }
         var current = slot.getStack();
-        int amount = Math.min(stack.getCount(), slot.getItemStackLimit(stack) - current.getCount());
+        int amount = Math.min(stack.getCount(), getMaxStackSize(slot, stack) - current.getCount());
         if (amount <= 0) {
             return stack;
         }
@@ -561,6 +581,14 @@ public abstract class AEBaseMenu extends Container {
             slot.putStack(current);
         }
         return stack;
+    }
+
+    /**
+     * 1.21 {@code Slot.getMaxStackSize(stack)}. {@link Slot#getItemStackLimit} of vanilla 1.12.2 slots (the player
+     * inventory) ignores the stack size of the item.
+     */
+    public static int getMaxStackSize(Slot slot, ItemStack stack) {
+        return Math.min(slot.getItemStackLimit(stack), stack.getMaxStackSize());
     }
 
     protected List<Slot> getQuickMoveDestinationSlots(ItemStack stackToMove, boolean fromPlayerSide) {
@@ -595,9 +623,9 @@ public abstract class AEBaseMenu extends Container {
 
         var currentItem = s.getStack();
         if (currentItem.isEmpty()) {
-            return s.getItemStackLimit(what.getReadOnlyStack());
+            return getMaxStackSize(s, what.getReadOnlyStack());
         } else if (what.matches(currentItem)) {
-            return Math.max(0, s.getItemStackLimit(currentItem) - currentItem.getCount());
+            return Math.max(0, getMaxStackSize(s, currentItem) - currentItem.getCount());
         } else {
             return 0;
         }

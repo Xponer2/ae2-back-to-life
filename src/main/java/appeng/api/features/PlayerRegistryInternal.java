@@ -44,7 +44,8 @@ import appeng.core.worlddata.AESavedData;
  * @version rv3 - 30.05.2015
  * @since rv3 30.05.2015
  */
-final class PlayerRegistryInternal extends AESavedData implements IPlayerRegistry {
+// Public: MapStorage creates saved data by reflection
+public final class PlayerRegistryInternal extends AESavedData implements IPlayerRegistry {
 
     private static final String NAME = AppEng.MOD_ID + "_players";
     private static final String TAG_PLAYER_IDS = "playerIds";

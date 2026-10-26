@@ -18,6 +18,8 @@
 
 package appeng.helpers.patternprovider;
 
+import net.minecraft.item.Item;
+import net.minecraft.entity.player.InventoryPlayer;
 import appeng.util.Platform;
 
 import appeng.util.TextUtil;
@@ -223,7 +225,7 @@ public class PatternProviderLogic implements InternalInventoryHost, ICraftingPro
 
         var sendListTag = tag.getTagList("sendList", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < sendListTag.tagCount(); ++i) {
-            var stack = GenericStack.readTag(sendListTag.getCompoundTag(i));
+            var stack = GenericStack.readTag(sendListTag.getCompoundTagAt(i));
             if (stack != null) {
                 this.addToSendList(stack.what(), stack.amount());
             }
@@ -642,8 +644,8 @@ public class PatternProviderLogic implements InternalInventoryHost, ICraftingPro
 
             // Restore from blank patterns in the player inv
             var playerInv = player.inventory;
-            var blankPatternsAvailable = player.getAbilities().instabuild ? Integer.MAX_VALUE
-                    : playerInv.countItem(AEItems.BLANK_PATTERN.asItem());
+            var blankPatternsAvailable = player.capabilities.isCreativeMode ? Integer.MAX_VALUE
+                    : countItem(playerInv, AEItems.BLANK_PATTERN.asItem());
             var blankPatternsUsed = 0;
             for (int i = 0; i < desiredPatterns.size(); i++) {
                 if (desiredPatterns.getStackInSlot(i).isEmpty()) {
@@ -668,7 +670,7 @@ public class PatternProviderLogic implements InternalInventoryHost, ICraftingPro
             }
 
             // Deduct the used blank patterns
-            if (blankPatternsUsed > 0 && !player.getAbilities().instabuild) {
+            if (blankPatternsUsed > 0 && !player.capabilities.isCreativeMode) {
                 new PlayerInternalInventory(playerInv)
                         .removeItems(blankPatternsUsed, AEItems.BLANK_PATTERN.stack(), null);
             }
@@ -681,10 +683,20 @@ public class PatternProviderLogic implements InternalInventoryHost, ICraftingPro
         }
     }
 
+    private static int countItem(InventoryPlayer inventory, Item item) {
+        int count = 0;
+        for (var stack : inventory.mainInventory) {
+            if (stack.getItem() == item) {
+                count += stack.getCount();
+            }
+        }
+        return count;
+    }
+
     // Converts all patterns in this provider to blank patterns and give them to the player
     private void clearPatternInventory(EntityPlayer player) {
         // Just clear it for creative mode players
-        if (player.capabilities.instabuild) {
+        if (player.capabilities.isCreativeMode) {
             for (int i = 0; i < patternInventory.size(); i++) {
                 patternInventory.setItemDirect(i, ItemStack.EMPTY);
             }
@@ -698,22 +710,22 @@ public class PatternProviderLogic implements InternalInventoryHost, ICraftingPro
         for (int i = 0; i < patternInventory.size(); i++) {
             var pattern = patternInventory.getStackInSlot(i);
             // Auto-Clear encoded patterns to allow them to stack
-            if (Platform.is(pattern, AEItems.CRAFTING_PATTERN.asItem())
-                    || Platform.is(pattern, AEItems.PROCESSING_PATTERN.asItem())
-                    || Platform.is(pattern, AEItems.SMITHING_TABLE_PATTERN.asItem())
-                    || Platform.is(pattern, AEItems.STONECUTTING_PATTERN.asItem())
-                    || Platform.is(pattern, AEItems.BLANK_PATTERN.asItem())) {
+            if (AEItems.CRAFTING_PATTERN.is(pattern)
+                    || AEItems.PROCESSING_PATTERN.is(pattern)
+                    || AEItems.SMITHING_TABLE_PATTERN.is(pattern)
+                    || AEItems.STONECUTTING_PATTERN.is(pattern)
+                    || AEItems.BLANK_PATTERN.is(pattern)) {
                 blankPatternCount += pattern.getCount();
             } else {
                 // Give back any non-blank-patterns individually
-                playerInv.placeItemBackInInventory(pattern);
+                Platform.placeItemBackInInventory(player, pattern);
             }
             patternInventory.setItemDirect(i, ItemStack.EMPTY);
         }
 
         // Place back the removed blank patterns all at once
         if (blankPatternCount > 0) {
-            playerInv.placeItemBackInInventory(AEItems.BLANK_PATTERN.stack(blankPatternCount), false);
+            Platform.placeItemBackInInventory(player, AEItems.BLANK_PATTERN.stack(blankPatternCount));
         }
     }
 
@@ -765,7 +777,7 @@ public class PatternProviderLogic implements InternalInventoryHost, ICraftingPro
 
         // Prefer own custom name / icon if player has named it
         if (this.host instanceof IWorldNameable nameable && nameable.hasCustomName()) {
-            var name = nameable.getCustomName();
+            var name = nameable.getDisplayName();
             return new PatternContainerGroup(
                     this.host.getTerminalIcon(),
                     name,

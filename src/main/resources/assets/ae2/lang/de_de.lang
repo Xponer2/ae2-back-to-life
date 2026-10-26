@@ -1021,3 +1021,6 @@ waila.ae2.Suppressed=Unterdrückt
 waila.ae2.Unlocked=Entsperrt
 item.ae2.copper_ingot=Kupferbarren
 block.ae2.copper_ore=Kupfererz
+ae2.jei.stonecutting=Steinsäge
+item.minecraft.smithing_template.applies_to=Anwendbar auf:
+item.minecraft.smithing_template.ingredients=Zutaten:

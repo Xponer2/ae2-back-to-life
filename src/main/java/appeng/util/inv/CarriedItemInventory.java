@@ -18,6 +18,7 @@
 
 package appeng.util.inv;
 
+import appeng.menu.AEBaseMenu;
 import com.google.common.base.Preconditions;
 
 import net.minecraft.inventory.Container;
@@ -29,9 +30,9 @@ import appeng.api.inventories.InternalInventory;
  * Exposes the carried item stored in a menu as an {@link InternalInventory}.
  */
 public class CarriedItemInventory implements InternalInventory {
-    private final Container menu;
+    private final AEBaseMenu menu;
 
-    public CarriedItemInventory(Container menu) {
+    public CarriedItemInventory(AEBaseMenu menu) {
         this.menu = menu;
     }
 

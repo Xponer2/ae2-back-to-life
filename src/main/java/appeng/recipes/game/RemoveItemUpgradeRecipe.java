@@ -8,15 +8,13 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import appeng.api.upgrades.IUpgradeableItem;
 import appeng.core.AppEng;
 import appeng.core.network.RegistryFriendlyByteBuf;
 import appeng.core.network.codec.StreamCodec;
+import appeng.recipes.RecipeSerializer;
+import appeng.util.CraftingInput;
 
 /**
  * Allows adding upgrades to upgradable items.
@@ -28,7 +26,6 @@ public class RemoveItemUpgradeRecipe extends CustomRecipe {
     private static final NonNullList<Ingredient> INGREDIENTS = NonNullList.create();
 
     private RemoveItemUpgradeRecipe() {
-        super(CraftingBookCategory.MISC);
     }
 
     public static final MapCodec<RemoveItemUpgradeRecipe> CODEC = MapCodec.unit(INSTANCE);
@@ -128,7 +125,7 @@ public class RemoveItemUpgradeRecipe extends CustomRecipe {
             return super.getRemainingItems(input);
         }
 
-        return NonNullList.of(ItemStack.EMPTY, result.upgradableItem());
+        return NonNullList.from(ItemStack.EMPTY, result.upgradableItem());
     }
 
     @Override

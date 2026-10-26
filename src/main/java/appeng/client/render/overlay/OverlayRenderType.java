@@ -38,7 +38,8 @@ public final class OverlayRenderType {
     }
 
     private static void begin() {
-        GlStateManager.pushAttrib();
+        // Restored explicitly in end(): popAttrib would not update the GlStateManager cache
+        lightingWasEnabled = GL11.glIsEnabled(GL11.GL_LIGHTING);
         GlStateManager.disableTexture2D();
         GlStateManager.disableLighting();
         GlStateManager.disableCull();
@@ -88,6 +89,7 @@ public final class OverlayRenderType {
     }
 
     private static boolean active;
+    private static boolean lightingWasEnabled;
 
     /**
      * Restores the GL state changed by the begin methods.
@@ -100,11 +102,13 @@ public final class OverlayRenderType {
         GlStateManager.depthFunc(GL11.GL_LEQUAL);
         GlStateManager.depthMask(true);
         GlStateManager.glLineWidth(1.0f);
-        GlStateManager.popAttrib();
         GlStateManager.enableTexture2D();
         GlStateManager.enableCull();
         GlStateManager.enableAlpha();
         GlStateManager.disableBlend();
+        if (lightingWasEnabled) {
+            GlStateManager.enableLighting();
+        }
     }
 
     public static int[] decomposeColor(int color) {

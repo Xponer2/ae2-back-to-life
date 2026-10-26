@@ -97,19 +97,19 @@ public class SpatialPylonService implements ISpatialService, IGridServiceProvide
 
             // Expand the bounding box
             if (maxPoint == null) {
-                maxPoint = cl.getBoundsMax().mutable();
+                maxPoint = new MutableBlockPos(cl.getBoundsMax());
             } else {
-                maxPoint.setX(Math.max(maxPoint.getX(), cl.getBoundsMax().getX()));
-                maxPoint.setY(Math.max(maxPoint.getY(), cl.getBoundsMax().getY()));
-                maxPoint.setZ(Math.max(maxPoint.getZ(), cl.getBoundsMax().getZ()));
+                maxPoint.setPos(Math.max(maxPoint.getX(), cl.getBoundsMax().getX()), maxPoint.getY(), maxPoint.getZ());
+                maxPoint.setPos(maxPoint.getX(), Math.max(maxPoint.getY(), cl.getBoundsMax().getY()), maxPoint.getZ());
+                maxPoint.setPos(maxPoint.getX(), maxPoint.getY(), Math.max(maxPoint.getZ(), cl.getBoundsMax().getZ()));
             }
 
             if (minPoint == null) {
-                minPoint = cl.getBoundsMin().mutable();
+                minPoint = new MutableBlockPos(cl.getBoundsMin());
             } else {
-                minPoint.setX(Math.min(minPoint.getX(), cl.getBoundsMin().getX()));
-                minPoint.setY(Math.min(minPoint.getY(), cl.getBoundsMin().getY()));
-                minPoint.setZ(Math.min(minPoint.getZ(), cl.getBoundsMin().getZ()));
+                minPoint.setPos(Math.min(minPoint.getX(), cl.getBoundsMin().getX()), minPoint.getY(), minPoint.getZ());
+                minPoint.setPos(minPoint.getX(), Math.min(minPoint.getY(), cl.getBoundsMin().getY()), minPoint.getZ());
+                minPoint.setPos(minPoint.getX(), minPoint.getY(), Math.min(minPoint.getZ(), cl.getBoundsMin().getZ()));
             }
 
             pylonBlocks += cl.size();

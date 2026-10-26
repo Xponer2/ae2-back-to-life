@@ -20,10 +20,10 @@ package appeng.recipes.handlers;
 
 import com.mojang.serialization.MapCodec;
 
-import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import appeng.core.network.RegistryFriendlyByteBuf;
 import appeng.core.network.codec.StreamCodec;
+import appeng.recipes.RecipeSerializer;
 
 public class InscriberRecipeSerializer implements RecipeSerializer<InscriberRecipe> {
 

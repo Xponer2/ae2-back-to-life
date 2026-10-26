@@ -183,9 +183,9 @@ public class WirelessTerminalMenuHost<T extends WirelessTerminalItem> extends It
         var dc = wap.getLocation();
 
         if (dc.getLevel() == this.getPlayer().world) {
-            var offX = dc.getPos().posX - this.getPlayer().posX;
-            var offY = dc.getPos().posY - this.getPlayer().posY;
-            var offZ = dc.getPos().posZ - this.getPlayer().posZ;
+            var offX = dc.getPos().getX() - this.getPlayer().posX;
+            var offY = dc.getPos().getY() - this.getPlayer().posY;
+            var offZ = dc.getPos().getZ() - this.getPlayer().posZ;
 
             double r = offX * offX + offY * offY + offZ * offZ;
             if (r < rangeLimit && wap.isActive()) {

@@ -18,31 +18,31 @@
 
 package appeng.hooks;
 
-import net.minecraft.core.dispenser.BlockSource;
-import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.item.Item;
+import net.minecraft.block.BlockDispenser;
+import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
+import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.item.context.DirectionalPlaceContext;
-import net.minecraft.world.level.block.DispenserBlock;
 
+import appeng.hooks.IBlockTool;
 import appeng.util.UseOnContext;
 
-public final class BlockToolDispenseItemBehavior extends DefaultDispenseItemBehavior {
+public final class BlockToolDispenseItemBehavior extends BehaviorDefaultDispenseItem {
 
     @Override
-    protected ItemStack execute(BlockSource dispenser, ItemStack dispensedItem) {
-        final Item i = dispensedItem.getItem();
-        if (i instanceof IBlockTool tm) {
-            final EnumFacing direction = dispenser.state().getValue(DispenserBlock.FACING);
+    protected ItemStack dispenseStack(IBlockSource dispenser, ItemStack dispensedItem) {
+        if (dispensedItem.getItem() instanceof IBlockTool tm) {
+            final var direction = dispenser.getBlockState().getValue(BlockDispenser.FACING);
 
-            final World level = dispenser.level();
-            if (level instanceof WorldServer) {
-                UseOnContext context = new DirectionalPlaceContext(level, dispenser.pos().offset(direction),
-                        direction, dispensedItem, direction.getOpposite());
-                tm.useOn(context);
+            if (dispenser.getWorld() instanceof WorldServer level) {
+                // 1.21 DirectionalPlaceContext: the block in front of the dispenser, clicked on its near side
+                var pos = dispenser.getBlockPos().offset(direction);
+                var hit = new RayTraceResult(new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5),
+                        direction.getOpposite(), pos);
+                tm.useOn(new UseOnContext(level, null, EnumHand.MAIN_HAND, dispensedItem, hit));
             }
         }
         return dispensedItem;

@@ -75,7 +75,7 @@ public class TinyTNTBlock extends AEBaseBlock {
             EntityPlayer player, EnumHand hand, RayTraceResult hit) {
         if (Platform.is(heldItem, Items.FLINT_AND_STEEL) || Platform.is(heldItem, Items.FIRE_CHARGE)) {
             onCaughtFire(state, level, pos, hit.sideHit, player);
-            level.setBlockState(pos, Blocks.AIR.getDefaultState(), 11);
+            removeLit(level, pos, 11);
             Item item = heldItem.getItem();
             if (!player.capabilities.isCreativeMode) {
                 if (Platform.is(heldItem, Items.FLINT_AND_STEEL)) {
@@ -114,7 +114,7 @@ public class TinyTNTBlock extends AEBaseBlock {
             boolean isMoving) {
         if (level.isBlockPowered(pos)) {
             this.startFuse(level, pos, null);
-            level.setBlockToAir(pos);
+            removeLit(level, pos, 3);
         }
     }
 
@@ -124,20 +124,70 @@ public class TinyTNTBlock extends AEBaseBlock {
 
         if (level.isBlockPowered(pos)) {
             this.startFuse(level, pos, null);
-            level.setBlockToAir(pos);
+            removeLit(level, pos, 3);
+        }
+    }
+
+    // Set while the block is removed by a player, by an explosion or after it was lit, see onRemove. Per thread: in
+    // single player the client thread also predicts block breaking.
+    private static final ThreadLocal<Boolean> removingOnPurpose = ThreadLocal.withInitial(() -> false);
+
+    @Override
+    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player,
+            boolean willHarvest) {
+        removingOnPurpose.set(true);
+        try {
+            return super.removedByPlayer(state, world, pos, player, willHarvest);
+        } finally {
+            removingOnPurpose.set(false);
         }
     }
 
     /**
-     * 1.12.2 has no hook for blocks catching fire: spreading fire replaces the block, so the fuse is lit when that
-     * happens (like vanilla TNT, which is special-cased by the fire block).
+     * The explosion primes it in {@link #wasExploded}, it must not be lit a second time as burnt next to fire.
+     */
+    @Override
+    public void onBlockExploded(World world, BlockPos pos, Explosion explosion) {
+        removingOnPurpose.set(true);
+        try {
+            super.onBlockExploded(world, pos, explosion);
+        } finally {
+            removingOnPurpose.set(false);
+        }
+    }
+
+    /**
+     * 1.12.2 has no hook for blocks catching fire: burning replaces the block with fire or (mostly) with air, so the
+     * fuse is lit when that happens next to fire (like vanilla TNT, which is special-cased by the fire block).
      */
     @Override
     public void onRemove(IBlockState state, World level, BlockPos pos, IBlockState newState, boolean isMoving) {
         super.onRemove(state, level, pos, newState, isMoving);
-        if (!level.isRemote && newState.getBlock() == Blocks.FIRE) {
+        if (level.isRemote) {
+            return;
+        }
+        if (newState.getBlock() == Blocks.FIRE
+                || newState.getBlock() == Blocks.AIR && !removingOnPurpose.get() && isNextToFire(level, pos)) {
             onCaughtFire(state, level, pos, null, null);
         }
+    }
+
+    private static void removeLit(World level, BlockPos pos, int flags) {
+        removingOnPurpose.set(true);
+        try {
+            level.setBlockState(pos, Blocks.AIR.getDefaultState(), flags);
+        } finally {
+            removingOnPurpose.set(false);
+        }
+    }
+
+    private static boolean isNextToFire(World level, BlockPos pos) {
+        for (var side : EnumFacing.VALUES) {
+            if (level.getBlockState(pos.offset(side)).getBlock() == Blocks.FIRE) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -163,7 +213,7 @@ public class TinyTNTBlock extends AEBaseBlock {
                     igniter = (EntityLivingBase) shooter;
                 }
                 this.startFuse(level, pos, igniter);
-                level.setBlockToAir(pos);
+                removeLit(level, pos, 3);
             }
         }
     }

@@ -18,6 +18,7 @@
 
 package appeng.me.service;
 
+import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -145,10 +146,10 @@ public class StatisticsService implements IGridService, IGridServiceProvider {
 
     @Override
     public void debugDump(JsonWriter writer) throws IOException {
-        JsonStreamUtil.writeProperties(Map.<String, Object>of("chunks",
+        JsonStreamUtil.writeProperties(java.util.Collections.<String, Object>singletonMap("chunks",
                 chunks.keySet().stream().collect(
                         Collectors.toMap(
-                                level -> level.dimension().location().toString(),
+                                level -> String.valueOf(level.provider.getDimension()),
                                 level -> chunks.get(level).elementSet().stream().map(JsonStreamUtil::toJson)
                                         .collect(Collectors.toList())))),
                 writer);

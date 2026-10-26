@@ -54,6 +54,8 @@ import appeng.api.capabilities.RegisterCapabilitiesEvent;
 import appeng.api.parts.CableRenderMode;
 import appeng.api.stacks.AEKeyType;
 import appeng.api.stacks.AEKeyTypesInternal;
+import appeng.block.AEBaseBlock;
+import appeng.core.compat.OreDictionaryCompat;
 import appeng.core.definitions.AEBlockEntities;
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEEntities;
@@ -61,7 +63,6 @@ import appeng.core.definitions.AEItems;
 import appeng.core.definitions.AEParts;
 import appeng.core.network.ClientboundPacket;
 import appeng.core.network.InitNetwork;
-import appeng.core.compat.OreDictionaryCompat;
 import appeng.core.network.PacketDistributor;
 import appeng.core.tags.TagManager;
 import appeng.hooks.IntrinsicEnchantHooks;
@@ -71,6 +72,7 @@ import appeng.hooks.ticking.TickHandler;
 import appeng.hotkeys.HotkeyActions;
 import appeng.init.InitAdvancementTriggers;
 import appeng.init.InitCapabilityProviders;
+import appeng.init.InitCauldronInteraction;
 import appeng.init.InitDispenserBehavior;
 import appeng.init.InitMenuTypes;
 import appeng.init.InitStats;
@@ -86,6 +88,7 @@ import appeng.init.worldgen.InitDimensionTypes;
 import appeng.init.worldgen.InitStructures;
 import appeng.integration.Integrations;
 import appeng.recipes.loader.RecipeLoader;
+import appeng.recipes.transform.TransformLogic;
 import appeng.server.AECommand;
 import appeng.server.services.ChunkLoadingService;
 import appeng.sounds.AppEngSounds;
@@ -137,6 +140,8 @@ public abstract class AppEngBase implements AppEng {
         MinecraftForge.EVENT_BUS.register(WrenchHook.class);
         MinecraftForge.EVENT_BUS.register(SkyStoneBreakSpeed.class);
         MinecraftForge.EVENT_BUS.register(IntrinsicEnchantHooks.class);
+        // Explosions transform items (entangled singularities)
+        MinecraftForge.EVENT_BUS.register(TransformLogic.class);
         HotkeyActions.init();
     }
 
@@ -158,6 +163,8 @@ public abstract class AppEngBase implements AppEng {
     public void postInit(FMLPostInitializationEvent event) {
         // All mods registered their ore dictionary entries now
         TagManager.invalidate();
+        RecipeLoader.loadDeferred();
+        AEBaseBlock.applyHarvestLevels();
     }
 
     /**
@@ -168,6 +175,7 @@ public abstract class AppEngBase implements AppEng {
         InitStorageCells.init();
         InitP2PAttunements.init();
         InitDispenserBehavior.init();
+        InitCauldronInteraction.init();
         InitUpgrades.init();
     }
 

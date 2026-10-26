@@ -22,6 +22,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
@@ -121,6 +123,7 @@ public class NetworkStatusMenu extends AEBaseMenu {
         setValidMenu(false); // Close the menu
     }
 
+    @SideOnly(Side.CLIENT)
     public boolean canExportGrid() {
         // 1.21 parses the command with the client's command tree; the 1.12.2 client only knows its op level
         var player = Minecraft.getMinecraft().player;

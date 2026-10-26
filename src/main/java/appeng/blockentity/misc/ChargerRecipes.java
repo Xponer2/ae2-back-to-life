@@ -8,11 +8,12 @@ import appeng.util.RecipeHolder;
 
 import appeng.recipes.AERecipeTypes;
 import appeng.recipes.handlers.ChargerRecipe;
+import appeng.recipes.RecipeManager;
 
 public class ChargerRecipes {
 
     public static Iterable<RecipeHolder<ChargerRecipe>> getRecipes(World level) {
-        return level.getRecipeManager().byType(AERecipeTypes.CHARGER);
+        return RecipeManager.of(level).byType(AERecipeTypes.CHARGER);
     }
 
     @Nullable

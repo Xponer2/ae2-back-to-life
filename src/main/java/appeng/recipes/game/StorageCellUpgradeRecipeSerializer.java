@@ -2,10 +2,10 @@ package appeng.recipes.game;
 
 import com.mojang.serialization.MapCodec;
 
-import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import appeng.core.network.RegistryFriendlyByteBuf;
 import appeng.core.network.codec.StreamCodec;
+import appeng.recipes.RecipeSerializer;
 
 public class StorageCellUpgradeRecipeSerializer implements RecipeSerializer<StorageCellUpgradeRecipe> {
     public static final StorageCellUpgradeRecipeSerializer INSTANCE = new StorageCellUpgradeRecipeSerializer();

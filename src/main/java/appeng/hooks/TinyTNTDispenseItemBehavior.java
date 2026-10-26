@@ -18,24 +18,22 @@
 
 package appeng.hooks;
 
-import net.minecraft.core.dispenser.BlockSource;
-import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.block.BlockDispenser;
+import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
+import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
-import net.minecraft.world.level.block.DispenserBlock;
 
 import appeng.entity.TinyTNTPrimedEntity;
 
-public final class TinyTNTDispenseItemBehavior extends DefaultDispenseItemBehavior {
+public final class TinyTNTDispenseItemBehavior extends BehaviorDefaultDispenseItem {
 
     @Override
-    protected ItemStack execute(BlockSource dispenser, ItemStack dispensedItem) {
-        final EnumFacing EnumFacing = dispenser.state().getValue(DispenserBlock.FACING);
-        final World level = dispenser.level();
-        final int i = dispenser.pos().getX() + EnumFacing.getXOffset();
-        final int j = dispenser.pos().getY() + EnumFacing.getYOffset();
-        final int k = dispenser.pos().getZ() + EnumFacing.getZOffset();
+    protected ItemStack dispenseStack(IBlockSource dispenser, ItemStack dispensedItem) {
+        final var facing = dispenser.getBlockState().getValue(BlockDispenser.FACING);
+        final var level = dispenser.getWorld();
+        final int i = dispenser.getBlockPos().getX() + facing.getXOffset();
+        final int j = dispenser.getBlockPos().getY() + facing.getYOffset();
+        final int k = dispenser.getBlockPos().getZ() + facing.getZOffset();
         final TinyTNTPrimedEntity primedTinyTNTEntity = new TinyTNTPrimedEntity(level, i + 0.5F, j, k + 0.5F,
                 null);
         level.spawnEntity(primedTinyTNTEntity);

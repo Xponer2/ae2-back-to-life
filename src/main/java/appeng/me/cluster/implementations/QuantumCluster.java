@@ -18,9 +18,10 @@
 
 package appeng.me.cluster.implementations;
 
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.event.world.WorldEvent;
 import java.util.Iterator;
 
-import net.neoforged.neoforge.event.level.LevelEvent;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.tileentity.TileEntity;
@@ -60,8 +61,8 @@ public class QuantumCluster implements IAECluster, IActionHost {
     }
 
     @SubscribeEvent
-    public void onUnload(final LevelEvent.Unload e) {
-        if (this.center != null && this.center.getLevel() == e.getLevel()) {
+    public void onUnload(final WorldEvent.Unload e) {
+        if (this.center != null && this.center.getLevel() == e.getWorld()) {
             this.setUpdateStatus(false);
             this.destroy();
         }
@@ -149,7 +150,7 @@ public class QuantumCluster implements IAECluster, IActionHost {
                 // until the center
                 // block entity begins ticking normally.
                 if (level.isBlockLoaded(qc.center.getPos())) {
-                    final World cur = level.getMinecraftServer().getLevel(level.dimension());
+                    final World cur = DimensionManager.getWorld(level.provider.getDimension());
 
                     final TileEntity te = level.getTileEntity(qc.center.getPos());
                     return te != qc.center || level != cur;

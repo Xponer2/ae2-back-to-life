@@ -38,6 +38,7 @@ import appeng.client.render.model.AEModelData;
 import appeng.client.render.model.AutoRotatingBakedModel;
 import appeng.client.render.model.EmissiveModels;
 import appeng.client.render.overlay.OverlayManager;
+import appeng.client.render.tesr.InscriberTESR;
 import appeng.core.AppEng;
 import appeng.entity.TinyTNTPrimedEntity;
 import appeng.entity.TinyTNTPrimedRenderer;
@@ -80,6 +81,7 @@ public final class InitRendering {
         InitPartTextures.registerTextures(map);
         InitAdditionalModels.registerTextures(map);
         CopperTextures.registerSprites(map);
+        InscriberTESR.registerSprites(map);
         // The texture manager exists by now (the first stitch is part of the model loading)
         VillagerTextures.register();
     }

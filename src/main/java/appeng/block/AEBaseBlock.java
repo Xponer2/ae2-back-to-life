@@ -18,14 +18,23 @@
 
 package appeng.block;
 
+import appeng.api.orientation.IOrientableBlock;
+import appeng.api.orientation.IOrientationStrategy;
+import appeng.api.orientation.OrientationStrategies;
+import appeng.core.AppEng;
+import appeng.core.CreativeTabOutput;
+import appeng.core.tags.TagManager;
+import appeng.hooks.WrenchHook;
+import appeng.util.BlockPlaceContext;
+import appeng.util.ItemInteractionResult;
 import appeng.util.ItemTooltipContext;
+import appeng.util.shape.CollisionContext;
+import appeng.util.shape.Shapes;
+import appeng.util.shape.VoxelShape;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -54,17 +63,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import appeng.api.orientation.IOrientableBlock;
-import appeng.api.orientation.IOrientationStrategy;
-import appeng.api.orientation.OrientationStrategies;
-import appeng.core.CreativeTabOutput;
-import appeng.hooks.WrenchHook;
-import appeng.util.BlockPlaceContext;
-import appeng.util.ItemInteractionResult;
-import appeng.util.shape.CollisionContext;
-import appeng.util.shape.Shapes;
-import appeng.util.shape.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Base class of all AE2 blocks. Bridges the Minecraft 1.21 block API that AE2's blocks are written against
@@ -451,6 +450,68 @@ public abstract class AEBaseBlock extends Block implements IOrientableBlock {
         return properties == null || properties.canOcclude();
     }
 
+    /**
+     * 1.21 {@code requiresCorrectToolForDrops}: only blocks that ask for it need the right tool to drop anything (in
+     * 1.12.2 the material decides, and the metal and stone materials of the machines would require a pickaxe). The
+     * tool and its level come from the {@code mineable}/{@code needs_*_tool} tags (see {@link #applyHarvestLevels}).
+     */
+    @Override
+    public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player) {
+        if (properties == null || !properties.isRequiresCorrectToolForDrops()) {
+            return true;
+        }
+        var state = world.getBlockState(pos);
+        var tool = getHarvestTool(state);
+        if (tool == null) {
+            return super.canHarvestBlock(world, pos, player);
+        }
+        var stack = player.getHeldItemMainhand();
+        return !stack.isEmpty() && stack.getItem().getHarvestLevel(stack, tool, player, state) >= getHarvestLevel(state);
+    }
+
+    /**
+     * Sets the harvest tool and level of the AE2 blocks from the block tags of 1.21 ({@code minecraft:mineable/*} and
+     * {@code minecraft:needs_*_tool}). Called once the tags can be read (post init).
+     */
+    public static void applyHarvestLevels() {
+        String[] tools = { "pickaxe", "axe", "shovel" };
+        for (var tool : tools) {
+            for (var block : TagManager.getBlocks(new ResourceLocation("minecraft", "mineable/" + tool))) {
+                var id = block.getRegistryName();
+                if (id == null || !AppEng.MOD_ID.equals(id.getNamespace())) {
+                    continue;
+                }
+                int level = 0;
+                if (isInBlockTag("needs_diamond_tool", block)) {
+                    level = 3;
+                } else if (isInBlockTag("needs_iron_tool", block)) {
+                    level = 2;
+                } else if (isInBlockTag("needs_stone_tool", block)) {
+                    level = 1;
+                }
+                block.setHarvestLevel(tool, level);
+            }
+        }
+    }
+
+    private static boolean isInBlockTag(String vanillaTag, Block block) {
+        return TagManager.isInBlockTag(new ResourceLocation("minecraft", vanillaTag), block, -1);
+    }
+
+    /**
+     * Like {@code ForgeHooks.blockStrength}, but with {@link #canHarvestBlock} (1.21 mines blocks without the
+     * requirement at full speed by hand).
+     */
+    @SuppressWarnings("deprecation")
+    @Override
+    public float getPlayerRelativeBlockHardness(IBlockState state, EntityPlayer player, World world, BlockPos pos) {
+        float hardness = state.getBlockHardness(world, pos);
+        if (hardness < 0.0F) {
+            return 0.0F;
+        }
+        return player.getDigSpeed(state, pos) / hardness / (canHarvestBlock(world, pos, player) ? 30F : 100F);
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     public boolean isNormalCube(IBlockState state) {
@@ -561,13 +622,16 @@ public abstract class AEBaseBlock extends Block implements IOrientableBlock {
     @SuppressWarnings("deprecation")
     @Override
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        neighborChanged(state, worldIn, pos, blockIn, fromPos, false);
+        // The modern methods get the full state: properties kept by block entities (the facing of a crank, for
+        // example) are only in the actual state here
+        neighborChanged(state.getActualState(worldIn, pos), worldIn, pos, blockIn, fromPos, false);
 
         // Emulate modern updateShape: blocks can return air to break themselves (e.g. attached fixtures)
         var direction = facingTo(pos, fromPos);
         if (direction != null && worldIn.getBlockState(pos).getBlock() == this) {
-            var current = worldIn.getBlockState(pos);
-            var updated = updateShape(current, direction, worldIn.getBlockState(fromPos), worldIn, pos, fromPos);
+            var current = worldIn.getBlockState(pos).getActualState(worldIn, pos);
+            var neighbor = worldIn.getBlockState(fromPos).getActualState(worldIn, fromPos);
+            var updated = updateShape(current, direction, neighbor, worldIn, pos, fromPos);
             if (updated.getBlock() == Blocks.AIR) {
                 worldIn.destroyBlock(pos, true);
             } else if (updated != current && getMetaFromState(updated) != getMetaFromState(current)) {

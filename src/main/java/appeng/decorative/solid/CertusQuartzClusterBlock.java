@@ -141,4 +141,26 @@ public class CertusQuartzClusterBlock extends AEBaseBlock {
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
+
+    /**
+     * The shape is smaller than the block (1.21 only occludes with the shape), so the neighbors' faces must not be
+     * culled and light passes through.
+     */
+    @SuppressWarnings("deprecation")
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public boolean isNormalCube(IBlockState state) {
+        return false;
+    }
 }
