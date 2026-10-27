@@ -30,6 +30,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import appeng.api.orientation.IOrientableBlock;
 import appeng.client.render.CopperTextures;
 import appeng.client.render.TooltipImages;
 import appeng.client.render.VillagerTextures;
@@ -105,7 +106,8 @@ public final class InitRendering {
 
     /**
      * Wraps the block models of AE2: emissive faces are made full-bright, and blocks whose orientation is stored in
-     * their block entity get the {@link AutoRotatingBakedModel}.
+     * their block entity get the {@link AutoRotatingBakedModel}, unless their blockstate file already rotates the
+     * model.
      */
     private static void customizeBlockModels(IRegistry<ModelResourceLocation, IBakedModel> modelRegistry) {
         IBakedModel missingModel = modelRegistry.getObject(new ModelResourceLocation("builtin/missing", "missing"));
@@ -129,7 +131,8 @@ public final class InitRendering {
             }
 
             IBakedModel newModel = EmissiveModels.wrapBlockModel(blockId, model);
-            if (isOrientedByBlockEntity(block) && shouldAutoRotate(blockId, location.getVariant())) {
+            if (isOrientedByBlockEntity(block) && !isRotatedByBlockState(block, location.getVariant())
+                    && shouldAutoRotate(blockId, location.getVariant())) {
                 newModel = new AutoRotatingBakedModel(newModel);
             }
 
@@ -142,6 +145,31 @@ public final class InitRendering {
     private static boolean isOrientedByBlockEntity(Block block) {
         return block.getBlockState() instanceof ExtendedBlockState extendedBlockState
                 && extendedBlockState.getUnlistedProperties().contains(AEModelData.ORIENTATION);
+    }
+
+    /**
+     * Blockstate files that select the model by an orientation property (the facing of the wireless access point,
+     * growth accelerator, spatial anchor, ...) already rotate it, like in 1.21. Rotating such a model again by the
+     * orientation of the block entity would turn every orientation except the default one twice.
+     */
+    private static boolean isRotatedByBlockState(Block block, String variant) {
+        if (!(block instanceof IOrientableBlock orientableBlock)) {
+            return false;
+        }
+        var orientationProperties = orientableBlock.getOrientationStrategy().getProperties();
+        for (var part : variant.split(",")) {
+            int eq = part.indexOf('=');
+            if (eq <= 0) {
+                continue;
+            }
+            var name = part.substring(0, eq);
+            for (var property : orientationProperties) {
+                if (property.getName().equals(name)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
