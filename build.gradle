@@ -16,7 +16,8 @@ version = propertyString('mod_version')
 group = propertyString('root_package')
 
 base {
-    archivesName.set(propertyString('mod_id'))
+    // Not the name of the AE2 jars for newer Minecraft versions
+    archivesName.set('ae2-back-to-life-1.12.2')
 }
 
 java {
