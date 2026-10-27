@@ -11,6 +11,8 @@ items, blocks, ids, tags, recipes, textures and features as the modern AE2, on 1
 Not made or supported by the [Applied Energistics 2](https://github.com/AppliedEnergistics/Applied-Energistics-2)
 team — please report problems with this port here.
 
+**Made with AI:** this port was made entirely with AI (Claude), from the code changes to the in-game testing.
+
 **Beta:** playable, but young. Back up your worlds and report problems in the
 [issue tracker](https://github.com/Xponer2/ae2-back-to-life/issues).
 
