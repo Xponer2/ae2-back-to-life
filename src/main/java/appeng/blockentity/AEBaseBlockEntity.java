@@ -449,10 +449,18 @@ public class AEBaseBlockEntity extends TileEntity
         }
 
         if (tag.hasKey("orientation", Constants.NBT.TAG_STRING)) {
+            BlockOrientation loaded;
             try {
-                this.orientation = BlockOrientation.valueOf(tag.getString("orientation"));
+                loaded = BlockOrientation.valueOf(tag.getString("orientation"));
             } catch (IllegalArgumentException e) {
-                this.orientation = BlockOrientation.NORTH_UP;
+                loaded = BlockOrientation.NORTH_UP;
+            }
+            if (loaded != this.orientation) {
+                this.orientation = loaded;
+                // 1.21 passes the block state to the constructor, so what depends on the orientation (the sides the
+                // grid node is exposed on, the sides that accept power) is set up with it right away. Here the
+                // orientation is only known now.
+                onOrientationChanged(loaded);
             }
         }
 
